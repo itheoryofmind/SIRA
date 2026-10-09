@@ -1297,7 +1297,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
     <div id="view" class="beige"><button class="cmpx" id="cmpX" type="button" hidden>إغلاق المقارنة ✕</button><div class="stage" id="stage"><canvas id="cv"></canvas><div class="hot" id="hot"></div></div><div class="loader" id="loader" hidden>جاري التحميل…</div></div>
   </div>
   <div class="selbar" id="selBar" hidden>
-    <button class="hc c-f" data-c="f" type="button">فائدة</button><button class="hc c-d" data-c="d" type="button">دليل</button><button class="hc c-r" data-c="r" type="button">مراجعة</button>
+    <button class="hc c-f" data-c="f" type="button">فائدة</button><button class="hc c-d" data-c="d" type="button">عبرة</button><button class="hc c-r" data-c="r" type="button">مراجعة</button>
     <button class="hc hdel" id="hlDel" type="button" hidden>إزالة</button>
     <button class="quotebtn" id="quoteBtn" type="button">اقتباس</button>
     <button class="hc hlink" id="selLink" type="button">رابط</button>
@@ -1481,7 +1481,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1727';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1739';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2605,7 +2605,7 @@ async function exportNotes(){
 $('#exportNotes').onclick=exportNotes;$('#exportHl').onclick=exportNotes;
 
 /* ---------- coloured highlighters: kept on this device; anchored by the exact wording and its occurrence on the page ---------- */
-const HLC={f:'فائدة',d:'دليل',r:'للمراجعة'};let HLEDIT=null,HLF='';
+const HLC={f:'فائدة',d:'عبرة',r:'للمراجعة'};let HLEDIT=null,HLF='';
 const hls=()=>LS.get('hls',{})||{};
 const hlShow=t=>t.replace(/\{/g,'﴿').replace(/\}/g,'﴾').replace(/\s+/g,' ').trim();
 function bodyText(body){                                   // the page text exactly as its text nodes hold it
