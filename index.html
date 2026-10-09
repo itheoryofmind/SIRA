@@ -1074,6 +1074,17 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .yr-ft .go::after{content:"";width:6px;height:6px;border-left:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(45deg)}
 .yr-src{display:inline;border:0;background:none;padding:0;font:inherit;color:var(--brass);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .yr-mk{margin-top:6px}
+/* القراءة بدون إنترنت */
+.off-st{display:flex;gap:12px;align-items:flex-start;background:var(--raised);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 12px}
+.off-st .ic{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--brass) 18%,transparent);color:var(--brass)}
+.off-st b{display:block;font-size:16px;margin-bottom:3px}
+.off-st p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.7}
+.off-bar{height:6px;border-radius:3px;background:var(--line);margin-top:9px;overflow:hidden}
+.off-bar i{display:block;height:100%;background:var(--brass);border-radius:3px;transition:width .3s}
+.off-btn{display:block;width:100%;margin-top:10px;border:0;border-radius:11px;padding:11px;background:var(--brass);color:var(--surface);font:inherit;font-size:15.5px;font-weight:700;cursor:pointer}
+.off-del{display:block;margin:8px auto 0;border:0;background:none;color:var(--muted);font:inherit;font-size:13.5px;text-decoration:underline;cursor:pointer}
+.off-note{font-size:13px;color:var(--muted);line-height:1.8;margin:4px 2px 0}
+#offSheet .sheethead{position:sticky}
 
 </style>
 
@@ -1550,7 +1561,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1909';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1918';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2980,6 +2991,7 @@ function openNav(){
   grp('القراءة');
   it($('#contT').textContent,()=>{closeNav();$('#continue').click()});
   it('ابحث في الكتب',()=>{closeNav();window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>$('#q').focus(),350)});
+  it('القراءة دون اتصال',()=>{closeNav();fxOffline()});
   grp('الكتب');
   SXBOOKS.filter(b=>b.open).forEach(b=>it(b.t,()=>{closeNav();b.open()}));
   grp('استكشف');
@@ -3392,6 +3404,73 @@ async function pushBtn(b){
       const r=await fetch(PUSHU+'/sub',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(s)});if(!r.ok)throw 0;
       set(true);toast('فُعّل التذكير: يصلك كل صباح حديثٌ من شمائله صلى الله عليه وسلم، وكل جمعة تذكيرٌ بالصلاة عليه.',5000)
     }catch(e){toast('تعذّر تفعيل التذكير الآن. حاول بعد قليل.',4000)}finally{b.disabled=false}}}
+
+/* ---------- القراءة بدون إنترنت: the texts are saved by themselves; the page images only when the reader asks ---------- */
+const OFFC=()=>caches.open('sira-img');
+const OFFI=()=>[...new Set(Object.values(SXIMGMAP).map(m=>'img/'+m.f))];
+const SXOFF={tx:{d:0,t:0,run:false},im:{d:0,t:0,run:false,stop:false}};
+async function sxFillTexts(){
+  if(!('caches' in window)||typeof DH==='undefined'||SXOFF.tx.run)return;SXOFF.tx.run=true;
+  try{const c=await dataCache();
+    const want=new Map(Object.keys(DH).map(p=>{const u=p+'?h='+DH[p];return [new URL(u,location.href).href,u]}));
+    for(const r of await c.keys()){if(!want.has(r.url))await c.delete(r)}
+    SXOFF.tx.t=want.size;SXOFF.tx.d=0;
+    for(const [abs,u] of want){
+      if(!(await c.match(u))){if(navigator.onLine===false)break;
+        const r=await fetch(u).catch(()=>null);if(!r||!r.ok)break;await c.put(u,new Response(await r.text(),{headers:{'Content-Type':'application/json'}}))}
+      SXOFF.tx.d++;offPaint()}
+  }catch(e){}SXOFF.tx.run=false;offPaint()}
+setTimeout(sxFillTexts,4000);addEventListener('online',()=>setTimeout(sxFillTexts,2000));
+
+async function offCountImgs(){const L=OFFI();SXOFF.im.t=L.length;
+  try{const c=await OFFC();const have=new Set((await c.keys()).map(r=>r.url));SXOFF.im.d=L.filter(u=>have.has(new URL(u,location.href).href)).length}catch(e){SXOFF.im.d=0}}
+async function offSaveImgs(){
+  if(SXOFF.im.run)return;SXOFF.im.run=true;SXOFF.im.stop=false;SXOFF.im.err=false;offPaint();
+  try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist().catch(()=>{})}catch(e){}
+  const c=await OFFC(),L=OFFI(),have=new Set((await c.keys()).map(r=>r.url));
+  const q=L.filter(u=>!have.has(new URL(u,location.href).href));SXOFF.im.d=L.length-q.length;SXOFF.im.t=L.length;
+  const work=async()=>{while(q.length&&!SXOFF.im.stop){const u=q.shift();
+    try{const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw 0;await c.put(u,r);SXOFF.im.d++;offPaint()}catch(e){SXOFF.im.err=true;SXOFF.im.stop=true}}};
+  await Promise.all([work(),work(),work(),work()]);
+  SXOFF.im.run=false;offPaint()}
+async function offDelImgs(){if(!confirm('هل تريد حذف صور الصفحات المحفوظة من جهازك؟ ستبقى النصوص محفوظة.'))return;
+  SXOFF.im.stop=true;try{await caches.delete('sira-img')}catch(e){}SXOFF.im.d=0;offPaint()}
+
+const OFFMB=125;
+const offIc=k=>k?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+  :'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>';
+function offPaint(){
+  const B=document.getElementById('offBody');if(!B||B.closest('[hidden]'))return;B.innerHTML='';
+  const box=(ok,title,txt)=>{const d=el('div','off-st');const i=el('span','ic');i.innerHTML=offIc(ok);const w=el('div');w.style.flex='1';
+    w.append(el('b',null,title),el('p',null,txt));d.append(i,w);B.append(d);return w};
+  const bar=(w,d,t)=>{const b=el('div','off-bar');const i=el('i');i.style.width=Math.round(d/Math.max(t,1)*100)+'%';b.append(i);w.append(b)};
+  // the texts
+  const txDone=typeof DH==='undefined'||(SXOFF.tx.t&&SXOFF.tx.d>=SXOFF.tx.t);
+  if(txDone)box(true,'نصوص الكتب محفوظة في جهازك','يمكنك قراءة الكتب كلها والبحث فيها وفتح الآيات دون اتصال بالإنترنت، وإذا صدر تحديثٌ نُزِّل ما تغيّر منها فحسب.');
+  else{const w=box(false,'جارٍ حفظ نصوص الكتب في جهازك',navigator.onLine===false?'يُستأنف الحفظ عند الاتصال بالإنترنت.':'يكتمل خلال لحظات ما دام الموقع مفتوحاً.');bar(w,SXOFF.tx.d,SXOFF.tx.t)}
+  // the page images
+  const t=SXOFF.im.t,d=SXOFF.im.d,mb=ar(OFFMB);
+  if(t&&d>=t){const w=box(true,'صور الصفحات محفوظة كلها','أصبح الموقع كله متاحاً دون اتصال بالإنترنت.');
+    const x=el('button','off-del','حذف الصور المحفوظة ('+mb+' ميجابايت)');x.type='button';x.onclick=offDelImgs;w.append(x)}
+  else if(SXOFF.im.run){const w=box(false,'صور الصفحات المطبوعة','جارٍ الحفظ… '+ar(d)+' من '+ar(t)+' صفحة، ويستمر الحفظ بعد إغلاق هذه النافذة ما دام الموقع مفتوحاً.');bar(w,d,t)}
+  else{const w=box(false,'صور الصفحات المطبوعة',SXOFF.im.err?'توقف الحفظ عند '+ar(d)+' من '+ar(t)+' صفحة لانقطاع الاتصال، ويمكنك متابعته عند الاتصال بالإنترنت.'
+      :d?'حُفظ منها '+ar(d)+' من '+ar(t)+' صفحة. احفظها كلها لتتمكّن من المقارنة بالمطبوع دون اتصال بالإنترنت.':'لم يُحفظ منها إلا ما فتحته من الصفحات. احفظها كلها (نحو '+mb+' ميجابايت) لتتمكّن من المقارنة بالمطبوع دون اتصال بالإنترنت.');
+    if(d)bar(w,d,t);
+    const s=el('button','off-btn',d?'متابعة حفظ الصور':'حفظ صور الصفحات كلها');s.type='button';s.onclick=offSaveImgs;w.append(s)}
+  B.append(el('p','off-note','أما التذكير اليومي وتذكير الجمعة فيصلان عبر الإنترنت.'))}
+async function fxOffline(){
+  let S=document.getElementById('offSheet');
+  if(!S){const bk=el('div','sheet-back');bk.id='offBack';S=el('div','sheet');S.id='offSheet';S.setAttribute('role','dialog');S.setAttribute('aria-label','القراءة دون اتصال');
+    const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');
+    x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.style.cssText='position:absolute;inset-inline-start:6px;top:6px';hd.append(x);
+    const B=el('div');B.id='offBody';S.append(hd,el('h4',null,'القراءة دون اتصال'),B);document.body.append(bk,S);
+    const close=()=>{bk.hidden=true;S.hidden=true};bk.onclick=close;x.onclick=close}
+  document.getElementById('offBack').hidden=false;S.hidden=false;
+  if(!('caches' in window)){document.getElementById('offBody').innerHTML='<p class="off-note">لا يتيح متصفحك الحفظ للقراءة دون اتصال بالإنترنت.</p>';return}
+  if(!SXOFF.im.run)await offCountImgs();
+  if(typeof DH!=='undefined'&&!SXOFF.tx.run){SXOFF.tx.t=Object.keys(DH).length;try{const c=await dataCache();let n=0;for(const p in DH)if(await c.match(p+'?h='+DH[p]))n++;SXOFF.tx.d=n}catch(e){}
+    if(SXOFF.tx.d<SXOFF.tx.t)sxFillTexts()}
+  offPaint()}
 
 /* ---------- مواضع الخلاف مع المطبوع: علامات حمراء، وقراءة الصفحات المعلَّمة وحدها ---------- */
 let MK={};getJSON('data/marks.json').then(d=>{MK=d||{};renderMkBooks()}).catch(()=>{});
@@ -3820,17 +3899,7 @@ renderHome();renderShelfS();
 (function(){const h=location.hash,m=h.match(/^#v(\d+)p(\d+)/);if(m&&VOLS[+m[1]]){history.replaceState(null,'',location.pathname);history.pushState({r:1},'','#v'+m[1]+'p'+m[2]);openHash(h,false)}})();
 </script>
 
-<script>
-(function(){if(!('caches' in window)||typeof DH==='undefined')return;
-  async function fill(){try{const c=await dataCache();
-    const want=new Map(Object.keys(DH).map(p=>{const u=p+'?h='+DH[p];return [new URL(u,location.href).href,u]}));
-    for(const r of await c.keys()){if(!want.has(r.url))await c.delete(r)}
-    for(const [abs,u] of want){if(navigator.onLine===false)return;if(await c.match(u))continue;
-      const r=await fetch(u);if(!r.ok)continue;await c.put(u,new Response(await r.text(),{headers:{'Content-Type':'application/json'}}))}
-  }catch(e){}}
-  setTimeout(fill,4000);addEventListener('online',()=>setTimeout(fill,2000));
-})();
-</script>
+
 <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});</script>
 </body>
 </html>
