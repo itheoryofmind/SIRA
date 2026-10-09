@@ -26,7 +26,7 @@
 <script>document.documentElement.lang="ar";document.documentElement.dir="rtl"</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0e2a2e">
+<meta name="theme-color" content="#07110E">
 <meta name="robots" content="noindex,nofollow">
 <script>try{var t=JSON.parse(localStorage.getItem("theme")||"null");if(t&&t!=="auto"&&t!=="brown")document.documentElement.setAttribute("data-theme",t)}catch(e){}
 // the preview runs inside a frame: history calls must never stop the page
@@ -247,6 +247,7 @@ footer .waqf{max-width:520px;margin:8px auto 0;font-family:var(--text);font-size
 .banner{position:fixed;inset-inline:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:60;background:var(--brown);color:var(--on-brown);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;font-size:14px}
 .bar{height:6px;border-radius:3px;background:rgba(255,255,255,.2);overflow:hidden}
 .bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s}
+.toast.low{top:auto;bottom:calc(84px + env(safe-area-inset-bottom))}
 .toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translateX(-50%);z-index:90;background:var(--brown);color:var(--on-brown);padding:9px 16px;border-radius:20px;font-size:14px;box-shadow:var(--shadow);max-width:90vw;text-align:center;transition:opacity .3s}
 
 /* ---------- Reader ---------- */
@@ -517,6 +518,8 @@ textarea.notebox{width:100%;min-height:80px;border:1px solid var(--line);border-
 .fld>span{display:block;font-size:14px;font-weight:600;margin-bottom:5px}
 .fld select,.fld textarea,.fld input[type=text]{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:10px;background:var(--raised);color:var(--ink);font:inherit;font-size:16px;padding:9px 10px}
 .fld input[type=file]{font:inherit;font-size:14px;max-width:100%}
+.fld{position:relative}.vh{position:absolute!important;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+.filebtn{display:flex;align-items:center;gap:10px;margin-top:6px;border:1px dashed var(--line);border-radius:10px;padding:10px 12px;background:var(--raised);cursor:pointer}.filebtn b{flex:none;font-size:14px;color:var(--brass)}.filebtn small{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:13px}
 .fld.bad select,.fld.bad textarea,.fld.bad input{border-color:var(--clay)}
 .fbref{font-size:13.5px;color:var(--muted);background:var(--raised);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:0 0 12px;line-height:1.7}
 .schhd{position:sticky;top:-14px;z-index:2;display:flex;align-items:center;gap:8px;background:var(--raised);margin:-14px -16px 0;padding:10px 16px 4px}
@@ -745,7 +748,7 @@ body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
 .fx-row .pg{flex:none;font-size:13px;color:var(--brass)}
 .fx-chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}.fx-chips::-webkit-scrollbar{display:none}
 .fx-chip{flex:none;min-height:40px;border-radius:20px;border:1px solid var(--line);background:var(--raised);color:var(--ink);font-family:var(--text);font-size:17px;padding:0 14px;white-space:nowrap}
-.fx-chip.on{background:var(--brown);color:var(--on-brown);border-color:var(--brown)}
+.fx-chip.on{background:var(--palm);color:var(--surface);border-color:var(--palm)}
 .fx-src{border-top:1px solid var(--line);padding:12px 0}
 .fx-src h3{margin:0 0 2px;font-family:var(--text);font-size:19px}
 .fx-src .by{font-size:13px;color:var(--muted);margin:0 0 6px}
@@ -985,6 +988,12 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 #dataSec .note{border:0!important;padding:0!important;font-family:var(--text);font-size:15.5px;line-height:1.8;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
+/* the book's own «ثم دخلت السنة…» in a year's list: a divider */
+.yr-mk{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--brass);font-family:var(--text);font-size:16px;padding:12px 0 4px;text-align:start}
+.yr-mk::before,.yr-mk::after{content:"";flex:1;height:1px;background:var(--line)}
+.yr-mk small{font-size:12px;color:var(--muted)}
+.kh-c.mx{color:var(--ink);text-shadow:0 0 3px var(--surface),0 0 3px var(--surface)}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -997,11 +1006,11 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
  <linearGradient id="domeG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4E9B7A"/><stop offset="1" stop-color="#245442"/></linearGradient>
 </defs><g><circle cx="127.7" cy="26.0" r="0.50" class="st tw"/><circle cx="208.7" cy="57.4" r="0.50" class="st"/><circle cx="86.0" cy="16.5" r="0.90" class="st tw"/><circle cx="38.7" cy="66.0" r="1.10" class="st tw"/><circle cx="89.3" cy="95.6" r="0.50" class="st"/><circle cx="155.5" cy="146.5" r="0.50" class="st"/><circle cx="54.9" cy="65.2" r="1.10" class="st tw"/><circle cx="121.8" cy="123.2" r="0.60" class="st tw"/><circle cx="222.2" cy="31.4" r="0.50" class="st"/><circle cx="28.0" cy="12.7" r="0.60" class="st"/><circle cx="207.1" cy="117.5" r="0.90" class="st"/><circle cx="177.1" cy="47.8" r="0.60" class="st"/><circle cx="97.2" cy="87.9" r="1.10" class="st"/><circle cx="135.2" cy="69.5" r="1.10" class="st"/><circle cx="49.1" cy="65.0" r="0.70" class="st tw"/><circle cx="190.8" cy="9.7" r="0.50" class="st"/><circle cx="222.9" cy="131.8" r="0.70" class="st"/><circle cx="137.8" cy="76.5" r="0.90" class="st tw"/><circle cx="39.8" cy="43.4" r="0.50" class="st tw"/><circle cx="272.0" cy="98.5" r="0.90" class="st"/><circle cx="151.4" cy="101.6" r="0.50" class="st"/><circle cx="139.8" cy="93.2" r="0.90" class="st tw"/><circle cx="297.5" cy="22.9" r="0.60" class="st"/><circle cx="354.2" cy="76.5" r="0.60" class="st"/><circle cx="213.9" cy="133.0" r="0.90" class="st"/><circle cx="110.4" cy="64.6" r="0.70" class="st"/><circle cx="149.3" cy="37.7" r="0.50" class="st tw"/><circle cx="92.6" cy="38.1" r="0.90" class="st"/><circle cx="73.7" cy="45.2" r="0.60" class="st"/><circle cx="145.1" cy="86.7" r="0.60" class="st"/><circle cx="200.9" cy="94.2" r="0.50" class="st"/><circle cx="336.7" cy="143.0" r="1.10" class="st"/><circle cx="156.4" cy="19.1" r="0.90" class="st tw"/><circle cx="29.7" cy="34.5" r="0.60" class="st tw"/><circle cx="233.5" cy="18.9" r="1.10" class="st tw"/><circle cx="42.8" cy="57.1" r="0.50" class="st tw"/><circle cx="83.4" cy="58.9" r="0.70" class="st"/><circle cx="234.1" cy="73.2" r="0.50" class="st"/><circle cx="383.4" cy="72.0" r="0.90" class="st"/><circle cx="59.1" cy="113.5" r="0.70" class="st"/><circle cx="268.4" cy="79.4" r="0.60" class="st"/><circle cx="205.8" cy="25.4" r="1.10" class="st"/><circle cx="293.6" cy="47.5" r="0.50" class="st"/><circle cx="103.7" cy="57.5" r="0.60" class="st"/><circle cx="89.1" cy="83.1" r="1.10" class="st"/><circle cx="89.2" cy="122.5" r="0.60" class="st"/><circle cx="316.6" cy="112.0" r="0.60" class="st tw"/><circle cx="192.2" cy="110.7" r="0.50" class="st"/><circle cx="184.4" cy="32.3" r="1.10" class="st"/><circle cx="174.8" cy="140.8" r="0.70" class="st"/><circle cx="143.3" cy="36.2" r="0.60" class="st"/><circle cx="133.0" cy="74.5" r="1.10" class="st"/><circle cx="187.2" cy="99.3" r="0.50" class="st"/><circle cx="49.8" cy="60.7" r="0.60" class="st"/><circle cx="72.2" cy="119.2" r="0.70" class="st tw"/><circle cx="365.4" cy="109.4" r="0.90" class="st"/><circle cx="365.7" cy="109.8" r="0.60" class="st"/><circle cx="14.5" cy="90.3" r="0.90" class="st"/><circle cx="59.8" cy="124.7" r="0.90" class="st"/><circle cx="137.9" cy="84.1" r="0.60" class="st tw"/><circle cx="309.4" cy="110.1" r="0.50" class="st"/><circle cx="360.6" cy="67.3" r="0.60" class="st"/><circle cx="84.6" cy="40.8" r="0.70" class="st"/><circle cx="295.7" cy="51.6" r="1.10" class="st"/><circle cx="54.1" cy="136.9" r="0.70" class="st"/><circle cx="257.1" cy="123.0" r="1.10" class="st"/><circle cx="354.6" cy="77.2" r="1.10" class="st tw"/><circle cx="199.0" cy="131.4" r="0.60" class="st"/><circle cx="300.4" cy="25.9" r="0.60" class="st"/><circle cx="281.0" cy="85.2" r="0.70" class="st"/></g>
 <circle cx="268" cy="34" r="22" fill="url(#moonG)"/><path d="M271 24a11 11 0 1 0 2.6 20a8.8 8.8 0 1 1 -2.6 -20z" fill="#F3DFA6"/></svg><svg class="sx-band" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120 L120 96 L240 110 L380 80 L520 104 L640 70 L700 60 L760 84 L860 92 L960 72 L1060 98 L1200 86 L1200 200 L0 200Z" fill="#132A22"/><path d="M0 150 Q300 124 600 146 T1200 138 L1200 200 L0 200Z" fill="#0D1C17"/></svg><svg class="sx-ground" viewBox="0 290 390 130" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><defs>
- <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#07110E"/><stop offset=".55" stop-color="#10241D"/><stop offset=".86" stop-color="#1D3A30"/><stop offset="1" stop-color="#2A4A3C"/></linearGradient>
- <radialGradient id="moonG" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#F6E3B0" stop-opacity=".55"/><stop offset="1" stop-color="#F6E3B0" stop-opacity="0"/></radialGradient>
- <radialGradient id="horG" cx=".5" cy="1" r=".7"><stop offset="0" stop-color="#E2C27E" stop-opacity=".18"/><stop offset="1" stop-color="#E2C27E" stop-opacity="0"/></radialGradient>
- <linearGradient id="domeG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4E9B7A"/><stop offset="1" stop-color="#245442"/></linearGradient>
-</defs><ellipse cx="195" cy="420" rx="260" ry="120" fill="url(#horG)"/>
+ <linearGradient id="skyG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#07110E"/><stop offset=".55" stop-color="#10241D"/><stop offset=".86" stop-color="#1D3A30"/><stop offset="1" stop-color="#2A4A3C"/></linearGradient>
+ <radialGradient id="moonG2" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#F6E3B0" stop-opacity=".55"/><stop offset="1" stop-color="#F6E3B0" stop-opacity="0"/></radialGradient>
+ <radialGradient id="horG2" cx=".5" cy="1" r=".7"><stop offset="0" stop-color="#E2C27E" stop-opacity=".18"/><stop offset="1" stop-color="#E2C27E" stop-opacity="0"/></radialGradient>
+ <linearGradient id="domeG2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4E9B7A"/><stop offset="1" stop-color="#245442"/></linearGradient>
+</defs><ellipse cx="195" cy="420" rx="260" ry="120" fill="url(#horG2)"/>
 <!-- far mountains: Hira near Makkah, Uhud near Madinah -->
 <path d="M0 352 L28 336 L52 344 L84 318 L104 330 L128 312 L150 328 L172 322 L196 338 L222 330 L248 340 L268 300 L280 292 L292 304 L312 326 L336 318 L360 332 L390 324 L390 420 L0 420Z" fill="#132A22"/>
 <path d="M0 370 Q60 354 120 366 T240 362 T390 358 L390 420 L0 420Z" fill="#0D1C17"/>
@@ -1022,7 +1031,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
  <rect x="18" y="52" width="74" height="30" fill="#08110E" stroke="#E2C27E" stroke-width=".7" stroke-opacity=".55"/>
  <g fill="#F6D58A" opacity=".75"><rect x="26" y="62" width="4" height="9" rx="2"/><rect x="36" y="62" width="4" height="9" rx="2"/><rect x="70" y="62" width="4" height="9" rx="2"/><rect x="80" y="62" width="4" height="9" rx="2"/></g>
  <rect x="40" y="44" width="30" height="9" fill="#0B1612" stroke="#E2C27E" stroke-width=".6" stroke-opacity=".6"/>
- <path d="M40 44 C40 22 47 12 55 6 C63 12 70 22 70 44Z" fill="url(#domeG)" stroke="#E2C27E" stroke-width=".7"/>
+ <path d="M40 44 C40 22 47 12 55 6 C63 12 70 22 70 44Z" fill="url(#domeG2)" stroke="#E2C27E" stroke-width=".7"/>
  <path d="M55 6 V-4" stroke="#E2C27E" stroke-width="1.2"/><path d="M58 -8 a3.5 3.5 0 1 0 0 6 a2.8 2.8 0 1 1 0 -6z" fill="#E2C27E"/>
  <g fill="#0A1310" stroke="#E2C27E" stroke-width=".7">
   <path d="M2 82 V20 h7 v62z"/><path d="M0 34 h11 v3 H0z"/><path d="M0 56 h11 v3 H0z"/><path d="M2 20 l3.5 -12 l3.5 12z"/>
@@ -1168,7 +1177,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 
     <section>
       <div class="actions">
-        <button class="action main" id="continue" type="button"><b id="contT">ابدأ القراءة</b><span id="contS">من أول الجزء الأول</span></button>
+        <button class="action main" id="continueL" type="button"><b id="contTL">ابدأ القراءة</b><span id="contSL">من أول الجزء الأول</span></button>
         <button class="action" id="openToc" type="button"><b>أبواب الكتاب</b><span>الأجزاء والكتب والأبواب وفهارسها</span></button>
       </div>
       <button class="treecard" id="openZubda" type="button"><svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="6" y="6" width="15" height="15" rx="2"/><rect x="27" y="6" width="15" height="15" rx="2"/><rect x="6" y="27" width="15" height="15" rx="2"/><rect x="27" y="27" width="15" height="15" rx="2"/></svg><span><b>الدرر في لمحة</b><small>الأجزاء الستة عشر وأبوابها على خريطة واحدة، ومن كل باب إلى صفحته</small></span></button>
@@ -1267,7 +1276,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
     <button class="icon" id="rBack" aria-label="الرجوع للرئيسية"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg></button>
     <div class="ttl" id="rTitle"></div>
     <div class="modes" role="group" aria-label="طريقة العرض"><button type="button" data-v="img">صور</button><button type="button" data-v="txt">نص</button></div>
-    <div class="pgbox"><label for="pg" class="count">ص</label><input id="pg" type="number" inputmode="numeric" min="1"><span id="tot" class="num"></span></div>
+    <div class="pgbox"><label for="pg" class="count">ص</label><input id="pg" type="text" inputmode="numeric" autocomplete="off" aria-label="رقم الصفحة"><span id="tot" class="num"></span></div>
   </div>
   <button class="backchip" id="backChip" type="button" hidden></button>
   <div class="panes" id="panes">
@@ -1379,7 +1388,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
   <form id="fbForm" method="POST" enctype="multipart/form-data" target="fbFrame" novalidate>
     <label class="fld" id="fbTypeF"><span>نوع الملاحظة</span><select id="fbType" name="النوع"></select></label>
     <label class="fld"><span id="fbMsgL">الملاحظة</span><textarea id="fbMsg" name="الملاحظة" rows="4" placeholder="اكتب ما لاحظته بإيجاز"></textarea></label>
-    <label class="fld" id="fbImgF"><span>صورة توضّح الملاحظة <small id="fbImgReq"></small></span><input type="file" id="fbImg" name="attachment" accept="image/*"></label>
+    <label class="fld" id="fbImgF"><span>صورة توضّح الملاحظة <small id="fbImgReq"></small></span><span class="filebtn"><b>اختر صورة</b><small id="fbImgN">لم تُختر صورة</small></span><input type="file" id="fbImg" class="vh" name="attachment" accept="image/*"></label>
     <label class="fld"><span id="fbWhoL">للتواصل معك <small>(اختياري)</small></span><input type="text" id="fbWho" name="المرسل" placeholder="الاسم أو البريد أو الجوال" autocomplete="off"></label>
     <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
     <button type="submit" class="btn btn-primary" id="fbSend">إرسال</button>
@@ -1419,7 +1428,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 <div class="overlay bkpage" id="bookPage" hidden role="dialog" aria-label="مختصر سيرة الرسول">
   <div class="head"><h2 style="flex:1">مختصر سيرة الرسول ﷺ</h2><button class="icon" id="bookClose" aria-label="إغلاق"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div class="body">
-    <div class="bkhead"><p>تأليف الإمام الشيخ</p><h3>محمد بن عبدالوهاب</h3><p>رحمه الله (١١١٥–١٢٠٦هـ)</p><p>صحّحه وقابله على أصوله: المشايخ عبدالرحمن بن ناصر البراك، وعبدالعزيز بن عبدالله الراجحي، ومحمد العلي البراك</p><p>مؤلفات الشيخ، القسم الثالث · طبعة جامعة الإمام محمد بن سعود الإسلامية · ٣٤٥ صفحة</p></div>
+    <div class="bkhead"><p>تأليف الإمام الشيخ</p><h3>محمد بن عبدالوهاب</h3><p>رحمه الله (١١١٥–١٢٠٦هـ)</p><p>صحّحه وقابله على أصوله: المشايخ عبدالرحمن بن ناصر البراك، وعبدالعزيز بن عبدالله الراجحي، ومحمد العلي البراك</p><p>مؤلفات الشيخ، القسم الثالث · طبعة جامعة الإمام محمد بن سعود الإسلامية</p></div>
     <div class="actions"><button class="action main" id="bkGo" type="button"><b id="bkGoT">ابدأ القراءة</b><span id="bkGoS">من مقدمة الطبعة</span></button></div>
     <form class="searchbox" id="bkForm" role="search" style="margin-top:14px"><input id="bkQ" type="search" placeholder="ابحث في مختصر السيرة…" aria-label="البحث في مختصر السيرة" enterkeyhint="search" autocomplete="off"><button class="btn btn-primary" type="submit">بحث</button></form>
     <div class="results" id="bkRes"></div>
@@ -1428,7 +1437,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
     <h4>أبواب الكتاب</h4>
     <div class="bktoc" id="bkToc"></div>
     <h4>عن هذه النسخة</h4>
-    <p class="note">النص من نشرة وزارة الشؤون الإسلامية (المكتبة الشاملة)، وهو نص هذه الطبعة نفسها، رُبط بصفحات المطبوع صفحةً صفحة، وقوبل بصورها، وطُبّق عليه جدول التصويبات المطبوع في آخر الكتاب. والآيات بنص مجمع الملك فهد وخطه، وحواشي المطبوع تُعرض صورةً كما طُبعت. والعناوين الباهتة من النسخة الرقمية وليست في المطبوع. والمعتمد عند النقل صورة الصفحة: زر «قارن بالصورة».</p>
+    <p class="note">النص من نشرة وزارة الشؤون الإسلامية (المكتبة الشاملة)، وهو نص هذه الطبعة نفسها، رُبط بصفحات المطبوع صفحةً صفحة، وقوبل بصورها، وطُبّق عليه جدول التصويبات المطبوع في آخر الكتاب. والآيات بنص مجمع الملك فهد وخطه، ولا تُعرض حواشي المطبوع. والعناوين الباهتة من النسخة الرقمية وليست في المطبوع. والمعتمد عند النقل صورة الصفحة: زر «قارن بالصورة».</p>
   </div>
 </div>
 <div class="overlay bkpage" id="zadPage" hidden role="dialog" aria-label="كتاب">
@@ -1459,7 +1468,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1630';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1713';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1519,6 +1528,9 @@ const SPINE=['','العقائد','التوحيد','الأسماء والصفات
 const LEATHER=[['#5a3520','#3b2213'],['#4d2b1a','#2f190d'],['#633a1f','#40240f'],['#3f3320','#282013'],['#5c2e22','#3a1b12']];
 const $=s=>document.querySelector(s);
 const AR='٠١٢٣٤٥٦٧٨٩';const ar=x=>String(x).replace(/\d/g,d=>AR[d]);
+// a number with its counted noun, as Arabic counts it (g: after a preposition, so the dual is genitive)
+const NW={'موضع':['موضع واحد','موضعان','مواضع','موضعاً','موضع','موضعين'],'صفحة':['صفحة واحدة','صفحتان','صفحات','صفحة','صفحة','صفحتين'],'جزء':['جزء واحد','جزءان','أجزاء','جزءاً','جزء','جزأين'],'سؤال':['سؤال واحد','سؤالان','أسئلة','سؤالاً','سؤال','سؤالين'],'كلمة':['كلمة واحدة','كلمتان','كلمات','كلمة','كلمة','كلمتين']};
+const CNT=(k,w,g)=>{const f=NW[w];if(k===1)return f[0];if(k===2)return g?f[5]:f[1];const r=k%100;return ar(k)+' '+(r>=3&&r<=10?f[2]:r>=11?f[3]:f[4])};
 const jOf=n=>{const b=mbOf(n),i=b.ps.indexOf(n);return b.jn?b.jn[i]:i+1};
 const partName=n=>mbOf(n)?mbOf(n).sh+(mbOf(n).ps.length>1?' ج'+ar(jOf(n)):''):isB(n)?'مختصر السيرة':n?'الجزء '+ORD[n]:'صفحة العنوان';
 const short=n=>n?'ج'+ar(n):'العنوان';
@@ -1527,14 +1539,15 @@ const nl=s=>s.replace(/[إأآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه'
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 /* appearance: automatic (the device's light/dark setting), brown (the dark brown), night (near black), white */
 const THEMES=[['auto','تلقائي','linear-gradient(90deg,#f1e7d2 50%,#201911 50%)'],['night','ليلي','#000'],['white','أبيض','#fff']];
+const THEMEC='#07110E';   // the status bar colour (the Sira site sets its own)
 function applyTheme(t){
   const r=document.documentElement;if(t&&t!=='auto')r.setAttribute('data-theme',t);else r.removeAttribute('data-theme');
-  const m=document.querySelector('meta[name=theme-color]');if(m)m.content=t==='night'?'#000000':'#3b2616';
+  const m=document.querySelector('meta[name=theme-color]');if(m)m.content=t==='night'?'#000000':THEMEC;
   document.querySelectorAll('.themes button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===(t||'auto')));
 }
 document.querySelectorAll('.themes').forEach(box=>THEMES.forEach(([k,n,c])=>{const b=el('button');b.type='button';b.dataset.t=k;const i=document.createElement('i');i.style.background=c;b.append(i,document.createTextNode(n));b.onclick=()=>{LS.set('theme',k);applyTheme(k)};box.append(b)}));
 {let t=LS.get('theme','auto');if(t==='brown'){t='auto';LS.set('theme',t)}applyTheme(t)}
-function toast(msg,ms){const e=document.createElement('div');e.className='toast';e.setAttribute('role','status');e.textContent=msg;document.body.append(e);setTimeout(()=>{e.style.opacity='0';setTimeout(()=>e.remove(),300)},ms||2200)}
+function toast(msg,ms,low){const e=document.createElement('div');e.className='toast'+(low?' low':'');e.setAttribute('role','status');e.textContent=msg;document.body.append(e);setTimeout(()=>{e.style.opacity='0';setTimeout(()=>e.remove(),300)},ms||2200)}
 function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
 
 if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='lib/pdf.worker.js';
@@ -1562,7 +1575,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "c036daf725", "data/sx_feat.json": "90c82faccc", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/saadi.json": "bf53b5261e"};
+const DH={"data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "c036daf725", "data/sx_feat.json": "d4cbce21d9", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -1631,7 +1644,7 @@ function renderHits(R,res,filterN){
   let last=-1;const frag=document.createDocumentFragment();
   for(const h of list){
     if(h.n!==last){
-      last=h.n;const g=el('div','rgroup');g.append(el('span',null,partName(h.n)),el('small',null,ar(res.out.filter(x=>x.n===h.n).length)+' موضع'));frag.append(g);
+      last=h.n;const g=el('div','rgroup');g.append(el('span',null,partName(h.n)),el('small',null,CNT(res.out.filter(x=>x.n===h.n).length,'موضع')));frag.append(g);
     }
     const b=el('button','hit');b.type='button';
     const w=el('div','where');w.append(partName(h.n)+' · ص '+ar(h.p));
@@ -1677,7 +1690,7 @@ async function homeSearch(v){
   const sel=$('#fpart');sel.innerHTML='';
   const all=el('option',null,'كل الأجزاء');all.value='0';sel.append(all);
   parts.forEach(n=>{const o=el('option',null,partName(n)+' ('+ar(res.out.filter(h=>h.n===n).length)+')');o.value=n;sel.append(o)});
-  $('#rcount').textContent=res.out.length?ar(res.out.length)+' موضع في '+ar(parts.length)+' جزء':'';
+  $('#rcount').textContent=res.out.length?CNT(res.out.length,'موضع')+' في '+CNT(parts.length,'جزء',1):'';
   $('#filterRow').hidden=!res.out.length;
   renderHits(R,res,0);
 }
@@ -1695,7 +1708,7 @@ async function renderHome(){
   if(lr&&lr.n){$('#contT').textContent='تابع القراءة';$('#contS').textContent=partName(lr.n)+' · ص '+ar(lr.p)}
   else{$('#contT').textContent='ابدأ القراءة';$('#contS').textContent='من أول الجزء الأول'}
   const F=favs(),N=notes();const keys=[];F.forEach(x=>keys.push(x.n+':'+x.p));Object.keys(N).forEach(k=>{if(N[k]&&!keys.includes(k))keys.push(k)});
-  $('#favSec').hidden=!keys.length;$('#favCount').textContent=keys.length?ar(keys.length)+' صفحة':'';
+  $('#favSec').hidden=!keys.length;$('#favCount').textContent=keys.length?CNT(keys.length,'صفحة'):'';
   const FV=$('#favs');FV.innerHTML='';
   keys.forEach(k=>{
     const [n,p]=k.split(':').map(Number);
@@ -1876,7 +1889,7 @@ async function renderIdx(){
   L.innerHTML='';const f=norm($('#idxq').value.trim());const has=t=>!f||norm(t).includes(f);
   const N=$('#idxNote');const MAX=300;let shown=0;const frag=document.createDocumentFragment();
   if(IX.tab==='q'){
-    N.textContent='الأسئلة التي تبدأ بـ«سُئل» ('+ar(D.q.length)+' سؤالاً)، مرتبة بالجزء والباب. اضغط على السؤال لتنتقل إلى صفحته.';
+    N.textContent='الأسئلة التي تبدأ بـ«سُئل» ('+CNT(D.q.length,'سؤال')+')، مرتبة بالجزء والباب. اضغط على السؤال لتنتقل إلى صفحته.';
     let lv=0,lh=null;
     for(const [v,p,h,t,ap] of D.q){
       if(!has(t)&&!has(h))continue;if(shown>=MAX)break;
@@ -1887,7 +1900,7 @@ async function renderIdx(){
   }else if(IX.tab==='s'){
     if(IX.sub==null){
       N.textContent='العلماء المصرَّح بأسمائهم في صدر الجواب أو القول أو الرسالة. العدد عدد المواضع.';
-      for(const [name,occ] of D.s){if(!has(name))continue;const r=el('button','irow');r.type='button';r.append(el('span',null,name),el('span',null,ar(occ.length)+' موضعاً'));r.onclick=()=>{IX.sub=name;$('#idxq').value='';renderIdx()};frag.append(r)}
+      for(const [name,occ] of D.s){if(!has(name))continue;const r=el('button','irow');r.type='button';r.append(el('span',null,name),el('span',null,CNT(occ.length,'موضع')));r.onclick=()=>{IX.sub=name;$('#idxq').value='';renderIdx()};frag.append(r)}
     }else{
       const occ=(D.s.find(x=>x[0]===IX.sub)||[,[]])[1];
       const bk=el('button','btn btn-link back','→ كل العلماء');bk.type='button';bk.onclick=()=>{IX.sub=null;renderIdx()};frag.append(bk,el('h5',null,IX.sub));
@@ -1901,7 +1914,7 @@ async function renderIdx(){
     if(IX.sub==null){
       N.textContent='الآيات المستشهد بها مرتبة بالسور، بحسب عزو الآيات في النسخة الرقمية.';
       const cnt={};for(const r of D.a)cnt[r[0]]=(cnt[r[0]]||0)+1;
-      S.forEach((name,i)=>{const c=cnt[i+1];if(!c||!has(name))return;const r=el('button','irow');r.type='button';r.append(el('span',null,ar(i+1)+'. سورة '+name),el('span',null,ar(c)+' موضعاً'));r.onclick=()=>{IX.sub=i+1;$('#idxq').value='';renderIdx()};frag.append(r)});
+      S.forEach((name,i)=>{const c=cnt[i+1];if(!c||!has(name))return;const r=el('button','irow');r.type='button';r.append(el('span',null,ar(i+1)+'. سورة '+name),el('span',null,CNT(c,'موضع')));r.onclick=()=>{IX.sub=i+1;$('#idxq').value='';renderIdx()};frag.append(r)});
     }else{
       const bk=el('button','btn btn-link back','→ كل السور');bk.type='button';bk.onclick=()=>{IX.sub=null;renderIdx()};frag.append(bk,el('h5',null,'سورة '+S[IX.sub-1]));
       N.textContent='';
@@ -1927,7 +1940,8 @@ async function renderToc(focus){
     const h=el('h5',null,isB(v.n)?BOOK(v.n):partName(v.n));h.id='toc'+v.n;box.append(h);
     box.append(el('p','note',v.d));
     const add=(t,p)=>{const b=el('button');b.type='button';b.append(el('span',null,t),el('span',null,'ص '+ar(p)));b.onclick=()=>{const ov=$('#tocOverlay'),y=ov.scrollTop;ov.hidden=true;openPart(v.n,p).then(()=>setBack('رجوع إلى الأبواب',()=>{ov.hidden=false;ov.scrollTop=y}))};box.append(b)};
-    if(isB(v.n)){box.append(el('p','note','تصحيح ومقابلة: الشيخ عبدالرحمن بن ناصر البراك، والشيخ عبدالعزيز بن عبدالله الراجحي، والشيخ محمد العلي البراك. طبعة جامعة الإمام محمد بن سعود الإسلامية (مؤلفات الشيخ، القسم الثالث).'));add('مقدمة الطبعة',3);add('أول الكتاب',7);add('فهرس الموضوعات المطبوع',v.f);add('جدول التصويبات المطبوع',339)}
+    if(mbOf(v.n))add('أول الجزء',v.s||1);
+    else if(isB(v.n)){box.append(el('p','note','تصحيح ومقابلة: الشيخ عبدالرحمن بن ناصر البراك، والشيخ عبدالعزيز بن عبدالله الراجحي، والشيخ محمد العلي البراك. طبعة جامعة الإمام محمد بن سعود الإسلامية (مؤلفات الشيخ، القسم الثالث).'));add('مقدمة الطبعة',3);add('أول الكتاب',7);if(v.f<=v.p)add('فهرس الموضوعات المطبوع',v.f);if(v.p>=339)add('جدول التصويبات المطبوع',339)}
     else{add('أول الجزء',1);add('الفهرس المطبوع (اضغط فيه على الموضوع)',v.f)}
     H.filter(x=>x[0]===v.n).forEach(x=>add(x[2],x[1]));
   }
@@ -1995,14 +2009,22 @@ function richInline(s,hl,inQ,rep){
 }
 function appendHL(node,text,hl){
   if(!hl||!hl.length){node.append(text);return}
-  for(const w of text.split(/(\s+)/)){
-    if(/\S/.test(w)&&hl.some(h=>norm(w).includes(h)))node.append(el('mark',null,w));else node.append(w);
-  }
+  // the text normalised as the search terms are, each letter kept with its place in the original, so a phrase of several words is found too
+  let N='',I=[];for(let i=0;i<text.length;i++){const c=text[i];if(/\s/.test(c)){if(N.slice(-1)!==' '){N+=' ';I.push(i)}continue}const k=norm(c);for(const ch of k){N+=ch;I.push(i)}}
+  const rg=[];
+  for(const h of hl){if(!h)continue;const hh=norm(String(h)).replace(/\s+/g,' ').trim();if(!hh)continue;let at=0,j;
+    while((j=N.indexOf(hh,at))>=0){let a=I[j],b=I[j+hh.length-1]+1;
+      if(!/ /.test(hh)){while(a>0&&!/\s/.test(text[a-1]))a--;while(b<text.length&&!/\s/.test(text[b]))b++}   // one word: the whole word, as before
+      while(b<text.length&&/[\u064B-\u0652\u0670\u0640]/.test(text[b]))b++;
+      rg.push([a,b]);at=j+hh.length}}
+  if(!rg.length){node.append(text);return}
+  rg.sort((x,y)=>x[0]-y[0]);const M=[];for(const r of rg){const l=M[M.length-1];if(l&&r[0]<=l[1])l[1]=Math.max(l[1],r[1]);else M.push(r.slice())}
+  let p=0;for(const [a,b] of M){if(a>p)node.append(text.slice(p,a));node.append(el('mark',null,text.slice(a,b)));p=b}if(p<text.length)node.append(text.slice(p));
 }
 function midNote(words,places,diff){
   if(diff)return toast('النص الرقمي في هذا الموضع يخالف المطبوع، ظهر ذلك عند مقابلته بالصورة. المعتمد الصورة: اضغط «قارن بالصورة».',7000);
-  if(!words&&places>1)return toast('في هذه الصفحة '+ar(places)+' مواضع يخالف فيها النص الرقمي المطبوع، وهي معلَّمة في مواضعها. المعتمد الصورة: اضغط «قارن بالصورة».',7000);
-  toast((places>1?'في المطبوع في '+ar(places)+' مواضع من هذه الصفحة':'في المطبوع في هذا الموضع')+' كلامٌ'+(words?' (نحو '+ar(words)+' كلمات)':'')+' ليس في النص الرقمي، ظهر عند مقابلة النص بالصورة. المعتمد الصورة: اضغط «قارن بالصورة».',7000);
+  if(!words&&places>1)return toast('في هذه الصفحة '+CNT(places,'موضع')+' يخالف فيها النص الرقمي المطبوع، وهي معلَّمة في مواضعها. المعتمد الصورة: اضغط «قارن بالصورة».',7000);
+  toast((places>1?'في المطبوع في '+CNT(places,'موضع',1)+' من هذه الصفحة':'في المطبوع في هذا الموضع')+' كلامٌ'+(words?' (نحو '+CNT(words,'كلمة',1)+')':'')+' ليس في النص الرقمي، ظهر عند مقابلة النص بالصورة. المعتمد الصورة: اضغط «قارن بالصورة».',7000);
 }
 /* ---------- continuous reading: pages follow one another, each headed by its printed page number ---------- */
 const TX={n:-1,from:0,to:0,T:null,lock:false,raf:0};let BRP=false;   // BRP: square brackets are the print's own (not the digital edition's)
@@ -2259,18 +2281,21 @@ function loadPdf(n){
 }
 /* a page opened from the daily page, a search, an index, a link… is a visit: the reading place («تابع القراءة», the plan)
    moves only once the reader reads on from it (two pages away); «تابع القراءة», the plan and turning parts are reading */
-let READING=false,EXC=null;
+let READING=false,EXC=null,RET=null;
 function isReading(n,p){if(EXC&&n===EXC.n&&Math.abs(p-EXC.p)>=2)EXC=null;return !EXC}
 async function openPart(n,p,hl,noPush,view){
   if(HIDDEN.has(n)){toast('هذا الكتاب موقوف مؤقتاً حتى تكتمل مراجعته',3500);return}
-  if(!LS.get('chosen',0)&&!view){return chooseMode(()=>openPart(n,p,hl,noPush,VIEW))}
+  if(!LS.get('chosen',0)&&!view&&!VOLS[n].ni){return chooseMode(()=>openPart(n,p,hl,noPush,VIEW))}
+  if($('#reader').hidden){   // leaving the home: remember where it was (its scroll and any page open over it) to come back to it
+    const b=document.body,lk=b.classList.contains('ov-locked')||b.classList.contains('pg-locked')||b.classList.contains('sx-locked');
+    RET={y:lk?-parseInt(b.style.top||'0',10)||0:window.scrollY,ov:[...document.querySelectorAll('.overlay')].filter(o=>!o.hidden&&o.id!=='tocOverlay').map(o=>[o,o.scrollTop])}}
   EXC=READING?null:{n,p};READING=false;
   const seq=++openSeq;HL=hl||[];CMP=false;clearBack();
   if(view){VIEW=view;LS.set('view2',view)}
   if(VOLS[n].ni){VIEW='txt'}else if(!view)VIEW=LS.get('view2',VIEW);
   {const m=document.querySelector('#reader .modes');if(m)m.hidden=!!VOLS[n].ni}
   $('#home').hidden=true;$('#reader').hidden=false;document.body.classList.remove('immersive');
-  if(!LS.get('immHint')){LS.set('immHint','1');setTimeout(()=>{if(!$('#reader').hidden)toast('المس الصفحة لإخفاء الشريطين، والمسها مرة أخرى لإظهارهما',3500)},1800)}
+  if(!LS.get('immHint')){LS.set('immHint','1');setTimeout(()=>{if(!$('#reader').hidden)toast('المس الصفحة لإخفاء الشريطين، والمسها مرة أخرى لإظهارهما',3500,1)},1800)}
   $('#tocOverlay').hidden=true;$('#bookPage').hidden=true;$('#sxOverlay').hidden=true;$('#zadPage').hidden=true;
   $('#rTitle').textContent=partName(n);$('#tot').textContent='/ '+ar(VOLS[n].p);
   if(!noPush)history.pushState({r:1},'','#v'+n+'p'+(p||1));
@@ -2282,7 +2307,7 @@ async function openPart(n,p,hl,noPush,view){
 function setPage(p){
   const rd=cur.n&&isReading(cur.n,p);if(rd)planProgress(cur.n,p);cur.p=p;if(rd){LS.set('last'+cur.n,p);const lr=LS.get(LRK(cur.n),null);if(!lr||lr.n!==cur.n||lr.p!==p)LS.set(LRK(cur.n),{n:cur.n,p,f:0})}
   history.replaceState(history.state,'','#v'+cur.n+'p'+p);
-  $('#pg').value=p;updFav();
+  $('#pg').value=ar(p);updFav();
 }
 async function go(p,noText){
   const max=VOLS[cur.n].p;
@@ -2351,7 +2376,8 @@ async function buildHot(H,n,p,still){
 }
 function next(){if(loading)return;HL=[];if(cur.p>=VOLS[cur.n].p){if(cur.n<16||(mbOf(cur.n)&&mbOf(cur.n).ps.includes(cur.n+1))){READING=!EXC;openPart(cur.n+1,VOLS[cur.n+1].s||1,null,true)}else if(cur.n>=16)toast('هذه آخر صفحة في الكتاب')}else go(cur.p+1)}
 function prev(){if(loading)return;HL=[];if(cur.p<=(VOLS[cur.n].s||1)){if((cur.n>1&&!isB(cur.n))||(mbOf(cur.n)&&mbOf(cur.n).ps.includes(cur.n-1))){READING=!EXC;openPart(cur.n-1,VOLS[cur.n-1].p,null,true)}}else go(cur.p-1)}
-function closeReader(){clearTimeout(TX.sv);savePlace();clearBack();$('#reader').hidden=true;$('#home').hidden=false;hideSelBar();renderPlan();closeSheet();closeSearch();document.body.classList.remove('immersive');renderHome()}
+function closeReader(){clearTimeout(TX.sv);savePlace();clearBack();$('#reader').hidden=true;$('#home').hidden=false;hideSelBar();renderPlan();closeSheet();closeSearch();document.body.classList.remove('immersive');renderHome();
+  const r=RET;RET=null;if(!r)return;window.scrollTo(0,r.y);r.ov.forEach(([o,t])=>{o.hidden=false;o.scrollTop=t});if(!r.ov.length)requestAnimationFrame(()=>window.scrollTo(0,r.y))}
 $('#rBack').onclick=()=>{history.replaceState(null,'',location.pathname);closeReader()};   // the home button goes home, not one page back
 window.addEventListener('popstate',()=>{if(!openHash(location.hash,false)&&!$('#reader').hidden)closeReader()});
 $('#mNext').onclick=()=>{closeSheet();next()};$('#mPrev').onclick=()=>{closeSheet();prev()};
@@ -2359,7 +2385,7 @@ $('#qToc').onclick=()=>{renderToc(cur.n||1);$('#tocOverlay').hidden=false};
 $('#qNote').onclick=()=>{openSheet(true);setTimeout(()=>$('#note').focus(),60)};
 $('#qReport').onclick=()=>openFb('page');
 // jump to a page: on Enter, on «تم» of the phone keypad (blur) or on change; once per value
-function jumpTo(){const v=+$('#pg').value|0;if(!v||v===cur.p&&TX.n===cur.n)return;HL=[];clearBack();go(v).then(()=>setTimeout(()=>scrollToPage(cur.p),350))}
+function jumpTo(){const v=+$('#pg').value.replace(/[٠-٩]/g,d=>AR.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/\D/g,'')|0;if(!v||v===cur.p&&TX.n===cur.n)return;HL=[];clearBack();go(v).then(()=>setTimeout(()=>scrollToPage(cur.p),350))}
 $('#pg').addEventListener('change',jumpTo);$('#pg').addEventListener('blur',jumpTo);
 $('#pg').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('#pg').blur()}});
 $('#pg').addEventListener('focus',()=>setTimeout(()=>$('#pg').select(),30));
@@ -2481,16 +2507,15 @@ $('#mLink').onclick=async()=>{closeSheet();const u=pageUrl(),t=citation();
   copyText(t+'\n'+u,'نُسخ رابط الصفحة')};
 $('#mImg').onclick=async()=>{closeSheet();
   try{
-    if(!pdf||pdf._n!==cur.n)await loadPdf(cur.n,openSeq);
-    const pg=await pdf.getPage(cur.p),v=pg.getViewport({scale:2}),c=document.createElement('canvas');const band=90;c.width=v.width;c.height=v.height+band;
-    const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);
-    await pg.render({canvasContext:x,viewport:v}).promise;
-    if(PAPER==='beige'){x.globalCompositeOperation='multiply';x.fillStyle='#f2e6c6';x.fillRect(0,0,c.width,v.height);x.globalCompositeOperation='source-over'}
-    x.fillStyle='#3b2616';x.fillRect(0,v.height,c.width,band);x.fillStyle='#f6ecd8';x.font='36px Amiri, serif';x.textAlign='center';x.direction='rtl';
-    x.fillText((isB(cur.n)?BOOK(cur.n):BOOK(cur.n)+' — '+partName(cur.n))+'، ص '+ar(cur.p),c.width/2,v.height+58);
+    let src;try{src=await (window.SXQIMG||QIMG)(cur.n,cur.p)}catch(e){toast('لا توجد صورة لهذه الصفحة.',3000);return}
+    const band=Math.round(src.width*.064),c=document.createElement('canvas');c.width=src.width;c.height=src.height+band;
+    const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(src,0,0);
+    if(PAPER==='beige'){x.globalCompositeOperation='multiply';x.fillStyle='#f2e6c6';x.fillRect(0,0,c.width,src.height);x.globalCompositeOperation='source-over'}
+    x.fillStyle=CARD.mid;x.fillRect(0,src.height,c.width,band);x.fillStyle=CARD.ink;x.font=Math.round(band*.4)+'px Amiri, serif';x.textAlign='center';x.direction='rtl';x.textBaseline='middle';
+    x.fillText((isB(cur.n)?BOOK(cur.n)+(mbOf(cur.n)&&mbOf(cur.n).ps.length>1?' ج'+ar(jOf(cur.n)):''):BOOK(cur.n)+' — '+partName(cur.n))+'، ص '+ar(cur.p),c.width/2,src.height+band/2,c.width-40);
     const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.9));
-    const file=new File([blob],(isB(cur.n)?'مختصر السيرة':mbOf(cur.n)?mbOf(cur.n).sh+(mbOf(cur.n).ps.length>1?' ج'+jOf(cur.n):''):'الدرر السنية - '+short(cur.n))+' ص'+cur.p+'.jpg',{type:'image/jpeg'});
-    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:citation()});return}
+    const file=new File([blob],(isB(cur.n)?(mbOf(cur.n)?mbOf(cur.n).sh+(mbOf(cur.n).ps.length>1?' ج'+jOf(cur.n):''):'مختصر السيرة'):'الدرر السنية - '+short(cur.n))+' ص'+cur.p+'.jpg',{type:'image/jpeg'});
+    try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:citation()});return}}catch(e){if(e&&e.name==='AbortError')return}
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=file.name;document.body.append(a);a.click();a.remove();
   }catch(e){if(e.name!=='AbortError')toast('تعذّرت مشاركة الصورة')}};
 $('#mSave').onclick=async()=>{closeSheet();const n=cur.n;
@@ -2499,16 +2524,17 @@ $('#mSave').onclick=async()=>{closeSheet();const n=cur.n;
   try{await saveVol(n);toast('حُفظ '+partName(n)+' للقراءة بدون إنترنت')}catch(e){toast('تعذّر الحفظ. تأكد من الاتصال بالإنترنت.')}};
 
 /* in-reader search */
-function openSearch(){$('#sOverlay').hidden=false;setTimeout(()=>$('#q2').focus(),50)}
+function openSearch(){$('#onlyPart').closest('label').hidden=isB(cur.n)&&!(mbOf(cur.n)&&mbOf(cur.n).ps.length>1);$('#sOverlay').hidden=false;setTimeout(()=>$('#q2').focus(),50)}
 function closeSearch(){$('#sOverlay').hidden=true}
 $('#qSearch').onclick=openSearch;$('#sClose').onclick=closeSearch;
 $('#sform2').addEventListener('submit',async e=>{
   e.preventDefault();$('#q2').blur();
   {const r=parseRef($('#q2').value);if(r){closeSearch();openRef(r);return}}
   const R=$('#res2');R.innerHTML='';R.append(el('p','note','جاري البحث…'));
-  const only=mbOf(cur.n)?mbOf(cur.n).ps:isB(cur.n)||($('#onlyPart').checked&&cur.n)?cur.n:0;
+  const one=$('#onlyPart').checked&&!$('#onlyPart').closest('label').hidden;
+  const only=one&&cur.n?cur.n:mbOf(cur.n)?mbOf(cur.n).ps:isB(cur.n)?cur.n:0;const VL=Array.isArray(only)?only:only?[only]:VOLS.slice(1,NV+1).map(v=>v.n);
   R.innerHTML='';const pr=progressBar(R);
-  const res=await runSearch($('#q2').value,only,n=>{pr.t.textContent='جاري البحث في '+partName(n)+'…';pr.i.style.width=((n-1)/16*100)+'%'},$('#exact2').checked,r=>{if(r.out.length)renderHits(R,r,0)});
+  const res=await runSearch($('#q2').value,only,n=>{pr.t.textContent='جاري البحث في '+partName(n)+'…';pr.i.style.width=(VL.indexOf(n)/VL.length*100)+'%'},$('#exact2').checked,r=>{if(r.out.length)renderHits(R,r,0)});
   pr.done();
   if(!res){R.innerHTML='';R.append(el('p','note','اكتب كلمة من حرفين على الأقل.'));return}
   if(res.error&&!res.out.length){R.innerHTML='';R.append(el('p','note','تعذّر تحميل نص البحث. تأكد من الاتصال بالإنترنت.'));return}
@@ -2533,11 +2559,11 @@ function renderPlan(){
   const ppd=Math.ceil(TOTAL/P.days),day=Math.min(P.days-1,Math.max(0,dayNo()-P.start));
   const a=Math.min(TOTAL,day*ppd+1),z=Math.min(TOTAL,(day+1)*ppd),A=fromG(a),Z=fromG(z);
   const done=P.done||0,expected=Math.min(TOTAL,(day+1)*ppd);
-  B.append(el('p','count','اليوم '+ar(day+1)+' من '+ar(P.days)+' · '+ar(ppd)+' صفحة يومياً'));
+  B.append(el('p','count','اليوم '+ar(day+1)+' من '+ar(P.days)+' · '+CNT(ppd,'صفحة')+' يومياً'));
   B.append(el('p','today','ورد اليوم: '+short(A.n)+' ص '+ar(A.p)+' — '+short(Z.n)+' ص '+ar(Z.p)));
   const bar=el('div','pbar');const i=el('i');i.style.width=(done/TOTAL*100).toFixed(1)+'%';bar.append(i);B.append(bar);
   const behind=day*ppd-done;
-  B.append(el('p','count','قرأت '+ar(done)+' صفحة من '+ar(TOTAL)+(done>=TOTAL?' · ختمت الكتاب، تقبّل الله منك':done>=z?' · أنهيت ورد اليوم':behind>0?' · متأخر '+ar(behind)+' صفحة عن الأيام السابقة':'')));
+  B.append(el('p','count','قرأت '+CNT(done,'صفحة')+' من '+ar(TOTAL)+(done>=TOTAL?' · ختمت الكتاب، تقبّل الله منك':done>=z?' · أنهيت ورد اليوم':behind>0?' · متأخر '+CNT(behind,'صفحة')+' عن الأيام السابقة':'')));
   const row=el('div','row');
   if(done<TOTAL){const go1=el('button','btn btn-primary',done+1>a?'تابع ورد اليوم':'اقرأ ورد اليوم');go1.type='button';
   go1.onclick=()=>{const t=fromG(Math.min(TOTAL,done+1)),lr=LS.get('lastRead',null);
@@ -2700,7 +2726,7 @@ document.addEventListener('selectionchange',()=>{
 });
 $('#selBar').addEventListener('pointerdown',e=>e.preventDefault());   // keep the selection
 /* ---------- shareable cards (quotation, verse): the same dress as the site's share image ---------- */
-const CARD={bg0:'#5a3a22',bg1:'#2a1a0e',gold:'#c9a35a',goldL:'#e7c27a',ink:'#f6ecd8',mut:'rgba(246,236,216,.62)'};
+const CARD={bg0:'#1F3A30',mid:'#10241D',bg1:'#07110E',gold:'#C9A04A',goldL:'#E2C27E',ink:'#F4F5F1',mut:'rgba(244,245,241,.62)',cite:'#1F3A30',pl0:'#1D3A30',pl1:'#07110E'};
 // runs: [{t, k}] with k = 'n' (text), 'q' (verse, Uthmani), 'r' (verse reference, small)
 function cardRuns(raw){
   const R=[];let k='n',buf='';const push=()=>{if(buf.trim())R.push({t:buf,k});buf=''};
@@ -2732,7 +2758,7 @@ async function drawCard(runs,foot1,foot2,fname,shareText){
   if(L.length)lines.push({L,lw});
   const top=140,bottom=230,body=lines.length*lh,H=Math.max(1080,top+body+bottom);c.width=W;c.height=H;x.direction='rtl';   // resizing the canvas resets its state
   // ground: warm radial light, faint eight-point lattice, double gold frame with corner ornaments
-  const g=x.createRadialGradient(W/2,H*.28,60,W/2,H*.4,Math.max(W,H)*.8);g.addColorStop(0,CARD.bg0);g.addColorStop(.6,'#3b2616');g.addColorStop(1,CARD.bg1);
+  const g=x.createRadialGradient(W/2,H*.28,60,W/2,H*.4,Math.max(W,H)*.8);g.addColorStop(0,CARD.bg0);g.addColorStop(.6,CARD.mid);g.addColorStop(1,CARD.bg1);
   x.fillStyle=g;x.fillRect(0,0,W,H);
   const star=(cx,cy,r,lw_,col)=>{x.save();x.translate(cx,cy);x.strokeStyle=col;x.lineWidth=lw_;for(const a of [0,Math.PI/4]){x.save();x.rotate(a);x.strokeRect(-r,-r,2*r,2*r);x.restore()}x.restore()};
   x.save();x.globalAlpha=.07;for(let yy=40;yy<H;yy+=96)for(let xx=((yy/96)%2?88:40);xx<W;xx+=96)star(xx,yy,15,1.5,CARD.gold);x.restore();
@@ -2802,6 +2828,7 @@ function openTopics(){
   $('#topicOverlay').hidden=false;
 }
 $('#openTopics').onclick=openTopics;$('#topicClose').onclick=()=>{$('#topicOverlay').hidden=true};
+$('#fbImg').addEventListener('change',()=>{const f=$('#fbImg').files&&$('#fbImg').files[0];$('#fbImgN').textContent=f?f.name:'لم تُختر صورة'});
 function fbInit(){$('#fbSec').hidden=!FBON();$('#mFaw').hidden=!FBON();$('#fwSend').hidden=!FBON();$('#qReport').hidden=!FBON();$('#selRep').hidden=!FBON()}
 let FBK=null;
 function openFb(kind){
@@ -2815,7 +2842,7 @@ function openFb(kind){
   if(faw){T.append(new Option('فائدة للنشر','فائدة للنشر'));T.value='فائدة للنشر'}else{
   const opts=pageRep?['النص يخالف صورة الصفحة','خطأ في آية','حدود الصفحة (بدايتها أو نهايتها)','أخرى']:['تجربة المستخدم','تقنية','شرعية'];
   T.append(new Option('اختر…',''));opts.forEach(o=>T.append(new Option(o,o)));}
-  $('#fbImgReq').textContent='(اختيارية)';
+  $('#fbImgReq').textContent='(اختيارية)';$('#fbImgN').textContent=$('#fbImg').files&&$('#fbImg').files[0]?$('#fbImg').files[0].name:'لم تُختر صورة';
   const R=$('#fbRef');R.hidden=!pageRep||(faw&&$('#reader').hidden);
   if(pageRep&&!(faw&&$('#reader').hidden)){const S=document.getSelection(),sel=(S||'').toString().trim();
     // the page of the selected words, else the page being read
@@ -2906,7 +2933,12 @@ function renderShelfS(){
 }
 function lastAny(){const x=LS.get('lastAnyS',null);return x&&x.n&&!HIDDEN.has(x.n)?x:null}
 {const _sp=setPage;setPage=function(p){_sp(p);try{if(cur.n>=17)LS.set('lastAnyS',{n:cur.n,p:p,f:0})}catch(e){}}}
-{const _cr=closeReader;closeReader=function(){_cr.apply(this,arguments);renderShelfS()}}
+/* a panel the reader was opened from stays as it was, and comes back with «رجوع» */
+let SXRET=null;
+{const _op=openPart;openPart=function(){if($('#reader').hidden){document.querySelectorAll('.fx[hidden]').forEach(o=>o.remove());
+    const L=[...document.querySelectorAll('.fx,#sxZub,#sxAtl')].filter(o=>!o.hidden);if(L.length){L.forEach(o=>o.hidden=true);sxUnlock();SXRET=L}else SXRET=null}
+  return _op.apply(this,arguments)}}
+{const _cr=closeReader;closeReader=function(){_cr.apply(this,arguments);renderShelfS();const L=SXRET;SXRET=null;if(L&&L.length){L.forEach(o=>o.hidden=false);sxLock()}}}
 $('#sxTl').onclick=()=>openSX('tl');$('#sxTree').onclick=()=>openSX('nasab');
 /* ---------- قارن بالصورة: صورة الصفحة من المطبوع ---------- */
 const SXIMGMAP={};
@@ -2939,10 +2971,10 @@ function sxUnlock(){if(!document.body.classList.contains('sx-locked'))return;doc
 async function openZubda(){const X=await getJSON('data/sira_x.json');const it=X.tl.it,eras=X.tl.eras,L=ZUB.map(i=>it[i]);let i=+(LS.get('zubAt',0))||0;if(i>=L.length)i=0;
   let ov=$('#sxZub');if(!ov){ov=el('div','sx-zub');ov.id='sxZub';document.body.append(ov)}ov.hidden=false;sxLock();const shut=()=>{ov.hidden=true;sxUnlock()};
   const draw=()=>{LS.set('zubAt',i);const s=L[i];ov.innerHTML='';
-    const top=el('div','zt');const x=el('button','zx','✕');x.type='button';x.onclick=shut;
+    const top=el('div','zt');const x=el('button','zx','✕');x.type='button';x.setAttribute('aria-label','إغلاق');x.onclick=shut;
     const bar=el('div','zbar');L.forEach((_,j)=>{const d=el('i',j<=i?'on':'');bar.append(d)});top.append(x,bar);
     const card=el('div','zcard');card.append(el('p','zera',eras[s.e]||''),el('p','znum','المحطة '+ar(i+1)+' من '+ar(L.length)),el('h3',null,s.t),el('blockquote',null,'«'+s.q+'»'));
-    const go=el('button','btn btn-primary','اقرأها في الكتاب · ص '+ar(s.p));go.type='button';go.onclick=()=>{shut();openPart(17,s.p,null,false,'txt')};card.append(go,el('p','zsrc','من «مختصر سيرة الرسول صلى الله عليه وسلم» للإمام محمد بن عبد الوهاب، ص '+ar(s.p)));
+    const go=el('button','btn btn-primary','اقرأها في الكتاب · ص '+ar(s.p));go.type='button';go.onclick=()=>openPart(17,s.p,null,false,'txt');card.append(go,el('p','zsrc','من «مختصر سيرة الرسول صلى الله عليه وسلم» للإمام محمد بن عبد الوهاب، ص '+ar(s.p)));
     const nav=el('div','znav');const pv=el('button','btn btn-quiet','السابقة'),nx=el('button','btn btn-primary',i===L.length-1?'تمّت':'التالية');[pv,nx].forEach(b=>b.type='button');pv.disabled=i===0;
     pv.onclick=()=>{i--;draw()};nx.onclick=()=>{if(i===L.length-1){shut();LS.set('zubAt',0);return}i++;draw()};nav.append(pv,nx);
     ov.append(top,card,nav);
@@ -2953,7 +2985,7 @@ $('#sxZubda').onclick=openZubda;
 const ATL=[["مكة المكرمة", 21.4225, 39.8262, 1, [0, 55, 85, 109, 114, 345]], ["غار حراء (جبل النور)", 21.4575, 39.8592, 1, [42, 70]], ["العقبة بمنى", 21.4206, 39.8731, 1, [146, 157]], ["غار ثور", 21.3772, 39.8494, 1, [170]], ["عرفة", 21.3549, 39.9842, 1, [447]], ["المدينة النبوية", 24.4672, 39.6111, 1, [178, 186, 188, 202, 460]], ["أُحُد", 24.5022, 39.6128, 1, [248]], ["الخندق (المساجد السبعة)", 24.4781, 39.5975, 1, [285]], ["بدر", 23.78, 38.7906, 1, [216]], ["الطائف", 21.2703, 40.4158, 1, [136, 394]], ["خيبر", 25.6969, 39.2906, 1, [320]], ["تبوك", 28.3838, 36.555, 1, [414]], ["مؤتة", 31.0925, 35.6942, 1, [338]], ["الحديبية", 21.44, 39.61, 0, [300]], ["حنين", 21.5, 40.0, 0, [378]], ["الحبشة", 14.13, 38.72, 0, [92]]];
 async function openAtlas(){const X=await getJSON('data/sira_x.json');const it=X.tl.it;
   let ov=$('#sxAtl');if(!ov){ov=el('div','sx-atl');ov.id='sxAtl';document.body.append(ov)}ov.hidden=false;ov.innerHTML='';sxLock();
-  const top=el('div','at-top');const x=el('button','zx','✕');x.type='button';x.onclick=()=>{ov.hidden=true;sxUnlock()};top.append(el('h3',null,'أطلس مواضع السيرة'),x);
+  const top=el('div','at-top');const x=el('button','zx','✕');x.type='button';x.setAttribute('aria-label','إغلاق');x.onclick=()=>{ov.hidden=true;sxUnlock()};top.append(el('h3',null,'أطلس مواضع السيرة'),x);
   const note=el('p','at-note','كل موضع في مكانه بإحداثياته، والمسافات بينها بمقياسها. لم تُرسم السواحل والحدود، فاضغط «افتحه في الخرائط» لترى الموضع على خريطة حقيقية. المواضع المكتوب عليها «تقريبي» مختلَف في تعيينها اليوم.');
   const box=el('div','at-map'),card=el('div','at-card');card.hidden=true;ov.append(top,note,box,card);
   const groups=[{n:'مكة وما حولها',f:p=>p[1]<21.6&&p[1]>21.3&&p[2]>39.5&&p[2]<40.1},{n:'المدينة وما حولها',f:p=>p[1]>24.3&&p[1]<24.6}];
@@ -2976,20 +3008,24 @@ async function openAtlas(){const X=await getJSON('data/sira_x.json');const it=X.
     const cl=view?[]:groups.map(g=>({g,P:ATL.filter(g.f)}));
     const inCl=p=>cl.some(c=>c.P.includes(p));
     const placed=[];pts.forEach(p=>{if(!inCl(p))placed.push({x:X(p[2])-8,y:Y(p[1])-8,w:16,h:16})});
+    const fits=r=>!placed.some(q=>r.x<q.x+q.w&&q.x<r.x+r.w&&r.y<q.y+q.h&&q.y<r.y+r.h)&&r.x>0&&r.x+r.w<W;
+    // the groups first, their circle and name kept clear, then the single places around them
+    cl.forEach(({g,P})=>{const la=P.reduce((a,p)=>a+p[1],0)/P.length,lo=P.reduce((a,p)=>a+p[2],0)/P.length;const cx=X(lo),cy=Y(la);placed.push({x:cx-14,y:cy-14,w:28,h:28});
+      const c=mk('circle',{cx,cy,r:13,class:'cl'});const n=mk('text',{x:cx,y:cy+5,class:'cn'});n.textContent=ar(P.length);
+      const w=g.n.length*6.6+6;let pos=[cx,cy-20];for(const [dx,dy] of [[0,-20],[0,32],[-(w/2+18),5],[w/2+18,5],[0,-36],[0,48]]){const r={x:cx+dx-w/2,y:cy+dy-13,w,h:16};if(fits(r)){pos=[cx+dx,cy+dy];placed.push(r);break}}
+      const t=mk('text',{x:pos[0],y:pos[1],class:'pl'});t.textContent=g.n;
+      [c,n,t].forEach(e=>e.addEventListener('click',()=>{draw(g)}))});
     pts.forEach(p=>{if(inCl(p))return;const cx=X(p[2]),cy=Y(p[1]);const c=mk('circle',{cx,cy,r:p[3]?7:11,class:p[3]?'pt':'pt ap'});const lab=p[0]+(p[3]?'':' (تقريبي)'),w=lab.length*6.6+6;let pos=null;
       for(const [dx,dy] of [[0,-13],[0,23],[w/2+12,5],[-w/2-12,5],[0,-28],[0,38]]){const r={x:cx+dx-w/2,y:cy+dy-13,w,h:16};if(!placed.some(q=>r.x<q.x+q.w&&q.x<r.x+r.w&&r.y<q.y+q.h&&q.y<r.y+r.h)&&r.x>0&&r.x+r.w<W){pos=[cx+dx,cy+dy];placed.push(r);break}}
       if(!pos)pos=[cx,cy-13];const t=mk('text',{x:pos[0],y:pos[1],class:'pl'});t.textContent=lab;
       [c,t].forEach(e=>e.addEventListener('click',()=>show(p)))});
-    cl.forEach(({g,P})=>{const la=P.reduce((a,p)=>a+p[1],0)/P.length,lo=P.reduce((a,p)=>a+p[2],0)/P.length;const cx=X(lo),cy=Y(la);
-      const c=mk('circle',{cx,cy,r:13,class:'cl'});const n=mk('text',{x:cx,y:cy+5,class:'cn'});n.textContent=ar(P.length);const t=mk('text',{x:cx-18,y:cy-18,class:'pl'});t.textContent=g.n;
-      [c,n,t].forEach(e=>e.addEventListener('click',()=>{draw(g)}))});
     box.append(svg);
     if(view){const b=el('button','btn btn-quiet','← الخريطة كاملة');b.type='button';b.onclick=()=>draw(null);box.prepend(b)}
     far.forEach(p=>{const b=el('button','at-far','↓ '+p[0]+' (تقريبي) — جنوب البحر الأحمر، خارج حدود هذه الخريطة');b.type='button';b.onclick=()=>show(p);box.append(b)});
   };
   const show=p=>{card.hidden=false;card.innerHTML='';const hd=el('div','at-ch');hd.append(el('b',null,p[0]+(p[3]?'':' — موضع تقريبي')));
     const mp=el('a','at-maps','افتحه في الخرائط');mp.href='https://maps.apple.com/?ll='+p[1]+','+p[2]+'&q='+encodeURIComponent(p[0]);mp.target='_blank';mp.rel='noopener';hd.append(mp);card.append(hd);
-    p[4].forEach(i=>{const s=it[i];const r=el('div','at-ev');r.append(el('b',null,s.t),el('p',null,'«'+s.q+'»'));const g=el('button','btn btn-link','ص '+ar(s.p)+' من مختصر السيرة');g.type='button';g.onclick=()=>{ov.hidden=true;sxUnlock();openPart(17,s.p,null,false,'txt')};r.append(g);card.append(r)});
+    p[4].forEach(i=>{const s=it[i];const r=el('div','at-ev');r.append(el('b',null,s.t),el('p',null,'«'+s.q+'»'));const g=el('button','btn btn-link','ص '+ar(s.p)+' من مختصر السيرة');g.type='button';g.onclick=()=>openPart(17,s.p,null,false,'txt');r.append(g);card.append(r)});
     card.scrollIntoView({behavior:'smooth',block:'start'})};
   draw(null)}
 $('#sxAtlas').onclick=openAtlas;
@@ -3011,7 +3047,7 @@ function fxOpen(t){const ov=el('div','fx');ov.setAttribute('role','dialog');ov.s
   const inn=el('div','fx-in');ov.append(top,inn);document.body.append(ov);sxLock();x.focus({preventScroll:true});
   const kd=e=>{if(e.key==='Escape')close()};const close=()=>{ov.remove();sxUnlock();document.removeEventListener('keydown',kd)};
   document.addEventListener('keydown',kd);x.onclick=close;return{ov,inn,close}}
-const goBtn=(F,label,n,p,hl)=>{const b=el('button','btn btn-quiet',label);b.type='button';b.onclick=()=>{F.close();openPart(n,p,hl||null,false,'txt')};return b};
+const goBtn=(F,label,n,p,hl)=>{const b=el('button','btn btn-quiet',label);b.type='button';b.onclick=()=>openPart(n,p,hl||null,false,'txt');return b};
 const pgT=(n,p)=>SXBN(n)+'، ص '+ar(p);
 /* a quote with the dating words marked */
 function quoteW(q,w){const e=el('q');const i=w?q.indexOf(w):-1;if(i<0){e.textContent=q;return e}
@@ -3029,7 +3065,8 @@ async function showYear(k){const F=await sxFeat();const G=$('#yrGrid'),P=$('#yrP
   P.append(el('h3',null,'السنة '+ar(k)+' من عمره صلى الله عليه وسلم'),el('p','sub',yrSub(k)));
   const L=F.years[k]||[];
   if(!L.length)P.append(el('p','yr-none','لم يذكر مختصر السيرة حدثاً نصّ على أنه في هذه السنة.'));
-  L.forEach(it=>{const b=el('button','yr-ev');b.type='button';b.append(el('b',null,it.t),quoteW(it.q,it.w),el('small',null,pgT(17,it.p)));
+  L.forEach(it=>{if(it.mk&&!it.q){const d=el('button','yr-mk');d.type='button';d.append(el('span',null,it.t),el('small',null,'ص '+ar(it.p)));d.onclick=()=>openPart(17,it.p,null,false,'txt');P.append(d);return}   // the book's own year mark: a divider, not a quote
+    const b=el('button','yr-ev');b.type='button';b.append(el('b',null,it.t),quoteW(it.q,it.w),el('small',null,pgT(17,it.p)));
     b.onclick=()=>openPart(17,it.p,it.w?[it.w]:null,false,'txt');P.append(b)});
   const n=el('p','yr-note','عُدّت السنون من مولده: البعثة على رأس الأربعين فهي أول الحادية والأربعين، والهجرة أول الرابعة والخمسين. وأحداث المدينة على سني الهجرة كما رتّبها المختصر، فمطابقتها بسني العمر تقريبية. وتوفي صلى الله عليه وسلم وهو ابن ثلاث وستين، كما في صحيح البخاري عن عائشة رضي الله عنها: ');
   const s=el('button','btn btn-link',pgT(F.src63.n,F.src63.p));s.type='button';s.onclick=()=>openPart(F.src63.n,F.src63.p,['ثلاث وستين'],false,'txt');n.append(s);P.append(n)}
@@ -3050,7 +3087,7 @@ function planDay(pl){return Math.floor((Date.now()-pl.t)/864e5)+1}
 async function renderSxPlan(){await sxFeat();const B=$('#plBox');if(!B)return;B.innerHTML='';const pl=LS.get('sxPlan',null);const R=SXRD.get();
   let done=0;for(let p=PL_A;p<=PL_B;p++)if(R.has(p))done++;
   if(!pl){B.append(el('p','pl-today','اقرأ مختصر سيرة الرسول صلى الله عليه وسلم كاملاً، صفحاتٍ معلومة كل يوم. وكلما قرأت صفحةً فيها ذكرُ سنةٍ من عمره عُلّم مربعها.'));
-    const r=el('div','pl-row');[[30,'شهر'],[60,'شهران'],[100,'مئة يوم']].forEach(([d,t])=>{const b=el('button','pl-opt');b.type='button';b.append(el('b',null,t),el('span',null,'نحو '+ar(Math.ceil(PL_N/d))+' صفحات كل يوم'));
+    const r=el('div','pl-row');[[30,'شهر'],[60,'شهران'],[100,'مئة يوم']].forEach(([d,t])=>{const b=el('button','pl-opt');b.type='button';b.append(el('b',null,t),el('span',null,'نحو '+CNT(Math.ceil(PL_N/d),'صفحة',1)+' كل يوم'));
       b.onclick=()=>{LS.set('sxPlan',{d,t:new Date(new Date().toDateString()).getTime()});renderSxPlan()};r.append(b)});B.append(r);
     if(done)B.append(el('p','yr-note','الصفحات المقروءة إلى الآن: '+ar(done)+' من '+ar(PL_N)+'.'));return}
   const per=Math.ceil(PL_N/pl.d),day=Math.min(planDay(pl),pl.d),a=PL_A+(day-1)*per,b=Math.min(PL_B,a+per-1);
@@ -3068,7 +3105,7 @@ async function fxEvent(){const F=await sxFeat();const P=fxOpen('الحدث في 
   P.inn.append(el('p','fx-lead','اختر حدثاً تجد موضعه في كل كتاب من كتب الموقع، بعنوانه وصفحته في المطبوع، ومعه أول كلام المؤلف فيه بلفظه.'));
   const ch=el('div','fx-chips');ch.setAttribute('role','group');const box=el('div');P.inn.append(ch,box);
   const show=i=>{[...ch.children].forEach((c,j)=>{c.classList.toggle('on',j===i);c.setAttribute('aria-pressed',j===i)});box.innerHTML='';const E=F.events[i];
-    E.s.forEach(s=>{const d=el('div','fx-src');d.append(el('h3',null,SXBN(s.n)),el('p','by',s.h+'، ص '+ar(s.p)),el('blockquote',null,s.x),goBtn(P,'اقرأه في الكتاب',s.n,s.p));box.append(d)});
+    E.s.forEach(s=>{const d=el('div','fx-src');d.append(el('h3',null,SXBN(s.n)),el('p','by',(s.h?s.h+'، ':'')+'ص '+ar(s.p)),el('blockquote',null,s.x),goBtn(P,'اقرأه في الكتاب',s.n,s.p));box.append(d)});
     LS.set('fxEv',i)};
   F.events.forEach((E,i)=>{const c=el('button','fx-chip',E.t);c.type='button';c.onclick=()=>{show(i);c.scrollIntoView({inline:'center',block:'nearest'})};ch.append(c)});
   const i0=Math.min(+(LS.get('fxEv',0))||0,F.events.length-1);show(i0);ch.children[i0].scrollIntoView({inline:'center',block:'nearest'});
@@ -3140,7 +3177,7 @@ async function renderKhul(){const F=await sxFeat();const K=F.khul,G=$('#khGrid')
     const b=el('button','btn btn-link',pgT(K.saf.n,K.saf.p));b.type='button';b.onclick=()=>openPart(K.saf.n,K.saf.p,['ثلاثون سنة'],false,'txt');s.append(b);
     const key=$('#khKey');['ab','um','uth','ali','has','mk'].forEach(c=>{const sp=el(c==='mk'?'span':'button','kh-k');if(c!=='mk'){sp.type='button';sp.onclick=()=>khWho(c)}const i=el('i');i.style.background='var(--'+(c==='mk'?'mkk':c)+')';sp.append(i,document.createTextNode(c==='mk'?'ثم المُلك':KHN[c]));sp.dataset.c=c;key.append(sp)})}
   G.innerHTML='';const sel=+G.dataset.sel||0;
-  K.years.forEach(Y=>{const b=el('button','kh-c'+(Y.c.length>1?' two':'')+(Y.y===sel?' sel':''),ar(Y.y));b.type='button';
+  K.years.forEach(Y=>{const b=el('button','kh-c'+(Y.c.length>1?' two':'')+(Y.c.includes('mk')?' mx':'')+(Y.y===sel?' sel':''),ar(Y.y));b.type='button';
     const cv=c=>'var(--'+(c==='mk'?'mkk':c)+')';b.style.setProperty('--c1',cv(Y.c[0]));if(Y.c[1])b.style.setProperty('--c2',cv(Y.c[1]));
     if(KHSELC&&!Y.c.includes(KHSELC))b.classList.add('off');
     b.setAttribute('aria-label','سنة '+ar(Y.y)+' من الهجرة: '+Y.c.map(c=>KHN[c]).join(' ثم '));b.onclick=()=>showKhul(Y.y);G.append(b)})}
@@ -3235,7 +3272,7 @@ function mkPages(ns){const L=[];ns.forEach(n=>Object.keys(MK).filter(k=>+k.split
 function renderMkBooks(){
   const B=$('#sxMkBooks');if(!B)return;B.innerHTML='';
   MKGROUPS.forEach(g=>{const P=mkPages(g.ns);if(!P.length)return;const c=P.reduce((s,[n,p])=>s+MK[n+':'+p].length,0);
-    const b=el('button','sx-mkb');b.type='button';b.append(el('b',null,g.t),el('span',null,ar(c)+' موضعاً في '+ar(P.length)+' صفحة'));
+    const b=el('button','sx-mkb');b.type='button';b.append(el('b',null,g.t),el('span',null,CNT(c,'موضع')+' في '+CNT(P.length,'صفحة',1)));
     const r=LS.get('mkAt_'+g.t,null);if(r&&r.i>0)b.append(el('small',null,'وصلت إلى '+ar(r.i+1)+' من '+ar(P.length)));
     b.onclick=()=>mkStart(g,P);B.append(b)});
 }
@@ -3515,12 +3552,12 @@ let QIMG=async(n,p)=>{await loadPdf(n);if(!pdf||pdf._n!==n)throw 0;const pg=awai
 function qPlate(n,BW,BH){   // the book's name plate, drawn like a cover (no publisher's artwork is copied); BW,BH: a wide band
   const mb=mbOf(n);const L=mb?[mb.t,((mb.head||'').match(/<h3>(.*?)<\/h3>/)||['',''])[1],(mb.ps&&mb.ps.length>1?'الجزء '+ar(jOf(n)):'')]:isB(n)?['مختصر سيرة الرسول ﷺ','للإمام محمد بن عبدالوهاب','']:['الدرر السنية','في الأجوبة النجدية',partName(n)];
   if(BW){const c=document.createElement('canvas');c.width=BW;c.height=BH;const x=c.getContext('2d');x.direction='rtl';
-    const g=x.createLinearGradient(0,0,0,BH);g.addColorStop(0,'#5a1f1a');g.addColorStop(1,'#2e0f0c');x.fillStyle=g;x.fillRect(0,0,BW,BH);
+    const g=x.createLinearGradient(0,0,0,BH);g.addColorStop(0,CARD.pl0);g.addColorStop(1,CARD.pl1);x.fillStyle=g;x.fillRect(0,0,BW,BH);
     x.strokeStyle=CARD.gold;x.lineWidth=5;x.strokeRect(40,40,BW-80,BH-80);x.lineWidth=1.5;x.strokeRect(56,56,BW-112,BH-112);
     x.textAlign='center';x.textBaseline='middle';x.fillStyle=CARD.goldL;let fs=96;do{x.font=fs+'px Amiri, serif';fs-=4}while(x.measureText(L[0]).width>BW-220&&fs>30);
     x.fillText(L[0],BW/2,BH*.42);x.fillStyle=CARD.ink;x.font='40px Amiri, serif';x.fillText([L[1],L[2]].filter(Boolean).join(' · '),BW/2,BH*.7,BW-200);return c}
   const W=520,H=700,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.direction='rtl';
-  const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#5a1f1a');g.addColorStop(1,'#2e0f0c');x.fillStyle=g;x.fillRect(0,0,W,H);
+  const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,CARD.pl0);g.addColorStop(1,CARD.pl1);x.fillStyle=g;x.fillRect(0,0,W,H);
   x.strokeStyle=CARD.gold;x.lineWidth=6;x.strokeRect(22,22,W-44,H-44);x.lineWidth=1.5;x.strokeRect(38,38,W-76,H-76);
   x.fillStyle='rgba(0,0,0,.35)';x.fillRect(70,140,W-140,230);x.strokeStyle=CARD.gold;x.lineWidth=2;x.strokeRect(70,140,W-140,230);
   x.textAlign='center';x.textBaseline='middle';x.fillStyle=CARD.goldL;
@@ -3583,7 +3620,7 @@ async function qEdit(pp,mode){
       const pl=qPlate(n,W,ph);
       o.save();o.beginPath();if(o.roundRect)o.roundRect(20,20,W-40,ph-20,36);else o.rect(20,20,W-40,ph-20);o.clip();o.drawImage(pl,0,0);o.restore();
       o.drawImage(body,0,ph+20,W,bh)}
-    o.fillStyle='#5a3a22';o.textAlign='center';o.direction='rtl';o.font='34px Amiri, serif';o.fillText(citation(pp).replace(/^\(|\)$/g,''),W/2,out.height-foot/2,W-60);
+    o.fillStyle=CARD.cite;o.textAlign='center';o.direction='rtl';o.font='34px Amiri, serif';o.fillText(citation(pp).replace(/^\(|\)$/g,''),W/2,out.height-foot/2,W-60);
     const blob=await new Promise(r=>out.toBlob(r,'image/jpeg',.9));const file=new File([blob],'اقتباس من المطبوع.jpg',{type:'image/jpeg'});
     try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:citation(pp)});ov.hidden=true;return}}catch(e){if(e&&e.name==='AbortError')return}
     // no share sheet (or not allowed here): show the picture so it can be saved with a long press
@@ -3605,7 +3642,7 @@ async function openZubdaD(){
   ov.append(el('p','note','وصف كل جزء منقول من «بيان الأجزاء» في آخر الجزء السادس عشر، والأبواب من فهارس الكتاب. اضغط أي باب لتنتقل إلى صفحته.'));
   const map=el('div','zbmap');ZG.forEach(([g,ns])=>{const b=el('button','zbg');b.type='button';b.append(el('b',null,g),el('span',null,ns.length>1?'الأجزاء '+ns.map(ar).join('، '):'الجزء '+ar(ns[0])));b.onclick=()=>{const t=ov.querySelector('[data-zg="'+g+'"]');if(t)t.scrollIntoView({behavior:'smooth',block:'start'})};map.append(b)});ov.append(map);
   ZG.forEach(([g,ns])=>{const sec=el('section','zbsec');sec.dataset.zg=g;sec.append(el('h3',null,g));
-    ns.forEach(n=>{const c=el('div','zbp');const hd=el('div','zbph');hd.append(el('b',null,partName(n)),el('span',null,ar(VOLS[n].p)+' صفحة'));c.append(hd,el('p','zbd',VOLS[n].d));
+    ns.forEach(n=>{const c=el('div','zbp');const hd=el('div','zbph');hd.append(el('b',null,partName(n)),el('span',null,CNT(VOLS[n].p,'صفحة')));c.append(hd,el('p','zbd',VOLS[n].d));
       const L=H.filter(h=>h[0]===n);const ul=el('div','zbl');const show=k=>{ul.innerHTML='';L.slice(0,k).forEach(([_,p,t])=>{const a=el('button',null);a.type='button';a.append(el('span',null,t),el('small',null,'ص '+ar(p)));a.onclick=()=>{ov.hidden=true;openPart(n,p,null,false,'txt').then(()=>setBack('رجوع إلى «الدرر في لمحة»',()=>{ov.hidden=false}))};ul.append(a)});
         if(L.length>k){const m=el('button','zbmore','عرض كل الأبواب ('+ar(L.length)+')');m.type='button';m.onclick=()=>show(L.length);ul.append(m)}};
       show(8);c.append(ul);const o=el('button','btn btn-quiet','افتح '+partName(n));o.type='button';o.onclick=()=>{ov.hidden=true;openPart(n,1)};c.append(o);sec.append(c)});
@@ -3627,7 +3664,7 @@ $('#openZubda').onclick=openZubdaD;
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   const box=$('#install'),txt=$('#installTxt');
   $('#installX').onclick=()=>{box.hidden=true;LS.set('installX',1)};
-  if(ios){txt.innerHTML='اجعله تطبيقاً على جوالك: اضغط زر <b>المشاركة</b> في Safari ثم <b>«إضافة إلى الشاشة الرئيسية»</b>.';box.hidden=false;return}
+  if(ios){txt.innerHTML='اجعله تطبيقاً على جوالك: اضغط زر <b>المشاركة</b> في متصفح سفاري ثم <b>«إضافة إلى الشاشة الرئيسية»</b>.';box.hidden=false;return}
   window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();txt.textContent='ثبّته تطبيقاً على جهازك ليفتح بضغطة ويعمل بدون إنترنت.';const b=$('#installBtn');b.hidden=false;box.hidden=false;
     b.onclick=async()=>{e.prompt();try{await e.userChoice}catch(_){}box.hidden=true}});
 })();
