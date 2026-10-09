@@ -838,6 +838,11 @@ span.kh-k{border-style:dashed;color:var(--muted)}
 body:not(.mk-on) mark.sxmk{background:none;border:0;padding:0;cursor:auto;color:inherit}
 body:not(.mk-on) .sxmk-btn,body:not(.mk-on) .sxmk-list{display:none!important}
 #mkOpts .note{font-size:12.5px;color:var(--muted);margin:6px 0 0;line-height:1.7}
+.fx-method{margin:0 0 6px;padding-inline-start:20px;font-family:var(--text);font-size:18px;line-height:1.85}
+.fx-method li{margin-bottom:8px}
+details.fx-src summary{cursor:pointer;font-family:var(--text);font-size:19px;font-weight:700;padding:4px 0;min-height:40px}
+details.fx-src p{font-family:var(--text);font-size:17px;line-height:1.9;color:var(--muted);margin:6px 0 0}
+.fx-in .sx-mkbooks{margin-bottom:10px}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 </style>
@@ -919,13 +924,6 @@ body:not(.mk-on) .sxmk-btn,body:not(.mk-on) .sxmk-list{display:none!important}
       </div>
     </section>
 
-    <section class="sx-sec" id="sxMarks">
-      <div class="sx-review">
-        <h2 class="sx-h2" style="font-size:22px">مواضع الخلاف مع المطبوع</h2>
-        <p class="sx-lead" style="font-size:15px">كل موضع خالف فيه النصُّ الرقمي المطبوعَ وقرّرنا فيه شيئاً معلَّمٌ بالأحمر في صفحته. اختر كتاباً لتقرأ صفحاته ذات العلامات وحدها، وقارن كل موضع بصورة الصفحة.</p>
-        <div class="sx-mkbooks" id="sxMkBooks"></div>
-      </div>
-    </section>
     <section class="sx-sec">
       <div class="sx-review">
         <h2 class="sx-h2" style="font-size:22px">ملاحظات المراجعة</h2>
@@ -1055,7 +1053,7 @@ body:not(.mk-on) .sxmk-btn,body:not(.mk-on) .sxmk-list{display:none!important}
     </section>
 <button type="button" id="waqfFb"></button></div>
   </main>
-  <footer class="sx-footer"><p class="k">موسوعة السيرة</p><p>نسخة مراجعة. الاسم مؤقت حتى يُختار اسم الموقع.</p></footer>
+  <footer class="sx-footer"><p class="k">موسوعة السيرة</p><p><button type="button" class="btn btn-link" id="sxMethod">منهج الموقع ومواضع الخلاف مع المطبوع</button></p><p>نسخة مراجعة. الاسم مؤقت حتى يُختار اسم الموقع.</p></footer>
 </div>
 <!-- ============ READER ============ -->
 <section id="reader" hidden aria-label="القارئ">
@@ -2691,6 +2689,8 @@ function openNav(){
   grp('استكشف');
   it('الخط الزمني للسيرة',()=>{closeNav();openSX('tl')});
   it('شجرة النسب وآل عبد المطلب والخلفاء',()=>{closeNav();openSX('nasab')});
+  grp('عن الموقع');
+  it('منهج الموقع ومواضع الخلاف مع المطبوع',()=>{closeNav();fxMethod()});
   grp('ملاحظاتي');
   it('المفضلة والتعليقات',()=>goSec('favSec'),!$('#favSec').hidden);
   it('تظليلاتي',()=>goSec('hlSec'),!$('#hlSec').hidden);
@@ -2986,6 +2986,25 @@ function khSection(){if(KHSEC)return KHSEC;const s=el('section','yr kh');s.id='s
   return KHSEC=s}
 {const _oz=openZad;openZad=async function(b){const r=await _oz.apply(this,arguments);const s=khSection();
   if(ZB===MB.k){$('#zadPage .actions').after(s);await renderKhul()}else s.remove();return r}}
+
+/* ---------- منهج الموقع ---------- */
+function fxMethod(){const P=fxOpen('منهج الموقع');const I=P.inn;
+  I.append(el('p','fx-lead','كيف نُقلت الكتب في هذا الموقع، وكيف قوبلت بطبعاتها.'));
+  const ul=el('ul','fx-method');[
+   'ينقل الموقع نصوص الكتب بلفظها، ولا يضيف إليها شيئاً من عنده. وكل كتاب مقسّم على صفحات طبعته المذكورة، ورقم كل صفحة هو رقمها في المطبوع.',
+   'قوبل كل كتاب بصور صفحات طبعته، وما خالف فيه النص الرقمي المطبوعَ صُحّح على المطبوع. وتفصيل ذلك لكل كتاب أدناه.',
+   'المعتمد عند النقل صورة الصفحة من المطبوع: زر «قارن بالصورة» في رأس كل صفحة.',
+   'الموقع ناقل لا محقق: أحكام الأحاديث منسوبة إلى من حكم بها، ولا يحكم الموقع على حديث ولا يرجّح بين الأقوال.',
+   'كل آية في الكتب تُفتح من مصحف مجمع الملك فهد لطباعة المصحف الشريف (رواية حفص). أما رسم الآيات داخل نص كل كتاب فمبيّن في التعريف بنسخته أدناه.',
+   'ما في أبواب الموقع، كالخط الزمني وأربعين محطة والحدث في كل الكتب، مأخوذ من الكتب بلفظها وصفحاتها. وما كان فيه ترتيب أو تقدير من عملنا نُصّ عليه في موضعه.'
+  ].forEach(t=>ul.append(el('li',null,t)));I.append(ul);
+  I.append(el('h3','fx-dh','عن نسخة كل كتاب'));
+  const bn=$('#bookPage .note');const B=[['مختصر سيرة الرسول صلى الله عليه وسلم، لمحمد بن عبد الوهاب',bn?bn.textContent:''],[MB.h.t,MB.h.note],[MB.z.t,MB.z.note],[MB.s.t,MB.s.note],[MB.m.t,MB.m.note],[MB.k.t,MB.k.note]];
+  B.forEach(([t,x])=>{if(!x)return;const d=el('details','fx-src');d.append(el('summary',null,t),el('p',null,x));I.append(d)});
+  I.append(el('h3','fx-dh','مواضع الخلاف مع المطبوع'));
+  I.append(el('p','fx-lead','كل موضع خالف فيه النصُّ الرقمي المطبوعَ وقرّرنا فيه شيئاً معلَّمٌ في صفحته. اختر كتاباً لتقرأ صفحاته ذات العلامات وحدها، وقارن كل موضع بصورة الصفحة. وتظهر العلامات في القارئ أيضاً من «المزيد».'));
+  const mb=el('div','sx-mkbooks');mb.id='sxMkBooks';mb.addEventListener('click',()=>P.close(),true);I.append(mb);renderMkBooks()}
+$('#sxMethod').onclick=fxMethod;
 /* wiring */
 $('#fxEvent').onclick=fxEvent;$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
 $('#sxSearchBtn').onclick=()=>{const q=$('#q');q.scrollIntoView({block:'center',behavior:'smooth'});q.focus({preventScroll:true})};
