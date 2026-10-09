@@ -1007,6 +1007,17 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 .nz-q .nz-more{display:block;margin:0 0 4px;padding:0;min-height:36px}
 .nz-q .btn-quiet{min-height:40px}
 
+/* the places in the scene are doors: Makkah and al-Madinah open their events, the road opens the Hijra */
+.sx-pin{cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none}
+.sx-pin .pb{fill:rgba(7,17,14,.6);stroke:#C9A04A;stroke-width:.8;transition:fill .15s}
+.sx-pin text{font:600 10.5px var(--text);fill:#EFE7D2;text-anchor:middle}
+.sx-pin path{fill:none;stroke:#C9A04A;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.sx-pin:active .pb,.sx-pin:focus-visible .pb{fill:rgba(201,160,74,.28)}
+.sx-pins-hint .sx-pin .pb{animation:sxPin 1.6s ease-in-out 3}
+@keyframes sxPin{0%,100%{stroke-width:.8;stroke-opacity:1}50%{stroke-width:2.2;stroke-opacity:.55}}
+@media (prefers-reduced-motion:reduce){.sx-pins-hint .sx-pin .pb{animation:none}}
+.sx-hero .sx-ground{z-index:3;pointer-events:none}.sx-hero .sx-ground .sx-pin{pointer-events:auto}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -1018,7 +1029,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
  <radialGradient id="horG" cx=".5" cy="1" r=".7"><stop offset="0" stop-color="#E2C27E" stop-opacity=".18"/><stop offset="1" stop-color="#E2C27E" stop-opacity="0"/></radialGradient>
  <linearGradient id="domeG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4E9B7A"/><stop offset="1" stop-color="#245442"/></linearGradient>
 </defs><g><circle cx="127.7" cy="26.0" r="0.50" class="st tw"/><circle cx="208.7" cy="57.4" r="0.50" class="st"/><circle cx="86.0" cy="16.5" r="0.90" class="st tw"/><circle cx="38.7" cy="66.0" r="1.10" class="st tw"/><circle cx="89.3" cy="95.6" r="0.50" class="st"/><circle cx="155.5" cy="146.5" r="0.50" class="st"/><circle cx="54.9" cy="65.2" r="1.10" class="st tw"/><circle cx="121.8" cy="123.2" r="0.60" class="st tw"/><circle cx="222.2" cy="31.4" r="0.50" class="st"/><circle cx="28.0" cy="12.7" r="0.60" class="st"/><circle cx="207.1" cy="117.5" r="0.90" class="st"/><circle cx="177.1" cy="47.8" r="0.60" class="st"/><circle cx="97.2" cy="87.9" r="1.10" class="st"/><circle cx="135.2" cy="69.5" r="1.10" class="st"/><circle cx="49.1" cy="65.0" r="0.70" class="st tw"/><circle cx="190.8" cy="9.7" r="0.50" class="st"/><circle cx="222.9" cy="131.8" r="0.70" class="st"/><circle cx="137.8" cy="76.5" r="0.90" class="st tw"/><circle cx="39.8" cy="43.4" r="0.50" class="st tw"/><circle cx="272.0" cy="98.5" r="0.90" class="st"/><circle cx="151.4" cy="101.6" r="0.50" class="st"/><circle cx="139.8" cy="93.2" r="0.90" class="st tw"/><circle cx="297.5" cy="22.9" r="0.60" class="st"/><circle cx="354.2" cy="76.5" r="0.60" class="st"/><circle cx="213.9" cy="133.0" r="0.90" class="st"/><circle cx="110.4" cy="64.6" r="0.70" class="st"/><circle cx="149.3" cy="37.7" r="0.50" class="st tw"/><circle cx="92.6" cy="38.1" r="0.90" class="st"/><circle cx="73.7" cy="45.2" r="0.60" class="st"/><circle cx="145.1" cy="86.7" r="0.60" class="st"/><circle cx="200.9" cy="94.2" r="0.50" class="st"/><circle cx="336.7" cy="143.0" r="1.10" class="st"/><circle cx="156.4" cy="19.1" r="0.90" class="st tw"/><circle cx="29.7" cy="34.5" r="0.60" class="st tw"/><circle cx="233.5" cy="18.9" r="1.10" class="st tw"/><circle cx="42.8" cy="57.1" r="0.50" class="st tw"/><circle cx="83.4" cy="58.9" r="0.70" class="st"/><circle cx="234.1" cy="73.2" r="0.50" class="st"/><circle cx="383.4" cy="72.0" r="0.90" class="st"/><circle cx="59.1" cy="113.5" r="0.70" class="st"/><circle cx="268.4" cy="79.4" r="0.60" class="st"/><circle cx="205.8" cy="25.4" r="1.10" class="st"/><circle cx="293.6" cy="47.5" r="0.50" class="st"/><circle cx="103.7" cy="57.5" r="0.60" class="st"/><circle cx="89.1" cy="83.1" r="1.10" class="st"/><circle cx="89.2" cy="122.5" r="0.60" class="st"/><circle cx="316.6" cy="112.0" r="0.60" class="st tw"/><circle cx="192.2" cy="110.7" r="0.50" class="st"/><circle cx="184.4" cy="32.3" r="1.10" class="st"/><circle cx="174.8" cy="140.8" r="0.70" class="st"/><circle cx="143.3" cy="36.2" r="0.60" class="st"/><circle cx="133.0" cy="74.5" r="1.10" class="st"/><circle cx="187.2" cy="99.3" r="0.50" class="st"/><circle cx="49.8" cy="60.7" r="0.60" class="st"/><circle cx="72.2" cy="119.2" r="0.70" class="st tw"/><circle cx="365.4" cy="109.4" r="0.90" class="st"/><circle cx="365.7" cy="109.8" r="0.60" class="st"/><circle cx="14.5" cy="90.3" r="0.90" class="st"/><circle cx="59.8" cy="124.7" r="0.90" class="st"/><circle cx="137.9" cy="84.1" r="0.60" class="st tw"/><circle cx="309.4" cy="110.1" r="0.50" class="st"/><circle cx="360.6" cy="67.3" r="0.60" class="st"/><circle cx="84.6" cy="40.8" r="0.70" class="st"/><circle cx="295.7" cy="51.6" r="1.10" class="st"/><circle cx="54.1" cy="136.9" r="0.70" class="st"/><circle cx="257.1" cy="123.0" r="1.10" class="st"/><circle cx="354.6" cy="77.2" r="1.10" class="st tw"/><circle cx="199.0" cy="131.4" r="0.60" class="st"/><circle cx="300.4" cy="25.9" r="0.60" class="st"/><circle cx="281.0" cy="85.2" r="0.70" class="st"/></g>
-<circle cx="268" cy="34" r="22" fill="url(#moonG)"/><path d="M271 24a11 11 0 1 0 2.6 20a8.8 8.8 0 1 1 -2.6 -20z" fill="#F3DFA6"/></svg><svg class="sx-band" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120 L120 96 L240 110 L380 80 L520 104 L640 70 L700 60 L760 84 L860 92 L960 72 L1060 98 L1200 86 L1200 200 L0 200Z" fill="#132A22"/><path d="M0 150 Q300 124 600 146 T1200 138 L1200 200 L0 200Z" fill="#0D1C17"/></svg><svg class="sx-ground" viewBox="0 290 390 130" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><defs>
+<circle cx="268" cy="34" r="22" fill="url(#moonG)"/><path d="M271 24a11 11 0 1 0 2.6 20a8.8 8.8 0 1 1 -2.6 -20z" fill="#F3DFA6"/></svg><svg class="sx-band" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120 L120 96 L240 110 L380 80 L520 104 L640 70 L700 60 L760 84 L860 92 L960 72 L1060 98 L1200 86 L1200 200 L0 200Z" fill="#132A22"/><path d="M0 150 Q300 124 600 146 T1200 138 L1200 200 L0 200Z" fill="#0D1C17"/></svg><svg class="sx-ground" viewBox="0 290 390 130" preserveAspectRatio="xMidYMax meet" role="group" aria-label="مكة وطريق الهجرة والمدينة"><defs>
  <linearGradient id="skyG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#07110E"/><stop offset=".55" stop-color="#10241D"/><stop offset=".86" stop-color="#1D3A30"/><stop offset="1" stop-color="#2A4A3C"/></linearGradient>
  <radialGradient id="moonG2" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#F6E3B0" stop-opacity=".55"/><stop offset="1" stop-color="#F6E3B0" stop-opacity="0"/></radialGradient>
  <radialGradient id="horG2" cx=".5" cy="1" r=".7"><stop offset="0" stop-color="#E2C27E" stop-opacity=".18"/><stop offset="1" stop-color="#E2C27E" stop-opacity="0"/></radialGradient>
@@ -1028,10 +1039,10 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 <path d="M0 352 L28 336 L52 344 L84 318 L104 330 L128 312 L150 328 L172 322 L196 338 L222 330 L248 340 L268 300 L280 292 L292 304 L312 326 L336 318 L360 332 L390 324 L390 420 L0 420Z" fill="#132A22"/>
 <path d="M0 370 Q60 354 120 366 T240 362 T390 358 L390 420 L0 420Z" fill="#0D1C17"/>
 <!-- the Hijra road -->
-<path class="road" d="M318 380 C 300 340, 250 330, 210 352 S 130 372, 104 378"/>
-<circle cx="210" cy="352" r="2.2" class="wp"/><circle cx="262" cy="337" r="2.2" class="wp"/><circle cx="160" cy="366" r="2.2" class="wp"/>
+<path class="road" d="M318 370 C 300 334, 250 326, 210 348 S 130 366, 104 370"/>
+<circle cx="210" cy="348" r="2.2" class="wp"/><circle cx="262" cy="332" r="2.2" class="wp"/><circle cx="160" cy="361" r="2.2" class="wp"/>
 <!-- Makkah: the Ka'bah -->
-<g transform="translate(300 352)">
+<g transform="translate(300 339)">
  <path d="M0 14 L22 6 L44 14 L44 46 L22 54 L0 46Z" fill="#050807"/>
  <path d="M22 6 L44 14 L44 46 L22 54Z" fill="#0B0F0D"/>
  <path d="M0 21 L22 13 L44 21" fill="none" stroke="#E2C27E" stroke-width="2.4"/>
@@ -1040,7 +1051,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
  <path d="M-14 54 H58" stroke="#E2C27E" stroke-width=".6" opacity=".4"/>
 </g>
 <!-- Madinah: the Prophet's Mosque, the green dome and minarets -->
-<g transform="translate(58 318)">
+<g transform="translate(58 311)">
  <rect x="18" y="52" width="74" height="30" fill="#08110E" stroke="#E2C27E" stroke-width=".7" stroke-opacity=".55"/>
  <g fill="#F6D58A" opacity=".75"><rect x="26" y="62" width="4" height="9" rx="2"/><rect x="36" y="62" width="4" height="9" rx="2"/><rect x="70" y="62" width="4" height="9" rx="2"/><rect x="80" y="62" width="4" height="9" rx="2"/></g>
  <rect x="40" y="44" width="30" height="9" fill="#0B1612" stroke="#E2C27E" stroke-width=".6" stroke-opacity=".6"/>
@@ -1052,8 +1063,8 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
  </g>
  <circle cx="5.5" cy="5" r="1.2" fill="#E2C27E"/><circle cx="104.5" cy="5" r="1.2" fill="#E2C27E"/>
 </g>
-<path d="M0 400 H390" stroke="#E2C27E" stroke-opacity=".18"/>
-<text x="322" y="414" class="lb">مكة</text><text x="113" y="414" class="lb">المدينة</text>
+<path d="M0 393 H390" stroke="#E2C27E" stroke-opacity=".18"/>
+<g class="sx-pin" data-go="mk" role="button" tabindex="0" aria-label="أحداث مكة في الخط الزمني"><rect x="295.7" y="388" width="52.6" height="32" fill="transparent" stroke="none"/><rect class="pb" x="301.7" y="397" width="40.6" height="19" rx="9.5"/><text x="326" y="410.5">مكة</text><path d="M310.7 401.5 l-3 5 l3 5"/></g><g class="sx-pin" data-go="road" role="button" tabindex="0" aria-label="طريق الهجرة"><rect x="165.9" y="388" width="102.2" height="32" fill="transparent" stroke="none"/><rect class="pb" x="171.9" y="397" width="90.2" height="19" rx="9.5"/><text x="221" y="410.5">طريق الهجرة</text><path d="M180.9 401.5 l-3 5 l3 5"/></g><g class="sx-pin" data-go="md" role="button" tabindex="0" aria-label="أحداث المدينة في الخط الزمني"><rect x="74.3" y="388" width="77.4" height="32" fill="transparent" stroke="none"/><rect class="pb" x="80.3" y="397" width="65.4" height="19" rx="9.5"/><text x="117" y="410.5">المدينة</text><path d="M89.3 401.5 l-3 5 l3 5"/></g>
 </svg>
     <svg class="sx-lan2 r" viewBox="0 0 48 150" aria-hidden="true">
  <path d="M24 0 V38" stroke="#C9A04A" stroke-width="1"/>
@@ -1481,7 +1492,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1740';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1805';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2952,7 +2963,11 @@ let SXRET=null;
     const L=[...document.querySelectorAll('.fx,#sxZub,#sxAtl')].filter(o=>!o.hidden);if(L.length){L.forEach(o=>o.hidden=true);sxUnlock();SXRET=L}else SXRET=null}
   return _op.apply(this,arguments)}}
 {const _cr=closeReader;closeReader=function(){_cr.apply(this,arguments);renderShelfS();const L=SXRET;SXRET=null;if(L&&L.length){L.forEach(o=>o.hidden=false);sxLock()}}}
-$('#sxTl').onclick=()=>openSX('tl');$('#sxTree').onclick=()=>openSX('nasab');
+$('#sxTl').onclick=()=>openSX('tl');
+/* the scene: Makkah opens the timeline at its start, al-Madinah at the Madinan period, the road opens the Hijra road */
+{const go=async k=>{if(k==='road'){fxRoad();return}await openSX('tl');if(k==='md'){const t=$('#era3');t&&t.scrollIntoView({block:'start'})}};
+  document.querySelectorAll('.sx-pin').forEach(g=>{g.addEventListener('click',()=>go(g.dataset.go));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go(g.dataset.go)}})});
+  if(!LS.get('pinHint',0)){const sv=document.querySelector('.sx-ground');if(sv){sv.classList.add('sx-pins-hint');LS.set('pinHint',1)}}}$('#sxTree').onclick=()=>openSX('nasab');
 /* ---------- قارن بالصورة: صورة الصفحة من المطبوع ---------- */
 const SXIMGMAP={};
 for(const n in SXIMG){const v=SXIMG[n];v.s.forEach(([f,ps])=>ps.forEach((p,i)=>{SXIMGMAP[n+':'+p]={f,i,c:ps.length,h:v.h}}))}
