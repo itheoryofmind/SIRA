@@ -76,10 +76,10 @@ function today() {
   return { t: 'من شمائله صلى الله عليه وسلم', b: h.t, u: SITE + '/#v25p' + h.p, tag: 'shamail' };
 }
 
-// every Friday to all who turned the notifications on: al-Ahzab 56 (King Fahd Complex text), and Ibn al-Qayyim's words in Zad al-Ma'ad (vol. 1 p. 364)
+// every Friday to all who turned the notifications on: al-Ahzab 56 only (King Fahd Complex text)
 const VERSE = "إِنَّ ٱللَّهَ وَمَلَٰٓئِكَتَهُۥ يُصَلُّونَ عَلَى ٱلنَّبِيِّۚ يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ صَلُّواْ عَلَيۡهِ وَسَلِّمُواْ تَسۡلِيمًا";
 function friday() {
-  return { t: 'يوم الجمعة', b: '﴿' + VERSE + '﴾ [الأحزاب: ٥٦]\n«أكثروا من الصلاة علي يوم الجمعة وليلة الجمعة» (زاد المعاد ١/٣٦٤)', u: SITE + '/#v18p364', tag: 'friday' };
+  return { t: 'يوم الجمعة', b: '﴿' + VERSE + '﴾ [الأحزاب: ٥٦]', u: SITE + '/', tag: 'friday' };
 }
 
 function valid(sub) {
