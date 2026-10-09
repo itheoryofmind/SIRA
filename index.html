@@ -994,6 +994,19 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 .yr-mk small{font-size:12px;color:var(--muted)}
 .kh-c.mx{color:var(--ink);text-shadow:0 0 3px var(--surface),0 0 3px var(--surface)}
 
+/* ما نزل من القرآن في أحداث السيرة */
+.nz-ev{border-top:1px solid var(--line);padding:14px 0 6px}
+.nz-ev h3{font-family:"Amiri",serif;font-weight:700;font-size:23px;line-height:1.4;margin:0 0 6px}
+.nz-q{margin:8px 0 12px}
+.nz-q .by{font-size:13px;color:var(--brass);margin:0 0 4px}
+.nz-q blockquote{margin:0 0 6px;font-family:var(--text);font-size:19px;line-height:2;border-inline-start:3px solid var(--palm);padding-inline-start:12px}
+.nz-q blockquote p{margin:0 0 6px}.nz-q blockquote p.gap{color:var(--muted);margin:0}
+.nz-q blockquote .q{color:var(--verse)}
+.nz-q blockquote .qu{font-family:"UthmanicHafs","Amiri",serif;font-size:1.08em}
+.nz-q blockquote.clip{max-height:15.5em;overflow:hidden;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
+.nz-q .nz-more{display:block;margin:0 0 4px;padding:0;min-height:36px}
+.nz-q .btn-quiet{min-height:40px}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -1123,7 +1136,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
       <div class="ex">
         <button type="button" class="wide" id="fxEvent"><b>الحدث في كل الكتب</b><span>اختر حدثاً واقرأه في كل كتاب بصفحته</span></button>
         <button type="button" id="fxDay"><b>يومه صلى الله عليه وسلم</b><span>هديه في يومه وليلته من زاد المعاد</span></button>
-        <button type="button" id="fxAyat"><b>الآيات في مختصر السيرة</b><span>كل آية استشهد بها المؤلف بموضعها</span></button>
+        <button type="button" id="fxAyat"><b>ما نزل من القرآن في أحداث السيرة</b><span>أحداثٌ نصّت الكتب على أن آياتٍ نزلت فيها</span></button>
         <button type="button" id="fxSifa"><b>صفته كأنك تراه</b><span>خَلقه وخُلقه من الشمائل</span></button>
         <button type="button" id="fxRoad"><b>طريق الهجرة</b><span>المنازل كما ذكرها ابن إسحاق</span></button>
         <button type="button" id="sxZubda"><b>أربعون محطة</b><span>السيرة في بطاقات، بلفظ الكتاب</span></button>
@@ -1468,7 +1481,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1713';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1727';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1575,7 +1588,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "c036daf725", "data/sx_feat.json": "d4cbce21d9", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/saadi.json": "bf53b5261e"};
+const DH={"data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "c036daf725", "data/sx_feat.json": "5bda039651", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3132,16 +3145,25 @@ async function fxDay(){const F=await sxFeat();const P=fxOpen('يومه صلى ا
   P.inn.append(el('p','fx-note','ترتيب الأوقات في الدائرة للتصفح، من الليل إلى الليل، وليس ترتيباً نصّ عليه ابن القيم. والنصوص بلفظ زاد المعاد، وقد يُختصر آخرها بنقاط.'))}
 
 /* ---------- آيات السيرة ---------- */
-async function fxAyat(){const F=await sxFeat();const P=fxOpen('الآيات في مختصر السيرة');
-  P.inn.append(el('p','fx-lead','كل آية استشهد بها الإمام محمد بن عبد الوهاب في مختصر السيرة، مرتبةً على صفحات الكتاب، ومع كل آية موضعها في المصحف وصفحتها في الكتاب. والتقسيم بحسب موضع الآية من الكتاب لا بحسب وقت نزولها، وليست كل آية منها في سبب نزول.'));
-  const G=[['الكل',()=>1],['المقدمة',a=>a.e===null],['قبل البعثة',a=>a.e===0],['العهد المكي',a=>a.e===1],['الهجرة',a=>a.e===2],['العهد المدني',a=>a.e===3],['الخلفاء',a=>a.e>3]];
-  const ch=el('div','fx-chips'),list=el('div','fx-list');P.inn.append(ch,list);
-  const show=gi=>{[...ch.children].forEach((c,j)=>{c.classList.toggle('on',j===gi);c.setAttribute('aria-pressed',j===gi)});list.innerHTML='';
-    F.ayat.filter(G[gi][1]).forEach(a=>{const d=el('div','fx-src');d.append(el('p','fx-q',a.u));
-      const ref='['+F.sn[a.s-1]+': '+ar(a.a)+(a.b!==a.a?'–'+ar(a.b):'')+']';d.append(el('p','by',ref+(a.h?' · '+a.h:'')));d.append(goBtn(P,'ص '+ar(a.p)+' من المختصر',17,a.p));list.append(d)})};
-  G.forEach(([t,f],i)=>{const n=F.ayat.filter(f).length;if(!n)return;const c=el('button','fx-chip',t+' ('+ar(n)+')');c.type='button';c.onclick=()=>show(i);ch.append(c)});
-  show(0);
-  P.inn.append(el('p','fx-note','نص الآيات بالرسم العثماني من مصحف مجمع الملك فهد (رواية حفص)، والآية تُعرض كما اقتبسها المؤلف، فقد يكون المقتبس بعض آية.'))}
+/* ما نزل من القرآن في أحداث السيرة: only where the book itself says the verse came down in that event, in its own words */
+async function fxAyat(){const E=await getJSON('data/sx_nuzul.json');const P=fxOpen('ما نزل من القرآن في أحداث السيرة');
+  P.inn.append(el('p','fx-lead','أحداثٌ من السيرة نصّت كتب الموقع على أن آياتٍ من القرآن نزلت فيها. تحت كل حدث كلامُ كل كتاب بلفظه وصفحته، والآيات فيه بالرسم العثماني؛ اضغط الآية لتراها في موضعها من المصحف. والأحداث مرتبة على وقت وقوعها، وقد تنزل الآية بعد الحدث بزمن.'));
+  const G=[['الكل',()=>1],['أحداث مكة',e=>e.e==='mk'],['أحداث المدينة',e=>e.e==='md']];
+  const ch=el('div','fx-chips'),list=el('div','nz-list');P.inn.append(ch,list);
+  list.addEventListener('click',e=>{const q=e.target.closest('.qa');if(q){openAya(+q.dataset.s,+q.dataset.a,+q.dataset.b)}});
+  const show=gi=>{[...ch.children].forEach((c,j)=>{c.classList.toggle('on',j===gi);c.setAttribute('aria-pressed',j===gi)});list.innerHTML='';LS.set('nzG',gi);
+    E.filter(G[gi][1]).forEach(ev=>{const card=el('section','nz-ev');card.append(el('h3',null,ev.t));
+      ev.q.forEach(q=>{const d=el('div','nz-q');
+        d.append(el('p','by',SXBN(q.n)+'، ص '+ar(q.p)+(q.p2!==q.p?'–'+ar(q.p2):'')));
+        const bq=el('blockquote');let len=0;
+        q.x.forEach(x=>{const pp=el('p');if(x.t==='…'){pp.className='gap';pp.textContent='…'}else{const rep={};for(const k in x.u){const v=x.u[k];rep[k]=[0,+k,v[0],v[1],v[2],v[3]]}pp.append(richInline(x.t,[],false,rep));len+=x.t.length}bq.append(pp)});
+        d.append(bq);
+        if(len>520){bq.classList.add('clip');const m=el('button','btn btn-link nz-more','أكمل النص');m.type='button';m.onclick=()=>{bq.classList.remove('clip');m.remove()};d.append(m)}
+        d.append(goBtn(P,'اقرأه في الكتاب',q.n,q.p));card.append(d)});
+      list.append(card)})};
+  G.forEach(([t,f],i)=>{const c=el('button','fx-chip',t+' ('+ar(E.filter(f).length)+')');c.type='button';c.onclick=()=>show(i);ch.append(c)});
+  show(Math.min(+(LS.get('nzG',0))||0,G.length-1));
+  P.inn.append(el('p','fx-note','لم يُذكر هنا إلا ما نصّ فيه الكتاب نفسه على أن الآية أو السورة نزلت في ذلك الحدث، ويُنقل كلامه بلفظه دون تصرف، وما حُذف من وسطه عُلّم بنقاط. والروايات على عهدة رواتها كما ذكرها أصحاب الكتب، فالموقع ناقل لا يحكم عليها، وإذا اختلفت الكتب في سبب نزول ذُكر ما في كل كتاب. ونص الآيات من مصحف مجمع الملك فهد، وتُعرض كما اقتبسها المؤلف، فقد يكون المقتبس بعض آية.'))}
 
 /* ---------- صفته كأنك تراه ---------- */
 async function fxSifa(){const F=await sxFeat();const P=fxOpen('صفته كأنك تراه');
