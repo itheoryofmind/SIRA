@@ -1271,7 +1271,7 @@ span.kh-k{border-style:dashed;color:var(--muted)}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1136';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1402';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3285,6 +3285,7 @@ function qPlate(n,BW,BH){   // the book's name plate, drawn like a cover (no pub
   if(L[2]){x.fillStyle=CARD.goldL;fit(L[2],W-120,30,'Amiri, serif');x.fillText(L[2],W/2,520)}
   return c}
 function qPick(t,pp){
+  try{window.getSelection().removeAllRanges()}catch(e){}if(typeof hideSelBar==='function')hideSelBar();
   let s=$('#qPick');if(!s){s=el('div','sheet');s.id='qPick';s.setAttribute('role','dialog');document.body.append(s)}
   s.innerHTML='';s.hidden=false;const back=$('#sheetBack')||null;
   s.append(el('h4',null,'اقتباس'));
@@ -3310,13 +3311,15 @@ async function qEdit(pp,mode){
     else{const r=drag||R[R.length-1];if(r){x.fillStyle='rgba(0,0,0,.45)';x.fillRect(0,0,cv.width,r.y);x.fillRect(0,r.y+r.h,cv.width,cv.height-r.y-r.h);x.strokeStyle='#dc2626';x.lineWidth=4;x.strokeRect(r.x,r.y,r.w,r.h)}}};
   paint();
   const pt=e=>{const b=cv.getBoundingClientRect();return {x:(e.clientX-b.left)*cv.width/b.width,y:(e.clientY-b.top)*cv.height/b.height}};
-  let a0=null;
-  cv.onpointerdown=e=>{e.preventDefault();cv.setPointerCapture(e.pointerId);a0=pt(e)};
-  cv.onpointermove=e=>{if(!a0)return;const b=pt(e);
+  let a0=null;const PT=new Set();
+  // one finger draws; a second finger means pinch-zoom, so the drawing in progress is dropped
+  cv.onpointerdown=e=>{PT.add(e.pointerId);if(PT.size>1){a0=null;drag=null;paint();return}e.preventDefault();cv.setPointerCapture(e.pointerId);a0=pt(e)};
+  cv.onpointercancel=e=>{PT.delete(e.pointerId);a0=null;drag=null;paint()};
+  cv.onpointermove=e=>{if(!a0||PT.size>1)return;const b=pt(e);
     if(mode==='hl'){const lh=cv.height*0.028,h=Math.max(lh,Math.abs(b.y-a0.y));drag={x:Math.min(a0.x,b.x),y:Math.abs(b.y-a0.y)<lh?a0.y-lh/2:Math.min(a0.y,b.y),w:Math.abs(b.x-a0.x),h}}
     else drag={x:0,y:Math.min(a0.y,b.y),w:cv.width,h:Math.abs(b.y-a0.y)};paint()};
-  cv.onpointerup=()=>{if(drag&&drag.w>8&&drag.h>8){if(mode==='crop')R.length=0;R.push(drag)}drag=null;a0=null;paint()};
-  cv.style.touchAction='none';
+  cv.onpointerup=e=>{const multi=PT.size>1;PT.delete(e.pointerId);if(multi){a0=null;drag=null;return}if(drag&&drag.w>8&&drag.h>8){if(mode==='crop')R.length=0;R.push(drag)}drag=null;a0=null;paint()};
+  cv.style.touchAction='pinch-zoom';
   undo.onclick=()=>{R.pop();paint()};cls.onclick=()=>{ov.hidden=true};
   done.onclick=async()=>{if(mode==='crop'&&!R.length){toast('حدّد المقطع أولاً بالسحب على الصورة.',2500);return}
     if(mode==='hl'&&!R.length){toast('ظلّل أولاً بالسحب على السطور.',2500);return}
