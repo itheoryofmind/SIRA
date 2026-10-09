@@ -786,6 +786,16 @@ body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
 .fx-dh{font-family:"Amiri",serif;font-weight:700;font-size:24px;margin:4px 0 0}
 .fx-src .by{font-size:14px}
 
+/* levels as separate cards */
+.lv{gap:12px}
+.lv-g{border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:0 14px}
+.lv-h{align-items:center;gap:10px;margin:0;padding:12px 0 10px;border-bottom:1px solid var(--line)}
+.lv-h b{flex:none;width:28px;height:28px;border-radius:14px;background:var(--brass-soft);color:var(--brass);display:flex;align-items:center;justify-content:center;font-size:15px}
+.lv-h span{color:var(--ink);font-size:17px;font-weight:600}
+.lv-b{padding:12px 0}.lv-b+.lv-b{border-top:1px solid var(--line)}
+.lv-b::after{content:"‹";flex:none;font-size:22px;color:var(--muted);line-height:1}
+.lv-b b{font-size:20px}
+
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 </style>
@@ -2655,7 +2665,7 @@ const SXBOOKS=[
   {t:'الخلفاء الراشدون',by:'من البداية والنهاية لابن كثير، تحقيق التركي',era:'الخلافة',tone:'var(--muted)',info:'من سنة ١١ إلى سنة ٤١هـ',st:'done',stT:'روجع على المطبوع',open:()=>openZad(MB.k)}
 ];
 function renderShelfS(){
-  const L=$('#lvList');if(L&&!L.childElementCount)SXMAD.forEach((m,k)=>{const g=el('div','lv-g');const hd=el('div','lv-h');hd.append(el('b',null,ar(k+1)),el('span',null,m.s));g.append(hd);
+  const L=$('#lvList');if(L&&!L.childElementCount)SXMAD.forEach((m,k)=>{const g=el('div','lv-g');const hd=el('div','lv-h');hd.append(el('b',null,ar(k+1)),el('span',null,m.d+': '+m.s));g.append(hd);
     m.b.forEach(([t,sub,fn])=>{const r=el('button','lv-b');r.type='button';const tt=el('span','t');tt.append(el('b',null,t),el('small',null,sub));r.append(tt);r.onclick=fn;g.append(r)});L.append(g)});
   const lr=lastAny();
   if(lr&&lr.n){$('#contT').textContent='تابع القراءة';$('#contS').textContent=SXBN(lr.n)+'، ص '+ar(lr.p);$('#contN').textContent=ar(lr.p)}
