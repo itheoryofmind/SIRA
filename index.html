@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="favicon-180.png">
+<link rel="icon" type="image/png" sizes="96x96" href="favicon-96.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="السيرة">
 </head>
 <body>
 <script>document.documentElement.lang="ar";document.documentElement.dir="rtl"</script>
@@ -546,7 +551,8 @@ textarea.notebox{width:100%;min-height:80px;border:1px solid var(--line);border-
 .zbl{display:flex;flex-direction:column}
 .zbl button{display:flex;justify-content:space-between;gap:10px;text-align:start;border:0;border-top:1px solid var(--line);background:none;padding:8px 0;font:inherit;font-size:15px;color:var(--ink)}
 .zbl small{color:var(--brass);white-space:nowrap}.zbl .zbmore{justify-content:center;color:var(--brass);font-size:14px}
-body.pg-locked{position:fixed;left:0;right:0;overflow:hidden}
+body.pg-locked,body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
+.overlay{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .zbd button{touch-action:manipulation}
 /* ===== موسوعة السيرة: «ثلاث وستون سنة» =====
    the life of the Prophet ﷺ as 63 squares is the one bold element; everything else is quiet:
@@ -843,21 +849,22 @@ body:not(.mk-on) .sxmk-btn,body:not(.mk-on) .sxmk-list{display:none!important}
 details.fx-src summary{cursor:pointer;font-family:var(--text);font-size:19px;font-weight:700;padding:4px 0;min-height:40px}
 details.fx-src p{font-family:var(--text);font-size:17px;line-height:1.9;color:var(--muted);margin:6px 0 0}
 .fx-in .sx-mkbooks{margin-bottom:10px}
-/* nasab: a golden thread from عدنان down to the Prophet */
-.ns{list-style:none;margin:8px 0 16px;padding:0;position:relative}
-.ns::before{content:"";position:absolute;top:56px;bottom:30px;left:50%;width:2px;margin-left:-1px;background:linear-gradient(var(--line),var(--gold))}
-.ns-note{display:block;text-align:center;font-family:var(--text);font-size:15px;line-height:1.8;color:var(--muted);margin:0 0 10px;padding:0 10px}
-.ns-note button{border:0;background:none;color:var(--brass);font:inherit;font-size:13px;margin-inline-start:6px}
-.ns-g{display:grid;grid-template-columns:1fr 34px 1fr;align-items:center;min-height:50px;position:relative}
-.ns-d{grid-column:2;grid-row:1;justify-self:center;width:24px;height:24px;border-radius:12px;background:var(--surface);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--brass);z-index:1}
-.ns-n{grid-row:1;justify-self:stretch;display:flex;flex-direction:column;gap:0;border:1px solid var(--line);background:var(--raised);color:var(--ink);border-radius:14px;padding:6px 12px;font:inherit;touch-action:manipulation;position:relative}
-.ns-g.l .ns-n{grid-column:1;text-align:start;margin-inline-end:6px}.ns-g.r .ns-n{grid-column:3;text-align:start;margin-inline-start:6px}
-.ns-n b{font-family:var(--text);font-size:19px;line-height:1.35}.ns-n small{font-size:11px;color:var(--muted)}
-.ns-g.me{grid-template-columns:1fr;margin-top:10px}
-.ns-g.me .ns-d{display:none}
-.ns-g.me .ns-n{grid-column:1;justify-self:center;text-align:center;align-items:center;background:var(--brown);color:var(--on-brown);border-color:var(--gold);padding:12px 26px;border-radius:20px}
-.ns-g.me .ns-n b{font-family:Amiri,serif;font-size:28px}.ns-g.me .ns-n small{color:var(--gold);font-size:13px}
-.ns .sxd{grid-column:1/-1}
+/* nasab: the lineage read downward from the Prophet, as the book says it, the names growing smaller into the past */
+.nb{text-align:center;margin:10px 0 18px}
+.nb-me{display:inline-flex;flex-direction:column;align-items:center;gap:0;min-width:220px;padding:16px 28px 14px;border-radius:28px;background:var(--brown);color:var(--on-brown);border:1.5px solid var(--gold);font:inherit;touch-action:manipulation;box-shadow:0 0 0 6px var(--ground),0 0 0 7px var(--gold)}
+.nb-me .nb-k{font-size:13px;color:var(--gold);letter-spacing:0}
+.nb-me b{font-family:Amiri,serif;font-size:44px;line-height:1.25}
+.nb-me small{font-family:var(--text);font-size:16px;color:var(--gold)}
+.nb-l{list-style:none;margin:14px 0 0;padding:0}
+.nb-l li{display:flex;flex-direction:column;align-items:center}
+.nb-bn{position:relative;font-family:Amiri,serif;font-size:14px;color:var(--brass);padding:12px 0 2px}
+.nb-bn::before{content:"";position:absolute;top:0;left:50%;height:10px;border-left:1.5px solid var(--gold);opacity:.7}
+.nb-n{border:0;background:none;color:var(--ink);font-family:Amiri,serif;font-weight:700;line-height:1.3;padding:2px 14px;touch-action:manipulation;display:flex;flex-direction:column;align-items:center}
+.nb-n small{font-family:var(--text);font-weight:400;font-size:13px;color:var(--muted)}
+.nb-fam{margin-top:2px;border:1px solid var(--line);background:var(--raised);color:var(--brass);border-radius:999px;padding:2px 12px;font-family:var(--text);font-size:14px}
+.nb-end{margin:18px auto 0;max-width:420px;padding-top:14px;border-top:1px solid var(--line);font-family:var(--text);font-size:15px;line-height:1.8;color:var(--muted)}
+.nb-end button{border:0;background:none;color:var(--brass);font:inherit;font-size:13px;margin-inline-start:6px}
+.nb .sxd{text-align:start;margin:6px 0}
 /* family of عبد المطلب: an indented tree with elbow threads */
 .ft{margin:6px 0 10px}
 .fn{display:inline-flex;flex-direction:column;align-items:flex-start;gap:2px;border:1px solid var(--line);background:var(--raised);color:var(--ink);border-radius:12px;padding:6px 12px;font:inherit;text-align:start;touch-action:manipulation;max-width:100%}
@@ -877,6 +884,9 @@ details.fx-src p{font-family:var(--text);font-size:17px;line-height:1.9;color:va
 .ft li.path>.fn{border-color:var(--gold)}
 .ft .sxd{margin-inline-start:0}
 
+body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
+.overlay{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#home .install{margin:0 0 10px}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 </style>
@@ -894,6 +904,12 @@ details.fx-src p{font-family:var(--text);font-size:17px;line-height:1.9;color:va
     <p class="sx-verse">لَّقَدۡ كَانَ لَكُمۡ فِي رَسُولِ ٱللَّهِ أُسۡوَةٌ حَسَنَةࣱ <span class="sx-ref">[الأحزاب: ٢١]</span></p>
     <p class="sx-tag">سيرة النبي صلى الله عليه وسلم وشمائله ومغازيه وهديه، ثم خلفاؤه الراشدون، من أمهات الكتب مقابلةً بطبعاتها.</p>
     <p class="hijri" id="hijri" hidden></p>
+    <div class="install" id="install" hidden>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+      <span id="installTxt"></span>
+      <button class="btn btn-primary" id="installBtn" type="button" hidden>ثبّت</button>
+      <button class="icon" id="installX" type="button" aria-label="إخفاء"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
   </div>
 <div class="wrap searchbar">
     <form class="searchbox" id="sform" role="search">
@@ -988,12 +1004,7 @@ details.fx-src p{font-family:var(--text);font-size:17px;line-height:1.9;color:va
     <div hidden id="legacy">
     
 
-    <div class="install" id="install" hidden>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M12 18h.01"/></svg>
-      <span id="installTxt"></span>
-      <button class="btn btn-primary" id="installBtn" type="button" hidden>ثبّت</button>
-      <button class="icon" id="installX" type="button" aria-label="إخفاء"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-    </div>
+    
 
 
     <section class="prsec" id="prSec" aria-label="مواقيت الصلاة">
@@ -3043,13 +3054,19 @@ $('#sxMethod').onclick=fxMethod;
 /* ---------- شجرة النسب وآل عبد المطلب: رسم شجري بخيوط ---------- */
 function sxQ(o,after){const nx=after.nextElementSibling;if(nx&&nx.classList.contains('sxd')){nx.remove();return}const d=el('div','sxd');d.append('«'+o.q+'» ');const b=el('button',null,'ص '+ar(o.p)+' ←');b.type='button';b.onclick=()=>sxGo(o.p);d.append(b);after.after(d)}
 sxNasab=function(V,D){
-  V.append(el('p','sxnote','النسب الشريف كما ساقه الكتاب في ص ٥١، من عدنان إلى النبي صلى الله عليه وسلم. اضغط على أي اسم لترى نص الكتاب.'));
-  const ch=[...D.nasab.chain].reverse(),N=ch.length,S=el('ol','ns');
-  const top=el('li','ns-note');top.append(el('span',null,'«'+D.nasab.notes[0].q+'»'));const tb=el('button',null,'ص '+ar(D.nasab.notes[0].p));tb.type='button';tb.onclick=()=>sxGo(D.nasab.notes[0].p);top.append(tb);S.append(top);
-  ch.forEach((n,i)=>{const last=i===N-1,li=el('li','ns-g'+(i%2?' r':' l')+(last?' me':''));
-    const b=el('button','ns-n');b.type='button';b.append(el('b',null,last?'محمد':n));const k=N-1-i;if(last)b.append(el('small',null,'صلى الله عليه وسلم'));else if(k===1)b.append(el('small',null,'أبوه'));else if(k===2)b.append(el('small',null,'جدّه'));
-    const dot=el('span','ns-d',ar(k));li.append(dot,b);b.onclick=()=>sxQ(D.nasab.src,li);S.append(li)});
-  V.append(S);D.nasab.notes.slice(1).forEach(o=>sxSrc(o,V))};
+  V.append(el('p','sxnote','النسب الشريف كما ساقه الكتاب في ص ٥١. اضغط على أي اسم لترى نص الكتاب.'));
+  const W=el('div','nb'),N=D.nasab.chain.length;
+  const me=el('button','nb-me');me.type='button';me.append(el('span','nb-k','رسول الله'),el('b',null,'محمد'),el('small',null,'صلى الله عليه وسلم'));me.onclick=()=>sxQ(D.nasab.src,me);W.append(me);
+  const ol=el('ol','nb-l');
+  D.nasab.chain.slice(1).forEach((n,i)=>{const li=el('li');li.append(el('span','nb-bn','بن'));
+    const b=el('button','nb-n');b.type='button';b.style.fontSize=Math.round(27-i*0.45)+'px';b.append(n);
+    const lab=i===0?'أبوه':i===1?'جدّه':null;if(lab)b.append(el('small',null,lab));
+    b.onclick=()=>{if(n==='عبد المطلب'){sxQ(D.nasab.src,li);return}sxQ(D.nasab.src,li)};li.append(b);
+    if(n==='عبد المطلب'){const f=el('button','nb-fam','آل عبد المطلب ←');f.type='button';f.onclick=()=>{$('#sxOverlay').scrollTop=0;openSX('fam')};li.append(f)}
+    ol.append(li)});
+  W.append(ol);
+  const e=el('div','nb-end');e.append(el('span',null,'«'+D.nasab.notes[0].q+'»'));const eb=el('button',null,'ص '+ar(D.nasab.notes[0].p));eb.type='button';eb.onclick=()=>sxGo(D.nasab.notes[0].p);e.append(eb);W.append(e);
+  V.append(W);D.nasab.notes.slice(1).forEach(o=>sxSrc(o,V))};
 sxFam=function(V,D){
   V.append(el('p','sxnote','آل عبد المطلب كما ذكرهم الكتاب في ص ٥٦–٦٢، ولا يذكر الكتاب كل أولاده بأسمائهم. الخيط الذهبي طريق النسب الشريف. اضغط على أي اسم لترى نص الكتاب وصفحته.'));
   D.famnote.forEach(o=>sxSrc(o,V));
@@ -3454,6 +3471,13 @@ async function openZubdaD(){
 }
 $('#openZubda').onclick=openZubdaD;
 
+
+/* full-page overlays: the page behind must not scroll with them (iOS pulls it) */
+(function(){let Y=0;const b=document.body;
+  const upd=()=>{const open=[...document.querySelectorAll('.overlay')].some(o=>!o.hidden);
+    if(open&&!b.classList.contains('ov-locked')){if(b.classList.contains('pg-locked')||b.classList.contains('sx-locked'))return;Y=window.scrollY;b.style.top=(-Y)+'px';b.classList.add('ov-locked')}
+    else if(!open&&b.classList.contains('ov-locked')){b.classList.remove('ov-locked');b.style.top='';window.scrollTo(0,Y)}};
+  const mo=new MutationObserver(upd);document.querySelectorAll('.overlay').forEach(o=>mo.observe(o,{attributes:true,attributeFilter:['hidden']}))})();
 /* add to home screen: a small hint, shown until dismissed */
 (function(){
   const standalone=window.navigator.standalone||window.matchMedia('(display-mode: standalone)').matches;
@@ -3489,5 +3513,6 @@ renderHome();renderShelfS();
 </script>
 
 
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});</script>
 </body>
 </html>
