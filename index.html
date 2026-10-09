@@ -1009,12 +1009,12 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 
 /* the places in the scene are doors: Makkah and al-Madinah open their events, the road opens the Hijra */
 .sx-pin{cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none}
-.sx-pin .pb{fill:rgba(7,17,14,.6);stroke:#C9A04A;stroke-width:.8;transition:fill .15s}
-.sx-pin text{font:600 10.5px var(--text);fill:#EFE7D2;text-anchor:middle}
-.sx-pin path{fill:none;stroke:#C9A04A;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.sx-pin .pb{fill:rgba(7,17,14,.35);stroke:#C9A04A;stroke-width:.5;stroke-opacity:.7;transition:fill .15s}
+.sx-pin text{font:400 8.6px var(--text);fill:#D9D2BE;text-anchor:middle}
+.sx-pin path{fill:none;stroke:#C9A04A;stroke-opacity:.8;stroke-width:.9;stroke-linecap:round;stroke-linejoin:round}
 .sx-pin:active .pb,.sx-pin:focus-visible .pb{fill:rgba(201,160,74,.28)}
 .sx-pins-hint .sx-pin .pb{animation:sxPin 1.6s ease-in-out 3}
-@keyframes sxPin{0%,100%{stroke-width:.8;stroke-opacity:1}50%{stroke-width:2.2;stroke-opacity:.55}}
+@keyframes sxPin{0%,100%{stroke-width:.5;stroke-opacity:.7}50%{stroke-width:1.6;stroke-opacity:1}}
 @media (prefers-reduced-motion:reduce){.sx-pins-hint .sx-pin .pb{animation:none}}
 .sx-hero .sx-ground{z-index:3;pointer-events:none}.sx-hero .sx-ground .sx-pin{pointer-events:auto}
 /* the site's doors look like doors: every card shows it opens (‹), and the wide one is a green card, not a dark band that reads as a heading */
@@ -1072,7 +1072,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
  <circle cx="5.5" cy="5" r="1.2" fill="#E2C27E"/><circle cx="104.5" cy="5" r="1.2" fill="#E2C27E"/>
 </g>
 <path d="M0 393 H390" stroke="#E2C27E" stroke-opacity=".18"/>
-<g class="sx-pin" data-go="mk" role="button" tabindex="0" aria-label="أحداث مكة في الخط الزمني"><rect x="295.7" y="388" width="52.6" height="32" fill="transparent" stroke="none"/><rect class="pb" x="301.7" y="397" width="40.6" height="19" rx="9.5"/><text x="326" y="410.5">مكة</text><path d="M310.7 401.5 l-3 5 l3 5"/></g><g class="sx-pin" data-go="road" role="button" tabindex="0" aria-label="طريق الهجرة"><rect x="165.9" y="388" width="102.2" height="32" fill="transparent" stroke="none"/><rect class="pb" x="171.9" y="397" width="90.2" height="19" rx="9.5"/><text x="221" y="410.5">طريق الهجرة</text><path d="M180.9 401.5 l-3 5 l3 5"/></g><g class="sx-pin" data-go="md" role="button" tabindex="0" aria-label="أحداث المدينة في الخط الزمني"><rect x="74.3" y="388" width="77.4" height="32" fill="transparent" stroke="none"/><rect class="pb" x="80.3" y="397" width="65.4" height="19" rx="9.5"/><text x="117" y="410.5">المدينة</text><path d="M89.3 401.5 l-3 5 l3 5"/></g>
+<g class="sx-pin" data-go="mk" role="button" tabindex="0" aria-label="أحداث مكة في الخط الزمني"><rect x="298.6" y="390" width="46.7" height="30" fill="transparent" stroke="none"/><rect class="pb" x="306.6" y="399.5" width="30.7" height="14.5" rx="7.25"/><text x="325" y="409.6">مكة</text><path d="M313.6 403.5 l-2.2 3.3 l2.2 3.3"/></g><g class="sx-pin" data-go="road" role="button" tabindex="0" aria-label="طريق الهجرة"><rect x="174.1" y="390" width="85.9" height="30" fill="transparent" stroke="none"/><rect class="pb" x="182.1" y="399.5" width="69.9" height="14.5" rx="7.25"/><text x="220" y="409.6">طريق الهجرة</text><path d="M189.1 403.5 l-2.2 3.3 l2.2 3.3"/></g><g class="sx-pin" data-go="md" role="button" tabindex="0" aria-label="أحداث المدينة في الخط الزمني"><rect x="79.8" y="390" width="66.3" height="30" fill="transparent" stroke="none"/><rect class="pb" x="87.8" y="399.5" width="50.3" height="14.5" rx="7.25"/><text x="116" y="409.6">المدينة</text><path d="M94.8 403.5 l-2.2 3.3 l2.2 3.3"/></g>
 </svg>
     <svg class="sx-lan2 r" viewBox="0 0 48 150" aria-hidden="true">
  <path d="M24 0 V38" stroke="#C9A04A" stroke-width="1"/>
@@ -1500,7 +1500,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1806';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1808';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2972,8 +2972,8 @@ let SXRET=null;
   return _op.apply(this,arguments)}}
 {const _cr=closeReader;closeReader=function(){_cr.apply(this,arguments);renderShelfS();const L=SXRET;SXRET=null;if(L&&L.length){L.forEach(o=>o.hidden=false);sxLock()}}}
 $('#sxTl').onclick=()=>openSX('tl');
-/* the scene: Makkah opens the timeline at its start, al-Madinah at the Madinan period, the road opens the Hijra road */
-{const go=async k=>{if(k==='road'){fxRoad();return}await openSX('tl');if(k==='md'){const t=$('#era3');t&&t.scrollIntoView({block:'start'})}};
+/* the scene: Makkah opens the timeline at the Makkan period (after the mission), al-Madinah at the Madinan period, the road opens the Hijra road */
+{const go=async k=>{if(k==='road'){fxRoad();return}await openSX('tl');const t=$(k==='md'?'#era3':'#era1');t&&t.scrollIntoView({block:'start'})};
   document.querySelectorAll('.sx-pin').forEach(g=>{g.addEventListener('click',()=>go(g.dataset.go));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go(g.dataset.go)}})});
   if(!LS.get('pinHint',0)){const sv=document.querySelector('.sx-ground');if(sv){sv.classList.add('sx-pins-hint');LS.set('pinHint',1)}}}$('#sxTree').onclick=()=>openSX('nasab');
 /* ---------- قارن بالصورة: صورة الصفحة من المطبوع ---------- */
