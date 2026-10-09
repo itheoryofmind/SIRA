@@ -708,8 +708,8 @@ body{font-family:var(--ui);background:var(--ground)}
 .sx-pimg{width:100%;background-repeat:no-repeat}
 .sx-pwrap.big .sx-pimg{width:220%}
 .sx-pzoom{position:sticky;top:6px;inset-inline-start:6px;z-index:2;float:inline-start;margin:6px;font:inherit;font-size:12px;border:0;border-radius:999px;padding:3px 12px;background:var(--brown);color:var(--on-brown);opacity:.92}
-@media (prefers-color-scheme:dark){:root:not([data-theme=white]):not([data-theme=brown]) .sx-pimg{filter:invert(.88) hue-rotate(180deg)}}
-:root[data-theme=night] .sx-pimg{filter:invert(.88)}
+/* the page image is shown exactly as printed, in every theme */
+.sx-pimg{filter:none!important}
 
 /* differences with the print */
 mark.sxmk{background:rgba(220,38,38,.14);color:inherit;border-bottom:2px solid #dc2626;border-radius:3px;padding:0 1px;cursor:pointer}
@@ -1478,7 +1478,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1602';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1603';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
