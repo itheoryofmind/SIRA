@@ -1045,6 +1045,10 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .sx-logo .w svg.nm{height:clamp(48px,13.5vw,60px);display:block;margin:2px auto 4px}
 .sx-footer .k svg.nm{height:40px;vertical-align:-.3em}
 
+/* the menu button sits on the left (where it leaves the right-aligned headings uncovered), so the drawer opens from the left, under the finger */
+.drawer{inset-inline-start:auto!important;left:0!important;right:auto!important;animation:dInL .22s ease!important}
+@keyframes dInL{from{transform:translateX(-100%)}to{transform:none}}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -1110,10 +1114,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
     
     <header class="sx-top">
       <span></span>
-      <span style="display:flex;gap:6px">
-        <button class="sx-ib" type="button" id="sxSearchBtn" aria-label="بحث"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
-        <button class="sx-ib" type="button" id="sxMenuBtn" aria-label="القائمة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
-      </span>
+      <span style="display:flex;gap:6px"><button class="sx-ib" type="button" id="sxSearchBtn" aria-label="بحث"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button><button class="sx-ib" type="button" id="sxMenuBtn" aria-label="القائمة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button></span>
     </header>
     <h1 class="sx-logo"><svg class="sx-cart" viewBox="0 0 320 132" aria-hidden="true">
       <path class="o" d="M40 66 C40 34 70 16 100 16 H220 C250 16 280 34 280 66 C280 98 250 116 220 116 H100 C70 116 40 98 40 66Z"/>
@@ -1523,7 +1524,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1823';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1825';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
