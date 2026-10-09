@@ -627,7 +627,7 @@ body{font-family:var(--ui);background:var(--ground)}
 .yr-ev small{display:block;font-size:13px;color:var(--brass);margin-top:2px}
 .yr-none{font-family:var(--text);font-size:17px;color:var(--muted);margin:4px 0 0;line-height:1.7}
 .yr-note{font-size:12.5px;color:var(--muted);margin:10px 0 0;line-height:1.7}
-.sx-go{margin-top:14px;display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:16px;background:var(--brown);color:var(--on-brown);border:0;text-align:start;font:inherit;touch-action:manipulation}
+.sx-go{margin-top:16px;outline:1px solid var(--line);outline-offset:-1px;display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:16px;background:var(--brown);color:var(--on-brown);border:0;text-align:start;font:inherit;touch-action:manipulation}
 .sx-go .n{flex:none;width:42px;height:42px;border-radius:21px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;color:var(--gold);font-family:var(--text);font-size:17px}
 .sx-go b{display:block;font-family:var(--text);font-size:19px}.sx-go span span{display:block;font-size:13.5px;opacity:.8}
 
@@ -788,11 +788,12 @@ body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
 
 /* levels as separate cards */
 .lv{gap:12px}
-.lv-g{border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:0 14px}
-.lv-h{align-items:center;gap:10px;margin:0;padding:12px 0 10px;border-bottom:1px solid var(--line)}
+.lv-g{display:flex;flex-direction:column;gap:8px;border:0;padding:0}
+.lv-h{align-items:center;gap:10px;margin:6px 0 0;padding:0}
 .lv-h b{flex:none;width:28px;height:28px;border-radius:14px;background:var(--brass-soft);color:var(--brass);display:flex;align-items:center;justify-content:center;font-size:15px}
 .lv-h span{color:var(--ink);font-size:17px;font-weight:600}
-.lv-b{padding:12px 0}.lv-b+.lv-b{border-top:1px solid var(--line)}
+.lv-b{padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--raised);box-shadow:0 1px 2px rgba(20,35,30,.05)}
+.lv-b:active{background:var(--brass-soft)}
 .lv-b::after{content:"‹";flex:none;font-size:22px;color:var(--muted);line-height:1}
 .lv-b b{font-size:20px}
 
@@ -833,6 +834,7 @@ body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
       <div class="filter" id="filterRow" hidden><label for="fpart">اعرض:</label><select id="fpart"></select><span id="rcount"></span></div>
       <div class="results" id="res"></div>
     </section>
+    <button class="sx-go" id="continue" type="button"><span class="n" id="contN">١</span><span><b id="contT">ابدأ القراءة</b><span id="contS">من مختصر سيرة الرسول صلى الله عليه وسلم</span></span></button>
     <section class="yr" id="sxYears" aria-labelledby="yrH">
       <h2 id="yrH">ثلاث وستون سنة</h2>
       <p class="sx-lead">كل مربع سنة من عمره صلى الله عليه وسلم. اضغط سنةً لترى ما ذكره مختصر السيرة فيها.</p>
@@ -845,7 +847,6 @@ body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
         <span><i class="rd"></i>قرأتَ مواضعها</span>
       </div>
       <div class="yr-p" id="yrPanel" hidden></div>
-      <button class="sx-go" id="continue" type="button"><span class="n" id="contN">١</span><span><b id="contT">ابدأ القراءة</b><span id="contS">من مختصر سيرة الرسول صلى الله عليه وسلم</span></span></button>
     </section>
 
     <section class="sx-sec" id="sxPlan" aria-labelledby="plH">
