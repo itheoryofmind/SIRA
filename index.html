@@ -1550,7 +1550,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1838';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1847';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3369,6 +3369,7 @@ async function renderDaily(){const F=await sxFeat();const sec=$('#sxDaily'),C=$(
   const act=el('div','dy-act');
   if(t.length>320){q.classList.add('clip');const m=el('button','btn btn-link','أكمل الحديث');m.type='button';m.onclick=()=>{q.classList.remove('clip');m.remove()};act.append(m)}
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>openPart(25,h.p,null,false,'txt');act.append(go);C.append(act);
+  const bell=el('button','btn btn-link dy-bell');bell.type='button';act.append(bell);pushBtn(bell);
   sec.hidden=false}
 renderDaily();
 
