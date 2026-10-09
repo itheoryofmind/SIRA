@@ -910,7 +910,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 .sx-ground .road{fill:none;stroke:#E2C27E;stroke-width:1.3;stroke-dasharray:1.5 5;stroke-linecap:round;opacity:.85}
 .sx-ground .wp{fill:#E2C27E}
 .sx-ground .lb{font-family:var(--text);font-size:10.5px;fill:#BFC7BE;text-anchor:middle}
-.sx-hero .wrap{position:relative;z-index:2;display:flow-root;padding-bottom:calc(min(100vw,760px)*.31)}
+.sx-hero .wrap{position:relative;z-index:2;display:flow-root;padding-bottom:calc(min(100vw,760px)*.33)}
 .sx-hero .sx-top{padding-top:calc(10px + env(safe-area-inset-top))}
 .sx-hero .sx-brand{color:#F4ECD8;font-size:clamp(32px,9vw,44px);text-shadow:0 2px 18px rgba(0,0,0,.4)}
 .sx-hero .sx-ib{background:rgba(7,17,14,.45);border-color:rgba(226,194,126,.45);color:#E2C27E;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
@@ -943,6 +943,8 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 .sx-hero .sx-tag{font-size:14.5px;line-height:1.7;color:#AEB7AE}
 .sx-band{position:absolute;left:0;right:0;bottom:0;width:100%;height:min(190px,22vw);display:block}
 @media (max-width:700px){.sx-band{display:none}}
+.sx-hero .sx-verse .v1,.sx-hero .sx-verse .v2{display:block}
+.sx-hero .sx-verse .v1{font-size:1.18em}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 </style>
@@ -1022,7 +1024,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
       <circle class="dot" cx="6" cy="66" r="2.4"/><circle class="dot" cx="314" cy="66" r="2.4"/>
       <path class="orn" d="M160 9 l4 7 -4 7 -4 -7z M160 109 l4 7 -4 7 -4 -7z"/>
     </svg><span class="w">سيرته</span><span class="s">صلى الله عليه وسلم</span></h1>
-    <p class="sx-verse">لَّقَدۡ كَانَ لَكُمۡ فِي رَسُولِ ٱللَّهِ أُسۡوَةٌ حَسَنَةࣱ <span class="sx-ref">[الأحزاب: ٢١]</span></p>
+    <p class="sx-verse"><span class="v1">مُّحَمَّدࣱ رَّسُولُ ٱللَّهِۚ</span> <span class="v2">وَٱلَّذِينَ مَعَهُۥٓ أَشِدَّآءُ عَلَى ٱلۡكُفَّارِ رُحَمَآءُ بَيۡنَهُمۡۖ</span> <span class="sx-ref">[الفتح: ٢٩]</span></p>
     <p class="sx-tag">سيرة النبي صلى الله عليه وسلم وشمائله ومغازيه وهديه، ثم خلفاؤه الراشدون</p>
     <p class="hijri" id="hijri" hidden></p>
     </div>
