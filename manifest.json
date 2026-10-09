@@ -1,6 +1,6 @@
 {
- "name": "موسوعة السيرة",
- "short_name": "السيرة",
+ "name": "سيرته صلى الله عليه وسلم",
+ "short_name": "سيرته",
  "lang": "ar",
  "dir": "rtl",
  "start_url": ".",
@@ -9,8 +9,18 @@
  "background_color": "#F4F5F1",
  "theme_color": "#14231E",
  "icons": [
-  {"src": "icon-192.png","sizes": "192x192","type": "image/png","purpose": "any"},
-  {"src": "icon-512.png","sizes": "512x512","type": "image/png","purpose": "any"}
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  }
  ],
  "description": "سيرة النبي صلى الله عليه وسلم من كتب أهل العلم، بنصوصها وصفحاتها"
 }

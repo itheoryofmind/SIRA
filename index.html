@@ -7,7 +7,7 @@
 <link rel="apple-touch-icon" href="favicon-180.png">
 <link rel="icon" type="image/png" sizes="96x96" href="favicon-96.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="السيرة">
+<meta name="apple-mobile-web-app-title" content="سيرته">
 </head>
 <body>
 <script>document.documentElement.lang="ar";document.documentElement.dir="rtl"</script>
@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Reem+Kufi:wght@400;500;600;700&display=swap">
-<title>موسوعة السيرة</title>
+<title>سيرته صلى الله عليه وسلم</title>
 <style>
 :root{
   --ground:#f1e7d2; --surface:#fbf6ea; --raised:#fffdf7;
@@ -915,6 +915,8 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 @media (prefers-color-scheme:dark){:root:not([data-theme=white]):not([data-theme=brown]) .sx-hero{background:radial-gradient(120% 80% at 50% 0%,#1A2E26 0%,#0E1512 60%,#0A100D 100%)}}
 
 
+.sx-brand small,.sx-footer .k small{font-family:var(--text);font-size:.36em;font-weight:400;color:#E2C27E;margin-inline-start:4px;vertical-align:.35em;white-space:nowrap}
+.sx-footer .k small{color:var(--brass)}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 </style>
@@ -981,7 +983,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
     <div class="wrap">
     
     <header class="sx-top">
-      <h1 class="sx-brand">موسوعة السيرة</h1>
+      <h1 class="sx-brand">سيرته <small>صلى الله عليه وسلم</small></h1>
       <span style="display:flex;gap:6px">
         <button class="sx-ib" type="button" id="sxSearchBtn" aria-label="بحث"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
         <button class="sx-ib" type="button" id="sxMenuBtn" aria-label="القائمة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
@@ -1186,7 +1188,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
     </section>
 <button type="button" id="waqfFb"></button></div>
   </main>
-  <footer class="sx-footer"><p class="k">موسوعة السيرة</p><p><button type="button" class="btn btn-link" id="sxMethod">منهج الموقع ومواضع الخلاف مع المطبوع</button></p><p>نسخة مراجعة. الاسم مؤقت حتى يُختار اسم الموقع.</p></footer>
+  <footer class="sx-footer"><p class="k">سيرته <small>صلى الله عليه وسلم</small></p><p><button type="button" class="btn btn-link" id="sxMethod">منهج الموقع ومواضع الخلاف مع المطبوع</button></p><p>نسخة مراجعة قبل الإطلاق.</p></footer>
 </div>
 <!-- ============ READER ============ -->
 <section id="reader" hidden aria-label="القارئ">
@@ -1292,7 +1294,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 <button class="navbtn" id="navBtn" type="button" aria-label="القائمة"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
 <div class="drawer-back" id="navBack" hidden></div>
 <nav class="drawer" id="nav" hidden aria-label="أقسام الموقع">
-  <div class="dhead"><b>الدرر السنية</b><button class="icon" id="navClose" type="button" aria-label="إغلاق"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="dhead"><b>سيرته <small style="font-size:.6em">صلى الله عليه وسلم</small></b><button class="icon" id="navClose" type="button" aria-label="إغلاق"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div class="dtheme"><span>المظهر</span><div class="themes" role="group" aria-label="المظهر"></div></div>
   <div class="dlist" id="navList"></div>
 </nav>
@@ -2422,7 +2424,7 @@ $('#mCopy').onclick=async()=>{closeSheet();
   try{const T=await textOf(cur.n);const t=pagePlain(T,cur.p);if(!t||cur.p>=VOLS[cur.n].f){toast('لا يوجد نص لهذه الصفحة، فاعتمد الصورة.',3500);return}
     copyText(t+'\n\n'+citation()+((T.p[cur.p][0]&2)?' [حدود الصفحة تقريبية؛ تُراجع صورتها]':''),'نُسخ نص الصفحة مع الاستشهاد')}catch(e){toast('تعذّر تحميل النص')}};
 $('#mLink').onclick=async()=>{closeSheet();const u=pageUrl(),t=citation();
-  if(navigator.share){try{await navigator.share({title:isB(cur.n)?'مختصر السيرة':'الدرر السنية',text:t,url:u});return}catch(e){if(e.name==='AbortError')return}}
+  if(navigator.share){try{await navigator.share({title:isB(cur.n)?'مختصر السيرة':mbOf(cur.n)?mbOf(cur.n).sh:'الدرر السنية',text:t,url:u});return}catch(e){if(e.name==='AbortError')return}}
   copyText(t+'\n'+u,'نُسخ رابط الصفحة')};
 $('#mImg').onclick=async()=>{closeSheet();
   try{
@@ -2434,7 +2436,7 @@ $('#mImg').onclick=async()=>{closeSheet();
     x.fillStyle='#3b2616';x.fillRect(0,v.height,c.width,band);x.fillStyle='#f6ecd8';x.font='36px Amiri, serif';x.textAlign='center';x.direction='rtl';
     x.fillText((isB(cur.n)?BOOK(cur.n):BOOK(cur.n)+' — '+partName(cur.n))+'، ص '+ar(cur.p),c.width/2,v.height+58);
     const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.9));
-    const file=new File([blob],(isB(cur.n)?'مختصر السيرة':'الدرر السنية - '+short(cur.n))+' ص'+cur.p+'.jpg',{type:'image/jpeg'});
+    const file=new File([blob],(isB(cur.n)?'مختصر السيرة':mbOf(cur.n)?mbOf(cur.n).sh+(mbOf(cur.n).ps.length>1?' ج'+jOf(cur.n):''):'الدرر السنية - '+short(cur.n))+' ص'+cur.p+'.jpg',{type:'image/jpeg'});
     if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:citation()});return}
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=file.name;document.body.append(a);a.click();a.remove();
   }catch(e){if(e.name!=='AbortError')toast('تعذّرت مشاركة الصورة')}};
@@ -2499,12 +2501,12 @@ async function exportNotes(){
   const N=notes(),H=hls(),byNum=(a,b)=>{const [n1,p1]=a.split(':').map(Number),[n2,p2]=b.split(':').map(Number);return n1-n2||p1-p2};
   const keys=[...new Set([...Object.keys(N).filter(k=>N[k]),...Object.keys(H).filter(k=>H[k].length)])].sort(byNum);
   if(!keys.length){toast('لا توجد تعليقات ولا تظليلات بعد.',3000);return}
-  let t='ملاحظاتي وتظليلاتي من موسوعة السيرة\n',last=0;
+  let t='ملاحظاتي وتظليلاتي من موقع سيرته\n',last=0;
   for(const k of keys){const [n,p]=k.split(':').map(Number);if(n!==last){t+='\n— '+partName(n)+' —\n';last=n}
     t+='\nص '+ar(p)+':\n';if(N[k])t+='  تعليق: '+N[k]+'\n';
     for(const h of (H[k]||[]))t+='  ['+HLC[h.c]+'] «'+hlShow(h.t)+'»\n'}
   try{await navigator.clipboard.writeText(t);toast('نُسخت ملاحظاتك وتظليلاتك كلها. الصقها في المحادثة.',4500);return}catch(e){}
-  const file=new File([t],'ملاحظاتي من موسوعة السيرة.txt',{type:'text/plain'});
+  const file=new File([t],'ملاحظاتي من موقع سيرته.txt',{type:'text/plain'});
   try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return}}catch(e){if(e.name==='AbortError')return}
   const a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=file.name;document.body.append(a);a.click();a.remove();
 }
@@ -3256,7 +3258,7 @@ const BK_KEYS=k=>/^(favs|notes|hls|plan|lastRead\d*|last\d+|mode|fs|view2|chosen
 $('#bkSave').onclick=async()=>{
   const d={app:'durar',saved:new Date().toISOString(),data:{}};
   try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(BK_KEYS(k))d.data[k]=localStorage.getItem(k)}}catch(e){}
-  const file=new File([JSON.stringify(d)],'الدرر السنية - بياناتي.json',{type:'application/json'});
+  const file=new File([JSON.stringify(d)],'سيرته - بياناتي.json',{type:'application/json'});
   try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return}}catch(e){if(e.name==='AbortError')return}
   const a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=file.name;document.body.append(a);a.click();a.remove();
 };
