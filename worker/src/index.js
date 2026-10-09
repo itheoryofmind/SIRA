@@ -95,6 +95,13 @@ export default {
     if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
     if (u.pathname === '/key') return json({ key: (await vapid(env)).pub });
     if (u.pathname === '/health') return json({ ok: true, hadiths: H.length });
+    // a test send, now, to everyone subscribed: only with the key the deploy step keeps in the store
+    if (req.method === 'POST' && u.pathname === '/admin/send') {
+      const k = await env.PUSH.get('admin');
+      if (!k || req.headers.get('X-Admin') !== k) return json({ ok: false }, 403);
+      const r = await sendAll(env, u.searchParams.get('kind') === 'friday' ? friday() : today());
+      return json({ ok: true, ...r });
+    }
     if (req.method === 'POST' && (u.pathname === '/sub' || u.pathname === '/unsub')) {
       let sub; try { sub = await req.json(); } catch (e) { return json({ ok: false }, 400); }
       if (!sub || !sub.endpoint) return json({ ok: false }, 400);
@@ -109,17 +116,22 @@ export default {
     return json({ ok: false }, 404);
   },
   async scheduled(ev, env, ctx) {
-    const msg = ev.cron === FRI ? friday() : today();
-    let cursor, n = 0, gone = 0;
+    const r = await sendAll(env, ev.cron === FRI ? friday() : today());
+    console.log('sent', r.sent, 'removed', r.removed);
+  },
+};
+
+async function sendAll(env, msg) {
+    let cursor, n = 0, gone = 0, ok = 0;
     do {
       const l = await env.PUSH.list({ prefix: 's:', cursor });
       for (const k of l.keys) {
         const sub = await env.PUSH.get(k.name, 'json'); if (!sub) continue;
         const st = await send(env, sub, msg).catch(() => 0); n++;
+        if (st >= 200 && st < 300) ok++;
         if (st === 404 || st === 410) { await env.PUSH.delete(k.name); gone++; }   // the reader turned it off or removed the app
       }
       cursor = l.list_complete ? null : l.cursor;
     } while (cursor);
-    console.log('sent', n, 'removed', gone);
-  },
-};
+    return { tried: n, sent: ok, removed: gone };
+}

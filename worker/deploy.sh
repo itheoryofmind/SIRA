@@ -26,6 +26,9 @@ id = "$NS"
 crons = ["0 3 * * *", "0 6 * * 5"]   # every day 6:00 in Riyadh; Friday 9:00
 T
 CLOUDFLARE_ACCOUNT_ID="$ACC" npx --yes wrangler@3 deploy
+# the key for test sends: derived from the token, so only this repository can make one
+ADMIN=$(printf %s "$CLOUDFLARE_API_TOKEN" | sha256sum | cut -c1-40)
+api -X PUT "https://api.cloudflare.com/client/v4/accounts/$ACC/storage/kv/namespaces/$NS/values/admin" --data-binary "$ADMIN" -H "Content-Type: text/plain" >/dev/null && echo "test key set"
 # check it answers (the certificate of a new domain can take a minute or two)
 for i in $(seq 1 30); do
   if out=$(curl -fsS https://push.seeratuh.com/health 2>/dev/null); then echo "live: $out"; curl -fsS https://push.seeratuh.com/key >/dev/null && echo "key ok"; exit 0; fi

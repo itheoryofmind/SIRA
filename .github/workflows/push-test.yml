@@ -1,0 +1,19 @@
+name: push-test
+on:
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: 'daily or friday'
+        default: 'friday'
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send a test notification to everyone subscribed
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          ADMIN=$(printf %s "$CLOUDFLARE_API_TOKEN" | sha256sum | cut -c1-40)
+          R=$(curl -fsS -X POST -H "X-Admin: $ADMIN" "https://push.seeratuh.com/admin/send?kind=${{ github.event.inputs.kind }}")
+          echo "$R"
+          echo "$R" | python3 -c 'import sys,json;r=json.load(sys.stdin);sys.exit(0 if r.get("sent",0)>0 else 1)'
