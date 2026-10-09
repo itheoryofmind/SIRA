@@ -957,14 +957,14 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 @media (max-width:700px){.sx-band{display:none}}
 .sx-hero .sx-verse .v1,.sx-hero .sx-verse .v2{display:block}
 .sx-hero .sx-verse .v1{font-size:1.18em}
-/* book pages: the Sira identity, not the Durar browns */
+
 .action.main,:root[data-theme] .action.main{background:linear-gradient(135deg,#1F3A30,#14231E)!important;border:1px solid rgba(226,194,126,.55)!important;color:#F4ECD8!important}
 .action.main span,:root[data-theme] .action.main span{color:#C9CFC6!important;opacity:1!important}
 .treecard{background:var(--raised)!important;border:1px solid var(--line)!important;color:var(--ink)!important}
 .treecard svg{color:var(--brass)!important}.treecard small{color:var(--muted);opacity:1}
 .bkhead h3,.bkpage h4,.bktoc summary{font-family:Amiri,serif}
 
-/* Durar-only tools are not part of this site */
+
 #mFaw,#mIdx{display:none!important}
 /* reader: Sira headings and toolbar */
 .tbody h3{font-family:Amiri,serif;font-weight:700;color:var(--palm)}
@@ -1550,7 +1550,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1858';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1909';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1571,13 +1571,13 @@ const VOLS=[
  {n:14,p:583,f:565,d:'كتاب النصائح'},
  {n:15,p:508,f:493,d:'القسم الأول من كتاب البيان الواضح وأنبل النصائح'},
  {n:16,p:512,f:497,d:'القسم الأخير من كتاب البيان الواضح وأنبل النصائح، وتراجم أصحاب الرسائل والأجوبة'},
- {n:17,p:329,f:9999,d:'مختصر سيرة الرسول ﷺ، للإمام محمد بن عبدالوهاب',ni:1,s:3},   // كتب أخرى: not a part of the Durar
+ {n:17,p:329,f:9999,d:'مختصر سيرة الرسول ﷺ، للإمام محمد بن عبدالوهاب',ni:1,s:3},   
  {n:18,p:513,f:9999,d:'زاد المعاد، الجزء الأول',ni:1,s:35},{n:19,p:435,f:9999,d:'زاد المعاد، الجزء الثاني',ni:1,s:5},{n:20,p:609,f:9999,d:'زاد المعاد، الجزء الثالث',ni:1,s:5},{n:21,p:381,f:9999,d:'زاد المعاد، الجزء الرابع',ni:1,s:5},{n:22,p:740,f:9999,d:'زاد المعاد، الجزء الخامس',ni:1,s:5},
  {n:23,p:716,f:9999,d:'السيرة النبوية لابن هشام، الجزء الأول',ni:1,s:1},{n:24,p:671,f:9999,d:'السيرة النبوية لابن هشام، الجزء الثاني',ni:1,s:3},{n:25,p:210,f:9999,d:'الشمائل المحمدية للترمذي',ni:1,s:13},
  {n:26,p:179,f:9999,d:'كتاب المغازي من صحيح البخاري، من الجزء الخامس',ni:1,s:71},{n:27,p:16,f:9999,d:'كتاب المغازي من صحيح البخاري، من الجزء السادس',ni:1,s:2},
  {n:28,p:672,f:9999,d:'البداية والنهاية لابن كثير، من الجزء التاسع: خلافة أبي بكر وأول خلافة عمر',ni:1,s:413},{n:29,p:686,f:9999,d:'البداية والنهاية لابن كثير، الجزء العاشر: خلافة عمر وعثمان وعلي',ni:1,s:5},{n:30,p:153,f:9999,d:'البداية والنهاية لابن كثير، من الجزء الحادي عشر: مقتل علي وعام الجماعة',ni:1,s:5}   // ni: no PDF page images in this reader (the Sira site shows its own page images: «قارن بالصورة»)
 ];
-const NV=16,isB=n=>n>NV;   // the Durar has 16 parts; numbers above are other books read in the same reader
+const NV=16,isB=n=>n>NV;   
 // multi-volume text-only books read in the same reader
 const MB={
  z:{ps:[18,19,20,21,22],t:'زاد المعاد في هدي خير العباد',sh:'زاد المعاد',lr:'lastReadZ',start:[18,35],startS:'من مقدمة المؤلف',
@@ -1641,7 +1641,7 @@ const hasCaches='caches' in window;
 // VV: file version per part (part 8 pages 41-120 were re-ordered to match the printed numbering)
 const VV={8:2},vq=n=>VV[n]?'?v='+VV[n]:'',vk=n=>VV[n]?'.v'+VV[n]:'';
 const volKey=n=>new Request('./_vol/'+n+vk(n)+'.pdf');
-const volCache=()=>caches.open('durar-vols-v1'), dataCache=()=>caches.open('durar-data-v'+DV);
+const volCache=()=>caches.open('sira-vols-v1'), dataCache=()=>caches.open('sira-data-v'+DV);
 async function isSaved(n){if(!hasCaches)return false;try{return !!(await (await volCache()).match(volKey(n)))}catch(e){return false}}
 async function saveVol(n,onp){
   if(!hasCaches)throw new Error('no-cache');
@@ -3815,12 +3815,22 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkUpdat
 setTimeout(checkUpdate,1500);
 
 /* start */
-if(hasCaches){volCache().then(c=>c.delete(new Request('./_vol/8.pdf'))).catch(()=>{});caches.delete('durar-text-v1').catch(()=>{})}
+if(hasCaches){volCache().then(c=>c.delete(new Request('./_vol/8.pdf'))).catch(()=>{});caches.keys().then(ks=>ks.filter(k=>k.startsWith('durar-')).forEach(k=>caches.delete(k))).catch(()=>{})}
 renderHome();renderShelfS();
 (function(){const h=location.hash,m=h.match(/^#v(\d+)p(\d+)/);if(m&&VOLS[+m[1]]){history.replaceState(null,'',location.pathname);history.pushState({r:1},'','#v'+m[1]+'p'+m[2]);openHash(h,false)}})();
 </script>
 
-
+<script>
+(function(){if(!('caches' in window)||typeof DH==='undefined')return;
+  async function fill(){try{const c=await dataCache();
+    const want=new Map(Object.keys(DH).map(p=>{const u=p+'?h='+DH[p];return [new URL(u,location.href).href,u]}));
+    for(const r of await c.keys()){if(!want.has(r.url))await c.delete(r)}
+    for(const [abs,u] of want){if(navigator.onLine===false)return;if(await c.match(u))continue;
+      const r=await fetch(u);if(!r.ok)continue;await c.put(u,new Response(await r.text(),{headers:{'Content-Type':'application/json'}}))}
+  }catch(e){}}
+  setTimeout(fill,4000);addEventListener('online',()=>setTimeout(fill,2000));
+})();
+</script>
 <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});</script>
 </body>
 </html>
