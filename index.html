@@ -15,7 +15,7 @@
 (function(){var H=window.history;['pushState','replaceState'].forEach(function(k){var f=H[k];H[k]=function(){try{return f.apply(H,arguments)}catch(e){}}})})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Scheherazade+New:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Reem+Kufi:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Reem+Kufi:wght@400;500;600;700&display=swap">
 <title>موسوعة السيرة</title>
 <style>
 :root{
@@ -559,8 +559,8 @@ body.pg-locked{position:fixed;left:0;right:0;overflow:hidden}
   --clay:#A4462E; --palm:#2F6B55; --verse:#2F6B55;
   --mark:#F1DD9A; --shadow:0 1px 2px rgba(20,35,30,.06),0 8px 24px rgba(20,35,30,.08);
   --makkah:#34405A; --madinah:#2F6B55; --pre:#C9CEC4; --here:#B98A2E;
-  --display:"Aref Ruqaa","Scheherazade New",serif;
-  --kufi:"Aref Ruqaa","Scheherazade New",serif;
+  --display:"Amiri","Scheherazade New",serif;
+  --kufi:"Amiri","Scheherazade New",serif;
   --text:"Scheherazade New","Noto Naskh Arabic",serif;
   --ui:"IBM Plex Sans Arabic",-apple-system,"Segoe UI",sans-serif;
 }
@@ -588,7 +588,7 @@ body{font-family:var(--ui);background:var(--ground)}
 
 /* ---------- home ---------- */
 .sx-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:calc(14px + env(safe-area-inset-top)) 0 0}
-.sx-brand{margin:0;font-family:"Aref Ruqaa",serif;font-weight:700;font-size:clamp(34px,10vw,46px);line-height:1.25;color:var(--ink)}
+.sx-brand{margin:0;font-family:"Amiri",serif;font-weight:700;font-size:clamp(34px,10vw,46px);line-height:1.25;color:var(--ink)}
 .sx-top .sx-ib{width:44px;height:44px;border-radius:22px;border:1px solid var(--line);background:var(--raised);color:var(--ink);display:flex;align-items:center;justify-content:center;touch-action:manipulation}
 .sx-verse{margin:0 0 4px;font-family:"UthmanicHafs","Amiri",serif;font-size:clamp(19px,5.4vw,24px);line-height:2;color:var(--muted)}
 .sx-verse .sx-ref{font-family:var(--text);font-size:15px;opacity:.85}
@@ -597,7 +597,7 @@ body{font-family:var(--ui);background:var(--ground)}
 .searchbar .refhint,#openTopics{display:none}
 .searchbox{box-shadow:none;border-color:var(--line)}
 
-.home h2,.sx-h2{font-family:"Aref Ruqaa",serif;font-weight:700;letter-spacing:0;color:var(--ink);font-size:26px;line-height:1.4;margin:0 0 2px}
+.home h2,.sx-h2{font-family:"Amiri",serif;font-weight:700;letter-spacing:0;color:var(--ink);font-size:26px;line-height:1.4;margin:0 0 2px}
 .sx-sec{margin-top:30px}
 .sx-lead{color:var(--muted);font-family:var(--text);font-size:17px;line-height:1.6;margin:0 0 12px}
 
@@ -619,7 +619,7 @@ body{font-family:var(--ui);background:var(--ground)}
 .yr-key i.mk{background:var(--makkah);border-color:var(--makkah)}.yr-key i.md{background:var(--madinah);border-color:var(--madinah)}
 .yr-key i.ev{border:0;width:7px;height:7px;border-radius:50%;background:var(--here)}
 .yr-p{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
-.yr-p h3{margin:0;font-family:"Aref Ruqaa",serif;font-weight:700;font-size:23px;line-height:1.4}
+.yr-p h3{margin:0;font-family:"Amiri",serif;font-weight:700;font-size:23px;line-height:1.4}
 .yr-p .sub{margin:0 0 8px;font-family:var(--text);font-size:16px;color:var(--muted)}
 .yr-ev{display:block;width:100%;text-align:start;border:0;border-top:1px solid var(--line);background:none;color:var(--ink);padding:10px 0;font:inherit;touch-action:manipulation}
 .yr-ev b{display:block;font-family:var(--text);font-size:19px;font-weight:700;line-height:1.5}
@@ -666,7 +666,7 @@ body{font-family:var(--ui);background:var(--ground)}
 .sx-review{border:1px dashed var(--brass);border-radius:16px;padding:14px 16px;background:var(--surface)}
 .sx-review ol{margin:6px 0 0;padding-inline-start:20px;font-size:14px;color:var(--muted);list-style:arabic-indic}
 .sx-footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 16px calc(30px + env(safe-area-inset-bottom))}
-.sx-footer .k{font-family:"Aref Ruqaa",serif;font-size:22px;color:var(--ink);margin:0 0 4px}
+.sx-footer .k{font-family:"Amiri",serif;font-size:22px;color:var(--ink);margin:0 0 4px}
 .qbar{background:rgba(20,35,30,.96)!important}
 
 /* reader: your place in his life */
@@ -706,7 +706,7 @@ body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
 .fx,.sx-atl,.sx-zub{position:fixed;inset:0;z-index:96;background:var(--ground);color:var(--ink);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:calc(10px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom))}
 .fx button,.sx-atl button,.sx-zub button{touch-action:manipulation}
 .fx-top,.sx-atl .at-top{position:sticky;top:calc(-10px - env(safe-area-inset-top));z-index:3;display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--ground);padding:6px 0 8px;margin:0 0 4px}
-.fx-top h2,.sx-atl .at-top h3{font-family:"Aref Ruqaa",serif;font-weight:700;font-size:27px;margin:0;line-height:1.35}
+.fx-top h2,.sx-atl .at-top h3{font-family:"Amiri",serif;font-weight:700;font-size:27px;margin:0;line-height:1.35}
 .fx-x,.sx-atl .zx,.sx-zub .zx{flex:none;width:44px;height:44px;border-radius:22px;border:1px solid var(--line);background:var(--raised);color:var(--ink);font-size:20px;display:flex;align-items:center;justify-content:center}
 .fx-in{max-width:640px;margin:0 auto}
 .fx-lead{font-family:var(--text);font-size:17px;line-height:1.75;color:var(--muted);margin:0 0 12px}
@@ -737,7 +737,7 @@ body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
 .day .seg path{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
 .day .seg.on path{fill:var(--brass-soft);stroke:var(--brass)}
 .day .seg text{font-family:var(--text);font-size:15px;fill:var(--ink);text-anchor:middle;dominant-baseline:middle}
-.day .hub{fill:var(--brown)}.day .hubt{font-family:"Aref Ruqaa",serif;font-size:17px;fill:var(--on-brown);text-anchor:middle;dominant-baseline:middle}
+.day .hub{fill:var(--brown)}.day .hubt{font-family:"Amiri",serif;font-size:17px;fill:var(--on-brown);text-anchor:middle;dominant-baseline:middle}
 
 /* Hijra road */
 .road{position:relative;margin:6px 0 0;padding-inline-start:30px}
@@ -755,7 +755,7 @@ body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
 .sx-zub .zcard{flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px;max-width:640px;margin:0 auto;width:100%;text-align:center}
 .sx-zub .zera{margin:0;color:var(--palm);font-family:var(--text);font-size:16px}
 .sx-zub .znum{margin:0;color:var(--muted);font-size:13px}
-.sx-zub h3{font-family:"Aref Ruqaa",serif;font-weight:700;font-size:32px;line-height:1.5;margin:6px 0;color:var(--ink)}
+.sx-zub h3{font-family:"Amiri",serif;font-weight:700;font-size:32px;line-height:1.5;margin:6px 0;color:var(--ink)}
 .sx-zub blockquote{margin:6px 0 12px;font-family:var(--text);font-size:21px;line-height:2;color:var(--ink);border-inline-start:3px solid var(--palm);padding-inline-start:12px;text-align:start}
 .sx-zub .zsrc{margin:6px 0 0;font-size:12.5px;color:var(--muted)}
 .sx-zub .znav{display:flex;gap:10px;justify-content:space-between;max-width:640px;margin:0 auto;width:100%}
@@ -783,7 +783,7 @@ body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
 .fx-gs{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px}.fx-gs .gr{margin:0}.fx-gs .btn{min-height:34px;padding:0 10px;font-size:13px;margin-inline-start:auto}
 .fx-had.weak p{color:var(--muted)}.fx-had.weak .gr{color:var(--clay)}
 .yr-key i.rd{border:2px solid var(--here);border-radius:3px}
-.fx-dh{font-family:"Aref Ruqaa",serif;font-weight:700;font-size:24px;margin:4px 0 0}
+.fx-dh{font-family:"Amiri",serif;font-weight:700;font-size:24px;margin:4px 0 0}
 .fx-src .by{font-size:14px}
 
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
