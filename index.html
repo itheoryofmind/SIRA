@@ -808,7 +808,7 @@ body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
 
 
 #sxMenuBtn{display:none!important}
-.navbtn{inset-inline-start:auto!important;left:16px!important;right:auto!important;top:calc(10px + env(safe-area-inset-top))!important;background:rgba(14,26,22,.78)!important;border-color:rgba(226,194,126,.5)!important;color:#E2C27E!important;width:44px!important;height:44px!important;z-index:74!important}
+.navbtn{inset-inline-start:auto!important;right:16px!important;left:auto!important;top:calc(10px + env(safe-area-inset-top))!important;background:rgba(14,26,22,.78)!important;border-color:rgba(226,194,126,.5)!important;color:#E2C27E!important;width:44px!important;height:44px!important;z-index:74!important}
 .sx-go .n.s3{font-size:14px}
 .yr-ev q mark{background:var(--brass-soft);color:inherit;border-radius:3px;padding:0 2px}
 .fx-gs{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px}.fx-gs .gr{margin:0}.fx-gs .btn{min-height:34px;padding:0 10px;font-size:13px;margin-inline-start:auto}
@@ -930,12 +930,12 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 .sx-hero .sx-verse .sx-ref{color:#E2C27E;font-size:14px;white-space:nowrap;display:block;line-height:1.6}
 .sx-hero .sx-tag{color:#C9CFC6;text-align:center;font-size:17px;line-height:1.7;margin:2px auto 0;max-width:30ch;padding-inline:20px}
 .sx-lan2{position:absolute;top:calc(60px + env(safe-area-inset-top));width:34px;height:106px;z-index:2;transform-origin:50% 0;animation:sxSw 6s ease-in-out infinite}
-.sx-lan2.l{left:8px}.sx-lan2.r{right:6px;top:0;height:120px;animation-delay:-3s}
+.sx-lan2.l{left:8px}.sx-lan2.r{left:6px;top:0;height:120px;animation-delay:-3s}
 .sx-lan2 .flame{filter:drop-shadow(0 0 8px #F6D58A);animation:sxFl 2.4s ease-in-out infinite}
 @keyframes sxSw{50%{transform:rotate(1.6deg)}}
 @keyframes sxFl{50%{opacity:.7}}
 .x{}@media (prefers-reduced-motion:reduce){.sx-sky2 .tw,.sx-lan2,.sx-lan2 .flame{animation:none}}
-@media (min-width:700px){.sx-hero{min-height:520px}.sx-lan2.l{left:calc(50% - 330px)}.sx-lan2.r{right:calc(50% - 330px)}}
+@media (min-width:700px){.sx-hero{min-height:520px}.sx-lan2.l{left:calc(50% - 330px)}.sx-lan2.r{left:calc(50% - 330px)}}
 .sx-under{padding-top:14px}
 @media (prefers-color-scheme:dark){:root:not([data-theme=white]):not([data-theme=brown]) .sx-hero{background:radial-gradient(120% 80% at 50% 0%,#1A2E26 0%,#0E1512 60%,#0A100D 100%)}}
 
@@ -1045,9 +1045,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .sx-logo .w svg.nm{height:clamp(48px,13.5vw,60px);display:block;margin:2px auto 4px}
 .sx-footer .k svg.nm{height:40px;vertical-align:-.3em}
 
-/* the menu button sits on the left (where it leaves the right-aligned headings uncovered), so the drawer opens from the left, under the finger */
-.drawer{inset-inline-start:auto!important;left:0!important;right:auto!important;animation:dInL .22s ease!important}
-@keyframes dInL{from{transform:translateX(-100%)}to{transform:none}}
+
 
 </style>
 
@@ -1113,8 +1111,8 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
     <div class="wrap">
     
     <header class="sx-top">
-      <span></span>
-      <span style="display:flex;gap:6px"><button class="sx-ib" type="button" id="sxSearchBtn" aria-label="بحث"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button><button class="sx-ib" type="button" id="sxMenuBtn" aria-label="القائمة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button></span>
+      <span style="display:flex"><button class="sx-ib" type="button" id="sxMenuBtn" aria-label="القائمة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button></span>
+      <span style="display:flex"><button class="sx-ib" type="button" id="sxSearchBtn" aria-label="بحث"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></span>
     </header>
     <h1 class="sx-logo"><svg class="sx-cart" viewBox="0 0 320 132" aria-hidden="true">
       <path class="o" d="M40 66 C40 34 70 16 100 16 H220 C250 16 280 34 280 66 C280 98 250 116 220 116 H100 C70 116 40 98 40 66Z"/>
@@ -1524,7 +1522,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1825';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1828';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
