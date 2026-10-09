@@ -360,8 +360,8 @@ body.immersive .selbar{bottom:calc(20px + env(safe-area-inset-bottom))}
 .qbar .icon.on{color:#e7c27a}
 .loader{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);font-size:14px;color:var(--muted);pointer-events:none}
 
-.sheet-back{position:fixed;inset:0;background:rgba(20,12,6,.45);z-index:70}
-.sheet{position:fixed;inset-inline:0;bottom:0;z-index:71;background:var(--surface);border-radius:18px 18px 0 0;padding:10px 16px calc(18px + env(safe-area-inset-bottom));max-height:82vh;overflow:auto;box-shadow:0 -6px 24px rgba(0,0,0,.2);max-width:640px;margin:0 auto}
+.sheet-back{position:fixed;inset:0;background:rgba(20,12,6,.45);z-index:110}
+.sheet{position:fixed;inset-inline:0;bottom:0;z-index:111;background:var(--surface);border-radius:18px 18px 0 0;padding:10px 16px calc(18px + env(safe-area-inset-bottom));max-height:82vh;overflow:auto;box-shadow:0 -6px 24px rgba(0,0,0,.2);max-width:640px;margin:0 auto}
 .sheet .grip{width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 10px}
 .sheet.noteonly #imgOpts,.sheet.noteonly #txtOpts,.sheet.noteonly .menu{display:none!important}
 .sheet:not(.noteonly) .notesec{display:none}
@@ -567,6 +567,9 @@ textarea.notebox{width:100%;min-height:80px;border:1px solid var(--line);border-
 body.pg-locked,body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 .overlay{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .zbd button{touch-action:manipulation}
+
+#chooseBack{z-index:118!important}#choose{z-index:119!important}
+button,a,.btn{touch-action:manipulation}
 /* ===== موسوعة السيرة: «ثلاث وستون سنة» =====
    the life of the Prophet ﷺ as 63 squares is the one bold element; everything else is quiet:
    white reading paper, basalt-green ink, Makkah night-blue, Madinah palm-green, one gold for "you are here" */
@@ -796,7 +799,8 @@ body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
 .at-ev{border-top:1px solid var(--line);padding:8px 0}.at-ev b{display:block;font-family:var(--text);font-size:18px}.at-ev p{margin:4px 0;line-height:1.9;font-size:16px;font-family:var(--text)}
 
 
-#navBtn{display:none!important}
+#sxMenuBtn{display:none!important}
+.navbtn{inset-inline-start:auto!important;left:16px!important;right:auto!important;top:calc(10px + env(safe-area-inset-top))!important;background:rgba(14,26,22,.78)!important;border-color:rgba(226,194,126,.5)!important;color:#E2C27E!important;width:44px!important;height:44px!important;z-index:74!important}
 .sx-go .n.s3{font-size:14px}
 .yr-ev q mark{background:var(--brass-soft);color:inherit;border-radius:3px;padding:0 2px}
 .fx-gs{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px}.fx-gs .gr{margin:0}.fx-gs .btn{min-height:34px;padding:0 10px;font-size:13px;margin-inline-start:auto}
@@ -931,7 +935,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 .sx-brand small,.sx-footer .k small{font-family:var(--text);font-size:.36em;font-weight:400;color:#E2C27E;margin-inline-start:4px;vertical-align:.35em;white-space:nowrap}
 .sx-footer .k small{color:var(--brass)}
 /* the name, set in a gold cartouche */
-.sx-hero .sx-top{position:absolute;top:0;left:0;right:0;padding-inline:16px;z-index:3}
+.sx-hero .sx-top{position:absolute;top:0;left:0;right:0;padding-inline:16px;padding-inline-end:64px;z-index:3}
 .sx-logo{position:relative;width:min(300px,78vw);aspect-ratio:320/132;margin:calc(70px + env(safe-area-inset-top)) auto 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
 .sx-cart{position:absolute;inset:0;width:100%;height:100%}
 .sx-cart .o{fill:rgba(7,17,14,.55);stroke:#D9B66A;stroke-width:1.6}
@@ -945,6 +949,32 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 @media (max-width:700px){.sx-band{display:none}}
 .sx-hero .sx-verse .v1,.sx-hero .sx-verse .v2{display:block}
 .sx-hero .sx-verse .v1{font-size:1.18em}
+/* book pages: the Sira identity, not the Durar browns */
+.action.main,:root[data-theme] .action.main{background:linear-gradient(135deg,#1F3A30,#14231E)!important;border:1px solid rgba(226,194,126,.55)!important;color:#F4ECD8!important}
+.action.main span,:root[data-theme] .action.main span{color:#C9CFC6!important;opacity:1!important}
+.treecard{background:var(--raised)!important;border:1px solid var(--line)!important;color:var(--ink)!important}
+.treecard svg{color:var(--brass)!important}.treecard small{color:var(--muted);opacity:1}
+.bkhead h3,.bkpage h4,.bktoc summary{font-family:Amiri,serif}
+
+/* Durar-only tools are not part of this site */
+#mFaw,#mIdx{display:none!important}
+/* reader: Sira headings and toolbar */
+.tbody h3{font-family:Amiri,serif;font-weight:700;color:var(--palm)}
+.qbar{background:rgba(14,26,22,.94)!important;color:#EFE7D2!important;border:1px solid rgba(226,194,126,.25)}
+.qbar .icon.on{color:#E2C27E!important}
+/* book pages: a night band at the head, then the book */
+.bkpage .bkhead{position:relative;overflow:hidden;border-radius:22px;padding:22px 16px 18px;margin:4px 0 0;color:#EFE7D2;
+  background:radial-gradient(120% 90% at 50% 0%,#1F3A30 0%,#14231E 60%,#0E1A16 100%);border:1px solid rgba(226,194,126,.4)}
+.bkpage .bkhead::before{content:"";position:absolute;inset:0;opacity:.08;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23E2C27E' stroke-width='1'%3E%3Cpath d='M30 4l7.5 18.5L56 30l-18.5 7.5L30 56l-7.5-18.5L4 30l18.5-7.5z'/%3E%3C/g%3E%3C/svg%3E");background-size:60px 60px}
+.bkpage .bkhead>*{position:relative}
+.bkpage .bkhead p{color:#C9CFC6!important;font-family:var(--text);font-size:15px}
+.bkpage .bkhead h3{font-family:Amiri,serif!important;font-weight:700;color:#F3E2B4!important;font-size:32px!important}
+.bkpage .head h2{font-family:Amiri,serif;font-weight:700}
+.bkpage h4{position:relative;padding-bottom:6px}
+.bkpage h4::after{content:"";position:absolute;bottom:0;inset-inline-start:0;width:36px;height:2px;background:var(--gold);border-radius:1px}
+.bktoc button{min-height:48px;align-items:center}
+.bktoc button span:last-child{color:var(--brass)!important}
+
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 </style>
@@ -1099,17 +1129,6 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
     </section>
 
 
-    <section class="sx-sec">
-      <div class="sx-review">
-        <h2 class="sx-h2" style="font-size:22px">ملاحظات المراجعة</h2>
-        <ol>
-          <li>اقرأ، وإذا وقفت على خطأ أو ملاحظة: اضغط «تعليق» في أسفل الصفحة واكتبها، أو ظلّل الكلمة.</li>
-          <li>كل تعليقاتك وتظليلاتك تُحفظ في جوالك وتظهر هنا تحت «المفضلة والتعليقات».</li>
-          <li>إذا اجتمعت: اضغط «انسخ ملاحظاتي» ثم الصقها في المحادثة.</li>
-        </ol>
-        <div class="links" style="margin-top:10px"><button class="btn btn-primary" id="sxCopy" type="button">انسخ ملاحظاتي</button></div>
-      </div>
-    </section>
     <section id="favSec" hidden>
       <div class="section-head"><h2>المفضلة والتعليقات</h2><span class="count" id="favCount"></span></div>
       <div class="favs" id="favs"></div>
@@ -1123,7 +1142,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
     </section>
     <section class="about" id="dataSec">
       <h2>بياناتك</h2>
-      <p class="note">المفضلة والتعليقات وخطة الختم وموضع القراءة محفوظة في المتصفح الذي تقرأ منه فقط، فلا تنتقل وحدها بين الأجهزة ولا بين المتصفحات: ما تحفظه في متصفح الكمبيوتر لا يظهر في الجوال، وما في التطبيق المضاف للشاشة الرئيسية لا يظهر في Safari. لنقلها احفظ نسخة منها في ملف من الجهاز الأول ثم استرجعها في الآخر، وكذلك قبل تغيير الجوال أو حذف التطبيق.</p>
+      <p class="note">المفضلة والتعليقات والتظليل وورد السيرة وموضع القراءة محفوظة في المتصفح الذي تقرأ منه فقط، فلا تنتقل وحدها بين الأجهزة ولا بين المتصفحات: ما تحفظه في متصفح الكمبيوتر لا يظهر في الجوال، وما في التطبيق المضاف للشاشة الرئيسية لا يظهر في Safari. لنقلها احفظ نسخة منها في ملف من الجهاز الأول ثم استرجعها في الآخر، وكذلك قبل تغيير الجوال أو حذف التطبيق.</p>
       <div class="links"><button class="btn btn-quiet" id="bkSave" type="button">حفظ نسخة من بياناتي</button><button class="btn btn-quiet" id="bkLoad" type="button">استرجاع من ملف</button><input type="file" id="bkFile" accept=".json,application/json" hidden></div>
     </section>
     <div hidden id="legacy">
@@ -1223,7 +1242,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
     </section>
 <button type="button" id="waqfFb"></button></div>
   </main>
-  <footer class="sx-footer"><p class="k">سيرته <small>صلى الله عليه وسلم</small></p><p><button type="button" class="btn btn-link" id="sxMethod">منهج الموقع ومواضع الخلاف مع المطبوع</button></p><p>نسخة مراجعة قبل الإطلاق.</p></footer>
+  <footer class="sx-footer"><p class="k">سيرته <small>صلى الله عليه وسلم</small></p><p><button type="button" class="btn btn-link" id="sxMethod">منهج الموقع ومواضع الخلاف مع المطبوع</button> · <button type="button" class="btn btn-link" id="sxFb">أرسل ملاحظة</button></p></footer>
 </div>
 <!-- ============ READER ============ -->
 <section id="reader" hidden aria-label="القارئ">
@@ -1442,7 +1461,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1501';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1547';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2865,7 +2884,6 @@ function openNav(){
   grp('ملاحظاتي');
   it('المفضلة والتعليقات',()=>goSec('favSec'),!$('#favSec').hidden);
   it('تظليلاتي',()=>goSec('hlSec'),!$('#hlSec').hidden);
-  it('انسخ ملاحظاتي',()=>{closeNav();exportNotes()});
   it('بياناتك (نسخة احتياطية)',()=>goSec('dataSec'));
 $('#navBack').hidden=false;$('#nav').hidden=false;
 }
@@ -2891,7 +2909,7 @@ function renderShelfS(){
 function lastAny(){const x=LS.get('lastAnyS',null);return x&&x.n&&!HIDDEN.has(x.n)?x:null}
 {const _sp=setPage;setPage=function(p){_sp(p);try{if(cur.n>=17)LS.set('lastAnyS',{n:cur.n,p:p,f:0})}catch(e){}}}
 {const _cr=closeReader;closeReader=function(){_cr.apply(this,arguments);renderShelfS()}}
-$('#sxTl').onclick=()=>openSX('tl');$('#sxTree').onclick=()=>openSX('nasab');$('#sxCopy').onclick=()=>exportNotes();
+$('#sxTl').onclick=()=>openSX('tl');$('#sxTree').onclick=()=>openSX('nasab');
 /* ---------- قارن بالصورة: صورة الصفحة من المطبوع ---------- */
 const SXIMGMAP={};
 for(const n in SXIMG){const v=SXIMG[n];v.s.forEach(([f,ps])=>ps.forEach((p,i)=>{SXIMGMAP[n+':'+p]={f,i,c:ps.length,h:v.h}}))}
@@ -3175,7 +3193,7 @@ function fxMethod(){const P=fxOpen('منهج الموقع');const I=P.inn;
   I.append(el('h3','fx-dh','مواضع الخلاف مع المطبوع'));
   I.append(el('p','fx-lead','كل موضع خالف فيه النصُّ الرقمي المطبوعَ وقرّرنا فيه شيئاً معلَّمٌ في صفحته. اختر كتاباً لتقرأ صفحاته ذات العلامات وحدها، وقارن كل موضع بصورة الصفحة. وتظهر العلامات في القارئ أيضاً من «المزيد».'));
   const mb=el('div','sx-mkbooks');mb.id='sxMkBooks';mb.addEventListener('click',()=>P.close(),true);I.append(mb);renderMkBooks()}
-$('#sxMethod').onclick=fxMethod;
+$('#sxMethod').onclick=fxMethod;$('#sxFb').onclick=()=>openFb('notes');
 
 /* ---------- شجرة النسب وآل عبد المطلب: رسم شجري بخيوط ---------- */
 function sxQ(o,after){const nx=after.nextElementSibling;if(nx&&nx.classList.contains('sxd')){nx.remove();return}const d=el('div','sxd');d.append('«'+o.q+'» ');const b=el('button',null,'ص '+ar(o.p)+' ←');b.type='button';b.onclick=()=>sxGo(o.p);d.append(b);after.after(d)}
@@ -3625,7 +3643,7 @@ async function checkUpdate(){
     const row=el('div');row.style.cssText='display:flex;align-items:center;gap:10px';
     const t=el('span',null,'يوجد تحديث جديد للموقع.');t.style.flex='1';
     const go=el('button','btn btn-primary','حدّث الآن');go.type='button';go.style.background='#c9a35a';go.style.color='#1a1209';
-    go.onclick=async()=>{try{const ks=await caches.keys();await Promise.all(ks.filter(k=>k.startsWith('durar-shell-')).map(k=>caches.delete(k)));const reg=await navigator.serviceWorker.getRegistration();if(reg)await reg.update()}catch(e){}location.reload()};
+    go.onclick=async()=>{try{const ks=await caches.keys();await Promise.all(ks.filter(k=>k.startsWith('sira-')).map(k=>caches.delete(k)));const reg=await navigator.serviceWorker.getRegistration();if(reg)await reg.update()}catch(e){}location.reload()};
     row.append(t,go);b.append(row);document.body.append(b);
   }catch(e){}
 }
