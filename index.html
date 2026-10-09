@@ -1064,6 +1064,17 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .dy-bell{min-height:40px;padding:0 4px}
 .dy-bell[data-on='1']{color:var(--palm)}
 
+/* a year's events: each is a card that plainly opens the book; the source under the note is a quiet link */
+.yr-ev{border:1px solid var(--line)!important;border-radius:14px;background:var(--raised)!important;padding:12px 14px!important;margin-top:10px}
+.yr-ev:active{background:var(--brass-soft)!important}
+.yr-ev q mark{background:none!important;color:var(--brass);padding:0;border-radius:0;font-weight:600}
+.yr-ft{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+.yr-ft small{margin:0!important;color:var(--muted)!important;font-size:13px}
+.yr-ft .go{display:flex;align-items:center;gap:8px;flex:none;font-size:14px;font-weight:600;color:var(--brass)}
+.yr-ft .go::after{content:"";width:6px;height:6px;border-left:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(45deg)}
+.yr-src{display:inline;border:0;background:none;padding:0;font:inherit;color:var(--brass);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.yr-mk{margin-top:6px}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -1539,7 +1550,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1829';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1831';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3141,10 +3152,10 @@ async function showYear(k){const F=await sxFeat();const G=$('#yrGrid'),P=$('#yrP
   const L=F.years[k]||[];
   if(!L.length)P.append(el('p','yr-none','لم يذكر مختصر السيرة حدثاً نصّ على أنه في هذه السنة.'));
   L.forEach(it=>{if(it.mk&&!it.q){const d=el('button','yr-mk');d.type='button';d.append(el('span',null,it.t),el('small',null,'ص '+ar(it.p)));d.onclick=()=>openPart(17,it.p,null,false,'txt');P.append(d);return}   // the book's own year mark: a divider, not a quote
-    const b=el('button','yr-ev');b.type='button';b.append(el('b',null,it.t),quoteW(it.q,it.w),el('small',null,pgT(17,it.p)));
+    const b=el('button','yr-ev');b.type='button';const ft=el('span','yr-ft');ft.append(el('small',null,'مختصر السيرة، ص '+ar(it.p)),el('span','go','اقرأه في المختصر'));b.append(el('b',null,it.t),quoteW(it.q,it.w),ft);
     b.onclick=()=>openPart(17,it.p,it.w?[it.w]:null,false,'txt');P.append(b)});
   const n=el('p','yr-note','عُدّت السنون من مولده: البعثة على رأس الأربعين فهي أول الحادية والأربعين، والهجرة أول الرابعة والخمسين. وأحداث المدينة على سني الهجرة كما رتّبها المختصر، فمطابقتها بسني العمر تقريبية. وتوفي صلى الله عليه وسلم وهو ابن ثلاث وستين، كما في صحيح البخاري عن عائشة رضي الله عنها: ');
-  const s=el('button','btn btn-link',pgT(F.src63.n,F.src63.p));s.type='button';s.onclick=()=>openPart(F.src63.n,F.src63.p,['ثلاث وستين'],false,'txt');n.append(s);P.append(n)}
+  const s=el('button','yr-src','صحيح البخاري، كتاب المغازي، ج'+ar(jOf(F.src63.n))+'، ص '+ar(F.src63.p));s.type='button';s.onclick=()=>openPart(F.src63.n,F.src63.p,['ثلاث وستين'],false,'txt');n.append(s);P.append(n)}
 
 /* ---------- reader: your place in his life (Mukhtasar only) ---------- */
 function yrBar(){let w=$('#yrbarW');const R=$('#reader');if(!R)return;
