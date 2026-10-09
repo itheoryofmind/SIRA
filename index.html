@@ -2744,7 +2744,7 @@ $('#quoteBtn').onclick=async()=>{
 
 /* ---------- feedback and error reports: sent by e-mail (FormSubmit), with a picture ---------- */
 // the addresses are set once the site's own e-mail exists; until then the forms stay hidden
-const FB={page:'report@dorarnajdiah.com',notes:'feedback@dorarnajdiah.com'};
+const FB={page:'report@seeratuh.com',notes:'feedback@seeratuh.com'};
 const FBON=()=>!!(FB.page&&FB.notes)||LS.get('fbtest',0);
 /* ---------- فوائد القرّاء: sent by readers, published only after review (data/fawaid.json: [{t, n?, p?, by?}]) ---------- */
 async function renderFawaid(){
@@ -2830,7 +2830,7 @@ $('#fbForm').addEventListener('submit',async e=>{
   // hidden fields: subject, where, and the site version
   F.querySelectorAll('input.auto').forEach(x=>x.remove());
   const add=(k,v)=>{const i=document.createElement('input');i.type='hidden';i.className='auto';i.name=k;i.value=v;F.append(i)};
-  add('_subject',(faw?'فائدة للنشر':pageRep?'تنبيه على خطأ: '+$('#fbType').value:'ملاحظة: '+$('#fbType').value)+(at?' — '+partName(at.n)+' ص '+at.p:''));
+  add('_subject','سيرته: '+(faw?'فائدة للنشر':pageRep?'تنبيه على خطأ: '+$('#fbType').value:'ملاحظة: '+$('#fbType').value)+(at?' — '+partName(at.n)+' ص '+at.p:''));
   add('_captcha','false');add('_template','table');
   if(at){add('الموضع',partName(at.n)+' · ص '+at.p+' · '+location.origin+location.pathname+'#v'+at.n+'p'+at.p);if(at.sel)add('النص المحدد',at.sel.slice(0,1500))}
   add('الإصدار',APP_VER);
@@ -2861,6 +2861,7 @@ function openNav(){
   it('شجرة النسب وآل عبد المطلب والخلفاء',()=>{closeNav();openSX('nasab')});
   grp('عن الموقع');
   it('منهج الموقع ومواضع الخلاف مع المطبوع',()=>{closeNav();fxMethod()});
+  it('أرسل ملاحظة',()=>{closeNav();openFb('notes')});
   grp('ملاحظاتي');
   it('المفضلة والتعليقات',()=>goSec('favSec'),!$('#favSec').hidden);
   it('تظليلاتي',()=>goSec('hlSec'),!$('#hlSec').hidden);
