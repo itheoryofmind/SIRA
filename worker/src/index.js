@@ -5,6 +5,7 @@
 import H from './hadith.js';
 
 const SITE = 'https://seeratuh.com';
+const FRI = '0 6 * * 5';   // Friday 9:00 in Riyadh
 const enc = new TextEncoder();
 const b64u = {
   enc: (b) => { b = new Uint8Array(b); let s = ''; for (const x of b) s += String.fromCharCode(x); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); },
@@ -75,6 +76,12 @@ function today() {
   return { t: 'من شمائله صلى الله عليه وسلم', b: h.t, u: SITE + '/#v25p' + h.p, tag: 'shamail' };
 }
 
+// every Friday to all who turned the notifications on: al-Ahzab 56 (King Fahd Complex text), and Ibn al-Qayyim's words in Zad al-Ma'ad (vol. 1 p. 364)
+const VERSE = "إِنَّ ٱللَّهَ وَمَلَٰٓئِكَتَهُۥ يُصَلُّونَ عَلَى ٱلنَّبِيِّۚ يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ صَلُّواْ عَلَيۡهِ وَسَلِّمُواْ تَسۡلِيمًا";
+function friday() {
+  return { t: 'يوم الجمعة', b: '﴿' + VERSE + '﴾ [الأحزاب: ٥٦]\n«أكثروا من الصلاة علي يوم الجمعة وليلة الجمعة» (زاد المعاد ١/٣٦٤)', u: SITE + '/#v18p364', tag: 'friday' };
+}
+
 function valid(sub) {
   try {
     const u = new URL(sub.endpoint);
@@ -96,13 +103,13 @@ export default {
       if (!valid(sub)) return json({ ok: false }, 400);
       await env.PUSH.put(id, JSON.stringify({ endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } }));
       // a first notification right away: the reader sees it works
-      const st = await send(env, sub, { t: 'سِيرَتُه', b: 'سيصلك كل صباح حديثٌ من شمائله صلى الله عليه وسلم.', u: SITE + '/', tag: 'welcome' }).catch(() => 0);
+      const st = await send(env, sub, { t: 'سِيرَتُه', b: 'سيصلك كل صباح حديثٌ من شمائله صلى الله عليه وسلم، وكل جمعة تذكيرٌ بالصلاة عليه.', u: SITE + '/', tag: 'welcome' }).catch(() => 0);
       return json({ ok: true, sent: st });
     }
     return json({ ok: false }, 404);
   },
   async scheduled(ev, env, ctx) {
-    const msg = today();
+    const msg = ev.cron === FRI ? friday() : today();
     let cursor, n = 0, gone = 0;
     do {
       const l = await env.PUSH.list({ prefix: 's:', cursor });

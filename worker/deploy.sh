@@ -23,7 +23,7 @@ routes = [{ pattern = "push.seeratuh.com", custom_domain = true }]
 binding = "PUSH"
 id = "$NS"
 [triggers]
-crons = ["0 3 * * *"]   # 6:00 in Riyadh
+crons = ["0 3 * * *", "0 6 * * 5"]   # every day 6:00 in Riyadh; Friday 9:00
 T
 CLOUDFLARE_ACCOUNT_ID="$ACC" npx --yes wrangler@3 deploy
 # check it answers (the certificate of a new domain can take a minute or two)

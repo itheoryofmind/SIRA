@@ -1550,7 +1550,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1847';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1850';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3390,7 +3390,7 @@ async function pushBtn(b){
       const reg=await navigator.serviceWorker.ready;const {key}=await (await fetch(PUSHU+'/key')).json();
       const s=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(key)});
       const r=await fetch(PUSHU+'/sub',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(s)});if(!r.ok)throw 0;
-      set(true);toast('فُعّل التذكير: يصلك كل صباح حديثٌ من شمائله صلى الله عليه وسلم.',4500)
+      set(true);toast('فُعّل التذكير: يصلك كل صباح حديثٌ من شمائله صلى الله عليه وسلم، وكل جمعة تذكيرٌ بالصلاة عليه.',5000)
     }catch(e){toast('تعذّر تفعيل التذكير الآن. حاول بعد قليل.',4000)}finally{b.disabled=false}}}
 
 /* ---------- مواضع الخلاف مع المطبوع: علامات حمراء، وقراءة الصفحات المعلَّمة وحدها ---------- */
