@@ -835,6 +835,9 @@ span.kh-k{border-style:dashed;color:var(--muted)}
 .ag-t .big{font-family:var(--text);font-size:19px;margin:0 0 6px}
 .ag-t blockquote{margin:8px 0 2px;font-family:var(--text);font-size:18px;line-height:1.9;border-inline-start:3px solid var(--palm);padding-inline-start:12px}
 
+body:not(.mk-on) mark.sxmk{background:none;border:0;padding:0;cursor:auto;color:inherit}
+body:not(.mk-on) .sxmk-btn,body:not(.mk-on) .sxmk-list{display:none!important}
+#mkOpts .note{font-size:12.5px;color:var(--muted);margin:6px 0 0;line-height:1.7}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 </style>
@@ -3031,7 +3034,7 @@ function mkNorm(root){
 }
 function mkWrap(N,a,b,cls,tip){   // wrap the source range of normalized chars a..b
   const segs=[];for(let i=a;i<b;i++){const r=N.map[i];if(!r)continue;const L=segs[segs.length-1];if(L&&L.t===r[0])L.e=r[1]+1;else segs.push({t:r[0],s:r[1],e:r[1]+1})}
-  let first=null;segs.reverse().forEach(g=>{try{const rg=document.createRange();rg.setStart(g.t,g.s);rg.setEnd(g.t,g.e);const m=el('mark',cls);m.title=tip;rg.surroundContents(m);m.onclick=e=>{e.stopPropagation();toast(tip,7000)};first=m}catch(e){}});
+  let first=null;segs.reverse().forEach(g=>{try{const rg=document.createRange();rg.setStart(g.t,g.s);rg.setEnd(g.t,g.e);const m=el('mark',cls);m.title=tip;rg.surroundContents(m);m.onclick=e=>{if(!document.body.classList.contains('mk-on'))return;e.stopPropagation();toast(tip,7000)};first=m}catch(e){}});
   return first
 }
 {const _pb2=pageBlock;pageBlock=function(T,n,p){const b=_pb2(T,n,p);const L=MK[n+':'+p];const hd=b.querySelector('.pghd'),body=b.querySelector('.tbody');
@@ -3048,6 +3051,13 @@ function mkWrap(N,a,b,cls,tip){   // wrap the source range of normalized chars a
       if(i<0)return;const m=mkWrap(N,i+off,i+off+tg.length,'sxmk k-'+k,(MKKIND[k]?MKKIND[k]+': ':'')+no);
       const it=list.querySelector('[data-j="'+j+'"]');if(m&&it)it.onclick=ev=>{ev.stopPropagation();m.scrollIntoView({block:'center',behavior:'smooth'});m.classList.add('flash');setTimeout(()=>m.classList.remove('flash'),1500)}})}
   return b}}
+
+/* العلامات مخفية افتراضياً، وتُظهر من «المزيد» في القارئ، أو تلقائياً عند مراجعة المواضع من الرئيسية */
+function mkShow(on){document.body.classList.toggle('mk-on',!!on);LS.set('mkOn',on?1:0);const s=$('#mkSeg');if(s)[...s.children].forEach(b=>b.classList.toggle('on',(b.dataset.v==='1')===!!on))}
+(function(){const t=$('#txtOpts');if(!t)return;const w=el('div');w.id='mkOpts';w.append(el('h4',null,'مواضع الخلاف مع المطبوع'));
+  const s=el('div','seg');s.id='mkSeg';[['0','إخفاء'],['1','إظهار']].forEach(([v,x])=>{const b=el('button',null,x);b.type='button';b.dataset.v=v;b.onclick=()=>mkShow(v==='1');s.append(b)});
+  w.append(s,el('p','note','علامات حمراء على الكلمات التي خالف فيها النص الرقمي المطبوع، ومعها ما قرّرناه فيها.'));t.after(w);mkShow(+LS.get('mkOn',0))})();
+{const _ms=mkStart;mkStart=function(){mkShow(1);return _ms.apply(this,arguments)}}
 
 $('#navBtn').onclick=openNav;$('#navClose').onclick=closeNav;$('#navBack').onclick=closeNav;
 // the button belongs to the home page only
