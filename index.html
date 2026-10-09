@@ -809,7 +809,14 @@ body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
 .kh-c.two{background:linear-gradient(135deg,var(--c1) 50%,var(--c2) 50%)}
 .kh-c.sel{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--here)}
 .kh-c:focus-visible{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--ink);outline:0}
-.kh-key i{border:0!important}
+.kh-key{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.kh-k{display:flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border-radius:18px;border:1px solid var(--line);background:var(--raised);color:var(--ink);font-family:var(--text);font-size:16px;touch-action:manipulation}
+span.kh-k{border-style:dashed;color:var(--muted)}
+.kh-k i{width:12px;height:12px;border-radius:3px}
+.kh-k.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.kh-c.off{opacity:.22}
+.kh-p blockquote,#khWho blockquote{margin:8px 0;font-family:var(--text);font-size:18px;line-height:1.9;border-inline-start:3px solid var(--palm);padding-inline-start:12px}
+#zadPage .kh{margin:14px 0 4px}
 .kh-p blockquote{margin:8px 0;font-family:var(--text);font-size:18px;line-height:1.9;border-inline-start:3px solid var(--palm);padding-inline-start:12px}
 .kh-h{display:flex;align-items:baseline;gap:10px;width:100%;text-align:start;border:0;border-top:1px solid var(--line);background:none;color:var(--ink);padding:10px 0;font:inherit;font-family:var(--text);font-size:18px;line-height:1.5;touch-action:manipulation}
 .kh-h span{flex:1}.kh-h small{flex:none;font-size:13px;color:var(--brass)}
@@ -877,23 +884,7 @@ body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
       <div class="yr-p" id="yrPanel" hidden></div>
     </section>
 
-    <section class="yr kh" id="sxKhul" aria-labelledby="khH">
-      <h2 id="khH">الخلافة الراشدة</h2>
-      <p class="sx-lead">كل مربع سنة هجرية من كتاب «الخلفاء الراشدون» لابن كثير، ولون كل خليفة على سنيه. اضغط سنةً لترى ما ذكره فيها.</p>
-      <div class="kh-saf" id="khSaf"></div>
-      <div class="kh-grid" id="khGrid" role="group" aria-label="سنوات الخلافة الراشدة"></div>
-      <div class="yr-key kh-key" id="khKey"></div>
-      <div class="yr-p" id="khPanel" hidden></div>
-    </section>
 
-    <section class="yr ag" id="sxAges" aria-labelledby="agH">
-      <h2 id="agH">أعمار الخلفاء الراشدين</h2>
-      <p class="sx-lead">كل مربع سنة من عمر الخليفة، كما في كتاب ابن كثير. وحيث اختلفت الأقوال في سنّه رُسمت المربعات الزائدة باهتة، ولم نرجّح ما لم يرجّحه.</p>
-      <div class="fx-chips" id="agChips" role="group"></div>
-      <div class="yr-grid" id="agGrid" aria-hidden="true"></div>
-      <div class="yr-key" id="agKey"></div>
-      <div class="ag-t" id="agText"></div>
-    </section>
 
     <section class="sx-sec" id="sxPlan" aria-labelledby="plH">
       <h2 id="plH">ورد السيرة</h2>
@@ -2718,7 +2709,7 @@ function renderShelfS(){
   if(lr&&lr.n){$('#contT').textContent='تابع القراءة';$('#contS').textContent=SXBN(lr.n)+'، ص '+ar(lr.p);$('#contN').textContent=ar(lr.p)}
   else{$('#contT').textContent='ابدأ القراءة';$('#contS').textContent='من مختصر سيرة الرسول صلى الله عليه وسلم';$('#contN').textContent=ar(1)}
   $('#contN').classList.toggle('s3',$('#contN').textContent.length>2);
-  renderYears();renderKhul();renderAges();renderSxPlan();
+  renderYears();renderSxPlan();
 }
 function lastAny(){const x=LS.get('lastAnyS',null);return x&&x.n&&!HIDDEN.has(x.n)?x:null}
 {const _sp=setPage;setPage=function(p){_sp(p);try{if(cur.n>=17)LS.set('lastAnyS',{n:cur.n,p:p,f:0})}catch(e){}}}
@@ -2954,11 +2945,20 @@ const KHG={ab:'أبي بكر الصديق',um:'عمر بن الخطاب',uth:'ع
 async function renderKhul(){const F=await sxFeat();const K=F.khul,G=$('#khGrid');if(!G||!K)return;
   if(!$('#khSaf').childElementCount){const s=$('#khSaf');s.append(document.createTextNode('قال صلى الله عليه وسلم: «'+K.saf.q+'». أورده ابن كثير من حديث سفينة رضي الله عنه. '));
     const b=el('button','btn btn-link',pgT(K.saf.n,K.saf.p));b.type='button';b.onclick=()=>openPart(K.saf.n,K.saf.p,['ثلاثون سنة'],false,'txt');s.append(b);
-    const key=$('#khKey');['ab','um','uth','ali','has','mk'].forEach(c=>{const sp=el('span');const i=el('i');i.style.background='var(--'+(c==='mk'?'mkk':c)+')';sp.append(i,document.createTextNode(c==='mk'?'ثم المُلك':KHN[c]));key.append(sp)})}
+    const key=$('#khKey');['ab','um','uth','ali','has','mk'].forEach(c=>{const sp=el(c==='mk'?'span':'button','kh-k');if(c!=='mk'){sp.type='button';sp.onclick=()=>khWho(c)}const i=el('i');i.style.background='var(--'+(c==='mk'?'mkk':c)+')';sp.append(i,document.createTextNode(c==='mk'?'ثم المُلك':KHN[c]));sp.dataset.c=c;key.append(sp)})}
   G.innerHTML='';const sel=+G.dataset.sel||0;
   K.years.forEach(Y=>{const b=el('button','kh-c'+(Y.c.length>1?' two':'')+(Y.y===sel?' sel':''),ar(Y.y));b.type='button';
     const cv=c=>'var(--'+(c==='mk'?'mkk':c)+')';b.style.setProperty('--c1',cv(Y.c[0]));if(Y.c[1])b.style.setProperty('--c2',cv(Y.c[1]));
+    if(KHSELC&&!Y.c.includes(KHSELC))b.classList.add('off');
     b.setAttribute('aria-label','سنة '+ar(Y.y)+' من الهجرة: '+Y.c.map(c=>KHN[c]).join(' ثم '));b.onclick=()=>showKhul(Y.y);G.append(b)})}
+
+async function khWho(c){const F=await sxFeat();KHSELC=KHSELC===c?null:c;
+  [...$('#khKey').children].forEach(k=>{k.classList.toggle('on',k.dataset.c===KHSELC);if(k.tagName==='BUTTON')k.setAttribute('aria-pressed',k.dataset.c===KHSELC)});
+  [...$('#khGrid').children].forEach((b,i)=>b.classList.toggle('off',!!KHSELC&&!F.khul.years[i].c.includes(KHSELC)));
+  const W=$('#khWho');W.innerHTML='';W.hidden=!KHSELC;if(!KHSELC)return;
+  const a=(F.khul.ages||[]).find(x=>x.k===c);W.append(el('h3',null,KHN[c]+(c==='has'?' رضي الله عنهما':' رضي الله عنه')));
+  if(a)a.q.forEach(q=>{W.append(el('blockquote',null,'«'+q.q+'»'));W.append(goP(pgT(q.n,q.p)+(q.p2?'–'+ar(q.p2):''),q.n,q.p))});
+  else{const ys=F.khul.years.filter(y=>y.c.includes(c));W.append(el('p','sub','سنوات خلافته في الكتاب: '+ys.map(y=>ar(y.y)).join('، ')))}}
 async function showKhul(y){const F=await sxFeat();const K=F.khul,Y=K.years.find(x=>x.y===y),G=$('#khGrid'),P=$('#khPanel');G.dataset.sel=y;
   [...G.children].forEach((b,i)=>b.classList.toggle('sel',K.years[i].y===y));P.hidden=false;P.className='yr-p kh-p';P.innerHTML='';
   const who=Y.c.filter(c=>c!=='mk');let sub='خلافة '+who.map(c=>KHG[c]).join(' ثم ')+(who.length>1?' رضي الله عنهما':' رضي الله عنه');if(Y.c.includes('mk'))sub+='، ثم أول المُلك';
@@ -2970,28 +2970,13 @@ async function showKhul(y){const F=await sxFeat();const K=F.khul,Y=K.years.find(
   P.append(el('p','yr-note','عُدّت الثلاثون كما قال ابن كثير: من وفاته صلى الله عليه وسلم في ربيع الأول سنة ١١ إلى نزول الحسن رضي الله عنه عن الخلافة في ربيع الأول سنة ٤١، فهي تمتد على إحدى وثلاثين سنة هجرية أولاها وآخرتها ناقصتان. والمربع ذو اللونين سنةٌ انتقلت فيها الخلافة.'))}
 const goP=(t,n,p)=>{const b=el('button','btn btn-quiet',t);b.type='button';b.style.margin='4px 0 8px';b.onclick=()=>openPart(n,p,null,false,'txt');return b};
 
-{const _oz=openZad;openZad=async function(b){const r=await _oz.apply(this,arguments);const old=$('#zKh');if(old)old.remove();
-  if(ZB===MB.k){const k=el('button','btn btn-quiet','الخلافة الراشدة سنةً سنة، في مربعات');k.id='zKh';k.type='button';k.style.cssText='width:100%;margin-top:10px;min-height:46px';
-    k.onclick=()=>{$('#zadClose').click();setTimeout(()=>$('#sxKhul').scrollIntoView({block:'start',behavior:'smooth'}),80)};$('#zadPage .actions').after(k)}
-  return r}}
-
-/* ---------- أعمار الخلفاء ---------- */
-async function renderAges(){const F=await sxFeat();const A=F.khul&&F.khul.ages,ch=$('#agChips');if(!A||!ch)return;
-  if(!ch.childElementCount)A.forEach((a,i)=>{const b=el('button','fx-chip',KHN[a.k]);b.type='button';b.onclick=()=>showAge(i);ch.append(b)});
-  showAge(+(LS.get('agAt',0))||0)}
-async function showAge(i){const F=await sxFeat();const a=F.khul.ages[i];LS.set('agAt',i);
-  [...$('#agChips').children].forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-pressed',j===i)});
-  const G=$('#agGrid'),col='var(--'+a.k+')';G.innerHTML='';G.style.setProperty('--c',col);
-  for(let k=1;k<=a.hi;k++){const c=el('span','ag-c'+(k>a.lo?' dim':'')+(a.pick&&k===a.pick[0]?' pick':''));G.append(c)}
-  const K=$('#agKey');K.innerHTML='';K.style.setProperty('--c',col);
-  const it=(cls,t)=>{const s=el('span');s.append(el('i',cls),document.createTextNode(t));K.append(s)};
-  it('f',a.lo===a.hi?'عمره: '+ar(a.lo)+' سنة، بلا خلاف في الكتاب':a.k==='uth'?'جاوز الثمانين على المشهور':'لا تختلف فيه الأقوال المذكورة: إلى '+ar(a.lo));
-  if(a.hi>a.lo)it('d','اختلفت فيها الأقوال: إلى '+ar(a.hi));
-  if(a.pick)it('k',ar(a.pick[0])+': '+a.pick[1]);
-  const T=$('#agText');T.innerHTML='';
-  a.q.forEach(q=>{T.append(el('blockquote',null,'«'+q.q+'»'));const b=el('button','btn btn-link',pgT(q.n,q.p)+(q.p2?'–'+ar(q.p2):''));b.type='button';b.onclick=()=>openPart(q.n,q.p,null,false,'txt');T.append(b)});
-  if(a.k==='uth')T.append(el('p','yr-note','رُسم الممتلئ إلى الثمانين لقول ابن كثير «جاوز الثمانين على المشهور»، والباهت إلى التسعين وهو أكثر ما ذُكر. أما قول من قال خمساً وسبعين أو ثلاثاً وستين فقد استغربه ابن كثير، فلم يُرسم.'));
-  if(a.k==='um')T.append(el('p','yr-note','الممتلئ إلى ثلاث وخمسين وهو أقل ما ذُكر، والباهت إلى ست وستين وهو أكثره. ولم يرجّح ابن كثير هنا قولاً، والمعلَّم قول الواقدي.'))}
+/* الخلافة الراشدة: في صفحة كتاب «الخلفاء الراشدون» */
+let KHSEC=null,KHSELC=null;
+function khSection(){if(KHSEC)return KHSEC;const s=el('section','yr kh');s.id='sxKhul';
+  s.innerHTML='<h2>الخلافة الراشدة سنةً سنة</h2><p class="sx-lead">كل مربع سنة هجرية من هذا الكتاب، ولون كل خليفة على سنيه. اضغط سنةً لترى ما ذكره ابن كثير فيها، أو اضغط اسم خليفة لترى سنيه وعمره ومدة خلافته.</p><div class="kh-saf" id="khSaf"></div><div class="kh-grid" id="khGrid" role="group" aria-label="سنوات الخلافة الراشدة"></div><div class="kh-key" id="khKey"></div><div class="yr-p" id="khWho" hidden></div><div class="yr-p" id="khPanel" hidden></div>';
+  return KHSEC=s}
+{const _oz=openZad;openZad=async function(b){const r=await _oz.apply(this,arguments);const s=khSection();
+  if(ZB===MB.k){$('#zadPage .actions').after(s);await renderKhul()}else s.remove();return r}}
 /* wiring */
 $('#fxEvent').onclick=fxEvent;$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
 $('#sxSearchBtn').onclick=()=>{const q=$('#q');q.scrollIntoView({block:'center',behavior:'smooth'});q.focus({preventScroll:true})};
