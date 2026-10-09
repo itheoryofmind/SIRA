@@ -4,7 +4,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 : "${CLOUDFLARE_API_TOKEN:?add the CLOUDFLARE_API_TOKEN secret in the repository settings}"
 api(){ curl -fsS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Type: application/json" "$@"; }
-ACC=$(api https://api.cloudflare.com/client/v4/accounts | python3 -c 'import sys,json;print(json.load(sys.stdin)["result"][0]["id"])')
+ACC="${CLOUDFLARE_ACCOUNT_ID:-}"
+[ -n "$ACC" ] || ACC=$(api https://api.cloudflare.com/client/v4/accounts | python3 -c 'import sys,json;print(json.load(sys.stdin)["result"][0]["id"])')
 echo "account found"
 NS=$(api "https://api.cloudflare.com/client/v4/accounts/$ACC/storage/kv/namespaces?per_page=100" | python3 -c 'import sys,json;r=[n["id"] for n in json.load(sys.stdin)["result"] if n["title"]=="sira-push"];print(r[0] if r else "")')
 if [ -z "$NS" ]; then
@@ -24,7 +25,7 @@ id = "$NS"
 [triggers]
 crons = ["0 3 * * *"]   # 6:00 in Riyadh
 T
-npx --yes wrangler@3 deploy
+CLOUDFLARE_ACCOUNT_ID="$ACC" npx --yes wrangler@3 deploy
 # check it answers (the certificate of a new domain can take a minute or two)
 for i in $(seq 1 30); do
   if out=$(curl -fsS https://push.seeratuh.com/health 2>/dev/null); then echo "live: $out"; curl -fsS https://push.seeratuh.com/key >/dev/null && echo "key ok"; exit 0; fi

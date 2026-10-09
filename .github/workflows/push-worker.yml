@@ -1,0 +1,17 @@
+name: push-worker
+on:
+  push:
+    paths: ['worker/**', '.github/workflows/push-worker.yml']
+  workflow_dispatch: {}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Deploy the daily notification worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 49598a4e9d62c68411910837b1a2f4bd
+        run: bash worker/deploy.sh
