@@ -1017,6 +1017,14 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 @keyframes sxPin{0%,100%{stroke-width:.8;stroke-opacity:1}50%{stroke-width:2.2;stroke-opacity:.55}}
 @media (prefers-reduced-motion:reduce){.sx-pins-hint .sx-pin .pb{animation:none}}
 .sx-hero .sx-ground{z-index:3;pointer-events:none}.sx-hero .sx-ground .sx-pin{pointer-events:auto}
+/* the site's doors look like doors: every card shows it opens (‹), and the wide one is a green card, not a dark band that reads as a heading */
+.sx-sec>h2{margin-bottom:14px}
+.ex button{position:relative;padding-inline-end:34px}
+.ex button::after{content:"";position:absolute;inset-inline-end:16px;bottom:16px;width:7px;height:7px;border-left:1.8px solid var(--brass);border-bottom:1.8px solid var(--brass);transform:rotate(45deg)}
+.ex button.wide{background:linear-gradient(135deg,#1F3A30 0%,#10241D 100%);color:#F4ECD8;border:1px solid rgba(201,160,74,.55)}
+.ex button.wide span{color:#C9D1C8;opacity:1}
+.ex button.wide::after{border-color:#E2C27E}
+.ex button:active{transform:scale(.985)}
 
 </style>
 
@@ -1492,7 +1500,7 @@ body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1805';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1806';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
