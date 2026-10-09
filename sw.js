@@ -1,5 +1,5 @@
 // Offline: the page (with all its texts inside it), page images once seen, and the fonts
-const V='sira-v1';
+const V='sira-v2';
 const SHELL=['./','index.html','manifest.json','icon-192.png','icon-512.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>Promise.all(SHELL.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith('sira-')&&k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
