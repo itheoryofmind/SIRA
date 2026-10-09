@@ -533,7 +533,7 @@ textarea.notebox{width:100%;min-height:80px;border:1px solid var(--line);border-
 .qwrap{max-width:820px;margin:0 auto}
 .qcv,.qout{display:block;width:100%;height:auto;border-radius:6px;box-shadow:0 4px 18px rgba(0,0,0,.18);background:#fff}
 
-.zbd{position:fixed;inset:0;z-index:90;background:var(--ground);overflow:auto;padding:calc(10px + env(safe-area-inset-top)) 14px calc(24px + env(safe-area-inset-bottom))}
+.zbd{position:fixed;inset:0;z-index:90;background:var(--ground);overflow:auto;overscroll-behavior:contain;padding:calc(10px + env(safe-area-inset-top)) 14px calc(24px + env(safe-area-inset-bottom))}
 .zbd .zbt{display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--ground);z-index:2;padding:4px 0}
 .zbd .zbt h2{font-family:var(--display);margin:0}
 .zbmap{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:10px 0 16px}
@@ -546,6 +546,8 @@ textarea.notebox{width:100%;min-height:80px;border:1px solid var(--line);border-
 .zbl{display:flex;flex-direction:column}
 .zbl button{display:flex;justify-content:space-between;gap:10px;text-align:start;border:0;border-top:1px solid var(--line);background:none;padding:8px 0;font:inherit;font-size:15px;color:var(--ink)}
 .zbl small{color:var(--brass);white-space:nowrap}.zbl .zbmore{justify-content:center;color:var(--brass);font-size:14px}
+body.pg-locked{position:fixed;left:0;right:0;overflow:hidden}
+.zbd button{touch-action:manipulation}
 /* ===== موسوعة السيرة: identity =====
    concept: «سراجاً منيراً» — a lamp in a night sky over the arches of the Prophet's mosque;
    by day: limestone and ink, the lamp's amber kept as the one accent */
@@ -713,6 +715,11 @@ body.immersive .sx-mkbar{bottom:calc(12px + env(safe-area-inset-bottom))}
 .at-ch{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}.at-ch b{font-family:Amiri,serif;font-size:20px}
 .at-maps{font-size:13px;color:var(--brass)}
 .at-ev{border-top:1px solid var(--line);padding:8px 0}.at-ev b{display:block}.at-ev p{margin:4px 0;line-height:1.9;font-size:15px}
+
+body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
+.sx-zub{overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}
+.sx-zub button,.sx-zub .btn{touch-action:manipulation}
+.sx-atl{overscroll-behavior:contain}.sx-atl button{touch-action:manipulation}
 
 </style>
 
@@ -1132,7 +1139,7 @@ body.immersive .sx-mkbar{bottom:calc(12px + env(safe-area-inset-bottom))}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1029';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1136';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2608,15 +2615,18 @@ const SXMAD=[
     m.b.forEach(([t,sub,fn],j)=>{const r=el('button','sx-madb');r.type='button';r.append(el('i',null,ar(SXMAD.slice(0,k).reduce((a,x)=>a+x.b.length,0)+j+1)),el('b',null,t),el('span',null,sub));r.onclick=fn;g.append(r)});L.append(g)})})();
 /* السيرة في أربعين محطة: بطاقات من الخط الزمني، بلفظ مختصر السيرة وصفحته */
 const ZUB=[0, 11, 41, 42, 43, 55, 70, 85, 92, 108, 109, 114, 115, 121, 122, 136, 142, 146, 157, 166, 170, 174, 178, 186, 188, 202, 216, 248, 285, 296, 300, 320, 338, 345, 378, 394, 414, 447, 454, 460];
+/* overlays: the page behind must not move (iOS pulls it), and a quick second tap must not zoom */
+let SXLY=0;function sxLock(){if(document.body.classList.contains('sx-locked'))return;SXLY=window.scrollY;document.body.style.top=(-SXLY)+'px';document.body.classList.add('sx-locked')}
+function sxUnlock(){if(!document.body.classList.contains('sx-locked'))return;document.body.classList.remove('sx-locked');document.body.style.top='';window.scrollTo(0,SXLY)}
 async function openZubda(){const X=await getJSON('data/sira_x.json');const it=X.tl.it,eras=X.tl.eras,L=ZUB.map(i=>it[i]);let i=+(LS.get('zubAt',0))||0;if(i>=L.length)i=0;
-  let ov=$('#sxZub');if(!ov){ov=el('div','sx-zub');ov.id='sxZub';document.body.append(ov)}ov.hidden=false;
+  let ov=$('#sxZub');if(!ov){ov=el('div','sx-zub');ov.id='sxZub';document.body.append(ov)}ov.hidden=false;sxLock();const shut=()=>{ov.hidden=true;sxUnlock()};
   const draw=()=>{LS.set('zubAt',i);const s=L[i];ov.innerHTML='';
-    const top=el('div','zt');const x=el('button','zx','✕');x.type='button';x.onclick=()=>{ov.hidden=true};
+    const top=el('div','zt');const x=el('button','zx','✕');x.type='button';x.onclick=shut;
     const bar=el('div','zbar');L.forEach((_,j)=>{const d=el('i',j<=i?'on':'');bar.append(d)});top.append(x,bar);
     const card=el('div','zcard');card.append(el('p','zera',eras[s.e]||''),el('p','znum','المحطة '+ar(i+1)+' من '+ar(L.length)),el('h3',null,s.t),el('blockquote',null,'«'+s.q+'»'));
-    const go=el('button','btn btn-primary','اقرأها في الكتاب · ص '+ar(s.p));go.type='button';go.onclick=()=>{ov.hidden=true;openPart(17,s.p,null,false,'txt')};card.append(go,el('p','zsrc','من «مختصر سيرة الرسول ﷺ» للإمام محمد بن عبد الوهاب، ص '+ar(s.p)));
+    const go=el('button','btn btn-primary','اقرأها في الكتاب · ص '+ar(s.p));go.type='button';go.onclick=()=>{shut();openPart(17,s.p,null,false,'txt')};card.append(go,el('p','zsrc','من «مختصر سيرة الرسول ﷺ» للإمام محمد بن عبد الوهاب، ص '+ar(s.p)));
     const nav=el('div','znav');const pv=el('button','btn btn-quiet','السابقة'),nx=el('button','btn btn-primary',i===L.length-1?'تمّت':'التالية');[pv,nx].forEach(b=>b.type='button');pv.disabled=i===0;
-    pv.onclick=()=>{i--;draw()};nx.onclick=()=>{if(i===L.length-1){ov.hidden=true;LS.set('zubAt',0);return}i++;draw()};nav.append(pv,nx);
+    pv.onclick=()=>{i--;draw()};nx.onclick=()=>{if(i===L.length-1){shut();LS.set('zubAt',0);return}i++;draw()};nav.append(pv,nx);
     ov.append(top,card,nav);
     let sx=null;card.ontouchstart=e=>{sx=e.touches[0].clientX};card.ontouchend=e=>{if(sx==null)return;const d=e.changedTouches[0].clientX-sx;sx=null;if(Math.abs(d)>60){if(d>0&&i<L.length-1){i++;draw()}else if(d<0&&i>0){i--;draw()}}}};
   draw()}
@@ -2624,8 +2634,8 @@ $('#sxZubda').onclick=openZubda;
 /* أطلس مواضع السيرة: مواضع الأحداث بإحداثياتها، وكل موضع يفتح نص مختصر السيرة وصفحته */
 const ATL=[["مكة المكرمة", 21.4225, 39.8262, 1, [0, 55, 85, 109, 114, 345]], ["غار حراء (جبل النور)", 21.4575, 39.8592, 1, [42, 70]], ["العقبة بمنى", 21.4206, 39.8731, 1, [146, 157]], ["غار ثور", 21.3772, 39.8494, 1, [170]], ["عرفة", 21.3549, 39.9842, 1, [447]], ["المدينة النبوية", 24.4672, 39.6111, 1, [178, 186, 188, 202, 460]], ["أُحُد", 24.5022, 39.6128, 1, [248]], ["الخندق (المساجد السبعة)", 24.4781, 39.5975, 1, [285]], ["بدر", 23.78, 38.7906, 1, [216]], ["الطائف", 21.2703, 40.4158, 1, [136, 394]], ["خيبر", 25.6969, 39.2906, 1, [320]], ["تبوك", 28.3838, 36.555, 1, [414]], ["مؤتة", 31.0925, 35.6942, 1, [338]], ["الحديبية", 21.44, 39.61, 0, [300]], ["حنين", 21.5, 40.0, 0, [378]], ["الحبشة", 14.13, 38.72, 0, [92]]];
 async function openAtlas(){const X=await getJSON('data/sira_x.json');const it=X.tl.it;
-  let ov=$('#sxAtl');if(!ov){ov=el('div','sx-atl');ov.id='sxAtl';document.body.append(ov)}ov.hidden=false;ov.innerHTML='';
-  const top=el('div','at-top');const x=el('button','zx','✕');x.type='button';x.onclick=()=>{ov.hidden=true};top.append(el('h3',null,'أطلس مواضع السيرة'),x);
+  let ov=$('#sxAtl');if(!ov){ov=el('div','sx-atl');ov.id='sxAtl';document.body.append(ov)}ov.hidden=false;ov.innerHTML='';sxLock();
+  const top=el('div','at-top');const x=el('button','zx','✕');x.type='button';x.onclick=()=>{ov.hidden=true;sxUnlock()};top.append(el('h3',null,'أطلس مواضع السيرة'),x);
   const note=el('p','at-note','كل موضع في مكانه بإحداثياته، والمسافات بينها بمقياسها. لم تُرسم السواحل والحدود، فاضغط «افتحه في الخرائط» لترى الموضع على خريطة حقيقية. المواضع المكتوب عليها «تقريبي» مختلَف في تعيينها اليوم.');
   const box=el('div','at-map'),card=el('div','at-card');card.hidden=true;ov.append(top,note,box,card);
   const groups=[{n:'مكة وما حولها',f:p=>p[1]<21.6&&p[1]>21.3&&p[2]>39.5&&p[2]<40.1},{n:'المدينة وما حولها',f:p=>p[1]>24.3&&p[1]<24.6}];
@@ -2661,7 +2671,7 @@ async function openAtlas(){const X=await getJSON('data/sira_x.json');const it=X.
   };
   const show=p=>{card.hidden=false;card.innerHTML='';const hd=el('div','at-ch');hd.append(el('b',null,p[0]+(p[3]?'':' — موضع تقريبي')));
     const mp=el('a','at-maps','افتحه في الخرائط');mp.href='https://maps.apple.com/?ll='+p[1]+','+p[2]+'&q='+encodeURIComponent(p[0]);mp.target='_blank';mp.rel='noopener';hd.append(mp);card.append(hd);
-    p[4].forEach(i=>{const s=it[i];const r=el('div','at-ev');r.append(el('b',null,s.t),el('p',null,'«'+s.q+'»'));const g=el('button','btn btn-link','ص '+ar(s.p)+' من مختصر السيرة');g.type='button';g.onclick=()=>{ov.hidden=true;openPart(17,s.p,null,false,'txt')};r.append(g);card.append(r)});
+    p[4].forEach(i=>{const s=it[i];const r=el('div','at-ev');r.append(el('b',null,s.t),el('p',null,'«'+s.q+'»'));const g=el('button','btn btn-link','ص '+ar(s.p)+' من مختصر السيرة');g.type='button';g.onclick=()=>{ov.hidden=true;sxUnlock();openPart(17,s.p,null,false,'txt')};r.append(g);card.append(r)});
     card.scrollIntoView({behavior:'smooth',block:'start'})};
   draw(null)}
 $('#sxAtlas').onclick=openAtlas;
@@ -3023,9 +3033,12 @@ async function qEdit(pp,mode){
 
 /* ---------- الدرر في لمحة: الأجزاء وموضوعاتها وأبوابها، من بيان الأجزاء وفهارس الكتاب نفسه ---------- */
 const ZG=[['العقيدة',[1,2,3]],['العبادات',[4,5]],['المعاملات',[6,7]],['الجهاد وحكم المرتد',[8,9,10]],['الردود',[11,12]],['التفسير',[13]],['النصائح والتراجم',[14,15,16]]];
+/* full-screen panels: the page behind stays still (iOS pulls it while scrolling the panel) */
+let PGLY=0;function pgLock(ov){if(document.body.classList.contains('pg-locked'))return;PGLY=window.scrollY;document.body.style.top=(-PGLY)+'px';document.body.classList.add('pg-locked');
+  const mo=new MutationObserver(()=>{if(ov.hidden){mo.disconnect();document.body.classList.remove('pg-locked');document.body.style.top='';window.scrollTo(0,PGLY)}});mo.observe(ov,{attributes:true,attributeFilter:['hidden']})}
 async function openZubdaD(){
   let H=[];try{H=await getJSON('data/heads.json')}catch(e){}
-  let ov=$('#zbD');if(!ov){ov=el('div','zbd');ov.id='zbD';document.body.append(ov)}ov.hidden=false;ov.innerHTML='';
+  let ov=$('#zbD');if(!ov){ov=el('div','zbd');ov.id='zbD';document.body.append(ov)}ov.hidden=false;ov.innerHTML='';pgLock(ov);
   const top=el('div','zbt');const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.onclick=()=>{ov.hidden=true};
   top.append(el('h2',null,'الدرر في لمحة'),x);ov.append(top);
   ov.append(el('p','note','وصف كل جزء منقول من «بيان الأجزاء» في آخر الجزء السادس عشر، والأبواب من فهارس الكتاب. اضغط أي باب لتنتقل إلى صفحته.'));
