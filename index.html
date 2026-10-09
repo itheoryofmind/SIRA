@@ -1047,6 +1047,21 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 
 
 
+/* مدارج القارئ: the five levels on a gold rail that steps inward like a stair */
+.lv{position:relative;margin-top:14px}
+.lv-g{position:relative;display:flex;flex-direction:column;gap:8px;padding:0 0 22px;padding-inline-start:48px;margin-inline-start:calc(var(--k)*16px)}
+.lv-g::before{content:"";position:absolute;inset-inline-start:16px;top:34px;bottom:0;border-inline-start:2px solid rgba(201,160,74,.5)}
+.lv-g::after{content:"";position:absolute;inset-inline-start:16px;bottom:0;width:16px;border-top:2px solid rgba(201,160,74,.5)}
+.lv-g:last-child::before,.lv-g:last-child::after{display:none}
+.lv-h{display:block;margin:0 0 2px;padding:0;min-height:34px}
+.lv-h b{position:absolute;inset-inline-start:0;top:0;width:34px;height:34px;border-radius:17px;background:var(--surface);border:2px solid var(--brass);color:var(--brass);display:flex;align-items:center;justify-content:center;font:700 16px var(--text);z-index:1}
+.lv-h .d{display:block;font:13px/1.4 var(--ui);color:var(--brass);letter-spacing:0}
+.lv-h .s{display:block;font:700 19px/1.4 var(--text);color:var(--ink)}
+.lv-b{padding:11px 14px;border:1px solid var(--line);border-radius:14px;background:var(--raised);box-shadow:none}
+.lv-b b{font-size:18px!important;line-height:1.4}
+.lv-b small{font-size:14.5px!important;line-height:1.5}
+.lv-b::after{content:""!important;flex:none;width:7px;height:7px;border-left:1.8px solid var(--brass);border-bottom:1.8px solid var(--brass);transform:rotate(45deg);font-size:0}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -2977,7 +2992,7 @@ const SXBOOKS=[
   {t:'الخلفاء الراشدون',by:'من البداية والنهاية لابن كثير، تحقيق التركي',era:'الخلافة',tone:'var(--muted)',info:'من سنة ١١ إلى سنة ٤١هـ',st:'done',stT:'روجع على المطبوع',open:()=>openZad(MB.k)}
 ];
 function renderShelfS(){
-  const L=$('#lvList');if(L&&!L.childElementCount)SXMAD.forEach((m,k)=>{const g=el('div','lv-g');const hd=el('div','lv-h');hd.append(el('b',null,ar(k+1)),el('span',null,m.d+': '+m.s));g.append(hd);
+  const L=$('#lvList');if(L&&!L.childElementCount)SXMAD.forEach((m,k)=>{const g=el('div','lv-g');g.style.setProperty('--k',k);const hd=el('div','lv-h');hd.append(el('b',null,ar(k+1)),el('span','d',m.d),el('span','s',m.s));g.append(hd);
     m.b.forEach(([t,sub,fn])=>{const r=el('button','lv-b');r.type='button';const tt=el('span','t');tt.append(el('b',null,t),el('small',null,sub));r.append(tt);r.onclick=fn;g.append(r)});L.append(g)});
   const lr=lastAny();
   if(lr&&lr.n){$('#contT').textContent='تابع القراءة';$('#contS').textContent=SXBN(lr.n)+'، ص '+ar(lr.p);$('#contN').textContent=ar(lr.p)}
