@@ -1061,6 +1061,8 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .lv-b b{font-size:18px!important;line-height:1.4}
 .lv-b small{font-size:14.5px!important;line-height:1.5}
 .lv-b::after{content:""!important;flex:none;width:7px;height:7px;border-left:1.8px solid var(--brass);border-bottom:1.8px solid var(--brass);transform:rotate(45deg);font-size:0}
+.dy-bell{min-height:40px;padding:0 4px}
+.dy-bell[data-on='1']{color:var(--palm)}
 
 </style>
 
@@ -1537,7 +1539,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1828';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1829';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3356,8 +3358,29 @@ async function renderDaily(){const F=await sxFeat();const sec=$('#sxDaily'),C=$(
   const act=el('div','dy-act');
   if(t.length>320){q.classList.add('clip');const m=el('button','btn btn-link','أكمل الحديث');m.type='button';m.onclick=()=>{q.classList.remove('clip');m.remove()};act.append(m)}
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>openPart(25,h.p,null,false,'txt');act.append(go);C.append(act);
+  const bell=el('button','btn btn-link dy-bell');bell.type='button';act.append(bell);pushBtn(bell);
   sec.hidden=false}
 renderDaily();
+
+/* the daily notification: the browser gives a push address, kept at push.seeratuh.com; no name, no e-mail */
+const PUSHU='https://push.seeratuh.com';
+const IOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const STANDALONE=window.navigator.standalone||matchMedia('(display-mode: standalone)').matches;
+const u8=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return Uint8Array.from(atob(s),c=>c.charCodeAt(0))};
+const canPush=()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;
+async function pushSub(){try{const r=await navigator.serviceWorker.getRegistration();return r?await r.pushManager.getSubscription():null}catch(e){return null}}
+async function pushBtn(b){
+  const set=on=>{b.textContent=on?'التذكير اليومي مفعّل · إيقافه':'ذكّرني به كل صباح';b.dataset.on=on?1:''};
+  if(!canPush()){if(IOS&&!STANDALONE){set(false);b.onclick=()=>toast('لتصلك الإشعارات في الآيفون: أضف الموقع إلى الشاشة الرئيسية من زر المشاركة في سفاري، ثم افتحه من أيقونته واضغط هذا الزر.',7000)}else b.remove();return}
+  set(!!(await pushSub()));
+  b.onclick=async()=>{b.disabled=true;try{
+      if(b.dataset.on){const s=await pushSub();if(s){fetch(PUSHU+'/unsub',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint:s.endpoint})}).catch(()=>{});await s.unsubscribe()}set(false);toast('أوقف التذكير اليومي.');return}
+      const perm=await Notification.requestPermission();if(perm!=='granted'){toast('لم يُسمح بالإشعارات. تستطيع السماح بها من إعدادات الجوال.',5000);return}
+      const reg=await navigator.serviceWorker.ready;const {key}=await (await fetch(PUSHU+'/key')).json();
+      const s=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(key)});
+      const r=await fetch(PUSHU+'/sub',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(s)});if(!r.ok)throw 0;
+      set(true);toast('فُعّل التذكير: يصلك كل صباح حديثٌ من شمائله صلى الله عليه وسلم.',4500)
+    }catch(e){toast('تعذّر تفعيل التذكير الآن. حاول بعد قليل.',4000)}finally{b.disabled=false}}}
 
 /* ---------- مواضع الخلاف مع المطبوع: علامات حمراء، وقراءة الصفحات المعلَّمة وحدها ---------- */
 let MK={};getJSON('data/marks.json').then(d=>{MK=d||{};renderMkBooks()}).catch(()=>{});
