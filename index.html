@@ -629,19 +629,23 @@ body{font-family:var(--ui);background:var(--ground)}
 /* the 63 years */
 .yr{margin-top:16px;padding:18px 16px 16px;border-radius:24px;background:var(--surface);border:1px solid var(--line)}
 .yr h2{font-size:30px}
-.yr-grid{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;margin-top:4px}
-.yr-c{aspect-ratio:1;border-radius:8px;border:1.5px solid var(--pre);background:transparent;padding:0;position:relative;touch-action:manipulation;cursor:pointer;color:transparent;font:inherit;font-size:11px}
-.yr-c.mk{background:var(--makkah);border-color:var(--makkah)}
-.yr-c.md{background:var(--madinah);border-color:var(--madinah)}
+.yr-grid{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:5px;margin-top:4px}
+.yr-c{aspect-ratio:1;border-radius:4px;border:1.5px solid var(--pre);background:transparent;padding:0;position:relative;touch-action:manipulation;cursor:pointer;color:transparent;font:inherit;font-size:11px}
+.yr-c.mk{background:color-mix(in srgb,var(--brass) 14%,transparent);border-color:var(--brass)}
+.yr-c.md{background:#1F3A30;border-color:#1F3A30}
+:root[data-theme=night] .yr-c.md{background:#2E5A47;border-color:#2E5A47}
+@media (prefers-color-scheme:dark){:root:not([data-theme]) .yr-c.md{background:#2E5A47;border-color:#2E5A47}}
 .yr-c.ev::after{content:"";position:absolute;inset:auto 0 3px;margin:auto;width:5px;height:5px;border-radius:50%;background:var(--here)}
-.yr-c.mk.ev::after,.yr-c.md.ev::after{background:#fff}
+.yr-c.mk.ev::after{background:var(--brass)}.yr-c.md.ev::after{background:#E2C27E}
 .yr-c.read{outline:2px solid var(--here);outline-offset:-5px}
 .yr-c.sel{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--here)}
 .yr-c:focus-visible{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--ink);outline:0}
 .yr-key{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:14px;font-family:var(--text);font-size:16px;color:var(--muted)}
 .yr-key span{display:flex;align-items:center;gap:6px}
-.yr-key i{width:12px;height:12px;border-radius:3px;border:1.5px solid var(--pre)}
-.yr-key i.mk{background:var(--makkah);border-color:var(--makkah)}.yr-key i.md{background:var(--madinah);border-color:var(--madinah)}
+.yr-key i{width:12px;height:12px;border-radius:2px;border:1.5px solid var(--pre)}
+.yr-key i.mk{background:color-mix(in srgb,var(--brass) 14%,transparent);border-color:var(--brass)}.yr-key i.md{background:#1F3A30;border-color:#1F3A30}
+:root[data-theme=night] .yr-key i.md{background:#2E5A47;border-color:#2E5A47}
+@media (prefers-color-scheme:dark){:root:not([data-theme]) .yr-key i.md{background:#2E5A47;border-color:#2E5A47}}
 .yr-key i.ev{border:0;width:7px;height:7px;border-radius:50%;background:var(--here)}
 .yr-p{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
 .yr-p h3{margin:0;font-family:"Amiri",serif;font-weight:700;font-size:23px;line-height:1.4}
@@ -1561,7 +1565,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1918';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-09-1937';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
