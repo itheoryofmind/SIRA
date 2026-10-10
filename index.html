@@ -1501,7 +1501,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
         <p class="exg">من القرآن والصحيح</p>
         <button type="button" id="fxAyat"><b>ما نزل من القرآن في أحداث السيرة</b><span>أحداثٌ نصّت الكتب على أن آياتٍ نزلت فيها</span></button>
         <button type="button" id="fxMg"><b>المغازي في الصحيحين</b><span>أحاديث كل غزوة على ترتيب وقوعها</span></button>
-        <button type="button" id="fxGz"><b>الغزوات بطاقات</b><span>أعدادها وأسماؤها بلفظ مختصر السيرة</span></button>
+        <button type="button" id="fxGz"><b>الغزوات في سطور</b><span>أعدادها وأسماؤها بلفظ مختصر السيرة</span></button>
         <p class="exg">دلائل نبوته <span class="saw">ﷺ</span></p>
         <button type="button" class="wide" id="fxDal"><b>دلائل النبوة</b><span>أحاديثها من صحيح البخاري، وأبواب ابن كثير لمن شاء</span></button>
         <p class="exg">الأماكن</p>
@@ -1850,7 +1850,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1658';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1659';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3299,7 +3299,7 @@ function openNav(){
   grp('استكشف');
   it('الخط الزمني للسيرة',()=>{closeNav();openSX('tl')});
   it('المغازي في الصحيحين',()=>{closeNav();fxMgTL()});
-  it('الغزوات بطاقات',()=>{closeNav();fxGz()});
+  it('الغزوات في سطور',()=>{closeNav();fxGz()});
   it('أهل بيته ﷺ',()=>{closeNav();fxAhl()});
   it('حجة الوداع يوماً بيوم',()=>{closeNav();fxHajj()});
   it('دلائل النبوة',()=>{closeNav();fxDal()});
@@ -4125,8 +4125,8 @@ function evRoute(){const h=location.hash;let m;
   else if(h==='#fr')go(fxFriday)}
 addEventListener('hashchange',evRoute);evRoute();
 
-/* ---------- الغزوات بطاقات: the Mukhtasar's words and figures, and the hadiths of the two Sahihs ---------- */
-async function fxGz(){const G=await getJSON('data/sx_gz.json');const P=fxOpen('الغزوات بطاقات');
+/* ---------- الغزوات في سطور: the Mukhtasar's words and figures, and the hadiths of the two Sahihs ---------- */
+async function fxGz(){const G=await getJSON('data/sx_gz.json');const P=fxOpen('الغزوات في سطور');
   P.inn.append(el('p','fx-lead','لكل غزوة وحدث بطاقة: أول كلام «مختصر سيرة الرسول ﷺ» فيه، وما ذكره من الأعداد والأسماء بلفظه، وعدد أحاديثه في الصحيحين.'));
   const L=el('div','gz');G.forEach(g=>{const c=el('section','gz-c');c.append(sawEl('h3','gz-t',g.t));
     const q=el('p','gz-q');q.textContent='«'+g.q+'»';c.append(q);
