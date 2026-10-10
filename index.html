@@ -1230,6 +1230,19 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .nt-same{margin:6px 2px 0;font-size:12.5px;color:var(--clay);line-height:1.7}
 .sheet{overscroll-behavior:contain}
 .at-hint{margin:0 0 10px;padding:9px 12px;border-radius:10px;background:color-mix(in srgb,var(--brass) 12%,transparent);color:var(--ink);font-size:14px;line-height:1.7}
+.at-map{position:relative}
+.at-zt{margin:2px 4px 6px;font-weight:700;color:var(--brass);font-size:15px}
+.at-zrow{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:4px 0 8px}
+.at-zrow .at-zt{margin:0 4px}
+.at-insetw{flex:none;width:64px;padding:3px;border-radius:8px;background:var(--surface);border:1px solid var(--line)}
+.at-inset{display:block;width:100%;height:auto}
+.at-inset .ic{fill:none;stroke:color-mix(in srgb,var(--brass) 60%,transparent);stroke-width:.8}
+.at-inset .ir{fill:none;stroke:var(--clay);stroke-width:1.6}
+.at-inset .id{fill:var(--clay)}
+.sx-atl .at-card{position:fixed;inset-inline:0;bottom:0;z-index:5;max-height:52vh;overflow:auto;margin:0 auto;max-width:640px;border-radius:18px 18px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.35);padding-top:36px;padding-bottom:calc(16px + env(safe-area-inset-bottom));overscroll-behavior:contain}
+.at-cx{position:absolute;top:6px;inset-inline-start:8px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:16px;cursor:pointer}
+.at-svg .pt.sel{stroke:var(--brass);stroke-width:3}
+.sx-atl:has(.at-card:not([hidden])){padding-bottom:54vh}
 
 </style>
 
@@ -1719,7 +1732,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1136';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1139';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3301,15 +3314,24 @@ async function openAtlas(){const X=await getJSON('data/sira_x.json');const it=X.
       const w=g.n.length*6.6+6;let pos=[cx,cy-20];for(const [dx,dy] of [[0,-20],[0,32],[-(w/2+18),5],[w/2+18,5],[0,-36],[0,48]]){const r={x:cx+dx-w/2,y:cy+dy-13,w,h:16};if(fits(r)){pos=[cx+dx,cy+dy];placed.push(r);break}}
       const t=mk('text',{x:pos[0],y:pos[1],class:'pl'});t.textContent=g.n;
       [c,n,t].forEach(e=>e.addEventListener('click',()=>{draw(g)}))});
-    pts.forEach(p=>{if(inCl(p))return;const cx=X(p[2]),cy=Y(p[1]);const c=mk('circle',{cx,cy,r:p[3]?7:11,class:p[3]?'pt':'pt ap'});const lab=p[0]+(p[3]?'':' (تقريبي)'),w=lab.length*6.6+6;let pos=null;
+    pts.forEach(p=>{if(inCl(p))return;const cx=X(p[2]),cy=Y(p[1]);const c=mk('circle',{cx,cy,r:p[3]?7:11,class:p[3]?'pt':'pt ap','data-k':p[0]});const lab=p[0]+(p[3]?'':' (تقريبي)'),w=lab.length*6.6+6;let pos=null;
       for(const [dx,dy] of [[0,-13],[0,23],[w/2+12,5],[-w/2-12,5],[0,-28],[0,38]]){const r={x:cx+dx-w/2,y:cy+dy-13,w,h:16};if(!placed.some(q=>r.x<q.x+q.w&&q.x<r.x+r.w&&r.y<q.y+q.h&&q.y<r.y+r.h)&&r.x>0&&r.x+r.w<W){pos=[cx+dx,cy+dy];placed.push(r);break}}
       if(!pos)pos=[cx,cy-13];const t=mk('text',{x:pos[0],y:pos[1],class:'pl'});t.textContent=lab;
       [c,t].forEach(e=>e.addEventListener('click',()=>show(p)))});
     RG.forEach(([n,la,lo,rot])=>{if(la<la0||la>la1||lo<lo0||lo>lo1)return;const cx=X(lo),cy=Y(la),w=n.length*7;if(!rot&&!fits({x:cx-w/2,y:cy-12,w,h:16}))return;const t=mk('text',{x:cx,y:cy,class:'rg'+(rot?' sea':''),transform:rot?'rotate('+rot+' '+cx+' '+cy+')':''});t.textContent=n;svg.insertBefore(t,cg.nextSibling)});box.append(svg);
-    if(view){const b=el('button','btn btn-quiet','← الخريطة كاملة');b.type='button';b.onclick=()=>draw(null);box.prepend(b)}
+    if(view){const b=el('button','btn btn-quiet','← الخريطة كاملة');b.type='button';b.onclick=()=>draw(null);box.prepend(b,el('p','at-zt',view.n));
+      // where this close view lies: a small map of the whole region with its place marked
+      const F=ATL.filter(p=>p[1]>18),fa0=Math.min(...F.map(p=>p[1]))-.4,fa1=Math.max(...F.map(p=>p[1]))+.4,fo0=Math.min(...F.map(p=>p[2]))-.6,fo1=Math.max(...F.map(p=>p[2]))+.6;
+      const fk=Math.cos((fa0+fa1)/2*Math.PI/180),IW=96,fs=IW/((fo1-fo0)*fk),IH=Math.round((fa1-fa0)*fs);
+      const IX=lo=>(lo-fo0)*fk*fs,IY=la=>(fa1-la)*fs;
+      const iv=document.createElementNS(NS,'svg');iv.setAttribute('viewBox','0 0 '+IW+' '+IH);iv.setAttribute('class','at-inset');iv.setAttribute('aria-hidden','true');
+      const im=(t,a)=>{const e=document.createElementNS(NS,t);for(const q in a)e.setAttribute(q,a[q]);iv.append(e);return e};
+      CO.forEach(L=>{let d='';L.forEach((q,i)=>{d+=(i?'L':'M')+IX(q[0]).toFixed(1)+' '+IY(q[1]).toFixed(1)});im('path',{d,class:'ic'})});
+      const cx=IX((lo0+lo1)/2),cy=IY((la0+la1)/2);im('circle',{cx,cy,r:7,class:'ir'});im('circle',{cx,cy,r:2.2,class:'id'});
+      const zt=box.querySelector('.at-zt');const row=el('div','at-zrow');zt.replaceWith(row);const ib=el('div','at-insetw');ib.append(iv);row.append(zt,ib)}
     far.forEach(p=>{const b=el('button','at-far','↓ '+p[0]+' (تقريبي) — جنوب البحر الأحمر، خارج حدود هذه الخريطة');b.type='button';b.onclick=()=>show(p);box.append(b)});
   };
-  const show=p=>{card.hidden=false;card.innerHTML='';const hd=el('div','at-ch');hd.append(el('b',null,p[0]+(p[3]?'':' — موضع تقريبي')));
+  const show=p=>{card.hidden=false;card.innerHTML='';card.scrollTop=0;{const sv=box.querySelector('svg');if(sv)setTimeout(()=>ov.scrollBy({top:sv.getBoundingClientRect().top-70,behavior:'smooth'}),30)}box.querySelectorAll('.sel').forEach(e=>e.classList.remove('sel'));(box.querySelector('[data-k="'+p[0]+'"]')||{classList:{add(){}}}).classList.add('sel');const cx_=el('button','at-cx','✕');cx_.type='button';cx_.setAttribute('aria-label','إغلاق');cx_.onclick=()=>{card.hidden=true;box.querySelectorAll('.sel').forEach(e=>e.classList.remove('sel'))};card.append(cx_);const hd=el('div','at-ch');hd.append(el('b',null,p[0]+(p[3]?'':' — موضع تقريبي')));
     const mp=el('a','at-maps','افتحه في الخرائط');mp.href='https://maps.apple.com/?ll='+p[1]+','+p[2]+'&q='+encodeURIComponent(p[0]);mp.target='_blank';mp.rel='noopener';hd.append(mp);card.append(hd);
     p[4].forEach(i=>{const s=it[i];const r=el('div','at-ev');r.append(el('b',null,s.t),el('p',null,'«'+s.q+'»'));const g=el('button','btn btn-link','ص '+ar(s.p)+' من مختصر السيرة');g.type='button';g.onclick=()=>openPart(17,s.p,null,false,'txt');r.append(g);card.append(r)});
     card.scrollIntoView({behavior:'smooth',block:'start'})};
