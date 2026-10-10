@@ -582,6 +582,10 @@ body.pg-locked,body.ov-locked{position:fixed;left:0;right:0;overflow:hidden}
 
 #chooseBack{z-index:118!important}#choose{z-index:119!important}
 button,a,.btn{touch-action:manipulation}
+.ntcard{flex-wrap:wrap;position:relative;padding:12px 14px 12px 40px}
+.ntcard span{min-width:0;flex:1 1 calc(100% - 40px)}
+.ntcard .nt-go{flex:none;padding:8px 16px;font-size:14.5px;border-radius:10px;margin-inline-start:32px;background:var(--brass);color:var(--surface);border:0}
+.ntcard .nt-x{position:absolute;top:6px;inset-inline-end:6px;color:var(--muted)}
 /* ===== موسوعة السيرة: «ثلاث وستون سنة» =====
    the life of the Prophet ﷺ as 63 squares is the one bold element; everything else is quiet:
    white reading paper, basalt-green ink, Makkah night-blue, Madinah palm-green, one gold for "you are here" */
@@ -1184,6 +1188,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .ntcard span{min-width:0;flex:1 1 calc(100% - 40px)}
 .ntcard .nt-go{flex:none;padding:8px 16px;font-size:14.5px;border-radius:10px;margin-inline-start:32px;background:var(--brass);color:var(--surface);border:0}
 .ntcard .nt-x{position:absolute;top:6px;inset-inline-end:6px;color:var(--muted)}
+.nt-off{display:block;width:100%;margin-top:10px;border:1px solid color-mix(in srgb,var(--clay) 45%,transparent);border-radius:11px;padding:11px;background:none;color:var(--clay);font:inherit;font-size:15px;font-weight:700;cursor:pointer}
 
 </style>
 
@@ -1358,6 +1363,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
     
 
     
+    <div class="install ntcard" id="ntCard" hidden><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span><b>تنبيه قبل الأذان</b><br>يصلك قبل أذان كل صلاة من الصلوات الخمس، على مواقيت مدينتك.</span><button type="button" class="btn nt-go" id="ntGo">اختر التنبيه</button><button type="button" class="icon nt-x" id="ntX" aria-label="ليس الآن"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
 
 
     <section class="about" id="aboutSec">
@@ -1662,7 +1668,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-0950';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-0955';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3649,6 +3655,10 @@ async function ntPaint(){
     tb.onclick=async()=>{tb.disabled=true;tb.textContent='جارٍ الإرسال…';
       try{await ntSync(ntGet(),false,true);tb.textContent='أُرسل. انظر إلى إشعارات جوالك'}catch(e){tb.textContent='تعذّر الإرسال. حاول مرة أخرى'}
       setTimeout(()=>{tb.textContent='أرسل إشعاراً تجريبياً';tb.disabled=false},6000)};B.append(tb)}
+  if(live){const off=el('button','nt-off','إيقاف الإشعارات كلها');off.type='button';
+    off.onclick=async()=>{if(!confirm('إيقاف الإشعارات كلها؟ لن يصلك شيء من الموقع، وتستطيع تفعيلها من هذه الصفحة متى شئت.'))return;off.disabled=true;off.textContent='جارٍ الإيقاف…';
+      try{const m=ntGet();m.h={};await ntSync(m,false);NTD.n=JSON.parse(JSON.stringify(ntGet()));NTD.dirty=false;NTD.msg=['nt-ok','أُوقفت الإشعارات كلها، فلن يصلك شيء.']}
+      catch(e){NTD.msg=['nt-err','تعذّر الإيقاف الآن. تأكد من اتصالك بالإنترنت ثم حاول مرة أخرى.']}ntPaint()};B.append(off)}
   if(ok&&IOS)B.append(el('p','nt-note','على الآيفون: لا تصل الإشعارات إلا بعد إضافة الموقع إلى الشاشة الرئيسية، وفتحه منها.'))}
 
 /* ---------- القراءة بدون إنترنت: the texts are saved by themselves; the page images only when the reader asks ---------- */
@@ -4163,6 +4173,17 @@ $('#openZubda').onclick=openZubdaD;
   window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();txt.textContent='ثبّته تطبيقاً على جهازك ليفتح بضغطة ويعمل بدون إنترنت.';const b=$('#installBtn');b.hidden=false;box.hidden=false;
     b.onclick=async()=>{e.prompt();try{await e.userChoice}catch(_){}box.hidden=true}});
 })();
+
+/* the card that tells a reader about the reminder before the adhan: from the second visit, for a reader who chose a city and has not turned it on; «ليس الآن» hides it for a month */
+(function(){try{
+  const v=(+LS.get('visits',0)||0)+1;LS.set('visits',v);
+  const box=$('#ntCard');if(!box)return;
+  if(PRP.ios&&!PRP.app){setTimeout(()=>{const t=$('#installTxt');if(t&&t.innerHTML&&!/التنبيه/.test(t.innerHTML))t.innerHTML+=' وبعد تثبيته يصلك التنبيه قبل الأذان إن شئت.'},300);return}
+  if(!PRP.can()||v<2||!LS.get('prPlace',null)||Date.now()-(+LS.get('ntCardX',0)||0)<30*864e5)return;
+  prpSub().then(s=>{if(!s)box.hidden=false});
+  $('#ntGo').onclick=()=>{box.hidden=true;openNotif()};
+  $('#ntX').onclick=()=>{box.hidden=true;LS.set('ntCardX',Date.now())};
+}catch(e){}})();
 
 /* updates: the home-screen app on iPhone resumes the old page, so check for a newer version when it comes to the front */
 async function checkUpdate(){
