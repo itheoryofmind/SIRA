@@ -26,7 +26,7 @@ id = "$NS"
 binding = "SELF"
 service = "sira-push"
 [triggers]
-crons = ["0 * * * *"]   # every hour: the readers for whom it is 6:00 (and Friday 9:00) where they are
+crons = ["*/5 * * * *"]   # every five minutes: each reader's kinds at their hour, one after another five minutes apart
 T
 CLOUDFLARE_ACCOUNT_ID="$ACC" npx --yes wrangler@3 deploy
 # the key for test sends: derived from the token, so only this repository can make one

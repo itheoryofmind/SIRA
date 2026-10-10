@@ -1225,6 +1225,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .pl-opt{background:color-mix(in srgb,var(--brass) 9%,var(--raised));border-color:color-mix(in srgb,var(--brass) 35%,transparent);cursor:pointer}
 .pl-opt b{color:var(--ink)}
 .pl-opt span,.pl-opt small{color:var(--muted)}
+.nt-same{margin:6px 2px 0;font-size:12.5px;color:var(--clay);line-height:1.7}
 
 </style>
 
@@ -1714,7 +1715,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1103';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1110';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3629,9 +3630,9 @@ async function pushSub(){try{const r=await navigator.serviceWorker.getRegistrati
 const devTz=()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone||''}catch(e){return ''}};
 // the kinds, their default hours, and their wording
 const NTF=[['sh',6,'حديث من الشمائل كل يوم','حديث من الشمائل المحمدية مع حكمه.'],
-  ['mg',7,'حديث من المغازي كل يوم','حديث من كتاب المغازي في صحيح البخاري، على ترتيب الكتاب.'],
+  ['mg',7,'حديث من المغازي كل يوم','حديث من كتاب المغازي في صحيح البخاري، على ترتيب الأحداث.'],
   ['si',21,'محطة من السيرة كل يوم','حدث من سيرته <span class="saw">ﷺ</span> على ترتيب وقوعه، من المولد إلى الوفاة، بلفظ مختصر السيرة.'],
-  ['kh',21,'من أخبار الخلفاء الراشدين','خبر كل يوم على الترتيب، من حديث السقيفة وبيعة أبي بكر الصديق إلى صلح الحسن بن علي ومعاوية رضي الله عنهم.'],
+  ['kh',22,'من أخبار الخلفاء الراشدين','خبر كل يوم على الترتيب، من حديث السقيفة وبيعة أبي بكر الصديق إلى صلح الحسن بن علي ومعاوية رضي الله عنهم.'],
   ['pl',20,'ورد خطة القراءة','تذكير بورد اليوم من خطتك.'],
   ['fr',9,'تذكير يوم الجمعة','آية الأمر بالصلاة على النبي <span class="saw">ﷺ</span> من سورة الأحزاب.']];
 const NTFDEF=Object.fromEntries(NTF.map(x=>[x[0],x[1]]));
@@ -3714,6 +3715,9 @@ async function ntPaint(){
     if(on){const tm=el('label','nt-tm');tm.innerHTML='<span>الوقت:</span> ';const sel=el('select');sel.setAttribute('aria-label','وقت '+t);
       for(let h=0;h<24;h++)sel.append(new Option(hName(h),h));sel.value=n.h[k];tm.append(sel);r.append(tm);
       sel.onchange=()=>{n.h[k]=+sel.value;mark()}
+      // another kind at the same hour: say so (they come five minutes apart)
+      const same=NTF.filter(x=>x[0]!==k&&(x[0] in n.h)&&n.h[x[0]]===n.h[k]&&!(x[0]==='pl'&&!pl)).map(x=>'«'+x[2]+'»');
+      if(same.length)r.append(el('p','nt-same','في هذه الساعة يصلك أيضاً: '+same.join(' و')+'، بينهما خمس دقائق.'))
       if(k==='si'){const cx=el('label','nt-cx');const cb=document.createElement('input');cb.type='checkbox';cb.checked=n.cx!==false;
         cx.append(cb,el('span',null,'عند تمام السيرة أكمل بأخبار الخلفاء الراشدين على الترتيب'));cb.onchange=()=>{n.cx=cb.checked;mark()};r.append(cx)}}
     box.append(r)}

@@ -81,8 +81,8 @@ const okTz = (tz) => { try { return typeof tz === 'string' && tz.length < 64 && 
 // the reader's date, hour and weekday now
 function local(tz, t = Date.now()) {
   const p = {};
-  for (const x of new Intl.DateTimeFormat('en-US', { timeZone: tz, year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', hourCycle: 'h23', weekday: 'short' }).formatToParts(new Date(t))) p[x.type] = x.value;
-  return { y: +p.year, m: +p.month, d: +p.day, h: (+p.hour) % 24, wd: p.weekday };
+  for (const x of new Intl.DateTimeFormat('en-US', { timeZone: tz, year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hourCycle: 'h23', weekday: 'short' }).formatToParts(new Date(t))) p[x.type] = x.value;
+  return { y: +p.year, m: +p.month, d: +p.day, h: (+p.hour) % 24, mi: +p.minute, wd: p.weekday };
 }
 
 // the same hadith as the site's card that day (the reader's date)
@@ -125,7 +125,8 @@ function seq(L, sd, tz, kind) {
 }
 // what a reader asked for, and when: h = {kind: hour}; readers kept before the choice of hours: the hadith at 6, Friday at 9, the plan at 20
 const SIKH = SI.concat(KH);   // the Sira, then the caliphs, for a reader who asked to go on
-const KINDS = { mg: 7, sh: 6, fr: 9, si: 21, kh: 21, pl: 20 };
+const KINDS = { mg: 7, sh: 6, fr: 9, si: 21, kh: 22, pl: 20 };
+const ORDER = ['sh', 'mg', 'si', 'kh', 'pl', 'fr'];   // as on the notifications page
 function norm(m) {
   m = m || {};
   if (m.h && typeof m.h === 'object') return m;
@@ -159,13 +160,12 @@ async function due(env, force) {
     for (const k of l.keys) {
       const m = norm(k.metadata), tz = okTz(m.tz) ? m.tz : DEF_TZ;
       if (force) { if ({ daily: 'sh', friday: 'fr' }[force] in m.h || force in m.h) out.push([k.name, force]); continue; }
-      const L = local(tz);
-      for (const kind in m.h) {
-        if (m.h[kind] !== L.h) continue;
-        if (kind === 'fr' && L.wd !== 'Fri') continue;
-        if (kind === 'pl' && !planOf(m.pl)) continue;
-        out.push([k.name, kind === 'sh' ? 'daily' : kind === 'fr' ? 'friday' : kind]);
-      }
+      const L = local(tz), slot = Math.floor(L.mi / 5);
+      // the kinds due this hour, in the page's order; two in one hour come five minutes apart, not together
+      const now = ORDER.filter((kind) => kind in m.h && m.h[kind] === L.h
+        && !(kind === 'fr' && L.wd !== 'Fri') && !(kind === 'pl' && !planOf(m.pl)));
+      const kind = now[slot];
+      if (kind) out.push([k.name, kind === 'sh' ? 'daily' : kind === 'fr' ? 'friday' : kind]);
     }
     cursor = l.list_complete ? null : l.cursor;
   } while (cursor);
