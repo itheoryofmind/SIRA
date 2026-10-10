@@ -1226,6 +1226,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .pl-opt b{color:var(--ink)}
 .pl-opt span,.pl-opt small{color:var(--muted)}
 .nt-same{margin:6px 2px 0;font-size:12.5px;color:var(--clay);line-height:1.7}
+.sheet{overscroll-behavior:contain}
 
 </style>
 
@@ -1715,7 +1716,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1110';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1131';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3598,7 +3599,7 @@ renderDaily();
 const mgDay=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);
 // each reader goes through the hadiths in order, from the day the card was first shown (or the notification turned on)
 function mgStart(){let d=LS.get('mgStart',null);if(!Number.isInteger(d)){d=mgDay();LS.set('mgStart',d)}return d}
-const mgIdx=N=>((mgDay()-mgStart())%N+N)%N;
+const mgIdx=N=>Math.max(0,mgDay()-mgStart())%N;   // before the first day: the first hadith
 function mgText(h,full){return full||!h.s?h.x:h.s}
 function mgMeta(h,full){return 'صحيح البخاري، كتاب المغازي، رقم '+ar(+h.no)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'')}
 const mgCh=(M,h)=>(h.ch==='باب'||h.ch==='باب:')?'باب بلا ترجمة، تابع لما قبله':h.ch;
@@ -3641,6 +3642,9 @@ function ntGet(){let n=LS.get('ntf',null);if(n&&n.h)return n;n={h:{},sd:{},tz:nu
   if(LS.get('pushSh',null)!==0&&LS.get('pushTz',null)){n.h.sh=6;n.h.fr=9}
   if(LS.get('sxPlanPush',null))n.h.pl=20;return n}
 const ntSet=n=>LS.set('ntf',n);
+// a fresh start for the ordered notifications (Sira, caliphs, Maghazi), from the day named here
+const SEQ0=20737;   // 11 October 2026
+(function(){try{if(LS.get('seq0',0)===SEQ0)return;LS.set('seq0',SEQ0);LS.set('mgStart',SEQ0);const n=LS.get('ntf',null);if(!n||!n.h)return;n.sd={};['si','kh','mg'].forEach(k=>{if(k in n.h)n.sd[k]=SEQ0});ntSet(n);setTimeout(()=>{ntSync(n,false).catch(()=>{})},4000)}catch(e){}})();
 const myTz=()=>ntGet().tz||devTz();
 async function pushGet(){if(!canPush())throw 0;const perm=await Notification.requestPermission();if(perm!=='granted'){toast('لم يُسمح بالإشعارات. تستطيع السماح بها من إعدادات الجوال.',5000);return null}
   const reg=await navigator.serviceWorker.ready;const {key}=await (await fetch(PUSHU+'/key')).json();return reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(key)})}
@@ -3684,9 +3688,9 @@ function fxNotif(){
     const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');
     x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.style.cssText='position:absolute;inset-inline-start:6px;top:6px';hd.append(x);
     const B=el('div');B.id='ntBody';S.append(hd,el('h4',null,'الإشعارات'),B);document.body.append(bk,S);
-    const close=()=>{if(NTD.dirty&&!confirm('لم تحفظ التغييرات. أتغلق الصفحة دون حفظ؟'))return;bk.hidden=true;S.hidden=true};bk.onclick=close;x.onclick=close}
+    const close=()=>{if(NTD.dirty&&!confirm('لم تحفظ التغييرات. أتغلق الصفحة دون حفظ؟'))return;bk.hidden=true;S.hidden=true;sxUnlock()};bk.onclick=close;x.onclick=close}
   NTD={n:JSON.parse(JSON.stringify(ntGet())),dirty:false,msg:null};
-  document.getElementById('ntBack').hidden=false;S.hidden=false;ntPaint()}
+  document.getElementById('ntBack').hidden=false;S.hidden=false;sxLock();ntPaint()}
 // the page edits a draft; nothing reaches the sender until «حفظ»
 let NTD={n:null,dirty:false,msg:null};
 const ntList=(h,cx)=>NTF.filter(x=>x[0] in h).map(x=>x[2]+(x[0]==='si'&&cx!==false?'، ثم أخبار الخلفاء':'')+': '+hName(h[x[0]]));
@@ -3804,8 +3808,8 @@ async function fxOffline(){
     const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');
     x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.style.cssText='position:absolute;inset-inline-start:6px;top:6px';hd.append(x);
     const B=el('div');B.id='offBody';S.append(hd,el('h4',null,'القراءة دون اتصال'),B);document.body.append(bk,S);
-    const close=()=>{bk.hidden=true;S.hidden=true};bk.onclick=close;x.onclick=close}
-  document.getElementById('offBack').hidden=false;S.hidden=false;
+    const close=()=>{bk.hidden=true;S.hidden=true;sxUnlock()};bk.onclick=close;x.onclick=close}
+  document.getElementById('offBack').hidden=false;S.hidden=false;sxLock();
   if(!('caches' in window)){document.getElementById('offBody').innerHTML='<p class="off-note">لا يتيح متصفحك الحفظ للقراءة دون اتصال بالإنترنت.</p>';return}
   if(!SXOFF.im.run)await offCountImgs();
   if(typeof DH!=='undefined'&&!SXOFF.tx.run){SXOFF.tx.t=Object.keys(DH).length;try{const c=await dataCache();let n=0;for(const p in DH)if(await c.match(p+'?h='+DH[p]))n++;SXOFF.tx.d=n}catch(e){}
@@ -3834,11 +3838,11 @@ function evShell(label){
     const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');
     x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.style.cssText='position:absolute;inset-inline-start:6px;top:6px';hd.append(x);
     const B=el('div');B.id='evBody';S.append(hd,B);document.body.append(bk,S);
-    const close=()=>{bk.hidden=true;S.hidden=true};bk.onclick=close;x.onclick=close}
+    const close=()=>{bk.hidden=true;S.hidden=true;sxUnlock()};bk.onclick=close;x.onclick=close}
   S.setAttribute('aria-label',label);
   const B=document.getElementById('evBody');B.innerHTML='';
-  document.getElementById('evBack').hidden=false;S.hidden=false;S.scrollTop=0;return B}
-const evClose=()=>{const S=document.getElementById('evSheet');if(S){S.hidden=true;document.getElementById('evBack').hidden=true}};
+  document.getElementById('evBack').hidden=false;S.hidden=false;S.scrollTop=0;sxLock();return B}
+const evClose=()=>{const S=document.getElementById('evSheet');if(S){S.hidden=true;document.getElementById('evBack').hidden=true;sxUnlock()}};
 async function fxTlEv(k){
   const X=await getJSON('data/sira_x.json'),L=X.tl.it,it=L[k];if(!it||!it.q)return;
   const B=evShell(it.t);

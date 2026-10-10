@@ -95,7 +95,9 @@ function today(tz) {
 
 // the next hadith from Kitab al-Maghazi, by event (the site's home card shows the same one)
 function maghazi(tz, sd) {
-  const i = ((dayNo(tz) - (+sd || 0)) % MG.length + MG.length) % MG.length, x = MG[i];   // each reader in order, from the day the reader began
+  const d = dayNo(tz) - (+sd || 0);
+  if (d < 0) return null;   // the reader's first day has not come yet
+  const i = d % MG.length, x = MG[i];   // each reader in order, from the day the reader began
   return { t: x[0], b: x[1], u: SITE + '/#mg=' + i, tag: 'maghazi' };
 }
 
@@ -120,7 +122,9 @@ function plan(pl) {
 // the reader's day number (for the daily order of the Sira and the caliphs)
 const dayNo = (tz) => { const L = local(tz); return Date.UTC(L.y, L.m - 1, L.d) / 864e5; };
 function seq(L, sd, tz, kind) {
-  const n = ((dayNo(tz) - (+sd || 0)) % L.length + L.length) % L.length, x = L[n];
+  const d = dayNo(tz) - (+sd || 0);
+  if (d < 0) return null;   // the reader's first day has not come yet
+  const n = d % L.length, x = L[n];
   return { t: x[0], b: x[1], u: SITE + '/#ev=' + x[3], tag: kind };   // the site opens the event itself, in place
 }
 // what a reader asked for, and when: h = {kind: hour}; readers kept before the choice of hours: the hadith at 6, Friday at 9, the plan at 20
