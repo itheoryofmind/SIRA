@@ -1790,7 +1790,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1528';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1529';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3602,7 +3602,7 @@ async function khWho(c){const F=await sxFeat();KHSELC=KHSELC===c?null:c;
   [...$('#khGrid').children].forEach((b,i)=>b.classList.toggle('off',!!KHSELC&&!F.khul.years[i].c.includes(KHSELC)));
   const W=$('#khWho');W.innerHTML='';W.hidden=!KHSELC;if(!KHSELC)return;
   const a=(F.khul.ages||[]).find(x=>x.k===c);W.append(el('h3',null,KHN[c]+(c==='has'?' رضي الله عنهما':' رضي الله عنه')));
-  if(c==='has')W.append(el('p','sub','الخلفاء الراشدون أربعة، وبأشهره رضي الله عنه تتمّ الثلاثون سنة التي في حديث سفينة، ثم نزل عن الأمر لمعاوية رضي الله عنه. قال شيخ الإسلام ابن تيمية:'),el('blockquote',null,'«وكان أمير المؤمنين علي بن أبي طالب رضي الله عنه آخر الخلفاء الراشدين المهديين»'),el('p','kh-src','مجموع الفتاوى ٣/٤٠٦'));
+  if(c==='has'){const q=F.khul.q[41];W.append(el('p','sub','قال ابن كثير:'),el('blockquote',null,'«'+q.q+'»'),goP(pgT(q.n,q.p),q.n,q.p));W.append(el('p','sub','والخلفاء الراشدون أربعة، قال شيخ الإسلام ابن تيمية:'),el('blockquote',null,'«وكان أمير المؤمنين علي بن أبي طالب رضي الله عنه آخر الخلفاء الراشدين المهديين»'),el('p','kh-src','مجموع الفتاوى ٣/٤٠٦'))}
   if(c==='mk'){W.append(el('p','sub','قال ابن كثير في أول ترجمته:'),el('blockquote',null,'«هو معاوية بن أبي سفيان صخر بن حرب بن أمية بن عبد شمس بن عبد مناف بن قصي، أبو عبد الرحمن القرشي الأموي، خال المؤمنين، وكاتب وحي رب العالمين»'),goP(pgT(30,146),30,146),
       el('p','sub','وقال شيخ الإسلام ابن تيمية:'),el('blockquote',null,'«واتفق العلماء على أن معاوية أفضل ملوك هذه الأمة، فإن الأربعة قبله كانوا خلفاء نبوة، وهو أول الملوك؛ كان ملكه ملكا ورحمة»'),el('p','kh-src','مجموع الفتاوى ٤/٤٧٨'));return}
   const S=(F.khul.sec||{})[c]||[];if(S.length){W.append(el('p','sub','أبواب عنه في الكتاب:'));S.forEach(h=>{const b=el('button','kh-h');b.type='button';b.append(el('span',null,h.t),el('small',null,(h.n===28?'ج٩':h.n===29?'ج١٠':'ج١١')+'، ص '+ar(h.p)));b.onclick=()=>khRead(h.n,h.p,h.t);W.append(b)});if(a)W.append(el('p','sub','عمره ومدة خلافته:'))}
@@ -3612,7 +3612,7 @@ async function showKhul(y){const F=await sxFeat();const K=F.khul,Y=K.years.find(
   [...G.children].forEach((b,i)=>b.classList.toggle('sel',K.years[i].y===y));P.hidden=false;P.className='yr-p kh-p';P.innerHTML='';
   const who=Y.c.filter(c=>['ab','um','uth','ali'].includes(c));const P_=[];
   if(who.length)P_.push('خلافة '+who.map(c=>KHG[c]).join(' ثم ')+(who.length>1?' رضي الله عنهما':' رضي الله عنه'));
-  if(Y.c.includes('has'))P_.push((who.length?'ثم ':'')+'الحسن بن علي رضي الله عنهما حتى نزل عن الأمر');
+  if(Y.c.includes('has'))P_.push((who.length?'ثم ':'')+'خلافة الحسن بن علي رضي الله عنهما'+(Y.c.includes('mk')?'، وبها كملت الثلاثون، ثم نزل عن الأمر':''));
   if(Y.c.includes('mk'))P_.push('ثم أول المُلك: معاوية رضي الله عنه');let sub=P_.join('، ');
   P.append(el('h3',null,'سنة '+ar(y)+' من الهجرة'),el('p','sub',sub));
   const q=K.q[y];if(q){const bq=el('blockquote',null,'«'+q.q+'»');P.append(bq,goP(pgT(q.n,q.p),q.n,q.p))}
