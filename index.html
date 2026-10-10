@@ -1105,6 +1105,9 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 #yrH .saw{font-size:.72em;font-weight:400;vertical-align:.12em}
 .yr-src2{display:block;border:0;background:none;padding:0;margin:-2px 0 8px;font:inherit;font-size:12.5px;color:var(--brass);cursor:pointer;text-align:start}
 
+/* the year a book left undated, as al-Azimi gives it */
+.yr-ev .yr-az{display:block;font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.7}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -1213,7 +1216,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
     <section class="yr" id="sxYears" aria-labelledby="yrH">
       <h2 id="yrH">سنوات عمره <span class="saw">ﷺ</span></h2>
       <button class="yr-src2" id="yrSrc" type="button">أربعون قبل البعثة، وثلاث عشرة بمكة، وعشر بالمدينة: من حديث ابن عباس في الشمائل، وصححه الألباني</button>
-      <p class="sx-lead">كل مربع سنة من عمره صلى الله عليه وسلم. اضغط سنةً لترى ما ذكره مختصر السيرة فيها.</p>
+      <p class="sx-lead">كل مربع سنة من عمره صلى الله عليه وسلم. اضغط سنةً لترى ما ذكرته كتب السيرة فيها.</p>
       <div class="yr-grid" id="yrGrid" role="group" aria-label="سنوات عمره صلى الله عليه وسلم"></div>
       <div class="yr-key">
         <span><i></i>قبل البعثة: ٤٠</span>
@@ -1581,7 +1584,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-0437';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-0441';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1688,7 +1691,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "c036daf725", "data/sx_feat.json": "5bda039651", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/saadi.json": "bf53b5261e"};
+const DH={"data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "c036daf725", "data/sx_feat.json": "2054ff8008", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3186,11 +3189,13 @@ async function showYear(k){const F=await sxFeat();const G=$('#yrGrid'),P=$('#yrP
   [...G.children].forEach((b,i)=>b.classList.toggle('sel',i+1===k));P.hidden=false;P.innerHTML='';
   P.append(el('h3',null,'السنة '+ar(k)+' من عمره صلى الله عليه وسلم'),el('p','sub',yrSub(k)));
   const L=F.years[k]||[];
-  if(!L.length)P.append(el('p','yr-none','لم يذكر مختصر السيرة حدثاً نصّ على أنه في هذه السنة.'));
+  if(!L.length)P.append(el('p','yr-none','لم تذكر كتب الموقع حدثاً نصّت على أنه في هذه السنة.'));
   L.forEach(it=>{if(it.mk&&!it.q){const d=el('button','yr-mk');d.type='button';d.append(el('span',null,it.t),el('small',null,'ص '+ar(it.p)));d.onclick=()=>openPart(17,it.p,null,false,'txt');P.append(d);return}   // the book's own year mark: a divider, not a quote
-    const b=el('button','yr-ev');b.type='button';const ft=el('span','yr-ft');ft.append(el('small',null,'مختصر السيرة، ص '+ar(it.p)),el('span','go','اقرأه في المختصر'));b.append(el('b',null,it.t),quoteW(it.q,it.w),ft);
-    b.onclick=()=>openPart(17,it.p,it.w?[it.w]:null,false,'txt');P.append(b)});
-  const n=el('p','yr-note','عُدّت السنون من مولده: البعثة على رأس الأربعين فهي أول الحادية والأربعين، والهجرة أول الرابعة والخمسين. وأحداث المدينة على سني الهجرة كما رتّبها المختصر، فمطابقتها بسني العمر تقريبية. وتوفي صلى الله عليه وسلم وهو ابن ثلاث وستين، كما في صحيح البخاري عن عائشة رضي الله عنها: ');
+    const n=it.n||17,ih=n===23;
+    const b=el('button','yr-ev');b.type='button';const ft=el('span','yr-ft');ft.append(el('small',null,(ih?'السيرة النبوية لابن هشام، ج١، ص ':'مختصر السيرة، ص ')+ar(it.p)),el('span','go',ih?'اقرأه في السيرة':'اقرأه في المختصر'));b.append(el('b',null,it.t),quoteW(it.q,it.w));
+    if(it.az)b.append(el('small','yr-az',it.az));b.append(ft);
+    b.onclick=()=>openPart(n,it.p,it.w?[it.w]:null,false,'txt');P.append(b)});
+  const n=el('p','yr-note','عُدّت السنون من مولده: البعثة على رأس الأربعين فهي أول الحادية والأربعين، والهجرة أول الرابعة والخمسين. وأحداث المدينة على سني الهجرة كما رتّبها المختصر، فمطابقتها بسني العمر تقريبية. وما لم يؤرخه المختصر وُضع على ما ذكره موسى العازمي في «اللؤلؤ المكنون في سيرة النبي المأمون»، لعنايته بتحقيق السيرة. وتوفي صلى الله عليه وسلم وهو ابن ثلاث وستين، كما في صحيح البخاري عن عائشة رضي الله عنها: ');
   const s=el('button','yr-src','صحيح البخاري، كتاب المغازي، ج'+ar(jOf(F.src63.n))+'، ص '+ar(F.src63.p));s.type='button';s.onclick=()=>openPart(F.src63.n,F.src63.p,['ثلاث وستين'],false,'txt');n.append(s);P.append(n)}
 
 /* ---------- reader: your place in his life (Mukhtasar only) ---------- */
@@ -3417,7 +3422,7 @@ const u8=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';ret
 const canPush=()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;
 async function pushSub(){try{const r=await navigator.serviceWorker.getRegistration();return r?await r.pushManager.getSubscription():null}catch(e){return null}}
 async function pushBtn(b){
-  const set=on=>{b.textContent=on?'التذكير اليومي مفعّل · إيقافه':'ذكّرني به كل صباح';b.dataset.on=on?1:''};
+  const set=on=>{b.textContent=on?'التذكير اليومي مفعّل · إيقافه':'ذكّرني كل يوم بحديث';b.dataset.on=on?1:''};
   if(!canPush()){if(IOS&&!STANDALONE){set(false);b.onclick=()=>toast('لتصلك الإشعارات في الآيفون: أضف الموقع إلى الشاشة الرئيسية من زر المشاركة في سفاري، ثم افتحه من أيقونته واضغط هذا الزر.',7000)}else b.remove();return}
   set(!!(await pushSub()));
   b.onclick=async()=>{b.disabled=true;try{
@@ -3426,7 +3431,7 @@ async function pushBtn(b){
       const reg=await navigator.serviceWorker.ready;const {key}=await (await fetch(PUSHU+'/key')).json();
       const s=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(key)});
       const r=await fetch(PUSHU+'/sub',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(s)});if(!r.ok)throw 0;
-      set(true);toast('فُعّل التذكير: يصلك كل صباح حديثٌ من شمائله صلى الله عليه وسلم، وكل جمعة تذكيرٌ بالصلاة عليه.',5000)
+      set(true);toast('فُعّل التذكير: يصلك كل يوم حديثٌ من شمائله صلى الله عليه وسلم، وكل جمعة تذكيرٌ بالصلاة عليه.',5000)
     }catch(e){toast('تعذّر تفعيل التذكير الآن. حاول بعد قليل.',4000)}finally{b.disabled=false}}}
 
 /* ---------- القراءة بدون إنترنت: the texts are saved by themselves; the page images only when the reader asks ---------- */

@@ -110,7 +110,7 @@ export default {
       if (!valid(sub)) return json({ ok: false }, 400);
       await env.PUSH.put(id, JSON.stringify({ endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } }));
       // a first notification right away: the reader sees it works
-      const st = await send(env, sub, { t: 'سِيرَتُه', b: 'سيصلك كل صباح حديثٌ من شمائله صلى الله عليه وسلم، وكل جمعة تذكيرٌ بالصلاة عليه.', u: SITE + '/', tag: 'welcome' }).catch(() => 0);
+      const st = await send(env, sub, { t: 'سِيرَتُه', b: 'سيصلك كل يوم حديثٌ من شمائله صلى الله عليه وسلم، وكل جمعة تذكيرٌ بالصلاة عليه.', u: SITE + '/', tag: 'welcome' }).catch(() => 0);
       return json({ ok: true, sent: st });
     }
     return json({ ok: false }, 404);
