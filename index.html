@@ -1326,6 +1326,7 @@ button.lv-h::after{content:"";position:absolute;inset-inline-end:6px;top:14px;wi
 .lv-g{padding-bottom:14px}
 button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:8px}
 .lv-g:not(.open)::before,.lv-g:not(.open)::after{display:none}
+.mg-bk{font-family:"Amiri",serif;font-size:19px;color:var(--brass);margin:14px 0 4px}
 
 </style>
 
@@ -1469,7 +1470,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
         <button type="button" id="sxZubda"><b>أربعون محطة</b><span>السيرة في بطاقات، بلفظ الكتاب</span></button>
         <p class="exg">من القرآن والصحيح</p>
         <button type="button" id="fxAyat"><b>ما نزل من القرآن في أحداث السيرة</b><span>أحداثٌ نصّت الكتب على أن آياتٍ نزلت فيها</span></button>
-        <button type="button" id="fxMg"><b>المغازي في صحيح البخاري</b><span>أحاديث كل غزوة على ترتيب وقوعها</span></button>
+        <button type="button" id="fxMg"><b>المغازي في الصحيحين</b><span>أحاديث كل غزوة على ترتيب وقوعها</span></button>
         <p class="exg">دلائل نبوته <span class="saw">ﷺ</span></p>
         <button type="button" class="wide" id="fxDal"><b>دلائل النبوة</b><span>أحاديثها من صحيح البخاري، وأبواب ابن كثير لمن شاء</span></button>
         <p class="exg">الأماكن</p>
@@ -1817,7 +1818,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1556';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1620';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1935,7 +1936,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_alam.json": "45d11458be", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "04657fd023", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "20b4131afd", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_alam.json": "45d11458be", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "04657fd023", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "ac082ae3fe", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3265,7 +3266,7 @@ function openNav(){
   SXBOOKS.filter(b=>b.open).forEach(b=>it(b.t,()=>{closeNav();b.open()}));
   grp('استكشف');
   it('الخط الزمني للسيرة',()=>{closeNav();openSX('tl')});
-  it('المغازي في صحيح البخاري',()=>{closeNav();fxMgTL()});
+  it('المغازي في الصحيحين',()=>{closeNav();fxMgTL()});
   it('دلائل النبوة',()=>{closeNav();fxDal()});
   it('شجرة النسب الشريف وآل عبد المطلب والخلفاء',()=>{closeNav();openSX('nasab')});
   grp('عن الموقع');
@@ -4048,21 +4049,29 @@ async function fxMaghazi(i){const M=await getJSON('data/sx_mg.json');const h=M.h
   const ft=el('div','ev-ft');ft.append(el('small',null,mgMeta(h,1)));
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(h.n,h.p,null,false,'txt')};ft.append(go);B.append(ft)}
 // Kitab al-Maghazi by event: Bukhari's own chapters, the events in the order of the Mukhtasar
-async function fxMgTL(open){const M=await getJSON('data/sx_mg.json');const P=fxOpen('المغازي في صحيح البخاري');
-  P.inn.append(el('p','fx-lead','أحاديث كتاب المغازي من صحيح البخاري، مجموعةً على الغزوات والأحداث بحسب أبواب البخاري نفسه، والأحداث مرتبة على ترتيب وقوعها في مختصر السيرة. اضغط الحدث لترى أحاديثه.'));
+const msMgMeta=h=>'صحيح مسلم، كتاب الجهاد والسير، رقم '+ar(+h.no)+' بترقيم عبد الباقي، الطبعة العامرة ج٥ ص '+ar(h.p);
+async function fxMgTL(open){const M=await getJSON('data/sx_mg.json');const P=fxOpen('المغازي في الصحيحين');const MS={h:M.mh||[]};
+  P.inn.append(el('p','fx-lead','أحاديث كتاب المغازي من صحيح البخاري، ومعها أحاديث كتاب الجهاد والسير من صحيح مسلم، مجموعةً على الغزوات والأحداث بحسب أبواب الكتابين، والأحداث مرتبة على ترتيب وقوعها في مختصر السيرة. اضغط الحدث لترى أحاديثه.'));
   const list=el('div','mg-list');P.inn.append(list);
-  M.ev.forEach((ev,k)=>{const n=ev.ch.reduce((a,c)=>a+c.hs.length,0);if(!n)return;
+  const msCh=(cs,body)=>{const hd=el('p','mg-bk','من صحيح مسلم');body.append(hd);cs.forEach(c=>{const cb=el('div','mg-ch');cb.append(el('h4',null,c.t));c.hs.forEach(i=>cb.append(mgItem(MS,i,{clip:260,meta:msMgMeta,noBook:1}).w));body.append(cb)})};
+  M.ev.forEach((ev,k)=>{const mc=(M.mev||{})[k]||[];const nb=ev.ch.reduce((a,c)=>a+c.hs.length,0),nm=mc.reduce((a,c)=>a+c.hs.length,0),n=nb+nm;if(!n)return;
     const card=el('section','mg-ev'+(ev.rest?' rest':''));const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
-    const tt=el('span','mg-tt');tt.append(sawEl('b',null,ev.t),el('small',null,ar(n)+(n===1?' حديث':n===2?' حديثان':n<=10?' أحاديث':' حديثاً')));hd.append(tt);card.append(hd);
+    const tt=el('span','mg-tt');tt.append(sawEl('b',null,ev.t),el('small',null,ar(n)+(n===1?' حديث':n===2?' حديثان':n<=10?' أحاديث':' حديثاً')+(nm?' (منها '+(nm===1?'حديث واحد':nm===2?'حديثان':ar(nm))+' من مسلم)':'')));hd.append(tt);card.append(hd);
     if(ev.rest)card.append(el('p','mg-note','أبواب لم يذكر مختصر السيرة أحداثها في سياقه، فبقيت هنا على ترتيب البخاري دون أن يُقدَّر لها موضع.'));
     else{const src=el('p','mg-src');src.textContent='في مختصر السيرة ص '+ar(ev.mp)+(ev.dq?'، وفيه: «'+ev.dq+'»':'');card.append(src)}
     const body=el('div','mg-body');body.hidden=true;card.append(body);
-    const fill=()=>{if(body.childElementCount)return;ev.ch.forEach(c=>{const cb=el('div','mg-ch');
+    const fill=()=>{if(body.childElementCount)return;if(nb&&nm)body.append(el('p','mg-bk','من صحيح البخاري'));ev.ch.forEach(c=>{const cb=el('div','mg-ch');
         cb.append(el('h4',null,(c.t==='باب'||c.t==='باب:')?'باب بلا ترجمة':c.t));if(c.tr)cb.append(el('p','mg-tr',c.tr));
-        c.hs.forEach(i=>cb.append(mgItem(M,i,{clip:260,before:P.close}).w));body.append(cb)})};
+        c.hs.forEach(i=>cb.append(mgItem(M,i,{clip:260,before:P.close}).w));body.append(cb)});if(nm)msCh(mc,body)};
     hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};
     list.append(card);if(open===k){fill();body.hidden=false;hd.setAttribute('aria-expanded','true');setTimeout(()=>card.scrollIntoView({block:'start'}),50)}});
-  P.inn.append(el('p','fx-note','الحديث تحت الحدث الذي بوّب عليه البخاري، والباب الذي بلا ترجمة تابع للباب الذي قبله على عادته. وما ذُكر من تاريخ فهو بلفظ مختصر السيرة وصفحته، وكلام البخاري في أول الباب منقول كما هو، وقد يذكر فيه قولاً آخر في التاريخ. وحُذف الإسناد إلى الصحابي حيث كان ذلك بيّناً، ونُصّ عليه تحت الحديث، والحديث بإسناده بضغطة.'))}
+  if((M.mrest||[]).length){const n=M.mrest.reduce((a,c)=>a+c.hs.length,0);const card=el('section','mg-ev rest');const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
+    const tt=el('span','mg-tt');tt.append(el('b',null,'أبواب أخرى من كتاب الجهاد والسير'),el('small',null,ar(n)+' حديثاً من صحيح مسلم'));hd.append(tt);card.append(hd);
+    card.append(el('p','mg-note','أبواب لم يسمِّ عنوانُها غزوةً من الغزوات، فبقيت هنا على ترتيب مسلم، وفيها أحكام الجهاد والغنائم، وأخبار من السيرة.'));
+    const body=el('div','mg-body');body.hidden=true;card.append(body);
+    hd.onclick=()=>{const o=body.hidden;if(o&&!body.childElementCount)M.mrest.forEach(c=>{const cb=el('div','mg-ch');cb.append(el('h4',null,c.t));c.hs.forEach(i=>cb.append(mgItem(MS,i,{clip:260,meta:msMgMeta,noBook:1}).w));body.append(cb)});body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};list.append(card)}
+  P.inn.append(el('p','fx-note','الحديث تحت الحدث الذي بوّب عليه البخاري، والباب الذي بلا ترجمة تابع للباب الذي قبله على عادته. وما ذُكر من تاريخ فهو بلفظ مختصر السيرة وصفحته، وكلام البخاري في أول الباب منقول كما هو، وقد يذكر فيه قولاً آخر في التاريخ. وحُذف الإسناد إلى الصحابي حيث كان ذلك بيّناً، ونُصّ عليه تحت الحديث، والحديث بإسناده بضغطة.'));
+  P.inn.append(el('p','fx-note','وأحاديث مسلم من «كتاب الجهاد والسير»، مراجَعة كلمةً كلمةً على صور الطبعة العامرة بإسطنبول (الجزء الخامس ص ١٣٩–٢٠١)، بأسانيدها كما ساقها مسلم. وعناوين الأبواب كما في حاشية تلك الطبعة، وهي من وضع الشرّاح لا من الإمام مسلم، ولم يوضع الحديث تحت غزوة إلا إذا سمّاها عنوان بابه، و«باب قتل أبي جهل» تحت بدر كبابه في البخاري. والأرقام بترقيم محمد فؤاد عبد الباقي.'))}
 // Friday: al-Ahzab 56, in the Mushaf's script
 async function fxFriday(){const Q=await getJSON('data/quran.json');const v=Q.a[32][55];const B=evShell('يوم الجمعة');
   B.append(el('p','ev-era','يوم الجمعة'),sawEl('h3','ev-t','الصلاة على النبي ﷺ'));
