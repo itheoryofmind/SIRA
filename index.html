@@ -1229,6 +1229,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .pl-opt span,.pl-opt small{color:var(--muted)}
 .nt-same{margin:6px 2px 0;font-size:12.5px;color:var(--clay);line-height:1.7}
 .sheet{overscroll-behavior:contain}
+.at-hint{margin:0 0 10px;padding:9px 12px;border-radius:10px;background:color-mix(in srgb,var(--brass) 12%,transparent);color:var(--ink);font-size:14px;line-height:1.7}
 
 </style>
 
@@ -1718,7 +1719,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1135';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1136';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3268,7 +3269,7 @@ async function openAtlas(){const X=await getJSON('data/sira_x.json');const it=X.
   let ov=$('#sxAtl');if(!ov){ov=el('div','sx-atl');ov.id='sxAtl';document.body.append(ov)}ov.hidden=false;ov.innerHTML='';sxLock();
   const top=el('div','at-top');const x=el('button','zx','✕');x.type='button';x.setAttribute('aria-label','إغلاق');x.onclick=()=>{ov.hidden=true;sxUnlock()};top.append(el('h3',null,'أطلس مواضع السيرة'),x);
   const note=el('p','at-note','كل موضع في مكانه بإحداثياته، والمسافات بينها بمقياسها. رُسمت السواحل وحدها دون حدود الدول الحديثة، وأسماء الأقاليم والبحار في مواضعها على التقريب. المواضع المكتوب عليها «تقريبي» مختلَف في تعيينها اليوم.');
-  const box=el('div','at-map'),card=el('div','at-card');card.hidden=true;ov.append(top,note,box,card);
+  const box=el('div','at-map'),card=el('div','at-card');card.hidden=true;const hint=el('p','at-hint','اضغط أي نقطة لترى ما وقع في ذلك الموضع ونصه من الكتاب، واضغط الدائرة المرقّمة لترى مواضعها مكبّرة.');ov.append(top,note,hint,box,card);
   const groups=[{n:'مكة وما حولها',f:p=>p[1]<21.6&&p[1]>21.3&&p[2]>39.5&&p[2]<40.1},{n:'المدينة وما حولها',f:p=>p[1]>24.3&&p[1]<24.6}];
   const draw=(view)=>{box.innerHTML='';
     const pts=ATL.filter(p=>!view||view.f(p)).filter(p=>p[1]>18);
