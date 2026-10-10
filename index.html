@@ -1128,6 +1128,11 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .yr-ev .yr-more{display:block;margin:6px 0 0;border:0;background:none;padding:0;color:var(--brass);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
 .yr-ft .go{border:0;background:none;padding:0;font:inherit;cursor:pointer}
 
+/* «أكمل القراءة هنا»: a clear button, with a downward mark: the text opens below, on this page */
+.yr-ev .yr-more{display:inline-flex;align-items:center;gap:8px;margin:10px 0 2px;border:1px solid var(--brass)!important;border-radius:999px;padding:6px 14px!important;background:transparent;color:var(--brass);font-size:14.5px}
+.yr-ev .yr-more::after{content:"";width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(45deg) translateY(-2px)}
+.yr-ev .yr-more:active{background:var(--brass-soft)}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -1606,7 +1611,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-0723';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-0831';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3242,7 +3247,7 @@ async function showYear(k){const F=await sxFeat();const G=$('#yrGrid'),P=$('#yrP
     const ft=el('span','yr-ft');ft.append(el('small',null,(ih?'السيرة النبوية لابن هشام، ج١، ص ':'مختصر السيرة، ص ')+ar(it.p)),go);
     let qv=quoteW(it.q,it.w);b.append(el('b',null,it.t),qv);
     // the rest of the passage here, without leaving the page: up to the book's next heading
-    const more=el('button','yr-more','أكمل القراءة');more.type='button';
+    const more=el('button','yr-more','أكمل القراءة هنا');more.setAttribute('aria-label','أكمل قراءة النص في هذه الصفحة');more.type='button';
     more.onclick=async()=>{more.disabled=true;try{const t=await evFull(it);if(t&&t.length>it.q.replace(/…$/,'').length+20){const nq=quoteW(t,it.w);qv.replaceWith(nq);qv=nq;more.remove()}else{more.remove()}}catch(e){more.disabled=false}};
     if(it.q&&it.q.length>8)b.append(more);
     if(it.az)b.append(el('small','yr-az',it.az));b.append(ft);
