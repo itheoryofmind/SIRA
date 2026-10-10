@@ -1735,7 +1735,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1143';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1228';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3702,7 +3702,7 @@ function ntBtn(b,k,txt){
   b.onclick=async()=>{b.disabled=true;const on=!b.dataset.on;try{if(await ntToggle(k,on)){set(on);toast(on?txt[2]:txt[3],5000)}}
     catch(e){toast('تعذّر حفظ الإشعار الآن. حاول بعد قليل.',4000)}finally{b.disabled=false}};
   return b}
-function pushBtn(b){ntBtn(b,'sh',['ذكّرني كل يوم بحديث','التذكير اليومي مفعّل · إيقافه','فُعّل التذكير: يصلك كل يوم حديثٌ من شمائله صلى الله عليه وسلم. وتجد أنواع الإشعارات الأخرى وأوقاتها في صفحة «الإشعارات» من القائمة.','أوقف التذكير اليومي.'])}
+function pushBtn(b){ntBtn(b,'sh',['ذكّرني كل يوم بحديث من الشمائل','التذكير اليومي مفعّل · إيقافه','فُعّل التذكير: يصلك كل يوم حديثٌ من شمائله صلى الله عليه وسلم. وتجد أنواع الإشعارات الأخرى وأوقاتها في صفحة «الإشعارات» من القائمة.','أوقف التذكير اليومي.'])}
 async function planPushBtn(pl){const b=el('button','btn btn-quiet');b.type='button';
   return ntBtn(b,'pl',['ذكّرني بالورد كل يوم','تذكير الورد مفعّل · إيقافه','فُعّل تذكير الورد حتى تتم الخطة. وتستطيع تغيير وقته من صفحة «الإشعارات» في القائمة.','أوقف تذكير الورد.'])}
 async function planPushOff(){try{const n=ntGet();if(!('pl' in n.h))return;delete n.h.pl;await ntSync(n,false)}catch(e){}}
