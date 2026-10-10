@@ -3283,14 +3283,14 @@ function openMethod(){
   ov.hidden=false;ov.scrollTop=0;pgLock(ov)}
 function openOffline(){
   let S=$('#offSh');if(!S){const bk=el('div','sheet-back');bk.id='offBk';S=el('div','sheet offsh');S.id='offSh';S.setAttribute('role','dialog');S.setAttribute('aria-label','القراءة دون اتصال');
-    const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');x.style.cssText='position:absolute;inset-inline-start:6px;top:6px';
+    const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');x.style.cssText='position:absolute;inset-inline-end:6px;top:6px';
     x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';hd.append(x);
     S.append(hd,el('h4',null,'القراءة دون اتصال'),el('p','note','احفظ الكتاب في جهازك ليُقرأ كله من غير إنترنت، أو نزّله ملفاً واحداً.'),$('#dlSec'));document.body.append(bk,S);
     const close=()=>{bk.hidden=true;S.hidden=true};bk.onclick=close;x.onclick=close}
   $('#offBk').hidden=false;S.hidden=false}
 function openNotif(){
   let S=$('#ntSh');if(!S){const bk=el('div','sheet-back');bk.id='ntBk';S=el('div','sheet');S.id='ntSh';S.style.overflowX='hidden';S.setAttribute('role','dialog');S.setAttribute('aria-label','الإشعارات');
-    const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');x.style.cssText='position:absolute;inset-inline-start:6px;top:6px';
+    const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');x.style.cssText='position:absolute;inset-inline-end:6px;top:6px';
     x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';hd.append(x);
     const B=el('div');B.id='ntBd';S.append(hd,el('h4',null,'الإشعارات'),B);document.body.append(bk,S);
     const close=()=>{bk.hidden=true;S.hidden=true};bk.onclick=close;x.onclick=close}
