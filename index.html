@@ -1366,6 +1366,8 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .gz-d .gz-pg{margin-top:0}
 .gz-qq::before{content:"«"}
 .gz-qq::after{content:"»"}
+.gz-tg{margin:4px 0 8px}
+.gz-more{margin-bottom:8px}
 
 </style>
 
@@ -1860,7 +1862,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1738';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1757';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4137,7 +4139,7 @@ addEventListener('hashchange',evRoute);evRoute();
 
 /* ---------- الغزوات في سطور: the Mukhtasar's words and figures, and the hadiths of the two Sahihs ---------- */
 async function fxGz(){const G=await getJSON('data/sx_gz.json');const P=fxOpen('الغزوات في سطور');
-  P.inn.append(el('p','fx-lead','لكل غزوة وحدث: أول كلام «مختصر سيرة الرسول ﷺ» فيه، ثم تفاصيله من الصحيحين أولاً، ثم من كتب السيرة: سيرة ابن هشام، والبداية والنهاية لابن كثير، وزاد المعاد لابن القيم، كلها بلفظها ومع كل نص مصدره.'));
+  P.inn.append(el('p','fx-lead','لكل غزوة وحدث: أول كلام «مختصر سيرة الرسول ﷺ» فيه، وما ذكره من الأعداد والأسماء بلفظه. ومن أراد التفصيل ضغط «التفصيل» فيرى ما في الصحيحين أولاً، ثم سيرة ابن هشام والبداية والنهاية وزاد المعاد، كلها بلفظها ومع كل نص مصدره.'));
   const L=el('div','gz');G.forEach(g=>{const c=el('section','gz-c');c.append(sawEl('h3','gz-t',g.t));
     const q=el('p','gz-q');q.textContent='«'+g.q+'»';c.append(q);
     if(g.dq)c.append(el('p','gz-d','وفي المختصر (ص '+ar(g.dp)+'): «'+g.dq+'»'));
@@ -4150,7 +4152,12 @@ async function fxGz(){const G=await getJSON('data/sx_gz.json');const P=fxOpen('�
         const b=el('button','gz-pg',ref);b.type='button';
         if(x.src==='bk'||x.src==='ms'){b.onclick=()=>{P.close();fxMgTL(g.k)}}else{b.onclick=()=>{P.close();openPart(x.n,x.p,[x.q.split(' ').slice(0,3).join(' ')],false,'txt')}}
         r.append(b);dl.append(r)});c.append(dl)};
-    block('من الصحيحين',sahih);block('من كتب السيرة',other);
+    if(g.f.length){const dl=el('dl','gz-f');let last=null;g.f.forEach(f=>{if(f.it!==last&&f.it!==g.t){last=f.it;dl.append(sawEl('dt','gz-it',f.it))}else last=f.it;
+      const r=el('div','gz-r');r.append(el('span','gz-k',f.k),el('span','gz-v',f.v.replace(/\d+/g,d=>ar(+d))));dl.append(r)});c.append(dl)}
+    const nd=(g.d||[]).length;
+    if(nd){const box=el('div','gz-more');box.hidden=true;const tg=el('button','btn btn-link hd-b gz-tg','التفصيل من الصحيحين وكتب السيرة ('+ar(nd)+')');tg.type='button';tg.setAttribute('aria-expanded','false');
+      const real=c.append.bind(c);c.append=(...a)=>box.append(...a);block('من الصحيحين',sahih);block('من كتب السيرة',other);c.append=real;
+      tg.onclick=()=>{box.hidden=!box.hidden;tg.setAttribute('aria-expanded',!box.hidden);tg.textContent=box.hidden?'التفصيل من الصحيحين وكتب السيرة ('+ar(nd)+')':'إخفاء التفصيل'};c.append(tg,box)}
     const act=el('div','gz-a');const n=g.nb+g.nm;
     if(n){const b=el('button','btn btn-link hd-b',ar(n)+(n===1?' حديث':n===2?' حديثان':n<=10?' أحاديث':' حديثاً')+' في الصحيحين');b.type='button';b.onclick=()=>{P.close();fxMgTL(g.k)};act.append(b)}
     const r=el('button','btn btn-link hd-b','مختصر السيرة، ص '+ar(g.p));r.type='button';r.onclick=()=>{P.close();openPart(17,g.p,null,false,'txt')};act.append(r);c.append(act);L.append(c)});
