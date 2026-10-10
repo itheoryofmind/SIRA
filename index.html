@@ -1291,6 +1291,8 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .kn-d q{display:block;font-size:15px;line-height:1.9;quotes:"«" "»"}
 .kn-d .btn{margin-top:6px}
 .kn-by{display:block;color:var(--muted);font-size:12.5px;margin-bottom:2px}
+.dl-bk{font-family:"Amiri",serif;font-size:23px;margin:22px 0 2px;color:var(--brass)}
+.dl-bs{font-size:14px;color:var(--muted);margin:0 0 10px;line-height:1.8}
 
 </style>
 
@@ -1785,7 +1787,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1452';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1508';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1903,7 +1905,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_alam.json": "fdf9264dd2", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "04657fd023", "data/sx_khn.json": "426adac734", "data/sx_mg.json": "20b4131afd", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_alam.json": "45d11458be", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "04657fd023", "data/sx_khn.json": "426adac734", "data/sx_mg.json": "20b4131afd", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -4033,16 +4035,23 @@ addEventListener('hashchange',evRoute);evRoute();
 
 /* ---------- دلائل النبوة: Ibn Kathir's chapters, in his order and his words ---------- */
 const alMeta=(h,full)=>'صحيح البخاري، كتاب المناقب، رقم '+ar(+h.no)+'، الطبعة السلطانية ج٤ ص '+ar(h.p)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'');
-async function fxDal(){const [A,G]=await Promise.all([getJSON('data/sx_alam.json'),getJSON('data/sx_dal.json')]);const P=fxOpen('دلائل النبوة');
-  P.inn.append(el('p','fx-lead','أحاديث «باب علامات النبوة في الإسلام» من صحيح البخاري، والأبواب الثلاثة التي تليه، على ترتيب البخاري. اضغط الباب لترى أحاديثه.'));
-  const list=el('div','mg-list');P.inn.append(list);
-  A.ch.forEach((c,k)=>{const n=c.hs.length;const card=el('section','mg-ev');const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
-    const tt=el('span','mg-tt');const bt=el('b');(c.t==='باب'?'باب بلا ترجمة':c.t).replace(/\d+/g,d=>ar(+d)).split(/(﴿[^﴾]*﴾)/).forEach(x=>{if(!x)return;if(x[0]==='﴿')bt.append(el('span','dl-q',x));else bt.append(sawEl('span',null,x))});tt.append(bt,el('small',null,ar(n)+(n===1?' حديث':n===2?' حديثان':n<=10?' أحاديث':' حديثاً')));hd.append(tt);card.append(hd);
-    if(c.t==='باب')card.append(el('p','mg-note','باب لم يترجم له البخاري، وهو تابع للباب الذي قبله على عادته.'));
+const msMeta=(h)=>'صحيح مسلم، كتاب الفضائل، رقم '+ar(+h.no)+' بترقيم عبد الباقي، الطبعة العامرة ج٧ ص '+ar(h.p);
+function dalChapters(P,M,meta,note){const list=el('div','mg-list');P.inn.append(list);
+  M.ch.forEach(c=>{const n=c.hs.length;const card=el('section','mg-ev');const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
+    const bt=el('b');(c.t==='باب'?'باب بلا ترجمة':c.t).replace(/\d+/g,d=>ar(+d)).split(/(﴿[^﴾]*﴾)/).forEach(x=>{if(!x)return;if(x[0]==='﴿')bt.append(el('span','dl-q',x));else bt.append(sawEl('span',null,x))});
+    const tt=el('span','mg-tt');tt.append(bt,el('small',null,ar(n)+(n===1?' حديث':n===2?' حديثان':n<=10?' أحاديث':' حديثاً')));hd.append(tt);card.append(hd);
+    if(c.t==='باب')card.append(el('p','mg-note',note));
     const body=el('div','mg-body');body.hidden=true;card.append(body);
-    const fill=()=>{if(body.childElementCount)return;c.hs.forEach(i=>body.append(mgItem(A,i,{clip:260,meta:alMeta,noBook:1}).w))};
-    hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};list.append(card)});
+    const fill=()=>{if(body.childElementCount)return;c.hs.forEach(i=>body.append(mgItem(M,i,{clip:260,meta,noBook:1}).w))};
+    hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};list.append(card)})}
+async function fxDal(){const [A,G]=await Promise.all([getJSON('data/sx_alam.json'),getJSON('data/sx_dal.json')]);const P=fxOpen('دلائل النبوة');
+  P.inn.append(el('p','fx-lead','أحاديث دلائل نبوته صلى الله عليه وسلم من الصحيحين، بأبوابها وترتيبها في كل كتاب. اضغط الباب لترى أحاديثه.'));
+  P.inn.append(el('h3','dl-bk','من صحيح البخاري'),el('p','dl-bs','«باب علامات النبوة في الإسلام» من كتاب المناقب، والأبواب الثلاثة التي تليه.'));
+  dalChapters(P,A,alMeta,'باب لم يترجم له البخاري، وهو تابع للباب الذي قبله على عادته.');
   P.inn.append(el('p','fx-note','النص مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء الرابع ص ١٩١–٢٠٨)، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن، إلا أن في ص ٢٠٨ خطأً مطبعياً ظاهراً «من أبي صالح» فأُثبت «عن أبي صالح». وحُذف الإسناد إلى الصحابي حيث كان ذلك بيّناً، ونُصّ عليه تحت الحديث، والحديث بإسناده بضغطة.'));
+  if(A.m){P.inn.append(el('h3','dl-bk','من صحيح مسلم'),el('p','dl-bs','أبواب المعجزات من كتاب الفضائل: الحجر الذي كان يسلّم عليه، ومعجزاته، وعصمة الله له من الناس، وقتال جبريل وميكائيل عنه يوم أحد.'));
+    dalChapters(P,A.m,msMeta,'');
+    P.inn.append(el('p','fx-note','النص مراجَع كلمةً كلمةً على صور الطبعة العامرة بإسطنبول (الجزء السابع ص ٥٨–٦٢ و٧٢). وعناوين الأبواب كما في حاشيتها، وهي من وضع الشرّاح لا من الإمام مسلم، والأرقام بترقيم محمد فؤاد عبد الباقي، ويتكرر الرقم إذا ساق مسلم للحديث إسناداً آخر. والأحاديث بأسانيدها كما ساقها مسلم.'))}
   // Ibn Kathir: shown only when the reader asks for it
   const sw=el('label','dl-sw');const cb=el('input');cb.type='checkbox';let on=false;try{on=localStorage.getItem('dalIK')==='1'}catch(e){}cb.checked=on;
   const st=el('span');st.append(el('b',null,'أبواب ابن كثير في «دلائل النبوة»'),el('small',null,'من «البداية والنهاية»، وفيها الصحيح والضعيف بأسانيدها.'));sw.append(st,cb);P.inn.append(sw);
