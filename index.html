@@ -1317,7 +1317,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .pl-top .btn{flex:none;min-height:40px;padding:0 18px}
 .pl-tg{margin-top:4px;font-size:13.5px}
 /* مدارج: each level folds */
-button.lv-h{width:100%;border:0;background:none;font:inherit;color:inherit;text-align:start;cursor:pointer;touch-action:manipulation;position:relative;padding-inline-end:26px}
+button.lv-h{width:100%;border:0;background:none;font:inherit;color:inherit;text-align:start;cursor:pointer;touch-action:manipulation;position:static;padding-inline-end:26px}
 button.lv-h::after{content:"";position:absolute;inset-inline-end:6px;top:14px;width:8px;height:8px;border-inline-start:2px solid var(--brass);border-bottom:2px solid var(--brass);transform:rotate(-45deg);transition:transform .2s}
 .lv-g.open button.lv-h::after{transform:rotate(135deg)}
 .lv-ht{display:block}
@@ -1325,6 +1325,7 @@ button.lv-h::after{content:"";position:absolute;inset-inline-end:6px;top:14px;wi
 .lv-bx{display:flex;flex-direction:column;gap:8px;margin-top:8px}
 .lv-g{padding-bottom:14px}
 button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:8px}
+.lv-g:not(.open)::before,.lv-g:not(.open)::after{display:none}
 
 </style>
 
@@ -1816,7 +1817,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1549';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1556';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
