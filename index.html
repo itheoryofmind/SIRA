@@ -1888,7 +1888,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1827';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1903';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4204,7 +4204,7 @@ async function fxQa(){const Q=await getJSON('data/sx_qa.json');const P=fxOpen('�
   const OPEN={bk:()=>fxMgTL(),ms:()=>fxMgTL(),fd:()=>fxSifa(),ba:()=>fxDal()};
   Q.forEach(c=>{P.inn.append(sawEl('h3','dl-bk qa-h',c.c));const L=el('div','qa');
     c.q.forEach(it=>{const d=document.createElement('details');d.className='qa-i';const s=document.createElement('summary');s.className='qa-q';
-      const qt=el('span');hdFill(qt,it.q,[]);s.append(qt);d.append(s);const box=el('div','qa-a');
+      const qt=el('span');it.q.split(/(﴿[^﴾]*﴾)/).forEach(z=>{if(z)qt.append(z[0]==='﴿'?hdV(z):document.createTextNode(z))});s.append(qt);d.append(s);const box=el('div','qa-a');
       it.a.forEach(x=>{const r=el('div','gz-d');const t=el('p','gz-dq');hdFill(t,x.x.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾'),x.pm);r.append(t);
         const sh=x.src in OPEN;const ref=sh?SRC[x.src]+'، رقم '+String(x.no).replace(/\d+/g,n=>ar(+n)):SRC[x.src]+(VOL[x.n]?'، ج'+ar(VOL[x.n]):'')+'، ص '+ar(x.p);
         const b=el('button','gz-pg',ref);b.type='button';
