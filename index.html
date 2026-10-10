@@ -1361,7 +1361,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
     <section id="dlSec">
       <div class="actions">
         <a class="action" href="download/"><b>تحميل الكتاب كاملاً</b><span>ملف PDF واحد</span></a>
-        <button class="action" id="saveAll" type="button"><b>احفظه للقراءة بدون إنترنت</b><span id="saveAllInfo">الصور والنص · نحو ٣٨٠ ميجا · يفضّل على Wi‑Fi</span></button>
+        <button class="action" id="saveAll" type="button"><b>احفظه للقراءة بدون إنترنت</b><span id="saveAllInfo">الصور والنص · نحو ٣٨٠ ميجابايت · يُفضَّل تنزيلها عبر شبكة Wi‑Fi</span></button>
       </div>
     </section>
 
@@ -1413,7 +1413,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
   <button class="backchip" id="backChip" type="button" hidden></button>
   <div class="panes" id="panes">
     <div id="tview" hidden><div class="tpage" id="tpage"></div></div>
-    <div id="view" class="beige"><button class="cmpx" id="cmpX" type="button" hidden>إغلاق المقارنة ✕</button><div class="stage" id="stage"><canvas id="cv"></canvas><div class="hot" id="hot"></div></div><div class="loader" id="loader" hidden>جاري التحميل…</div></div>
+    <div id="view" class="beige"><button class="cmpx" id="cmpX" type="button" hidden>إغلاق المقارنة ✕</button><div class="stage" id="stage"><canvas id="cv"></canvas><div class="hot" id="hot"></div></div><div class="loader" id="loader" hidden>جارٍ التحميل…</div></div>
   </div>
   <div class="selbar" id="selBar" hidden>
     <button class="hc c-f" data-c="f" type="button">فائدة</button><button class="hc c-d" data-c="d" type="button">دليل</button><button class="hc c-r" data-c="r" type="button">مراجعة</button>
@@ -1435,7 +1435,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <!-- More sheet -->
 <div class="sheet-back" id="sheetBack" hidden></div>
 <div class="sheet" id="sheet" hidden role="dialog" aria-label="خيارات القراءة">
-  <div class="sheethead"><div class="grip"></div><button class="icon" id="sheetClose" type="button" aria-label="إغلاق والرجوع للصفحة"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="sheethead"><div class="grip"></div><button class="icon" id="sheetClose" type="button" aria-label="الإغلاق والرجوع إلى الصفحة"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <h4>المظهر</h4>
   <div class="themes" role="group" aria-label="المظهر"></div>
   <div id="imgOpts">
@@ -1450,7 +1450,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
   </div>
   <div class="notesec"><h4>تعليقك على هذه الصفحة</h4>
   <textarea class="notebox" id="note" placeholder="اكتب فائدة أو ملاحظة، تُحفظ على جهازك فقط"></textarea>
-  <div class="notebar"><button type="button" class="btn btn-primary" id="noteSave">حفظ والرجوع للصفحة</button></div></div>
+  <div class="notebar"><button type="button" class="btn btn-primary" id="noteSave">الحفظ والرجوع إلى الصفحة</button></div></div>
   <div class="menu">
     <button type="button" id="mFihris"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>فهرس هذا الجزء (اضغط على الموضوع للانتقال)</button>
     <button type="button" id="mPrev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>الصفحة السابقة</button>
@@ -1600,7 +1600,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-0540';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-0544';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1793,7 +1793,7 @@ function renderHits(R,res,filterN){
   if(res.out.length>=600)R.prepend(el('p','note','عُرض أول ٦٠٠ موضع. أضف كلمة أخرى لتضييق النتائج.'));
 }
 let lastRes=null;
-function progressBar(R){const w=el('div','sprog');const t=el('p','note','جاري البحث…');const b=el('div','bar');const i=el('i');b.append(i);w.append(t,b);R.before(w);return {t,i,done(){w.remove()}}}
+function progressBar(R){const w=el('div','sprog');const t=el('p','note','جارٍ البحث…');const b=el('div','bar');const i=el('i');b.append(i);w.append(t,b);R.before(w);return {t,i,done(){w.remove()}}}
 function parseRef(q){
   // iPhone keyboards may add direction marks, Persian digits or a different slash; the numbers may also come page-first (150/8)
   let t=' '+q.replace(/[\u200e\u200f\u061c\u202a-\u202e\u2066-\u2069]/g,'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
@@ -1813,7 +1813,7 @@ async function homeSearch(v){
   if(/^\s*[\d٠-٩۰-۹]+\s*[\/∕⁄÷؍\\]\s*[\d٠-٩۰-۹]+\s*$/.test(v.replace(/[\u200e\u200f\u061c\u202a-\u202e\u2066-\u2069]/g,''))){R.append(el('p','note','لا توجد صفحة بهذا الرقم. اكتب رقم الجزء (من ١ إلى ١٦) ثم الصفحة، مثل ٨/١٥٠.'));return}
   const pr=progressBar(R);sec.scrollIntoView({behavior:'smooth',block:'start'});
   // results appear part by part while the rest of the book is still loading
-  const res=await runSearch(v,SIRA,n=>{pr.t.textContent='جاري البحث في '+partName(n)+'…';pr.i.style.width=(SIRA.indexOf(n)/SIRA.length*100)+'%'},$('#exact').checked,r=>{if(r.out.length)renderHits(R,r,0)});
+  const res=await runSearch(v,SIRA,n=>{pr.t.textContent='جارٍ البحث في '+partName(n)+'…';pr.i.style.width=(SIRA.indexOf(n)/SIRA.length*100)+'%'},$('#exact').checked,r=>{if(r.out.length)renderHits(R,r,0)});
   pr.done();
   if(!res){R.innerHTML='';R.append(el('p','note','اكتب كلمة من حرفين على الأقل.'));return}
   if(res.error&&!res.out.length){R.innerHTML='';R.append(el('p','note','تعذّر تحميل نص البحث. تأكد من الاتصال بالإنترنت ثم جرّب مرة ثانية.'));return}
@@ -1891,7 +1891,7 @@ function sxSrc(o,wrap){const d=el('div','sxd');d.append('«'+o.q+'» ');const b=
 async function openSX(v){
   $('#sxOverlay').hidden=false;if(v)SXV=v;
   [...document.querySelectorAll('#sxOverlay .tabs button')].forEach(b=>b.setAttribute('aria-selected',b.dataset.v===SXV));
-  const V=$('#sxView');V.innerHTML='';V.append(el('p','note','جاري التحميل…'));
+  const V=$('#sxView');V.innerHTML='';V.append(el('p','note','جارٍ التحميل…'));
   let D;try{D=await sirax()}catch(e){V.innerHTML='';V.append(el('p','note','تعذّر التحميل. تأكد من الاتصال بالإنترنت.'));return}
   V.innerHTML='';({tl:sxTimeline,nasab:sxNasab,fam:sxFam,cal:sxCal})[SXV](V,D);
 }
@@ -1960,7 +1960,7 @@ async function openZad(b){
 $('#zadClose').onclick=()=>{$('#zadPage').hidden=true};
 $('#zGo').onclick=()=>{const lr=LS.get(ZB.lr,null);if(lr&&lr.n)resume(lr);else{READING=true;openPart(ZB.start[0],ZB.start[1])}};
 $('#zForm').addEventListener('submit',async e=>{e.preventDefault();$('#zQ').blur();const R=$('#zRes');R.innerHTML='';const pr=progressBar(R);
-  const res=await runSearch($('#zQ').value,ZB.ps,n=>{pr.t.textContent='جاري البحث في '+partName(n)+'…';pr.i.style.width=(ZB.ps.indexOf(n)/ZB.ps.length*100)+'%'},false,r=>{if(r.out.length)renderHits(R,r,0)});pr.done();
+  const res=await runSearch($('#zQ').value,ZB.ps,n=>{pr.t.textContent='جارٍ البحث في '+partName(n)+'…';pr.i.style.width=(ZB.ps.indexOf(n)/ZB.ps.length*100)+'%'},false,r=>{if(r.out.length)renderHits(R,r,0)});pr.done();
   if(!res){R.append(el('p','note','اكتب كلمة من حرفين على الأقل.'));return}
   if(res.error&&!res.out.length){R.innerHTML='';R.append(el('p','note','تعذّر تحميل نص البحث. تأكد من الاتصال بالإنترنت.'));return}
   renderHits(R,res,0)});
@@ -2016,7 +2016,7 @@ function iitem(v,p,text,kind,extra,ap){
 }
 async function renderIdx(){
   document.querySelectorAll('#idxOverlay .tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===IX.tab));
-  const L=$('#idxList');L.innerHTML='';L.append(el('p','note','جاري التحميل…'));
+  const L=$('#idxList');L.innerHTML='';L.append(el('p','note','جارٍ التحميل…'));
   let D;try{D=await idx()}catch(e){L.innerHTML='';L.append(el('p','note','تعذّر تحميل الفهارس. تأكد من الاتصال بالإنترنت.'));return}
   L.innerHTML='';const f=norm($('#idxq').value.trim());const has=t=>!f||norm(t).includes(f);
   const N=$('#idxNote');const MAX=300;let shown=0;const frag=document.createDocumentFragment();
@@ -2090,7 +2090,7 @@ $('#saveAll').onclick=async()=>{
   const todo=[];for(const v of VOLS)if(!HIDDEN.has(v.n)&&!(await isSaved(v.n)))todo.push(v.n);
   const totalPages=todo.reduce((a,n)=>a+VOLS[n].p,0);let done=0,failed=0;
   for(const n of todo){
-    t.textContent='جاري حفظ '+partName(n)+' ('+ar(todo.indexOf(n)+1)+' من '+ar(todo.length)+')';
+    t.textContent='جارٍ حفظ '+partName(n)+' ('+ar(todo.indexOf(n)+1)+' من '+ar(todo.length)+')';
     try{await saveVol(n,f=>{i.style.width=((done+f*VOLS[n].p)/totalPages*100).toFixed(1)+'%'})}catch(e){failed++}
     done+=VOLS[n].p;i.style.width=(done/totalPages*100).toFixed(1)+'%';
   }
@@ -2217,7 +2217,7 @@ const IO=new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting){IO
 const RQ=[];let RQbusy=false;
 function inlineImage(st,n,p){
   if(st.dataset.done)return;st.dataset.done='1';
-  if(!st.querySelector('canvas'))st.innerHTML='<div class="iload">جاري تحميل صورة الصفحة…</div>';
+  if(!st.querySelector('canvas'))st.innerHTML='<div class="iload">جارٍ تحميل صورة الصفحة…</div>';
   RQ.push({st,n,p});pumpRQ();
 }
 async function pumpRQ(){
@@ -2231,7 +2231,7 @@ async function pumpRQ(){
   RQbusy=false;
 }
 async function fnImage(st,n,p,[a,b]){
-  st.dataset.done='1';st.innerHTML='<div class="iload">جاري تحميل الحاشية…</div>';
+  st.dataset.done='1';st.innerHTML='<div class="iload">جارٍ تحميل الحاشية…</div>';
   try{
     if(!pdf||pdf._n!==n)await loadPdf(n);
     const pg=await pdf.getPage(p),base=pg.getViewport({scale:1}),dpr=Math.min(window.devicePixelRatio||1,2);
@@ -2241,7 +2241,7 @@ async function fnImage(st,n,p,[a,b]){
     const y0=Math.floor(a*v.height),y1=Math.ceil(b*v.height),cv=document.createElement('canvas');cv.width=v.width;cv.height=Math.max(1,y1-y0);
     const x=cv.getContext('2d');x.drawImage(full,0,y0,v.width,y1-y0,0,0,v.width,y1-y0);paintPaper(x,cv);if(PAPER==='night')cv.className='night';
     full.width=0;full.height=0;st.innerHTML='';st.append(cv);
-  }catch(e){st.dataset.done='';st.innerHTML='<div class="iload">تعذّر تحميل الحاشية، اضغط للمحاولة</div>';st.onclick=()=>{st.onclick=null;fnImage(st,n,p,[a,b])}}
+  }catch(e){st.dataset.done='';st.innerHTML='<div class="iload">تعذّر تحميل الحاشية، اضغط لإعادة المحاولة</div>';st.onclick=()=>{st.onclick=null;fnImage(st,n,p,[a,b])}}
 }
 async function drawInline(st,n,p){
   try{
@@ -2652,7 +2652,7 @@ $('#mImg').onclick=async()=>{closeSheet();
   }catch(e){if(e.name!=='AbortError')toast('تعذّرت مشاركة الصورة')}};
 $('#mSave').onclick=async()=>{closeSheet();const n=cur.n;
   if(await isSaved(n)){await removeVol(n);toast('أزيل '+partName(n)+' من الحفظ');return}
-  toast('جاري حفظ '+partName(n)+'…',1800);
+  toast('جارٍ حفظ '+partName(n)+'…',1800);
   try{await saveVol(n);toast('حُفظ '+partName(n)+' للقراءة بدون إنترنت')}catch(e){toast('تعذّر الحفظ. تأكد من الاتصال بالإنترنت.')}};
 
 /* in-reader search */
@@ -2662,11 +2662,11 @@ $('#qSearch').onclick=openSearch;$('#sClose').onclick=closeSearch;
 $('#sform2').addEventListener('submit',async e=>{
   e.preventDefault();$('#q2').blur();
   {const r=parseRef($('#q2').value);if(r){closeSearch();openRef(r);return}}
-  const R=$('#res2');R.innerHTML='';R.append(el('p','note','جاري البحث…'));
+  const R=$('#res2');R.innerHTML='';R.append(el('p','note','جارٍ البحث…'));
   const one=$('#onlyPart').checked&&!$('#onlyPart').closest('label').hidden;
   const only=one&&cur.n?cur.n:mbOf(cur.n)?mbOf(cur.n).ps:isB(cur.n)?cur.n:0;const VL=Array.isArray(only)?only:only?[only]:VOLS.slice(1,NV+1).map(v=>v.n);
   R.innerHTML='';const pr=progressBar(R);
-  const res=await runSearch($('#q2').value,only,n=>{pr.t.textContent='جاري البحث في '+partName(n)+'…';pr.i.style.width=(VL.indexOf(n)/VL.length*100)+'%'},$('#exact2').checked,r=>{if(r.out.length)renderHits(R,r,0)});
+  const res=await runSearch($('#q2').value,only,n=>{pr.t.textContent='جارٍ البحث في '+partName(n)+'…';pr.i.style.width=(VL.indexOf(n)/VL.length*100)+'%'},$('#exact2').checked,r=>{if(r.out.length)renderHits(R,r,0)});
   pr.done();
   if(!res){R.innerHTML='';R.append(el('p','note','اكتب كلمة من حرفين على الأقل.'));return}
   if(res.error&&!res.out.length){R.innerHTML='';R.append(el('p','note','تعذّر تحميل نص البحث. تأكد من الاتصال بالإنترنت.'));return}
@@ -2716,7 +2716,7 @@ async function exportNotes(){
   for(const k of keys){const [n,p]=k.split(':').map(Number);if(n!==last){t+='\n— '+partName(n)+' —\n';last=n}
     t+='\nص '+ar(p)+':\n';if(N[k])t+='  تعليق: '+N[k]+'\n';
     for(const h of (H[k]||[]))t+='  ['+HLC[h.c]+'] «'+hlShow(h.t)+'»\n'}
-  try{await navigator.clipboard.writeText(t);toast('نُسخت ملاحظاتك وتظليلاتك كلها. الصقها في المحادثة.',4500);return}catch(e){}
+  try{await navigator.clipboard.writeText(t);toast('نُسخت ملاحظاتك وتظليلاتك كلها. ألصِقها في المحادثة.',4500);return}catch(e){}
   const file=new File([t],'ملاحظاتي من موقع سيرته.txt',{type:'text/plain'});
   try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return}}catch(e){if(e.name==='AbortError')return}
   const a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=file.name;document.body.append(a);a.click();a.remove();
@@ -3012,7 +3012,7 @@ $('#fbForm').addEventListener('submit',async e=>{
   add('الإصدار',APP_VER);
   if(img.files&&img.files[0]){const f=await shrink(img.files[0]);if(f!==img.files[0]){const dt=new DataTransfer();dt.items.add(f);img.files=dt.files}}
   F.action='https://formsubmit.co/'+to;
-  const btn=$('#fbSend');btn.disabled=true;btn.textContent='جاري الإرسال…';
+  const btn=$('#fbSend');btn.disabled=true;btn.textContent='جارٍ الإرسال…';
   const done=new Promise(r=>{const fr=$('#fbFrame');const t=setTimeout(()=>r(false),45000);fr.onload=()=>{clearTimeout(t);r(true)}});
   F.submit();
   const sent=await done;btn.disabled=false;btn.textContent='إرسال';
@@ -3648,7 +3648,7 @@ $('#bkLoad').onclick=()=>$('#bkFile').click();
 $('#bkFile').onchange=async e=>{
   const f=e.target.files[0];if(!f)return;
   try{const d=JSON.parse(await f.text());if(!['sira','\u0064urar'].includes(d.app)||!d.data)throw 0;
-    if(!confirm('سيتم استبدال بياناتك الحالية بما في الملف. متابعة؟'))return;
+    if(!confirm('ستحلّ بيانات الملف محلّ بياناتك الحالية. أتريد المتابعة؟'))return;
     for(const [k,v] of Object.entries(d.data))if(BK_KEYS(k))localStorage.setItem(k,v);
     toast('استُرجعت بياناتك');renderHome();renderPlan();renderHls();
   }catch(err){toast('الملف غير صالح',3000)}
@@ -3837,7 +3837,7 @@ function prPushRow(B,pl){
       const reg=await navigator.serviceWorker.ready;const {key}=await (await fetch(PRPU+'/key')).json();
       const k=key.replace(/-/g,'+').replace(/_/g,'/');const s=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:Uint8Array.from(atob(k+'='.repeat((4-k.length%4)%4)),c=>c.charCodeAt(0))});
       const m=prpMeta(pl);const r=await prpPost('/sub',{sub:s,place:m});if(!r.ok)throw 0;LS.set('prPushMeta',JSON.stringify(m));
-      set(true);toast('فُعّل التنبيه: يصلك قبل أذان كل صلاة من الصلوات الخمس بنحو '+PRLEAD.find(x=>x[0]===m.ld)[1]+'، على مواقيت '+(m.nm||'موقعك')+'. وتستطيع تغيير الوقت من تحت الزر.',6000)
+      set(true);toast('فُعّل التنبيه: يصلك قبل أذان كل صلاة من الصلوات الخمس بنحو '+PRLEAD.find(x=>x[0]===m.ld)[1]+'، على مواقيت '+(m.nm||'موقعك')+'. وتستطيع تغيير الوقت من الخيار الذي أسفل الزر.',6000)
     }catch(e){toast('تعذّر تفعيل التنبيه الآن. حاول بعد قليل.',4000)}finally{b.disabled=false}};
 }
 // a new place, method or Asr choice: the reminders follow it
@@ -3905,10 +3905,10 @@ async function qText(t,pp){await drawCard(cardRuns(t),(isB(cur.n)||mbOf(cur.n)?B
 async function qEdit(pp,mode){
   const n=cur.n;let ov=$('#qEd');if(!ov){ov=el('div','qed');ov.id='qEd';document.body.append(ov)}
   ov.innerHTML='';ov.hidden=false;
-  const top=el('div','qtop'),help=el('p','qhelp',mode==='hl'?'مرّر إصبعك على السطور لتظليلها. كل سحبة تظلّل مستطيلاً، ويمكن أكثر من سحبة.':'اسحب إصبعك من أول المقطع إلى آخره لتحديده.');
+  const top=el('div','qtop'),help=el('p','qhelp',mode==='hl'?'مرّر إصبعك على السطور لتظليلها. كل سحبة تظلّل مستطيلاً، ويمكنك تكرار السحب.':'اسحب إصبعك من أول المقطع إلى آخره لتحديده.');
   const undo=el('button','btn btn-quiet','تراجع'),done=el('button','btn btn-primary','إنشاء الصورة'),cls=el('button','btn btn-link','إلغاء');[undo,done,cls].forEach(b=>b.type='button');
   top.append(cls,undo,done);const wrap=el('div','qwrap');ov.append(top,help,wrap);
-  const ld=el('p','note','جاري تحميل صورة الصفحة…');wrap.append(ld);
+  const ld=el('p','note','جارٍ تحميل صورة الصفحة…');wrap.append(ld);
   let src;try{src=await (window.SXQIMG||QIMG)(n,pp)}catch(e){ld.textContent='تعذّر تحميل صورة الصفحة.';return}
   ld.remove();const cv=el('canvas','qcv');cv.width=src.width;cv.height=src.height;wrap.append(cv);const x=cv.getContext('2d');
   const R=[];let drag=null;
