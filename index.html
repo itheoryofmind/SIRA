@@ -1243,6 +1243,9 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .at-cx{position:absolute;top:6px;inset-inline-start:8px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:16px;cursor:pointer}
 .at-svg .pt.sel{stroke:var(--brass);stroke-width:3}
 .sx-atl:has(.at-card:not([hidden])){padding-bottom:54vh}
+.at-svg .pt.hub{fill:var(--brass)}
+.at-svg .pt.hub.sel{stroke:var(--ink)}
+.at-zn{margin:0 4px 8px;font-size:13.5px;color:var(--muted);line-height:1.8}
 
 </style>
 
@@ -1732,7 +1735,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1139';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1143';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3303,7 +3306,7 @@ async function openAtlas(){const X=await getJSON('data/sira_x.json');const it=X.
     CO.forEach(L=>{let d='';L.forEach((q,i)=>{d+=(i?'L':'M')+X(q[0]).toFixed(1)+' '+Y(q[1]).toFixed(1)});const pa=document.createElementNS(NS,'path');pa.setAttribute('d',d);cg.append(pa)});
     const RG=view?[]:[['البحر الأحمر',25.2,35.9,-58],['الحجاز',22.7,40.35,0],['الشام',32.0,36.9,0]];
     // scale bar
-    const km=(la1-la0)>3?100:5,px=km/111.2*s_;mk('line',{x1:W-12-px,x2:W-12,y1:H-14,y2:H-14,class:'sc'});mk('text',{x:W-12-px/2,y:H-20,class:'scl'}).textContent=(km===100?'١٠٠':'٥')+' كم';
+    let km=[1,2,5,10,20,50,100,200].find(v=>v/111.2*s_>=W/7)||200;const px=km/111.2*s_;mk('line',{x1:W-12-px,x2:W-12,y1:H-14,y2:H-14,class:'sc'});mk('text',{x:W-12-px/2,y:H-20,class:'scl'}).textContent=ar(km)+' كم';
     const cl=view?[]:groups.map(g=>({g,P:ATL.filter(g.f)}));
     const inCl=p=>cl.some(c=>c.P.includes(p));
     const placed=[];pts.forEach(p=>{if(!inCl(p))placed.push({x:X(p[2])-8,y:Y(p[1])-8,w:16,h:16})});
@@ -3314,12 +3317,12 @@ async function openAtlas(){const X=await getJSON('data/sira_x.json');const it=X.
       const w=g.n.length*6.6+6;let pos=[cx,cy-20];for(const [dx,dy] of [[0,-20],[0,32],[-(w/2+18),5],[w/2+18,5],[0,-36],[0,48]]){const r={x:cx+dx-w/2,y:cy+dy-13,w,h:16};if(fits(r)){pos=[cx+dx,cy+dy];placed.push(r);break}}
       const t=mk('text',{x:pos[0],y:pos[1],class:'pl'});t.textContent=g.n;
       [c,n,t].forEach(e=>e.addEventListener('click',()=>{draw(g)}))});
-    pts.forEach(p=>{if(inCl(p))return;const cx=X(p[2]),cy=Y(p[1]);const c=mk('circle',{cx,cy,r:p[3]?7:11,class:p[3]?'pt':'pt ap','data-k':p[0]});const lab=p[0]+(p[3]?'':' (تقريبي)'),w=lab.length*6.6+6;let pos=null;
+    pts.forEach(p=>{if(inCl(p))return;const cx=X(p[2]),cy=Y(p[1]);const hub=view&&/^(مكة المكرمة|المدينة النبوية)$/.test(p[0]);const c=mk('circle',{cx,cy,r:hub?10:p[3]?7:11,class:(p[3]?'pt':'pt ap')+(hub?' hub':''),'data-k':p[0]});const lab=p[0]+(p[3]?'':' (تقريبي)'),w=lab.length*6.6+6;let pos=null;
       for(const [dx,dy] of [[0,-13],[0,23],[w/2+12,5],[-w/2-12,5],[0,-28],[0,38]]){const r={x:cx+dx-w/2,y:cy+dy-13,w,h:16};if(!placed.some(q=>r.x<q.x+q.w&&q.x<r.x+r.w&&r.y<q.y+q.h&&q.y<r.y+r.h)&&r.x>0&&r.x+r.w<W){pos=[cx+dx,cy+dy];placed.push(r);break}}
       if(!pos)pos=[cx,cy-13];const t=mk('text',{x:pos[0],y:pos[1],class:'pl'});t.textContent=lab;
       [c,t].forEach(e=>e.addEventListener('click',()=>show(p)))});
     RG.forEach(([n,la,lo,rot])=>{if(la<la0||la>la1||lo<lo0||lo>lo1)return;const cx=X(lo),cy=Y(la),w=n.length*7;if(!rot&&!fits({x:cx-w/2,y:cy-12,w,h:16}))return;const t=mk('text',{x:cx,y:cy,class:'rg'+(rot?' sea':''),transform:rot?'rotate('+rot+' '+cx+' '+cy+')':''});t.textContent=n;svg.insertBefore(t,cg.nextSibling)});box.append(svg);
-    if(view){const b=el('button','btn btn-quiet','← الخريطة كاملة');b.type='button';b.onclick=()=>draw(null);box.prepend(b,el('p','at-zt',view.n));
+    if(view){const b=el('button','btn btn-quiet','← الخريطة كاملة');b.type='button';b.onclick=()=>draw(null);box.prepend(b,el('p','at-zt',view.n),el('p','at-zn','عرض مكبّر: النقطة الذهبية '+(/مكة/.test(view.n)?'مكة المكرمة':'المدينة النبوية')+'، والخضراء مواضع حولها. والخريطة الصغيرة تبيّن مكان هذا العرض من المنطقة كلها.'));
       // where this close view lies: a small map of the whole region with its place marked
       const F=ATL.filter(p=>p[1]>18),fa0=Math.min(...F.map(p=>p[1]))-.4,fa1=Math.max(...F.map(p=>p[1]))+.4,fo0=Math.min(...F.map(p=>p[2]))-.6,fo1=Math.max(...F.map(p=>p[2]))+.6;
       const fk=Math.cos((fa0+fa1)/2*Math.PI/180),IW=96,fs=IW/((fo1-fo0)*fk),IH=Math.round((fa1-fa0)*fs);
