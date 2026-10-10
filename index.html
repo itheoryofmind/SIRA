@@ -1270,6 +1270,27 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .kh-rc{font-size:13.5px;color:var(--muted);margin:4px 0 0}
 .kh-cal{margin-top:14px}
 .kh-calh{font-family:"Amiri",serif;font-size:22px;margin:6px 0 4px}
+.kn{margin-top:14px}
+.kn-l{position:relative;margin:10px 0 4px}
+.kn-s{position:relative}
+.kn-s::before{content:"";position:absolute;left:50%;margin-left:-1px;top:0;bottom:0;width:2px;background:color-mix(in srgb,var(--brass) 45%,transparent)}
+.kn-r:first-child .kn-s::before{top:20px}
+.kn-r.me .kn-s::before{bottom:auto;height:20px}
+.kn-r.me .kn-s b small{display:block;font-family:var(--ui,inherit);font-size:11px;font-weight:400;color:var(--brass)}
+.kn-r{display:grid;grid-template-columns:94px 1fr;gap:10px;align-items:start;min-height:34px;position:relative}
+.kn-s{text-align:center;padding:6px 0}
+.kn-s b{display:inline-block;position:relative;z-index:1;background:var(--ground);padding:2px 6px;font-size:14.5px;font-weight:600;color:var(--muted)}
+.kn-r.br .kn-s b,.kn-r.me .kn-s b{color:var(--ink);border:1px solid color-mix(in srgb,var(--brass) 55%,transparent);border-radius:10px}
+.kn-r.me .kn-s b{font-family:"Amiri",serif;font-size:17px;color:var(--brass)}
+.kn-c{margin:2px 0 10px;border:1px solid var(--line);border-inline-start:4px solid var(--kc);border-radius:12px;background:var(--raised);position:relative}
+.kn-c::before{content:"";position:absolute;inset-inline-start:-14px;top:17px;width:10px;height:2px;background:var(--kc)}
+.kn-t{display:flex;flex-direction:column;gap:3px;width:100%;border:0;background:none;padding:9px 12px;font:inherit;color:var(--ink);text-align:start;cursor:pointer}
+.kn-t b{font-size:15.5px}
+.kn-t span{font-size:13px;color:var(--muted);line-height:1.7}
+.kn-d{padding:0 12px 10px}
+.kn-d q{display:block;font-size:15px;line-height:1.9;quotes:"«" "»"}
+.kn-d .btn{margin-top:6px}
+.kn-by{display:block;color:var(--muted);font-size:12.5px;margin-bottom:2px}
 
 </style>
 
@@ -1764,7 +1785,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1445';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1452';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1882,7 +1903,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_alam.json": "fdf9264dd2", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "04657fd023", "data/sx_mg.json": "20b4131afd", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_alam.json": "fdf9264dd2", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "04657fd023", "data/sx_khn.json": "426adac734", "data/sx_mg.json": "20b4131afd", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3603,6 +3624,20 @@ async function khRead(n,p,t){const lt=x=>x.replace(/[^\u0621-\u064A]/g,'');const
     if(cut)box.append(el('p','kh-rc','وللباب بقية في الكتاب.'))}catch(e){box.append(el('p','kh-rp','تعذّر عرض هذا الباب هنا، فاقرأه في الكتاب.'))}}
 const goP=(t,n,p)=>{const b=el('button','btn btn-quiet',t);b.type='button';b.style.margin='4px 0 8px';b.onclick=()=>openPart(n,p,null,false,'txt');return b};
 
+// the caliphs' lineages on the Prophet's line, from Ka'b ibn Lu'ayy down; each branch is Ibn Kathir's wording
+function khNasab(V,N){
+  V.append(el('h3','kh-calh','نسب الخلفاء الراشدين'),el('p','sxnote','عمود النسب الشريف من كعب بن لؤي إلى النبي ﷺ، وعند كل جدٍّ مَن يلتقي نسبُه به من الخلفاء. اضغط اسم الخليفة لترى لفظ ابن كثير وصفحته.'));
+  const by={};N.forEach(b=>by[b.j]=b);
+  const SP=['كعب بن لؤي','مرة','كلاب','قصي','عبد مناف','هاشم','عبد المطلب','عبد الله','محمد'];
+  const L=el('div','kn-l');V.append(L);
+  const row=(name,b,last)=>{const r=el('div','kn-r'+(b?' br':'')+(last?' me':''));const sp=el('div','kn-s');const nb=el('b',null,name);if(last)nb.append(el('small',null,'صلى الله عليه وسلم'));sp.append(nb);r.append(sp);
+    if(b){const c=el('div','kn-c');c.style.setProperty('--kc','var(--'+b.k+')');const t=el('button','kn-t');t.type='button';t.setAttribute('aria-expanded','false');
+      t.append(el('b',null,KHN[b.k]),sawEl('span',null,b.line));c.append(t);
+      const d=el('div','kn-d');d.hidden=true;d.append(el('q',null,b.q));d.prepend(el('small','kn-by','قال ابن كثير:'));const g=el('button','btn btn-quiet','البداية والنهاية، ج'+ar(b.jz)+'، ص '+ar(b.p));g.type='button';g.onclick=()=>openPart(b.n,b.p,null,false,'txt');d.append(g);c.append(d);
+      t.onclick=()=>{d.hidden=!d.hidden;t.setAttribute('aria-expanded',!d.hidden)};r.append(c)}
+    L.append(r)};
+  SP.forEach((n,i)=>row(n,by[n],i===SP.length-1));
+  V.append(el('p','fx-note','عمود النسب من «مختصر سيرة الرسول ﷺ» (ص ٥١)، وفروع الخلفاء بلفظ ابن كثير في «البداية والنهاية»، وسطر كل خليفة نسبُه إلى الجدّ الذي يلتقي فيه بنسب النبي ﷺ.'))}
 // the list of caliphs from the Mukhtasar (it was a tab of the family tree); each source opens the Mukhtasar at its page
 function khCal(V,D){const src=(o,w)=>{const d=el('div','sxd');d.append('«'+o.q+'» ');const b=el('button',null,'مختصر السيرة، ص '+ar(o.p)+' ←');b.type='button';b.onclick=()=>openPart(17,o.p,null,false,'txt');d.append(b);w.append(d)};
   V.append(el('h3','kh-calh','قائمة الخلفاء'),el('p','sxnote','الخلفاء بترتيب «مختصر سيرة الرسول ﷺ» للإمام محمد بن عبد الوهاب، ومع كل واحد كيف تولى ومدته بلفظ الكتاب إن ذكرها. اضغط للنص والصفحة.'));
@@ -3614,8 +3649,10 @@ function khCal(V,D){const src=(o,w)=>{const d=el('div','sxd');d.append('«'+o.q+
 /* الخلافة الراشدة: في صفحة كتاب «الخلفاء الراشدون» */
 let KHSEC=null,KHSELC=null;
 function khSection(){if(KHSEC)return KHSEC;const s=el('section','yr kh');s.id='sxKhul';
-  s.innerHTML='<h2>الخلافة الراشدة سنةً سنة</h2><p class="sx-lead">كل مربع سنة هجرية من هذا الكتاب، ولون كل خليفة على سنيه. اضغط سنةً لترى ما ذكره ابن كثير فيها، أو اضغط اسم خليفة لترى سنيه وعمره ومدة خلافته.</p><div class="kh-saf" id="khSaf"></div><div class="kh-grid" id="khGrid" role="group" aria-label="سنوات الخلافة الراشدة"></div><div class="kh-key" id="khKey"></div><div class="yr-p" id="khWho" hidden></div><div class="yr-p" id="khPanel" hidden></div><div class="kh-more"><button type="button" id="khTl"><b>الخلفاء في الخط الزمني</b><span>من مختصر السيرة لمحمد بن عبد الوهاب</span></button><button type="button" id="khNs" aria-expanded="false"><b>قائمة الخلفاء</b><span>الراشدون ومن بعدهم، من مختصر السيرة لمحمد بن عبد الوهاب</span></button></div><div class="kh-cal" id="khCal" hidden></div>';
+  s.innerHTML='<h2>الخلافة الراشدة سنةً سنة</h2><p class="sx-lead">كل مربع سنة هجرية من هذا الكتاب، ولون كل خليفة على سنيه. اضغط سنةً لترى ما ذكره ابن كثير فيها، أو اضغط اسم خليفة لترى سنيه وعمره ومدة خلافته.</p><div class="kh-saf" id="khSaf"></div><div class="kh-grid" id="khGrid" role="group" aria-label="سنوات الخلافة الراشدة"></div><div class="kh-key" id="khKey"></div><div class="yr-p" id="khWho" hidden></div><div class="yr-p" id="khPanel" hidden></div><div class="kh-more"><button type="button" id="khTl"><b>الخلفاء في الخط الزمني</b><span>من مختصر السيرة لمحمد بن عبد الوهاب</span></button><button type="button" id="khNb" aria-expanded="false"><b>نسب الخلفاء الراشدين</b><span>أين يلتقي نسب كل واحد بنسب النبي ﷺ، بلفظ ابن كثير</span></button><button type="button" id="khNs" aria-expanded="false"><b>قائمة الخلفاء</b><span>الراشدون ومن بعدهم، من مختصر السيرة لمحمد بن عبد الوهاب</span></button></div><div class="kn" id="khNas" hidden></div><div class="kh-cal" id="khCal" hidden></div>';
   s.querySelector('#khTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};
+  s.querySelector('#khNb').onclick=async e=>{const B=e.currentTarget,C=s.querySelector('#khNas');const o=C.hidden;B.setAttribute('aria-expanded',o);C.hidden=!o;if(!o||C.childElementCount)return;
+    const N=await getJSON('data/sx_khn.json');if(N)khNasab(C,N);setTimeout(()=>C.scrollIntoView({block:'start',behavior:'smooth'}),50)};
   s.querySelector('#khNs').onclick=async e=>{const B=e.currentTarget,C=s.querySelector('#khCal');const o=C.hidden;B.setAttribute('aria-expanded',o);C.hidden=!o;if(!o||C.childElementCount)return;
     let D;try{D=await sirax()}catch(_){C.append(el('p','note','تعذّر التحميل. تأكد من الاتصال بالإنترنت.'));return}khCal(C,D);setTimeout(()=>C.scrollIntoView({block:'start',behavior:'smooth'}),50)};
   return KHSEC=s}
