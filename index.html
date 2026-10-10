@@ -1217,6 +1217,8 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .mg-t{margin:0;font-family:var(--text);font-size:18px;line-height:1.95}
 .mg-t.clip{display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
 .dy-card .mg-h{border-bottom:0;padding:0}
+.ex .exg{grid-column:1/-1;margin:16px 4px -2px;font-size:15px;font-weight:700;color:var(--brass)}
+.ex .exg:first-of-type{margin-top:10px}
 
 </style>
 
@@ -1351,15 +1353,20 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
       <h2 id="exH">أبواب الموقع</h2>
       <div class="ex">
         <button type="button" class="wide" id="fxEvent"><b>الحدث في كل الكتب</b><span>اختر حدثاً واقرأه في كل كتاب بصفحته</span></button>
-        <button type="button" id="fxDay"><b>يومه صلى الله عليه وسلم</b><span>هديه في يومه وليلته من زاد المعاد</span></button>
-        <button type="button" id="fxMg"><b>المغازي في صحيح البخاري</b><span>أحاديث كل غزوة على ترتيب وقوعها</span></button>
-        <button type="button" id="fxAyat"><b>ما نزل من القرآن في أحداث السيرة</b><span>أحداثٌ نصّت الكتب على أن آياتٍ نزلت فيها</span></button>
+        <p class="exg">صفته وهديه <span class="saw">ﷺ</span></p>
         <button type="button" id="fxSifa"><b>صفته <span class="saw">ﷺ</span> كأنك تراه</b><span>خَلقه وخُلقه من الشمائل</span></button>
-        <button type="button" id="fxRoad"><b>طريق الهجرة</b><span>المنازل كما ذكرها ابن إسحاق</span></button>
-        <button type="button" id="sxZubda"><b>أربعون محطة</b><span>السيرة في بطاقات، بلفظ الكتاب</span></button>
-        <button type="button" id="sxAtlas"><b>الأطلس</b><span>مواضع الأحداث بإحداثياتها</span></button>
+        <button type="button" id="fxDay"><b>يومه صلى الله عليه وسلم</b><span>هديه في يومه وليلته من زاد المعاد</span></button>
+        <p class="exg">وقائع السيرة</p>
         <button type="button" id="sxTl"><b>الخط الزمني</b><span>الأحداث بترتيبها وصفحاتها</span></button>
-        <button type="button" id="sxTree"><b>شجرة النسب الشريف</b><span>آل عبد المطلب والخلفاء</span></button>
+        <button type="button" id="sxZubda"><b>أربعون محطة</b><span>السيرة في بطاقات، بلفظ الكتاب</span></button>
+        <p class="exg">من القرآن والصحيح</p>
+        <button type="button" id="fxAyat"><b>ما نزل من القرآن في أحداث السيرة</b><span>أحداثٌ نصّت الكتب على أن آياتٍ نزلت فيها</span></button>
+        <button type="button" id="fxMg"><b>المغازي في صحيح البخاري</b><span>أحاديث كل غزوة على ترتيب وقوعها</span></button>
+        <p class="exg">الأماكن</p>
+        <button type="button" id="sxAtlas"><b>الأطلس</b><span>مواضع الأحداث بإحداثياتها</span></button>
+        <button type="button" id="fxRoad"><b>طريق الهجرة</b><span>المنازل كما ذكرها ابن إسحاق</span></button>
+        <p class="exg">نسبه وآله</p>
+        <button type="button" class="wide" id="sxTree"><b>شجرة النسب الشريف</b><span>آل عبد المطلب والخلفاء</span></button>
       </div>
     </section>
 
@@ -1701,7 +1708,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1046';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1051';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
