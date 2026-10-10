@@ -1274,7 +1274,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .kn-s{position:relative}
 .kn-s::before{content:"";position:absolute;left:50%;margin-left:-1px;top:0;bottom:0;width:2px;background:color-mix(in srgb,var(--brass) 45%,transparent)}
 .kn-r:first-child .kn-s::before{top:20px}
-.kn-r.me .kn-s::before{bottom:auto;height:20px}
+.kn-r:last-child .kn-s::before{bottom:auto;height:20px}
 .kn-r.me .kn-s b small{display:block;font-family:var(--ui,inherit);font-size:11px;font-weight:400;color:var(--brass)}
 .kn-r{display:grid;grid-template-columns:94px 1fr;gap:10px;align-items:start;min-height:34px;position:relative}
 .kn-s{text-align:center;padding:6px 0}
@@ -1296,6 +1296,35 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .kh-it p{margin:0}
 .kh-it small{color:var(--muted);font-size:12.5px}
 .kh-src{color:var(--muted);font-size:13px;margin:-4px 0 8px}
+.kh-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+.kh-tabs button{min-height:36px;padding:0 13px;border-radius:18px;border:1px solid color-mix(in srgb,var(--brass) 45%,var(--line));background:var(--raised);color:var(--ink);font:inherit;font-size:14.5px;cursor:pointer;touch-action:manipulation}
+.kh-tabs button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.ev-sheet .yr-p{border:0;padding:0;margin:0;background:none}
+.kh-back{display:block;margin:0 0 6px}
+#sxKhul{margin-top:18px}
+/* ورد السيرة: compact, under the reading button */
+.pl-mini{margin:10px 0 4px}
+.pl-mini .pl{margin:0}
+.pl-cta{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;padding:11px 14px;border:1px dashed color-mix(in srgb,var(--brass) 55%,var(--line));border-radius:14px;background:none;color:var(--ink);font:inherit;text-align:start;cursor:pointer;touch-action:manipulation}
+.pl-cta b{font-size:15.5px}
+.pl-cta span{font-size:13px;color:var(--muted)}
+.pl-more{margin-top:10px}
+.pl-top{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:14px 14px 0 0;background:var(--raised)}
+.pl-top+.pl-bar{margin:0;border-radius:0 0 14px 14px;height:5px}
+.pl-tx{flex:1;display:flex;flex-direction:column;gap:2px}
+.pl-tx b{font-size:15.5px}
+.pl-tx span{font-size:13px;color:var(--muted)}
+.pl-top .btn{flex:none;min-height:40px;padding:0 18px}
+.pl-tg{margin-top:4px;font-size:13.5px}
+/* مدارج: each level folds */
+button.lv-h{width:100%;border:0;background:none;font:inherit;color:inherit;text-align:start;cursor:pointer;touch-action:manipulation;position:relative;padding-inline-end:26px}
+button.lv-h::after{content:"";position:absolute;inset-inline-end:6px;top:14px;width:8px;height:8px;border-inline-start:2px solid var(--brass);border-bottom:2px solid var(--brass);transform:rotate(-45deg);transition:transform .2s}
+.lv-g.open button.lv-h::after{transform:rotate(135deg)}
+.lv-ht{display:block}
+.lv-h .ts{display:block;font:13px/1.6 var(--ui);color:var(--muted);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.lv-bx{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.lv-g{padding-bottom:14px}
+button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:8px}
 
 </style>
 
@@ -1402,6 +1431,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
       <div class="results" id="res"></div>
     </section>
     <button class="sx-go" id="continue" type="button"><span class="n" id="contN">١</span><span><b id="contT">ابدأ القراءة</b><span id="contS">من مختصر سيرة الرسول صلى الله عليه وسلم</span></span></button>
+    <section class="pl-mini" id="sxPlan" aria-label="ورد السيرة"><div class="pl" id="plBox"></div></section>
     <section class="yr" id="sxYears" aria-labelledby="yrH">
       <h2 id="yrH">سنوات عمره <span class="saw">ﷺ</span></h2>
       <button class="yr-src2" id="yrSrc" type="button">أربعون قبل البعثة، وثلاث عشرة بمكة، وعشر بالمدينة: من حديث ابن عباس في صحيح البخاري، أورده ابن كثير في «البداية والنهاية» (٤/٤٤٣)</button>
@@ -1452,10 +1482,6 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
       </div>
     </section>
 
-    <section class="sx-sec" id="sxPlan" aria-labelledby="plH">
-      <h2 id="plH">ورد السيرة</h2>
-      <div class="pl" id="plBox"></div>
-    </section>
 
     <section class="sx-sec" id="sxShelf" aria-labelledby="lvH">
       <h2 id="lvH">الكتب، من الأيسر إلى الأوسع</h2>
@@ -1790,7 +1816,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1529';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1549';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3285,8 +3311,10 @@ const SXBOOKS=[
   {t:'الخلفاء الراشدون',by:'من البداية والنهاية لابن كثير، تحقيق التركي',era:'الخلافة',tone:'var(--muted)',info:'من سنة ١١ إلى سنة ٤١هـ',st:'done',stT:'روجع على المطبوع',open:()=>openZad(MB.k)}
 ];
 function renderShelfS(){
-  const L=$('#lvList');if(L&&!L.childElementCount)SXMAD.forEach((m,k)=>{const g=el('div','lv-g');g.style.setProperty('--k',k);const hd=el('div','lv-h');hd.append(el('b',null,ar(k+1)),el('span','d',m.d),el('span','s',m.s));g.append(hd);
-    m.b.forEach(([t,sub,fn])=>{const r=el('button','lv-b');r.type='button';const tt=el('span','t');tt.append(el('b',null,t),el('small',null,sub));r.append(tt);r.onclick=fn;g.append(r)});L.append(g)});
+  const L=$('#lvList');if(L&&!L.childElementCount)SXMAD.forEach((m,k)=>{const g=el('div','lv-g');g.style.setProperty('--k',k);const hd=el('button','lv-h');hd.type='button';hd.setAttribute('aria-expanded','false');
+    const tx=el('span','lv-ht');tx.append(el('span','d',m.d),el('span','s',m.s),el('span','ts',m.b.map(x=>x[0]).join('، ')));hd.append(el('b',null,ar(k+1)),tx);g.append(hd);
+    const bx=el('div','lv-bx');bx.hidden=true;m.b.forEach(([t,sub,fn])=>{const r=el('button','lv-b');r.type='button';const tt=el('span','t');tt.append(el('b',null,t),el('small',null,sub));r.append(tt);r.onclick=fn;bx.append(r)});g.append(bx);
+    hd.onclick=()=>{bx.hidden=!bx.hidden;hd.setAttribute('aria-expanded',!bx.hidden);g.classList.toggle('open',!bx.hidden)};L.append(g)});
   const lr=lastAny();
   if(lr&&lr.n){$('#contT').textContent='تابع القراءة';$('#contS').textContent=SXBN(lr.n)+'، ص '+ar(lr.p);$('#contN').textContent=ar(lr.p)}
   else{$('#contT').textContent='ابدأ القراءة';$('#contS').textContent='من مختصر سيرة الرسول صلى الله عليه وسلم';$('#contN').textContent=ar(1)}
@@ -3490,20 +3518,24 @@ const PL_A=3,PL_B=329,PL_N=PL_B-PL_A+1;
 function planDay(pl){return Math.floor((Date.now()-pl.t)/864e5)+1}
 async function renderSxPlan(){await sxFeat();const B=$('#plBox');if(!B)return;B.innerHTML='';const pl=LS.get('sxPlan',null);const R=SXRD.get();
   let done=0;for(let p=PL_A;p<=PL_B;p++)if(R.has(p))done++;
-  if(!pl){B.append(el('p','pl-today','اقرأ مختصر سيرة الرسول صلى الله عليه وسلم كاملاً، صفحاتٍ معلومة كل يوم.'));
+  if(!pl){const cta=el('button','pl-cta');cta.type='button';cta.setAttribute('aria-expanded','false');cta.append(el('b',null,'اجعل لك ورداً يومياً'),el('span',null,'تقرأ مختصر السيرة كاملاً في مدة تختارها'));B.append(cta);
+    const box=el('div','pl-more');box.hidden=true;
     const r=el('div','pl-row');[[30,'شهر'],[60,'شهران'],[100,'مئة يوم']].forEach(([d,t])=>{const b=el('button','pl-opt');b.type='button';b.append(el('b',null,t),el('span',null,'نحو '+CNT(Math.ceil(PL_N/d),'صفحة',1)+' كل يوم'));
-      b.onclick=()=>{LS.set('sxPlan',{d,t:new Date(new Date().toDateString()).getTime()});renderSxPlan()};r.append(b)});B.append(r);
-    if(done)B.append(el('p','yr-note','الصفحات المقروءة إلى الآن: '+ar(done)+' من '+ar(PL_N)+'.'));return}
+      b.onclick=()=>{LS.set('sxPlan',{d,t:new Date(new Date().toDateString()).getTime()});renderSxPlan()};r.append(b)});box.append(r);
+    if(done)box.append(el('p','yr-note','الصفحات المقروءة إلى الآن: '+ar(done)+' من '+ar(PL_N)+'.'));B.append(box);
+    cta.onclick=()=>{box.hidden=!box.hidden;cta.setAttribute('aria-expanded',!box.hidden)};return}
   const per=Math.ceil(PL_N/pl.d),day=Math.min(planDay(pl),pl.d),a=PL_A+(day-1)*per,b=Math.min(PL_B,a+per-1);
   let todayLeft=null;for(let p=a;p<=b;p++)if(!R.has(p)){todayLeft=p;break}
-  B.append(el('p','pl-today','اليوم '+ar(day)+' من '+ar(pl.d)+': الصفحات '+ar(a)+'–'+ar(b)+(todayLeft===null?'، قرأتها كلها':'')));
+  const top=el('div','pl-top');const tx=el('div','pl-tx');tx.append(el('b',null,'ورد اليوم: الصفحات '+ar(a)+'–'+ar(b)),el('span',null,'اليوم '+ar(day)+' من '+ar(pl.d)+(todayLeft===null?'، قرأتها كلها':'')));
+  const g=el('button','btn btn-primary',todayLeft===null?'اقرأ ما بعدها':'اقرأ');g.type='button';
+  g.onclick=()=>{let p=todayLeft;if(p===null){p=b+1;while(p<=PL_B&&R.has(p))p++;if(p>PL_B)p=PL_A}openPart(17,p,null,false,'txt')};top.append(tx,g);B.append(top);
   const bar=el('div','pl-bar');const i=el('i');i.style.width=(done/PL_N*100).toFixed(1)+'%';bar.append(i);B.append(bar);
-  const exp=Math.min(PL_N,(day-1)*per);B.append(el('p','yr-note','الصفحات المقروءة: '+ar(done)+' من '+ar(PL_N)+(done<exp?'، وبقي مما مضى من الأيام: '+ar(exp-done):'')+'.'));
-  const act=el('div','pl-act');const g=el('button','btn btn-primary',todayLeft===null?'اقرأ ما بعدها':'اقرأ ورد اليوم');g.type='button';
-  g.onclick=()=>{let p=todayLeft;if(p===null){p=b+1;while(p<=PL_B&&R.has(p))p++;if(p>PL_B)p=PL_A}openPart(17,p,null,false,'txt')};
+  const more=el('button','btn btn-link pl-tg','التفاصيل');more.type='button';more.setAttribute('aria-expanded','false');B.append(more);
+  const box=el('div','pl-more');box.hidden=true;B.append(box);more.onclick=()=>{box.hidden=!box.hidden;more.setAttribute('aria-expanded',!box.hidden)};
+  const exp=Math.min(PL_N,(day-1)*per);box.append(el('p','yr-note','الصفحات المقروءة: '+ar(done)+' من '+ar(PL_N)+(done<exp?'، وبقي مما مضى من الأيام: '+ar(exp-done):'')+'.'));
   const x=el('button','btn btn-quiet','إلغاء الخطة');x.type='button';x.onclick=()=>{if(confirm('إلغاء خطة القراءة؟ تبقى الصفحات التي قرأتها معلَّمة.')){LS.set('sxPlan',null);planPushOff();renderSxPlan()}};
-  act.append(g,x);B.append(act);
-  planPushBtn(pl).then(pb=>{if(pb){const w=el('div','pl-push');w.append(pb);B.append(w)}})}
+  const act=el('div','pl-act');act.append(x);box.append(act);
+  planPushBtn(pl).then(pb=>{if(pb){const w=el('div','pl-push');w.append(pb);box.append(w)}})}
 
 /* ---------- الحدث في كل الكتب ---------- */
 async function fxEvent(){const F=await sxFeat();const P=fxOpen('الحدث في كل الكتب');
@@ -3600,7 +3632,7 @@ async function renderKhul(){const F=await sxFeat();const K=F.khul,G=$('#khGrid')
 async function khWho(c){const F=await sxFeat();KHSELC=KHSELC===c?null:c;
   [...$('#khKey').children].forEach(k=>{k.classList.toggle('on',k.dataset.c===KHSELC);if(k.tagName==='BUTTON')k.setAttribute('aria-pressed',k.dataset.c===KHSELC)});
   [...$('#khGrid').children].forEach((b,i)=>b.classList.toggle('off',!!KHSELC&&!F.khul.years[i].c.includes(KHSELC)));
-  const W=$('#khWho');W.innerHTML='';W.hidden=!KHSELC;if(!KHSELC)return;
+  if(!KHSELC){evClose();return}const W=el('div','yr-p kh-w');evShell(KHN[c]).append(W);
   const a=(F.khul.ages||[]).find(x=>x.k===c);W.append(el('h3',null,KHN[c]+(c==='has'?' رضي الله عنهما':' رضي الله عنه')));
   if(c==='has'){const q=F.khul.q[41];W.append(el('p','sub','قال ابن كثير:'),el('blockquote',null,'«'+q.q+'»'),goP(pgT(q.n,q.p),q.n,q.p));W.append(el('p','sub','والخلفاء الراشدون أربعة، قال شيخ الإسلام ابن تيمية:'),el('blockquote',null,'«وكان أمير المؤمنين علي بن أبي طالب رضي الله عنه آخر الخلفاء الراشدين المهديين»'),el('p','kh-src','مجموع الفتاوى ٣/٤٠٦'))}
   if(c==='mk'){W.append(el('p','sub','قال ابن كثير في أول ترجمته:'),el('blockquote',null,'«هو معاوية بن أبي سفيان صخر بن حرب بن أمية بن عبد شمس بن عبد مناف بن قصي، أبو عبد الرحمن القرشي الأموي، خال المؤمنين، وكاتب وحي رب العالمين»'),goP(pgT(30,146),30,146),
@@ -3608,8 +3640,8 @@ async function khWho(c){const F=await sxFeat();KHSELC=KHSELC===c?null:c;
   const S=(F.khul.sec||{})[c]||[];if(S.length){W.append(el('p','sub','أبواب عنه في الكتاب:'));S.forEach(h=>{const b=el('button','kh-h');b.type='button';b.append(el('span',null,h.t),el('small',null,(h.n===28?'ج٩':h.n===29?'ج١٠':'ج١١')+'، ص '+ar(h.p)));b.onclick=()=>khRead(h.n,h.p,h.t);W.append(b)});if(a)W.append(el('p','sub','عمره ومدة خلافته:'))}
   if(a)a.q.forEach(q=>{W.append(el('blockquote',null,'«'+q.q+'»'));W.append(goP(pgT(q.n,q.p)+(q.p2?'–'+ar(q.p2):''),q.n,q.p))});
   else{const ys=F.khul.years.filter(y=>y.c.includes(c));W.append(el('p','sub','سنوات خلافته في الكتاب: '+ys.map(y=>ar(y.y)).join('، ')))}}
-async function showKhul(y){const F=await sxFeat();const K=F.khul,Y=K.years.find(x=>x.y===y),G=$('#khGrid'),P=$('#khPanel');G.dataset.sel=y;
-  [...G.children].forEach((b,i)=>b.classList.toggle('sel',K.years[i].y===y));P.hidden=false;P.className='yr-p kh-p';P.innerHTML='';
+async function showKhul(y){const F=await sxFeat();const K=F.khul,Y=K.years.find(x=>x.y===y),G=$('#khGrid');G.dataset.sel=y;
+  [...G.children].forEach((b,i)=>b.classList.toggle('sel',K.years[i].y===y));const P=el('div','yr-p kh-p');evShell('سنة '+ar(y)+' من الهجرة').append(P);
   const who=Y.c.filter(c=>['ab','um','uth','ali'].includes(c));const P_=[];
   if(who.length)P_.push('خلافة '+who.map(c=>KHG[c]).join(' ثم ')+(who.length>1?' رضي الله عنهما':' رضي الله عنه'));
   if(Y.c.includes('has'))P_.push((who.length?'ثم ':'')+'خلافة الحسن بن علي رضي الله عنهما'+(Y.c.includes('mk')?'، وبها كملت الثلاثون، ثم نزل عن الأمر':''));
@@ -3621,7 +3653,8 @@ async function showKhul(y){const F=await sxFeat();const K=F.khul,Y=K.years.find(
   Y.h.slice(1).forEach(h=>{const b=el('button','kh-h');b.type='button';b.append(el('span',null,h.t),el('small',null,'ص '+ar(h.p)));b.onclick=()=>khRead(h.n,h.p,h.t);P.append(b)});
   P.append(el('p','yr-note','عُدّت الثلاثون كما قال ابن كثير: من وفاته صلى الله عليه وسلم في ربيع الأول سنة ١١ إلى نزول الحسن رضي الله عنه عن الخلافة في ربيع الأول سنة ٤١، فهي تمتد على إحدى وثلاثين سنة هجرية أولاها وآخرتها ناقصتان. والمربع ذو اللونين سنةٌ انتقلت فيها الخلافة.'))}
 // a chapter of «الخلفاء الراشدون» read in place: from its heading to the next one
-async function khRead(n,p,t){const lt=x=>x.replace(/[^\u0621-\u064A]/g,'');const B=evShell(t);const jz=n===28?9:n===29?10:11;
+async function khRead(n,p,t){const lt=x=>x.replace(/[^\u0621-\u064A]/g,'');const S_=document.getElementById('evSheet'),prev=S_&&!S_.hidden?[...document.getElementById('evBody').childNodes]:null,y0=S_?S_.scrollTop:0;const B=evShell(t);
+  if(prev){const bk=el('button','btn btn-link kh-back','رجوع');bk.type='button';bk.onclick=()=>{document.getElementById('evBody').replaceChildren(...prev);S_.scrollTop=y0};B.append(bk)}const jz=n===28?9:n===29?10:11;
   B.append(el('p','ev-era','البداية والنهاية، ج'+ar(jz)),sawEl('h3','ev-t',t));const box=el('div','kh-rd');B.append(box);
   const ft=el('div','ev-ft');ft.append(el('small',null,'البداية والنهاية لابن كثير، تحقيق التركي، ج'+ar(jz)+'، ص '+ar(p)));
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(n,p,null,false,'txt')};ft.append(go);B.append(ft);
@@ -3634,24 +3667,24 @@ async function khRead(n,p,t){const lt=x=>x.replace(/[^\u0621-\u064A]/g,'');const
         if(on&&typeof y==='string'){const f=fix(y);if(!f)continue;const lp=box.lastElementChild;if(lp&&lp.classList.contains('kh-rp')&&lp.dataset.q!=q&&!/[.!؟?»]$/.test(lp.textContent))lp.textContent+=' '+f;else{const e=el('p','kh-rp',f);e.dataset.q=q;box.append(e)}txt+=f.length;if(txt>9000){cut=true;break out}}}}
     if(!box.childElementCount)box.append(el('p','kh-rp','تعذّر عرض هذا الباب هنا، فاقرأه في الكتاب.'));
     if(cut)box.append(el('p','kh-rc','وللباب بقية في الكتاب.'))}catch(e){box.append(el('p','kh-rp','تعذّر عرض هذا الباب هنا، فاقرأه في الكتاب.'))}}
-const goP=(t,n,p)=>{const b=el('button','btn btn-quiet',t);b.type='button';b.style.margin='4px 0 8px';b.onclick=()=>openPart(n,p,null,false,'txt');return b};
+const goP=(t,n,p)=>{const b=el('button','btn btn-quiet',t);b.type='button';b.style.margin='4px 0 8px';b.onclick=()=>{evClose();openPart(n,p,null,false,'txt')};return b};
 
 // the caliphs' lineages on the Prophet's line, from Ka'b ibn Lu'ayy down; each branch is Ibn Kathir's wording
 function khNasab(V,N){
-  V.append(el('h3','kh-calh','نسب الخلفاء الراشدين'),el('p','sxnote','عمود النسب الشريف من كعب بن لؤي إلى النبي ﷺ، وعند كل جدٍّ مَن يلتقي نسبُه به من الخلفاء. اضغط اسم الخليفة لترى لفظ ابن كثير وصفحته.'));
+  V.append(el('h3','kh-calh','نسب الخلفاء الراشدين'),el('p','sxnote','عمود النسب الشريف من النبي ﷺ صعوداً إلى كعب بن لؤي، وعند كل جدٍّ مَن يلتقي نسبُه به من الخلفاء. اضغط اسم الخليفة لترى لفظ ابن كثير وصفحته.'));
   const by={};N.forEach(b=>by[b.j]=b);
-  const SP=['كعب بن لؤي','مرة','كلاب','قصي','عبد مناف','هاشم','عبد المطلب','عبد الله','محمد'];
+  const SP=['محمد','عبد الله','عبد المطلب','هاشم','عبد مناف','قصي','كلاب','مرة','كعب بن لؤي'];
   const L=el('div','kn-l');V.append(L);
   const row=(name,b,last)=>{const r=el('div','kn-r'+(b?' br':'')+(last?' me':''));const sp=el('div','kn-s');const nb=el('b',null,name);if(last)nb.append(el('small',null,'صلى الله عليه وسلم'));sp.append(nb);r.append(sp);
     if(b){const c=el('div','kn-c');c.style.setProperty('--kc','var(--'+b.k+')');const t=el('button','kn-t');t.type='button';t.setAttribute('aria-expanded','false');
       t.append(el('b',null,KHN[b.k]),sawEl('span',null,b.line));c.append(t);
-      const d=el('div','kn-d');d.hidden=true;d.append(el('q',null,b.q));d.prepend(el('small','kn-by','قال ابن كثير:'));const g=el('button','btn btn-quiet','البداية والنهاية، ج'+ar(b.jz)+'، ص '+ar(b.p));g.type='button';g.onclick=()=>openPart(b.n,b.p,null,false,'txt');d.append(g);c.append(d);
+      const d=el('div','kn-d');d.hidden=true;d.append(el('q',null,b.q));d.prepend(el('small','kn-by','قال ابن كثير:'));const g=el('button','btn btn-quiet','البداية والنهاية، ج'+ar(b.jz)+'، ص '+ar(b.p));g.type='button';g.onclick=()=>{evClose();openPart(b.n,b.p,null,false,'txt')};d.append(g);c.append(d);
       t.onclick=()=>{d.hidden=!d.hidden;t.setAttribute('aria-expanded',!d.hidden)};r.append(c)}
     L.append(r)};
-  SP.forEach((n,i)=>row(n,by[n],i===SP.length-1));
+  SP.forEach((n,i)=>row(n,by[n],i===0));
   V.append(el('p','fx-note','عمود النسب من «مختصر سيرة الرسول ﷺ» (ص ٥١)، وفروع الخلفاء بلفظ ابن كثير في «البداية والنهاية»، وسطر كل خليفة نسبُه إلى الجدّ الذي يلتقي فيه بنسب النبي ﷺ.'))}
 // the list of caliphs from the Mukhtasar (it was a tab of the family tree); each source opens the Mukhtasar at its page
-function khCal(V,D){const src=(o,w)=>{const d=el('div','sxd');d.append('«'+o.q+'» ');const b=el('button',null,'مختصر السيرة، ص '+ar(o.p)+' ←');b.type='button';b.onclick=()=>openPart(17,o.p,null,false,'txt');d.append(b);w.append(d)};
+function khCal(V,D){const src=(o,w)=>{const d=el('div','sxd');d.append('«'+o.q+'» ');const b=el('button',null,'مختصر السيرة، ص '+ar(o.p)+' ←');b.type='button';b.onclick=()=>{evClose();openPart(17,o.p,null,false,'txt')};d.append(b);w.append(d)};
   V.append(el('h3','kh-calh','قائمة الخلفاء'),el('p','sxnote','الخلفاء بترتيب «مختصر سيرة الرسول ﷺ» للإمام محمد بن عبد الوهاب، ومع كل واحد كيف تولى ومدته بلفظ الكتاب إن ذكرها. اضغط للنص والصفحة.'));
   const G={r:'الخلفاء الراشدون ومن بعدهم',u:'بنو أمية',z:'',a:'بنو العباس'};let last=null;const L=el('div','tline');V.append(L);
   D.cal.forEach(c=>{const g=c.g==='z'?'u':c.g;if(g!==last){last=g;L.append(el('div','tera',G[g]))}
@@ -3661,15 +3694,13 @@ function khCal(V,D){const src=(o,w)=>{const d=el('div','sxd');d.append('«'+o.q+
 /* الخلافة الراشدة: في صفحة كتاب «الخلفاء الراشدون» */
 let KHSEC=null,KHSELC=null;
 function khSection(){if(KHSEC)return KHSEC;const s=el('section','yr kh');s.id='sxKhul';
-  s.innerHTML='<h2>الخلافة الراشدة سنةً سنة</h2><p class="sx-lead">كل مربع سنة هجرية من هذا الكتاب، ولون كل خليفة على سنيه. اضغط سنةً لترى ما ذكره ابن كثير فيها، أو اضغط اسم خليفة لترى سنيه وعمره ومدة خلافته.</p><div class="kh-saf" id="khSaf"></div><div class="kh-grid" id="khGrid" role="group" aria-label="سنوات الخلافة الراشدة"></div><div class="kh-key" id="khKey"></div><div class="yr-p" id="khWho" hidden></div><div class="yr-p" id="khPanel" hidden></div><div class="kh-more"><button type="button" id="khTl"><b>الخلفاء في الخط الزمني</b><span>من مختصر السيرة لمحمد بن عبد الوهاب</span></button><button type="button" id="khNb" aria-expanded="false"><b>نسب الخلفاء الراشدين</b><span>أين يلتقي نسب كل واحد بنسب النبي ﷺ، بلفظ ابن كثير</span></button><button type="button" id="khNs" aria-expanded="false"><b>قائمة الخلفاء</b><span>الراشدون ومن بعدهم، من مختصر السيرة لمحمد بن عبد الوهاب</span></button></div><div class="kn" id="khNas" hidden></div><div class="kh-cal" id="khCal" hidden></div>';
+  s.innerHTML='<h2>الخلافة الراشدة سنةً سنة</h2><div class="kh-tabs"><button type="button" id="khTl">في الخط الزمني</button><button type="button" id="khNb">نسب الخلفاء الراشدين</button><button type="button" id="khNs">قائمة الخلفاء</button></div><p class="sx-lead">كل مربع سنة هجرية من هذا الكتاب، ولون كل خليفة على سنيه. اضغط سنةً لترى ما ذكره ابن كثير فيها، أو اسم خليفة لترى سنيه وعمره ومدة خلافته.</p><div class="kh-saf" id="khSaf"></div><div class="kh-grid" id="khGrid" role="group" aria-label="سنوات الخلافة الراشدة"></div><div class="kh-key" id="khKey"></div>';
   s.querySelector('#khTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};
-  s.querySelector('#khNb').onclick=async e=>{const B=e.currentTarget,C=s.querySelector('#khNas');const o=C.hidden;B.setAttribute('aria-expanded',o);C.hidden=!o;if(!o||C.childElementCount)return;
-    const N=await getJSON('data/sx_khn.json');if(N)khNasab(C,N);setTimeout(()=>C.scrollIntoView({block:'start',behavior:'smooth'}),50)};
-  s.querySelector('#khNs').onclick=async e=>{const B=e.currentTarget,C=s.querySelector('#khCal');const o=C.hidden;B.setAttribute('aria-expanded',o);C.hidden=!o;if(!o||C.childElementCount)return;
-    let D;try{D=await sirax()}catch(_){C.append(el('p','note','تعذّر التحميل. تأكد من الاتصال بالإنترنت.'));return}khCal(C,D);setTimeout(()=>C.scrollIntoView({block:'start',behavior:'smooth'}),50)};
+  s.querySelector('#khNb').onclick=async()=>{const B=evShell('نسب الخلفاء الراشدين');const N=await getJSON('data/sx_khn.json');if(N)khNasab(B,N)};
+  s.querySelector('#khNs').onclick=async()=>{const B=evShell('قائمة الخلفاء');let D;try{D=await sirax()}catch(_){B.append(el('p','note','تعذّر التحميل. تأكد من الاتصال بالإنترنت.'));return}khCal(B,D)};
   return KHSEC=s}
 {const _oz=openZad;openZad=async function(b){const r=await _oz.apply(this,arguments);const s=khSection();
-  if(ZB===MB.k){$('#zadPage .actions').after(s);await renderKhul()}else s.remove();return r}}
+  if(ZB===MB.k){$('#zRes').after(s);await renderKhul()}else s.remove();return r}}
 
 /* ---------- منهج الموقع ---------- */
 function fxMethod(){const P=fxOpen('منهج الموقع');const I=P.inn;
@@ -3828,7 +3859,7 @@ function fxNotif(){
   let S=document.getElementById('ntSheet');
   if(!S){const bk=el('div','sheet-back');bk.id='ntBack';S=el('div','sheet');S.id='ntSheet';S.setAttribute('role','dialog');S.setAttribute('aria-label','الإشعارات');
     const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');
-    x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.style.cssText='position:absolute;inset-inline-start:6px;top:6px';hd.append(x);
+    x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.style.cssText='position:absolute;inset-inline-end:6px;top:6px';hd.append(x);
     const B=el('div');B.id='ntBody';S.append(hd,el('h4',null,'الإشعارات'),B);document.body.append(bk,S);
     const close=()=>{if(NTD.dirty&&!confirm('لم تحفظ التغييرات. أتغلق الصفحة دون حفظ؟'))return;bk.hidden=true;S.hidden=true;sxUnlock()};bk.onclick=close;x.onclick=close}
   NTD={n:JSON.parse(JSON.stringify(ntGet())),dirty:false,msg:null};
@@ -3948,7 +3979,7 @@ async function fxOffline(){
   let S=document.getElementById('offSheet');
   if(!S){const bk=el('div','sheet-back');bk.id='offBack';S=el('div','sheet');S.id='offSheet';S.setAttribute('role','dialog');S.setAttribute('aria-label','القراءة دون اتصال');
     const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');
-    x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.style.cssText='position:absolute;inset-inline-start:6px;top:6px';hd.append(x);
+    x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.style.cssText='position:absolute;inset-inline-end:6px;top:6px';hd.append(x);
     const B=el('div');B.id='offBody';S.append(hd,el('h4',null,'القراءة دون اتصال'),B);document.body.append(bk,S);
     const close=()=>{bk.hidden=true;S.hidden=true;sxUnlock()};bk.onclick=close;x.onclick=close}
   document.getElementById('offBack').hidden=false;S.hidden=false;sxLock();
@@ -3978,7 +4009,7 @@ function evShell(label){
   let S=document.getElementById('evSheet');
   if(!S){const bk=el('div','sheet-back');bk.id='evBack';S=el('div','sheet ev-sheet');S.id='evSheet';S.setAttribute('role','dialog');
     const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');
-    x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.style.cssText='position:absolute;inset-inline-start:6px;top:6px';hd.append(x);
+    x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.style.cssText='position:absolute;inset-inline-end:6px;top:6px';hd.append(x);
     const B=el('div');B.id='evBody';S.append(hd,B);document.body.append(bk,S);
     const close=()=>{bk.hidden=true;S.hidden=true;sxUnlock()};bk.onclick=close;x.onclick=close}
   S.setAttribute('aria-label',label);
