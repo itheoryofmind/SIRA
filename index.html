@@ -1246,6 +1246,28 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .at-svg .pt.hub{fill:var(--brass)}
 .at-svg .pt.hub.sel{stroke:var(--ink)}
 .at-zn{margin:0 4px 8px;font-size:13.5px;color:var(--muted);line-height:1.8}
+.dl-it{border-bottom:1px solid var(--line)}
+.dl-it:last-child{border-bottom:0}
+.dl-t{display:flex;width:100%;justify-content:space-between;align-items:baseline;gap:10px;border:0;background:none;padding:11px 0;font:inherit;color:var(--ink);text-align:start;cursor:pointer}
+.dl-t span{font-size:15.5px;line-height:1.6}
+.dl-t small{flex:none;color:var(--muted);font-size:12.5px}
+.dl-x{padding:0 0 12px}
+.dl-x .btn{margin-top:8px}
+
+.dl-sw{display:flex;align-items:center;gap:12px;margin:22px 0 10px;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:var(--raised);cursor:pointer;scroll-margin-top:12px}
+.dl-sw span{flex:1;display:flex;flex-direction:column;gap:2px}
+.dl-sw b{font-size:15.5px}
+.dl-sw small{font-size:13px;color:var(--muted);line-height:1.6}
+.dl-sw input{appearance:none;-webkit-appearance:none;flex:none;width:46px;height:28px;border-radius:14px;background:var(--line);position:relative;margin:0;cursor:pointer;transition:background .2s}
+.dl-sw input::after{content:"";position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0003;transition:right .2s}
+.dl-sw input:checked{background:var(--palm,#2F6B55)}
+.dl-sw input:checked::after{right:21px}
+.dl-sw input:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.dl-q{font-family:"Amiri",serif;font-weight:700;font-size:1.08em}
+.kh-rd{margin:6px 0 4px}
+.kh-rp{font-size:18px;line-height:2.05;margin:0 0 12px;text-align:start}
+.kh-rh{font-family:"Amiri",serif;font-size:19px;margin:16px 0 6px;color:var(--brass)}
+.kh-rc{font-size:13.5px;color:var(--muted);margin:4px 0 0}
 
 </style>
 
@@ -1389,6 +1411,8 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
         <p class="exg">من القرآن والصحيح</p>
         <button type="button" id="fxAyat"><b>ما نزل من القرآن في أحداث السيرة</b><span>أحداثٌ نصّت الكتب على أن آياتٍ نزلت فيها</span></button>
         <button type="button" id="fxMg"><b>المغازي في صحيح البخاري</b><span>أحاديث كل غزوة على ترتيب وقوعها</span></button>
+        <p class="exg" hidden data-dal>دلائل نبوته <span class="saw">ﷺ</span></p>
+        <button type="button" class="wide" id="fxDal" hidden data-dal><b>دلائل النبوة</b><span>أحاديثها من صحيح البخاري، وأبواب ابن كثير لمن شاء</span></button>
         <p class="exg">الأماكن</p>
         <button type="button" id="sxAtlas"><b>الأطلس</b><span>مواضع الأحداث بإحداثياتها</span></button>
         <button type="button" id="fxRoad"><b>طريق الهجرة</b><span>المنازل كما ذكرها ابن إسحاق</span></button>
@@ -1735,7 +1759,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1350';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1442';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1853,7 +1877,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_feat.json": "04657fd023", "data/sx_mg.json": "5af9e2d322", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_alam.json": "fdf9264dd2", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "04657fd023", "data/sx_mg.json": "20b4131afd", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3184,6 +3208,7 @@ function openNav(){
   grp('استكشف');
   it('الخط الزمني للسيرة',()=>{closeNav();openSX('tl')});
   it('المغازي في صحيح البخاري',()=>{closeNav();fxMgTL()});
+  // PENDING approval: it('دلائل النبوة',()=>{closeNav();fxDal()});
   it('شجرة النسب الشريف وآل عبد المطلب والخلفاء',()=>{closeNav();openSX('nasab')});
   grp('عن الموقع');
   it('منهج الموقع ومواضع الخلاف مع المطبوع',()=>{closeNav();fxMethod()});
@@ -3545,7 +3570,7 @@ async function khWho(c){const F=await sxFeat();KHSELC=KHSELC===c?null:c;
   [...$('#khGrid').children].forEach((b,i)=>b.classList.toggle('off',!!KHSELC&&!F.khul.years[i].c.includes(KHSELC)));
   const W=$('#khWho');W.innerHTML='';W.hidden=!KHSELC;if(!KHSELC)return;
   const a=(F.khul.ages||[]).find(x=>x.k===c);W.append(el('h3',null,KHN[c]+(c==='has'?' رضي الله عنهما':' رضي الله عنه')));
-  const S=(F.khul.sec||{})[c]||[];if(S.length){W.append(el('p','sub','أبواب عنه في الكتاب:'));S.forEach(h=>{const b=el('button','kh-h');b.type='button';b.append(el('span',null,h.t),el('small',null,(h.n===28?'ج٩':h.n===29?'ج١٠':'ج١١')+'، ص '+ar(h.p)));b.onclick=()=>openPart(h.n,h.p,null,false,'txt');W.append(b)});if(a)W.append(el('p','sub','عمره ومدة خلافته:'))}
+  const S=(F.khul.sec||{})[c]||[];if(S.length){W.append(el('p','sub','أبواب عنه في الكتاب:'));S.forEach(h=>{const b=el('button','kh-h');b.type='button';b.append(el('span',null,h.t),el('small',null,(h.n===28?'ج٩':h.n===29?'ج١٠':'ج١١')+'، ص '+ar(h.p)));b.onclick=()=>khRead(h.n,h.p,h.t);W.append(b)});if(a)W.append(el('p','sub','عمره ومدة خلافته:'))}
   if(a)a.q.forEach(q=>{W.append(el('blockquote',null,'«'+q.q+'»'));W.append(goP(pgT(q.n,q.p)+(q.p2?'–'+ar(q.p2):''),q.n,q.p))});
   else{const ys=F.khul.years.filter(y=>y.c.includes(c));W.append(el('p','sub','سنوات خلافته في الكتاب: '+ys.map(y=>ar(y.y)).join('، ')))}}
 async function showKhul(y){const F=await sxFeat();const K=F.khul,Y=K.years.find(x=>x.y===y),G=$('#khGrid'),P=$('#khPanel');G.dataset.sel=y;
@@ -3555,16 +3580,30 @@ async function showKhul(y){const F=await sxFeat();const K=F.khul,Y=K.years.find(
   const q=K.q[y];if(q){const bq=el('blockquote',null,'«'+q.q+'»');P.append(bq,goP(pgT(q.n,q.p),q.n,q.p))}
   if(Y.x){P.append(el('p','sub','أول ما ذكره ابن كثير في هذه السنة:'),el('blockquote',null,Y.x))}
   P.append(goP('اقرأ السنة من أولها، '+pgT(Y.n,Y.p),Y.n,Y.p));
-  Y.h.slice(1).forEach(h=>{const b=el('button','kh-h');b.type='button';b.append(el('span',null,h.t),el('small',null,'ص '+ar(h.p)));b.onclick=()=>openPart(h.n,h.p,null,false,'txt');P.append(b)});
+  Y.h.slice(1).forEach(h=>{const b=el('button','kh-h');b.type='button';b.append(el('span',null,h.t),el('small',null,'ص '+ar(h.p)));b.onclick=()=>khRead(h.n,h.p,h.t);P.append(b)});
   P.append(el('p','yr-note','عُدّت الثلاثون كما قال ابن كثير: من وفاته صلى الله عليه وسلم في ربيع الأول سنة ١١ إلى نزول الحسن رضي الله عنه عن الخلافة في ربيع الأول سنة ٤١، فهي تمتد على إحدى وثلاثين سنة هجرية أولاها وآخرتها ناقصتان. والمربع ذو اللونين سنةٌ انتقلت فيها الخلافة.'))}
+// a chapter of «الخلفاء الراشدون» read in place: from its heading to the next one
+async function khRead(n,p,t){const lt=x=>x.replace(/[^\u0621-\u064A]/g,'');const B=evShell(t);const jz=n===28?9:n===29?10:11;
+  B.append(el('p','ev-era','البداية والنهاية، ج'+ar(jz)),sawEl('h3','ev-t',t));const box=el('div','kh-rd');B.append(box);
+  const ft=el('div','ev-ft');ft.append(el('small',null,'البداية والنهاية لابن كثير، تحقيق التركي، ج'+ar(jz)+'، ص '+ar(p)));
+  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(n,p,null,false,'txt')};ft.append(go);B.append(ft);
+  try{const P=(await getJSON('data/t'+n+'.json')).p;let on=false,txt=0,cut=false;const fix=x=>x.replace(/\s*\((?:\d+|[٠-٩]+)\)/g,'').replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').replace(/\s+/g,' ').trim();
+    out:for(let q=p;q<P.length&&q<p+40;q++){const x=P[q];if(!x)continue;
+      for(const y of x.slice(1)){
+        if(y&&typeof y==='object'&&(y.h||y.e)){const h=y.h||y.e;
+          if(!on){if(q===p&&lt(h)===lt(t))on=true;continue}
+          if(txt)break out;box.append(sawEl('h4','kh-rh',h));continue}
+        if(on&&typeof y==='string'){const f=fix(y);if(!f)continue;const lp=box.lastElementChild;if(lp&&lp.classList.contains('kh-rp')&&lp.dataset.q!=q&&!/[.!؟?»]$/.test(lp.textContent))lp.textContent+=' '+f;else{const e=el('p','kh-rp',f);e.dataset.q=q;box.append(e)}txt+=f.length;if(txt>9000){cut=true;break out}}}}
+    if(!box.childElementCount)box.append(el('p','kh-rp','تعذّر عرض هذا الباب هنا، فاقرأه في الكتاب.'));
+    if(cut)box.append(el('p','kh-rc','وللباب بقية في الكتاب.'))}catch(e){box.append(el('p','kh-rp','تعذّر عرض هذا الباب هنا، فاقرأه في الكتاب.'))}}
 const goP=(t,n,p)=>{const b=el('button','btn btn-quiet',t);b.type='button';b.style.margin='4px 0 8px';b.onclick=()=>openPart(n,p,null,false,'txt');return b};
 
 /* الخلافة الراشدة: في صفحة كتاب «الخلفاء الراشدون» */
 let KHSEC=null,KHSELC=null;
 function khSection(){if(KHSEC)return KHSEC;const s=el('section','yr kh');s.id='sxKhul';
   s.innerHTML='<h2>الخلافة الراشدة سنةً سنة</h2><p class="sx-lead">كل مربع سنة هجرية من هذا الكتاب، ولون كل خليفة على سنيه. اضغط سنةً لترى ما ذكره ابن كثير فيها، أو اضغط اسم خليفة لترى سنيه وعمره ومدة خلافته.</p><div class="kh-saf" id="khSaf"></div><div class="kh-grid" id="khGrid" role="group" aria-label="سنوات الخلافة الراشدة"></div><div class="kh-key" id="khKey"></div><div class="yr-p" id="khWho" hidden></div><div class="yr-p" id="khPanel" hidden></div><div class="kh-more"><button type="button" id="khTl"><b>الخلفاء في الخط الزمني</b><span>من مختصر السيرة لمحمد بن عبد الوهاب</span></button><button type="button" id="khNs"><b>الخلفاء في شجرة النسب</b><span>من مختصر السيرة لمحمد بن عبد الوهاب</span></button></div>';
-  s.querySelector('#khTl').onclick=async()=>{$('#zadClose').click();await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};
-  s.querySelector('#khNs').onclick=()=>{$('#zadClose').click();openSX('cal')};
+  s.querySelector('#khTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};
+  s.querySelector('#khNs').onclick=()=>{openSX('cal')};
   return KHSEC=s}
 {const _oz=openZad;openZad=async function(b){const r=await _oz.apply(this,arguments);const s=khSection();
   if(ZB===MB.k){$('#zadPage .actions').after(s);await renderKhul()}else s.remove();return r}}
@@ -3618,7 +3657,7 @@ sxFam=function(V,D){
   [['أبناؤه',sons],['بناته',dau]].forEach(([h,L])=>{if(!L.length)return;const g=el('div','ft-g');g.append(el('h4',null,h));const ul=el('ul');L.forEach(c=>{const li=node(c);if(c.t)li.querySelector('.fn-t').querySelectorAll('i').forEach(i=>{if(i.textContent==='بنت')i.remove()});ul.append(li)});g.append(ul);T.append(g)});
   V.append(T)};
 /* wiring */
-$('#fxEvent').onclick=fxEvent;$('#fxMg').onclick=()=>fxMgTL();$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
+$('#fxEvent').onclick=fxEvent;$('#fxMg').onclick=()=>fxMgTL();$('#fxDal').onclick=()=>fxDal();$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
 $('#sxSearchBtn').onclick=()=>{const q=$('#q');q.scrollIntoView({block:'center',behavior:'smooth'});q.focus({preventScroll:true})};
 $('#sxMenuBtn').onclick=()=>openNav();
 
@@ -3645,11 +3684,11 @@ function mgMeta(h,full){return 'صحيح البخاري، كتاب المغاز�
 const mgCh=(M,h)=>(h.ch==='باب'||h.ch==='باب:')?'باب بلا ترجمة، تابع لما قبله':h.ch;
 // one hadith: the text from the Companion on, with the whole chain a tap away
 function mgItem(M,i,opt={}){const h=M.h[i],w=el('div','mg-h');
-  const q=el('p',opt.big?'dy-t':'mg-t',mgText(h));w.append(q);const meta=el('div','dy-meta');const ms=el('span','dy-src',mgMeta(h));meta.append(ms);w.append(meta);
+  const q=el('p',opt.big?'dy-t':'mg-t',mgText(h));w.append(q);const meta=el('div','dy-meta');const meta_=opt.meta||mgMeta;const ms=el('span','dy-src',meta_(h));meta.append(ms);w.append(meta);
   const act=el('div','dy-act');
   if(q.textContent.length>(opt.clip||320)){q.classList.add('clip');const m=el('button','btn btn-link','أكمل الحديث');m.type='button';m.onclick=()=>{q.classList.remove('clip');m.remove()};act.append(m)}
-  if(h.s){const f=el('button','btn btn-link','بإسناده');f.type='button';f.onclick=()=>{q.textContent=h.x;q.classList.remove('clip');ms.textContent=mgMeta(h,1);f.remove();[...act.querySelectorAll('.btn-link')].forEach(x=>{if(x.textContent==='أكمل الحديث')x.remove()})};act.append(f)}
-  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{if(opt.before)opt.before();openPart(h.n,h.p,null,false,'txt')};act.append(go);w.append(act);return {w,act}}
+  if(h.s){const f=el('button','btn btn-link','بإسناده');f.type='button';f.onclick=()=>{q.textContent=h.x;q.classList.remove('clip');ms.textContent=meta_(h,1);f.remove();[...act.querySelectorAll('.btn-link')].forEach(x=>{if(x.textContent==='أكمل الحديث')x.remove()})};act.append(f)}
+  if(!opt.noBook){const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{if(opt.before)opt.before();openPart(h.n,h.p,null,false,'txt')};act.append(go)}w.append(act);return {w,act}}
 async function renderMg(){const sec=$('#sxMg'),C=$('#mgCard');if(!sec||!C)return;const M=await getJSON('data/sx_mg.json');if(!M||!M.h||!M.h.length)return;
   const i=mgIdx(M.h.length),h=M.h[i];C.innerHTML='';
   const top=el('p','dy-ch');top.textContent=M.ev[h.ev].t+'، '+'الحديث '+ar(i+1)+' من '+ar(M.h.length);C.append(top);
@@ -3940,6 +3979,37 @@ function evRoute(){const h=location.hash;let m;
   else if((m=/^#mg=(\d+)$/.exec(h)))go(()=>fxMaghazi(+m[1]));
   else if(h==='#fr')go(fxFriday)}
 addEventListener('hashchange',evRoute);evRoute();
+
+/* ---------- دلائل النبوة: Ibn Kathir's chapters, in his order and his words ---------- */
+const alMeta=(h,full)=>'صحيح البخاري، كتاب المناقب، رقم '+ar(+h.no)+'، الطبعة السلطانية ج٤ ص '+ar(h.p)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'');
+async function fxDal(){const [A,G]=await Promise.all([getJSON('data/sx_alam.json'),getJSON('data/sx_dal.json')]);const P=fxOpen('دلائل النبوة');
+  P.inn.append(el('p','fx-lead','أحاديث «باب علامات النبوة في الإسلام» من صحيح البخاري، والأبواب الثلاثة التي تليه، على ترتيب البخاري. اضغط الباب لترى أحاديثه.'));
+  const list=el('div','mg-list');P.inn.append(list);
+  A.ch.forEach((c,k)=>{const n=c.hs.length;const card=el('section','mg-ev');const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
+    const tt=el('span','mg-tt');const bt=el('b');(c.t==='باب'?'باب بلا ترجمة':c.t).replace(/\d+/g,d=>ar(+d)).split(/(﴿[^﴾]*﴾)/).forEach(x=>{if(!x)return;if(x[0]==='﴿')bt.append(el('span','dl-q',x));else bt.append(sawEl('span',null,x))});tt.append(bt,el('small',null,ar(n)+(n===1?' حديث':n===2?' حديثان':n<=10?' أحاديث':' حديثاً')));hd.append(tt);card.append(hd);
+    if(c.t==='باب')card.append(el('p','mg-note','باب لم يترجم له البخاري، وهو تابع للباب الذي قبله على عادته.'));
+    const body=el('div','mg-body');body.hidden=true;card.append(body);
+    const fill=()=>{if(body.childElementCount)return;c.hs.forEach(i=>body.append(mgItem(A,i,{clip:260,meta:alMeta,noBook:1}).w))};
+    hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};list.append(card)});
+  P.inn.append(el('p','fx-note','النص مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء الرابع ص ١٩١–٢٠٨)، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن، إلا أن في ص ٢٠٨ خطأً مطبعياً ظاهراً «من أبي صالح» فأُثبت «عن أبي صالح». وحُذف الإسناد إلى الصحابي حيث كان ذلك بيّناً، ونُصّ عليه تحت الحديث، والحديث بإسناده بضغطة.'));
+  // Ibn Kathir: shown only when the reader asks for it
+  const sw=el('label','dl-sw');const cb=el('input');cb.type='checkbox';let on=false;try{on=localStorage.getItem('dalIK')==='1'}catch(e){}cb.checked=on;
+  const st=el('span');st.append(el('b',null,'أبواب ابن كثير في «دلائل النبوة»'),el('small',null,'من «البداية والنهاية»، وفيها الصحيح والضعيف بأسانيدها.'));sw.append(st,cb);P.inn.append(sw);
+  const ikBox=el('div','dl-ik');ikBox.hidden=!on;P.inn.append(ikBox);
+  const ikFill=()=>{if(ikBox.childElementCount)return;
+  ikBox.append(el('p','nt-warn','الروايات كما أوردها ابن كثير بأسانيدها وكلامه عليها، وقد ينبّه على ضعف بعضها، وما ذكره من حكم فهو بلفظه. والموقع ناقل لا يحكم عليها.'));
+    const list=el('div','mg-list');ikBox.append(list);
+    G.forEach(g=>{const card=el('section','mg-ev');const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
+      const tt=el('span','mg-tt');tt.append(el('b',null,g.t),el('small',null,ar(g.it.length)+(g.it.length===1?' باب':g.it.length===2?' بابان':g.it.length<=10?' أبواب':' باباً')));hd.append(tt);card.append(hd);
+      if(g.q)card.append(el('p','mg-src','قال ابن كثير: '+g.q));
+      const body=el('div','mg-body');body.hidden=true;card.append(body);
+      const fill=()=>{if(body.childElementCount)return;g.it.forEach(it=>{const w=el('div','dl-it');const b=el('button','dl-t');b.type='button';b.setAttribute('aria-expanded','false');b.append(el('span',null,it.t),el('small',null,'ج'+ar(it.n===36?8:9)+'، ص '+ar(it.p)));w.append(b);
+          const d=el('div','dl-x');d.hidden=true;if(it.x)d.append(el('p','mg-t',it.x));
+          const go=el('button','btn btn-quiet','اقرأه كاملاً في الكتاب');go.type='button';go.onclick=()=>{P.close();openPart(it.n,it.p,[it.t.split(' ').slice(0,4).join(' ')],false,'txt')};d.append(go);w.append(d);
+          b.onclick=()=>{d.hidden=!d.hidden;b.setAttribute('aria-expanded',d.hidden?'false':'true')};body.append(w)})};
+      hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};list.append(card)});
+    ikBox.append(el('p','fx-note','العناوين عناوين ابن كثير في المطبوع (طبعة دار هجر بتحقيق التركي)، وأسماء المجموعات من كلامه في أول كل قسم. والنص مراجَع على صور المطبوع.'))};
+  if(on)ikFill();cb.onchange=()=>{try{localStorage.setItem('dalIK',cb.checked?'1':'0')}catch(e){}if(cb.checked)ikFill();ikBox.hidden=!cb.checked;if(cb.checked)setTimeout(()=>sw.scrollIntoView({block:'start',behavior:'smooth'}),50)}}
 
 /* ---------- مواضع الخلاف مع المطبوع: علامات حمراء، وقراءة الصفحات المعلَّمة وحدها ---------- */
 let MK={};getJSON('data/marks.json').then(d=>{MK=d||{};renderMkBooks()}).catch(()=>{});
