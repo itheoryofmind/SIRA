@@ -848,9 +848,9 @@ body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
 .lv-b b{font-size:20px}
 
 /* the rightly-guided caliphate */
-:root{--ab:#9A6B1F;--um:#2E5E6E;--uth:#6A4C7D;--ali:#8E4636;--has:#4F7A45;--mkk:#C9CEC4;--khT:#fff}
-@media (prefers-color-scheme:dark){:root:not([data-theme=white]):not([data-theme=brown]):not([data-theme=night]){--ab:#D2A85A;--um:#6FA6B8;--uth:#A88BC0;--ali:#D08A78;--has:#8DBB80;--mkk:#3A463F;--khT:#0E1512}}
-:root[data-theme=night]{--ab:#C9A766;--um:#6497A8;--uth:#9A80B0;--ali:#C28070;--has:#82AD76;--mkk:#2C3530;--khT:#000}
+:root{--ab:#9A6B1F;--um:#2E5E6E;--uth:#6A4C7D;--ali:#8E4636;--has:#4F7A45;--mkk:#56688C;--khT:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme=white]):not([data-theme=brown]):not([data-theme=night]){--ab:#D2A85A;--um:#6FA6B8;--uth:#A88BC0;--ali:#D08A78;--has:#8DBB80;--mkk:#93A4C6;--khT:#0E1512}}
+:root[data-theme=night]{--ab:#C9A766;--um:#6497A8;--uth:#9A80B0;--ali:#C28070;--has:#82AD76;--mkk:#8495B6;--khT:#000}
 .kh{margin-top:16px}
 .kh-saf{font-family:var(--text);font-size:18px;line-height:1.8;border-inline-start:3px solid var(--palm);padding-inline-start:12px;margin:0 0 12px}
 .kh-saf .btn{min-height:34px;padding:0 10px;font-size:13px}
@@ -861,7 +861,6 @@ body.sx-locked{position:fixed;left:0;right:0;overflow:hidden}
 .kh-c:focus-visible{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--ink);outline:0}
 .kh-key{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .kh-k{display:flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border-radius:18px;border:1px solid var(--line);background:var(--raised);color:var(--ink);font-family:var(--text);font-size:16px;touch-action:manipulation}
-span.kh-k{border-style:dashed;color:var(--muted)}
 .kh-k i{width:12px;height:12px;border-radius:3px}
 .kh-k.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
 .kh-c.off{opacity:.22}
@@ -1293,6 +1292,10 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .kn-by{display:block;color:var(--muted);font-size:12.5px;margin-bottom:2px}
 .dl-bk{font-family:"Amiri",serif;font-size:23px;margin:22px 0 2px;color:var(--brass)}
 .dl-bs{font-size:14px;color:var(--muted);margin:0 0 10px;line-height:1.8}
+.kh-it{margin:8px 0 4px;padding:8px 12px;border-inline-start:3px solid var(--line);font-size:15px;line-height:1.9;color:var(--ink)}
+.kh-it p{margin:0}
+.kh-it small{color:var(--muted);font-size:12.5px}
+.kh-src{color:var(--muted);font-size:13px;margin:-4px 0 8px}
 
 </style>
 
@@ -1787,7 +1790,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1508';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1525';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1905,7 +1908,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_alam.json": "45d11458be", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "04657fd023", "data/sx_khn.json": "426adac734", "data/sx_mg.json": "20b4131afd", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_alam.json": "45d11458be", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "04657fd023", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "20b4131afd", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3586,7 +3589,8 @@ const KHG={ab:'أبي بكر الصديق',um:'عمر بن الخطاب',uth:'ع
 async function renderKhul(){const F=await sxFeat();const K=F.khul,G=$('#khGrid');if(!G||!K)return;
   if(!$('#khSaf').childElementCount){const s=$('#khSaf');s.append(document.createTextNode('قال صلى الله عليه وسلم: «'+K.saf.q+'». أورده ابن كثير من حديث سفينة رضي الله عنه. '));
     const b=el('button','btn btn-link',pgT(K.saf.n,K.saf.p));b.type='button';b.onclick=()=>openPart(K.saf.n,K.saf.p,['ثلاثون سنة'],false,'txt');s.append(b);
-    const key=$('#khKey');['ab','um','uth','ali','has','mk'].forEach(c=>{const sp=el(c==='mk'?'span':'button','kh-k');if(c!=='mk'){sp.type='button';sp.onclick=()=>khWho(c)}const i=el('i');i.style.background='var(--'+(c==='mk'?'mkk':c)+')';sp.append(i,document.createTextNode(c==='mk'?'ثم المُلك':KHN[c]));sp.dataset.c=c;key.append(sp)})}
+    const it=el('div','kh-it');it.append(el('p',null,'وقال شيخ الإسلام ابن تيمية: «ووفاة النبي صلى الله عليه وسلم كانت في شهر ربيع الأول سنة إحدى عشرة من هجرته، وإلى عام ثلاثين سنة كان إصلاح ابن رسول الله صلى الله عليه وسلم الحسن بن علي السيد بين فئتين من المؤمنين بنزوله عن الأمر عام إحدى وأربعين في شهر جمادى الأولى، وسمي "عام الجماعة" لاجتماع الناس على "معاوية" وهو أول الملوك».'),el('small',null,'مجموع الفتاوى ٣٥/١٩'));s.after(it);
+    const key=$('#khKey');['ab','um','uth','ali','has','mk'].forEach(c=>{const sp=el('button','kh-k');sp.type='button';sp.onclick=()=>khWho(c);const i=el('i');i.style.background='var(--'+(c==='mk'?'mkk':c)+')';sp.append(i,document.createTextNode(c==='mk'?'ثم المُلك: معاوية رضي الله عنه':KHN[c]));sp.dataset.c=c;key.append(sp)})}
   G.innerHTML='';const sel=+G.dataset.sel||0;
   K.years.forEach(Y=>{const b=el('button','kh-c'+(Y.c.length>1?' two':'')+(Y.c.includes('mk')?' mx':'')+(Y.y===sel?' sel':''),ar(Y.y));b.type='button';
     const cv=c=>'var(--'+(c==='mk'?'mkk':c)+')';b.style.setProperty('--c1',cv(Y.c[0]));if(Y.c[1])b.style.setProperty('--c2',cv(Y.c[1]));
@@ -3598,6 +3602,8 @@ async function khWho(c){const F=await sxFeat();KHSELC=KHSELC===c?null:c;
   [...$('#khGrid').children].forEach((b,i)=>b.classList.toggle('off',!!KHSELC&&!F.khul.years[i].c.includes(KHSELC)));
   const W=$('#khWho');W.innerHTML='';W.hidden=!KHSELC;if(!KHSELC)return;
   const a=(F.khul.ages||[]).find(x=>x.k===c);W.append(el('h3',null,KHN[c]+(c==='has'?' رضي الله عنهما':' رضي الله عنه')));
+  if(c==='mk'){W.append(el('p','sub','قال ابن كثير في أول ترجمته:'),el('blockquote',null,'«هو معاوية بن أبي سفيان صخر بن حرب بن أمية بن عبد شمس بن عبد مناف بن قصي، أبو عبد الرحمن القرشي الأموي، خال المؤمنين، وكاتب وحي رب العالمين»'),goP(pgT(30,146),30,146),
+      el('p','sub','وقال شيخ الإسلام ابن تيمية:'),el('blockquote',null,'«واتفق العلماء على أن معاوية أفضل ملوك هذه الأمة، فإن الأربعة قبله كانوا خلفاء نبوة، وهو أول الملوك؛ كان ملكه ملكا ورحمة»'),el('p','kh-src','مجموع الفتاوى ٤/٤٧٨'));return}
   const S=(F.khul.sec||{})[c]||[];if(S.length){W.append(el('p','sub','أبواب عنه في الكتاب:'));S.forEach(h=>{const b=el('button','kh-h');b.type='button';b.append(el('span',null,h.t),el('small',null,(h.n===28?'ج٩':h.n===29?'ج١٠':'ج١١')+'، ص '+ar(h.p)));b.onclick=()=>khRead(h.n,h.p,h.t);W.append(b)});if(a)W.append(el('p','sub','عمره ومدة خلافته:'))}
   if(a)a.q.forEach(q=>{W.append(el('blockquote',null,'«'+q.q+'»'));W.append(goP(pgT(q.n,q.p)+(q.p2?'–'+ar(q.p2):''),q.n,q.p))});
   else{const ys=F.khul.years.filter(y=>y.c.includes(c));W.append(el('p','sub','سنوات خلافته في الكتاب: '+ys.map(y=>ar(y.y)).join('، ')))}}
