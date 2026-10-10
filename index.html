@@ -1354,7 +1354,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
     <button class="sx-go" id="continue" type="button"><span class="n" id="contN">١</span><span><b id="contT">ابدأ القراءة</b><span id="contS">من مختصر سيرة الرسول صلى الله عليه وسلم</span></span></button>
     <section class="yr" id="sxYears" aria-labelledby="yrH">
       <h2 id="yrH">سنوات عمره <span class="saw">ﷺ</span></h2>
-      <button class="yr-src2" id="yrSrc" type="button">أربعون قبل البعثة، وثلاث عشرة بمكة، وعشر بالمدينة: من حديث ابن عباس في الشمائل، وصححه الألباني</button>
+      <button class="yr-src2" id="yrSrc" type="button">أربعون قبل البعثة، وثلاث عشرة بمكة، وعشر بالمدينة: من حديث ابن عباس في صحيح البخاري، أورده ابن كثير في «البداية والنهاية» (٤/٤٤٣)</button>
       <p class="sx-lead">كل مربع سنة من عمره صلى الله عليه وسلم، ورقمه ما بلغه من العمر فيها. اضغط سنةً لترى ما ذكرته كتب السيرة فيها.</p>
       <div class="yr-grid" id="yrGrid" role="group" aria-label="سنوات عمره صلى الله عليه وسلم"></div>
       <div class="yr-key">
@@ -3354,7 +3354,7 @@ async function openAtlas(){const X=await getJSON('data/sira_x.json');const it=X.
 $('#sxAtlas').onclick=openAtlas;
 
 /* the heading's hadith (Ibn Abbas, Shamail no. 317) opens on its page */
-{const b=$('#yrSrc');if(b)b.onclick=()=>openPart(25,192,null,false,'txt')}
+{const b=$('#yrSrc');if(b)b.onclick=()=>openPart(32,443,['ابن عباس'],false,'txt')}
 
 /* ---------- «سنوات عمره ﷺ» والأبواب الخمسة ---------- */
 let SXF=null;
