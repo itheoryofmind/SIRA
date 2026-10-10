@@ -1,6 +1,7 @@
 // «من شمائله» daily notification for seeratuh.com
-// - keeps the devices that asked for it (only the push address the browser gives; no name, no e-mail)
-// - every morning sends the same hadith the site shows that day (al-Albani graded it sahih or hasan)
+// - keeps the devices that asked for it (the push address the browser gives and the reader's time zone; no name, no e-mail)
+// - every day at 6:00 in the reader's own time zone: the hadith the site shows that day (al-Albani graded it sahih or hasan)
+// - every Friday at 9:00 in the reader's own time zone: al-Ahzab 56
 // Web Push: RFC 8291 (aes128gcm) and RFC 8292 (VAPID), with WebCrypto only.
 import H from './hadith.js';
 
@@ -69,15 +70,26 @@ async function send(env, sub, msg) {
 
 const idOf = async (endpoint) => 's:' + b64u.enc(await crypto.subtle.digest('SHA-256', enc.encode(endpoint))).slice(0, 32);
 
-// the same hadith as the site's card that day (Riyadh's date)
-function today() {
-  const day = Math.floor((Date.now() + 3 * 3600e3) / 864e5);
+
+const DEF_TZ = 'Asia/Riyadh';   // readers who subscribed before the time zone was kept
+const okTz = (tz) => { try { return typeof tz === 'string' && tz.length < 64 && !!new Intl.DateTimeFormat('en', { timeZone: tz }); } catch (e) { return false; } };
+// the reader's date, hour and weekday now
+function local(tz, t = Date.now()) {
+  const p = {};
+  for (const x of new Intl.DateTimeFormat('en-US', { timeZone: tz, year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', hourCycle: 'h23', weekday: 'short' }).formatToParts(new Date(t))) p[x.type] = x.value;
+  return { y: +p.year, m: +p.month, d: +p.day, h: (+p.hour) % 24, wd: p.weekday };
+}
+
+// the same hadith as the site's card that day (the reader's date)
+function today(tz) {
+  const L = local(tz);
+  const day = Date.UTC(L.y, L.m - 1, L.d) / 864e5;
   const h = H[day % H.length];
   return { t: 'من شمائله صلى الله عليه وسلم', b: h.t, u: SITE + '/#v25p' + h.p, tag: 'shamail' };
 }
 
 // every Friday to all who turned the notifications on: al-Ahzab 56 only (King Fahd Complex text)
-const VERSE = "إِنَّ ٱللَّهَ وَمَلَٰٓئِكَتَهُۥ يُصَلُّونَ عَلَى ٱلنَّبِيِّۚ يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ صَلُّواْ عَلَيۡهِ وَسَلِّمُواْ تَسۡلِيمًا";
+const VERSE = "إِنَّ ٱللَّهَ وَمَلَٰٓئِكَتَهُۥ يُصَلُّونَ عَلَى ٱلنَّبِيِّۚ يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ صَلُّواْ عَلَيۡهِ وَسَلِّمُواْ تَسۡلِيمًا";
 function friday() {
   return { t: 'يوم الجمعة', b: '﴿' + VERSE + '﴾ [الأحزاب: ٥٦]', u: SITE + '/', tag: 'friday' };
 }
@@ -89,26 +101,89 @@ function valid(sub) {
   } catch (e) { return false; }
 }
 
+// a secret between the scheduler and its own sending calls
+async function inner(env) {
+  let k = await env.PUSH.get('inner');
+  if (!k) { k = b64u.enc(crypto.getRandomValues(new Uint8Array(24))); await env.PUSH.put('inner', k); }
+  return k;
+}
+
+// every reader whose hour it is: [id, kind]
+async function due(env, force) {
+  const out = [];
+  let cursor;
+  do {
+    const l = await env.PUSH.list({ prefix: 's:', cursor });
+    for (const k of l.keys) {
+      const tz = (k.metadata && okTz(k.metadata.tz)) ? k.metadata.tz : DEF_TZ;
+      if (force) { out.push([k.name, force]); continue; }
+      const L = local(tz);
+      if (L.h === 6) out.push([k.name, 'daily']);
+      if (L.wd === 'Fri' && L.h === 9) out.push([k.name, 'friday']);
+    }
+    cursor = l.list_complete ? null : l.cursor;
+  } while (cursor);
+  return out;
+}
+
+// a few readers per call, so each call stays small
+async function fanOut(env, jobs) {
+  const r = { tried: 0, sent: 0, removed: 0 };
+  if (!jobs.length) return r;
+  const key = await inner(env);
+  const parts = [];
+  for (let i = 0; i < jobs.length; i += 6) parts.push(jobs.slice(i, i + 6));
+  for (let i = 0; i < parts.length; i += 10) {
+    const res = await Promise.all(parts.slice(i, i + 10).map((p) =>
+      (env.SELF ? env.SELF.fetch('https://self/inner/send', { method: 'POST', headers: { 'X-Inner': key, 'Content-Type': 'application/json' }, body: JSON.stringify(p) }).then((x) => x.json())
+                : sendJobs(env, p)).catch(() => ({ tried: p.length, sent: 0, removed: 0 }))));
+    for (const x of res) { r.tried += x.tried || 0; r.sent += x.sent || 0; r.removed += x.removed || 0; }
+  }
+  return r;
+}
+
+async function sendJobs(env, jobs) {
+  const r = { tried: 0, sent: 0, removed: 0 };
+  for (const [id, kind] of jobs) {
+    const v = await env.PUSH.getWithMetadata(id, 'json');
+    if (!v || !v.value) continue;
+    const tz = (v.metadata && okTz(v.metadata.tz)) ? v.metadata.tz : DEF_TZ;
+    const st = await send(env, v.value, kind === 'friday' ? friday() : today(tz)).catch(() => 0);
+    r.tried++;
+    if (st >= 200 && st < 300) r.sent++;
+    if (st === 404 || st === 410) { await env.PUSH.delete(id); r.removed++; }   // the reader turned it off or removed the app
+  }
+  return r;
+}
+
 export default {
   async fetch(req, env) {
     const u = new URL(req.url);
     if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
     if (u.pathname === '/key') return json({ key: (await vapid(env)).pub });
     if (u.pathname === '/health') return json({ ok: true, hadiths: H.length });
+    if (req.method === 'POST' && u.pathname === '/inner/send') {
+      if (req.headers.get('X-Inner') !== await inner(env)) return json({ ok: false }, 403);
+      return json(await sendJobs(env, await req.json()));
+    }
     // a test send, now, to everyone subscribed: only with the key the deploy step keeps in the store
     if (req.method === 'POST' && u.pathname === '/admin/send') {
       const k = await env.PUSH.get('admin');
       if (!k || req.headers.get('X-Admin') !== k) return json({ ok: false }, 403);
-      const r = await sendAll(env, u.searchParams.get('kind') === 'friday' ? friday() : today());
+      const r = await fanOut(env, await due(env, u.searchParams.get('kind') === 'friday' ? 'friday' : 'daily'));
       return json({ ok: true, ...r });
     }
     if (req.method === 'POST' && (u.pathname === '/sub' || u.pathname === '/unsub')) {
-      let sub; try { sub = await req.json(); } catch (e) { return json({ ok: false }, 400); }
+      let body; try { body = await req.json(); } catch (e) { return json({ ok: false }, 400); }
+      const sub = body && body.sub ? body.sub : body;   // {sub, tz} now; the bare subscription from older pages
       if (!sub || !sub.endpoint) return json({ ok: false }, 400);
       const id = await idOf(sub.endpoint);
       if (u.pathname === '/unsub') { await env.PUSH.delete(id); return json({ ok: true }); }
       if (!valid(sub)) return json({ ok: false }, 400);
-      await env.PUSH.put(id, JSON.stringify({ endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } }));
+      const tz = okTz(body.tz) ? body.tz : DEF_TZ;
+      const known = await env.PUSH.get(id);
+      await env.PUSH.put(id, JSON.stringify({ endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } }), { metadata: { tz } });
+      if (known) return json({ ok: true });   // the same reader again (a new time zone): no second welcome
       // a first notification right away: the reader sees it works
       const st = await send(env, sub, { t: 'سِيرَتُه', b: 'سيصلك كل يوم حديثٌ من شمائله صلى الله عليه وسلم، وكل جمعة تذكيرٌ بالصلاة عليه.', u: SITE + '/', tag: 'welcome' }).catch(() => 0);
       return json({ ok: true, sent: st });
@@ -116,22 +191,7 @@ export default {
     return json({ ok: false }, 404);
   },
   async scheduled(ev, env, ctx) {
-    const r = await sendAll(env, ev.cron === FRI ? friday() : today());
-    console.log('sent', r.sent, 'removed', r.removed);
+    const r = await fanOut(env, await due(env));
+    console.log('tried', r.tried, 'sent', r.sent, 'removed', r.removed);
   },
 };
-
-async function sendAll(env, msg) {
-    let cursor, n = 0, gone = 0, ok = 0;
-    do {
-      const l = await env.PUSH.list({ prefix: 's:', cursor });
-      for (const k of l.keys) {
-        const sub = await env.PUSH.get(k.name, 'json'); if (!sub) continue;
-        const st = await send(env, sub, msg).catch(() => 0); n++;
-        if (st >= 200 && st < 300) ok++;
-        if (st === 404 || st === 410) { await env.PUSH.delete(k.name); gone++; }   // the reader turned it off or removed the app
-      }
-      cursor = l.list_complete ? null : l.cursor;
-    } while (cursor);
-    return { tried: n, sent: ok, removed: gone };
-}

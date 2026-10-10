@@ -22,8 +22,11 @@ routes = [{ pattern = "push.seeratuh.com", custom_domain = true }]
 [[kv_namespaces]]
 binding = "PUSH"
 id = "$NS"
+[[services]]
+binding = "SELF"
+service = "sira-push"
 [triggers]
-crons = ["0 3 * * *", "0 6 * * 5"]   # every day 6:00 in Riyadh; Friday 9:00
+crons = ["0 * * * *"]   # every hour: the readers for whom it is 6:00 (and Friday 9:00) where they are
 T
 CLOUDFLARE_ACCOUNT_ID="$ACC" npx --yes wrangler@3 deploy
 # the key for test sends: derived from the token, so only this repository can make one
