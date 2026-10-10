@@ -674,7 +674,7 @@ body{font-family:var(--ui);background:var(--ground)}
 .sx-go b{display:block;font-family:var(--text);font-size:19px}.sx-go span span{display:block;font-size:13.5px;opacity:.8}
 
 /* reading plan */
-.pl{padding:16px;border-radius:20px;border:1px solid var(--line);background:var(--surface)}
+.pl{padding:16px 18px;border-radius:18px;border:1px solid var(--line);background:var(--raised);box-shadow:var(--shadow)}
 .pl-bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin:10px 0 6px}.pl-bar i{display:block;height:100%;background:var(--palm)}
 .pl-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .pl-opt{flex:1 1 140px;min-height:52px;border-radius:14px;border:1px solid var(--line);background:var(--raised);color:var(--ink);font:inherit;font-size:14px;padding:8px 10px;text-align:start;touch-action:manipulation}
@@ -1219,6 +1219,12 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .dy-card .mg-h{border-bottom:0;padding:0}
 .ex .exg{grid-column:1/-1;margin:16px 4px -2px;font-size:15px;font-weight:700;color:var(--brass)}
 .ex .exg:first-of-type{margin-top:10px}
+.at-svg .cst path{fill:none;stroke:color-mix(in srgb,var(--brass) 55%,transparent);stroke-width:1.1;stroke-linejoin:round}
+.at-svg .rg{font-family:"Amiri",serif;font-size:17px;fill:color-mix(in srgb,var(--ink) 38%,transparent);text-anchor:middle;letter-spacing:2px}
+.at-svg .rg.sea{fill:color-mix(in srgb,var(--palm) 70%,transparent);font-size:15px}
+.pl-opt{background:color-mix(in srgb,var(--brass) 9%,var(--raised));border-color:color-mix(in srgb,var(--brass) 35%,transparent);cursor:pointer}
+.pl-opt b{color:var(--ink)}
+.pl-opt span,.pl-opt small{color:var(--muted)}
 
 </style>
 
@@ -1708,7 +1714,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1051';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1103';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1815,7 +1821,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_feat.json": "04657fd023", "data/sx_mg.json": "5af9e2d322", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_feat.json": "04657fd023", "data/sx_mg.json": "5af9e2d322", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -1998,6 +2004,7 @@ function sxGo(p){const ov=$('#sxOverlay'),y=ov.scrollTop;openPart(17,p).then(()=
 function sxSrc(o,wrap){const d=el('div','sxd');d.append('«'+o.q+'» ');const b=el('button',null,'ص '+ar(o.p)+' ←');b.type='button';b.onclick=()=>sxGo(o.p);d.append(b);wrap.append(d);return d}
 async function openSX(v){
   $('#sxOverlay').hidden=false;if(v)SXV=v;
+  {const tl=SXV==='tl';$('#sxTitle').textContent=tl?'الخط الزمني للسيرة':'شجرة النسب الشريف';$('#sxOverlay').setAttribute('aria-label',$('#sxTitle').textContent);const T=document.querySelector('#sxOverlay .sxtabs');T.hidden=tl;T.style.gridTemplateColumns='repeat(3,1fr)';T.querySelector('[data-v=tl]').hidden=true}
   [...document.querySelectorAll('#sxOverlay .tabs button')].forEach(b=>b.setAttribute('aria-selected',b.dataset.v===SXV));
   const V=$('#sxView');V.innerHTML='';V.append(el('p','note','جارٍ التحميل…'));
   let D;try{D=await sirax()}catch(e){V.innerHTML='';V.append(el('p','note','تعذّر التحميل. تأكد من الاتصال بالإنترنت.'));return}
@@ -3253,10 +3260,10 @@ async function openZubda(){const X=await getJSON('data/sira_x.json');const it=X.
 $('#sxZubda').onclick=openZubda;
 /* أطلس مواضع السيرة: مواضع الأحداث بإحداثياتها، وكل موضع يفتح نص مختصر السيرة وصفحته */
 const ATL=[["مكة المكرمة", 21.4225, 39.8262, 1, [0, 55, 85, 109, 114, 345]], ["غار حراء (جبل النور)", 21.4575, 39.8592, 1, [42, 70]], ["العقبة بمنى", 21.4206, 39.8731, 1, [146, 157]], ["غار ثور", 21.3772, 39.8494, 1, [170]], ["عرفة", 21.3549, 39.9842, 1, [447]], ["المدينة النبوية", 24.4672, 39.6111, 1, [178, 186, 188, 202, 460]], ["أُحُد", 24.5022, 39.6128, 1, [248]], ["الخندق (المساجد السبعة)", 24.4781, 39.5975, 1, [285]], ["بدر", 23.78, 38.7906, 1, [216]], ["الطائف", 21.2703, 40.4158, 1, [136, 394]], ["خيبر", 25.6969, 39.2906, 1, [320]], ["تبوك", 28.3838, 36.555, 1, [414]], ["مؤتة", 31.0925, 35.6942, 1, [338]], ["الحديبية", 21.44, 39.61, 0, [300]], ["حنين", 21.5, 40.0, 0, [378]], ["الحبشة", 14.13, 38.72, 0, [92]]];
-async function openAtlas(){const X=await getJSON('data/sira_x.json');const it=X.tl.it;
+async function openAtlas(){const X=await getJSON('data/sira_x.json');const it=X.tl.it;let CO=[];try{CO=await getJSON('data/coast.json')}catch(e){}
   let ov=$('#sxAtl');if(!ov){ov=el('div','sx-atl');ov.id='sxAtl';document.body.append(ov)}ov.hidden=false;ov.innerHTML='';sxLock();
   const top=el('div','at-top');const x=el('button','zx','✕');x.type='button';x.setAttribute('aria-label','إغلاق');x.onclick=()=>{ov.hidden=true;sxUnlock()};top.append(el('h3',null,'أطلس مواضع السيرة'),x);
-  const note=el('p','at-note','كل موضع في مكانه بإحداثياته، والمسافات بينها بمقياسها. لم تُرسم السواحل والحدود، فاضغط «افتحه في الخرائط» لترى الموضع على خريطة حقيقية. المواضع المكتوب عليها «تقريبي» مختلَف في تعيينها اليوم.');
+  const note=el('p','at-note','كل موضع في مكانه بإحداثياته، والمسافات بينها بمقياسها. رُسمت السواحل وحدها دون حدود الدول الحديثة، وأسماء الأقاليم والبحار في مواضعها على التقريب. المواضع المكتوب عليها «تقريبي» مختلَف في تعيينها اليوم.');
   const box=el('div','at-map'),card=el('div','at-card');card.hidden=true;ov.append(top,note,box,card);
   const groups=[{n:'مكة وما حولها',f:p=>p[1]<21.6&&p[1]>21.3&&p[2]>39.5&&p[2]<40.1},{n:'المدينة وما حولها',f:p=>p[1]>24.3&&p[1]<24.6}];
   const draw=(view)=>{box.innerHTML='';
@@ -3273,6 +3280,10 @@ async function openAtlas(){const X=await getJSON('data/sira_x.json');const it=X.
     // graticule every degree (or tenth of a degree when close)
     const st=(la1-la0)>3?1:.1;for(let la=Math.ceil(la0/st)*st;la<la1;la+=st){mk('line',{x1:0,x2:W,y1:Y(la),y2:Y(la),class:'g'});mk('text',{x:4,y:Y(la)-3,class:'gl'}).textContent=(+la.toFixed(1))+'°'}
     for(let lo=Math.ceil(lo0/st)*st;lo<lo1;lo+=st){mk('line',{y1:0,y2:H,x1:X(lo),x2:X(lo),class:'g'})}
+    // the coasts (Natural Earth), and the old names of the land and the sea; no modern borders
+    const cg=document.createElementNS(NS,'g');cg.setAttribute('class','cst');svg.append(cg);
+    CO.forEach(L=>{let d='';L.forEach((q,i)=>{d+=(i?'L':'M')+X(q[0]).toFixed(1)+' '+Y(q[1]).toFixed(1)});const pa=document.createElementNS(NS,'path');pa.setAttribute('d',d);cg.append(pa)});
+    const RG=view?[]:[['البحر الأحمر',25.2,35.9,-58],['الحجاز',22.7,40.35,0],['الشام',32.0,36.9,0]];
     // scale bar
     const km=(la1-la0)>3?100:5,px=km/111.2*s_;mk('line',{x1:W-12-px,x2:W-12,y1:H-14,y2:H-14,class:'sc'});mk('text',{x:W-12-px/2,y:H-20,class:'scl'}).textContent=(km===100?'١٠٠':'٥')+' كم';
     const cl=view?[]:groups.map(g=>({g,P:ATL.filter(g.f)}));
@@ -3289,7 +3300,7 @@ async function openAtlas(){const X=await getJSON('data/sira_x.json');const it=X.
       for(const [dx,dy] of [[0,-13],[0,23],[w/2+12,5],[-w/2-12,5],[0,-28],[0,38]]){const r={x:cx+dx-w/2,y:cy+dy-13,w,h:16};if(!placed.some(q=>r.x<q.x+q.w&&q.x<r.x+r.w&&r.y<q.y+q.h&&q.y<r.y+r.h)&&r.x>0&&r.x+r.w<W){pos=[cx+dx,cy+dy];placed.push(r);break}}
       if(!pos)pos=[cx,cy-13];const t=mk('text',{x:pos[0],y:pos[1],class:'pl'});t.textContent=lab;
       [c,t].forEach(e=>e.addEventListener('click',()=>show(p)))});
-    box.append(svg);
+    RG.forEach(([n,la,lo,rot])=>{if(la<la0||la>la1||lo<lo0||lo>lo1)return;const cx=X(lo),cy=Y(la),w=n.length*7;if(!rot&&!fits({x:cx-w/2,y:cy-12,w,h:16}))return;const t=mk('text',{x:cx,y:cy,class:'rg'+(rot?' sea':''),transform:rot?'rotate('+rot+' '+cx+' '+cy+')':''});t.textContent=n;svg.insertBefore(t,cg.nextSibling)});box.append(svg);
     if(view){const b=el('button','btn btn-quiet','← الخريطة كاملة');b.type='button';b.onclick=()=>draw(null);box.prepend(b)}
     far.forEach(p=>{const b=el('button','at-far','↓ '+p[0]+' (تقريبي) — جنوب البحر الأحمر، خارج حدود هذه الخريطة');b.type='button';b.onclick=()=>show(p);box.append(b)});
   };
@@ -3381,7 +3392,7 @@ const PL_A=3,PL_B=329,PL_N=PL_B-PL_A+1;
 function planDay(pl){return Math.floor((Date.now()-pl.t)/864e5)+1}
 async function renderSxPlan(){await sxFeat();const B=$('#plBox');if(!B)return;B.innerHTML='';const pl=LS.get('sxPlan',null);const R=SXRD.get();
   let done=0;for(let p=PL_A;p<=PL_B;p++)if(R.has(p))done++;
-  if(!pl){B.append(el('p','pl-today','اقرأ مختصر سيرة الرسول صلى الله عليه وسلم كاملاً، صفحاتٍ معلومة كل يوم. وكلما قرأت صفحةً فيها ذكرُ سنةٍ من عمره عُلّم مربعها.'));
+  if(!pl){B.append(el('p','pl-today','اقرأ مختصر سيرة الرسول صلى الله عليه وسلم كاملاً، صفحاتٍ معلومة كل يوم.'));
     const r=el('div','pl-row');[[30,'شهر'],[60,'شهران'],[100,'مئة يوم']].forEach(([d,t])=>{const b=el('button','pl-opt');b.type='button';b.append(el('b',null,t),el('span',null,'نحو '+CNT(Math.ceil(PL_N/d),'صفحة',1)+' كل يوم'));
       b.onclick=()=>{LS.set('sxPlan',{d,t:new Date(new Date().toDateString()).getTime()});renderSxPlan()};r.append(b)});B.append(r);
     if(done)B.append(el('p','yr-note','الصفحات المقروءة إلى الآن: '+ar(done)+' من '+ar(PL_N)+'.'));return}
