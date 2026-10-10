@@ -1368,6 +1368,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .gz-qq::after{content:"»"}
 .gz-tg{margin:4px 0 8px}
 .gz-more{margin-bottom:8px}
+.hd-v{color:var(--verse,var(--palm));font-family:"Amiri",serif;font-size:1.06em}
 
 </style>
 
@@ -1862,7 +1863,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1757';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1800';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3830,8 +3831,10 @@ function mgMeta(h,full){return 'صحيح البخاري، كتاب المغاز�
 const mgCh=(M,h)=>(h.ch==='باب'||h.ch==='باب:')?'باب بلا ترجمة، تابع لما قبله':h.ch;
 // one hadith: the text from the Companion on, with the whole chain a tap away
 const HDN=/(رسول الله صلى الله عليه وسلم|النبي صلى الله عليه وسلم|نبي الله صلى الله عليه وسلم|رسول الله ﷺ|النبي ﷺ)/;
-function hdFill(e,t){e.textContent='';t.split(/(«[^«»]*»)/).forEach(seg=>{if(!seg)return;if(seg[0]==='«'&&seg.slice(-1)==='»'){e.append(el('span','hd-m',seg));return}
-  seg.split(HDN).forEach(x=>{if(!x)return;if(HDN.test(x)&&x.match(HDN)[0]===x)e.append(el('span','hd-n',x));else e.append(document.createTextNode(x))})})}
+function hdFill(e,t){e.textContent='';t=t.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾');
+  const plain=(par,x)=>x.split(HDN).forEach(y=>{if(!y)return;if(HDN.test(y)&&y.match(HDN)[0]===y)par.append(el('span','hd-n',y));else par.append(document.createTextNode(y))});
+  const marked=(par,x)=>x.split(/(«[^«»]*»)/).forEach(seg=>{if(!seg)return;if(seg[0]==='«'&&seg.slice(-1)==='»'){const m=el('span','hd-m');seg.split(/(﴿[^﴾]*﴾)/).forEach(z=>{if(!z)return;m.append(z[0]==='﴿'?el('span','hd-v',z):document.createTextNode(z))});par.append(m)}else plain(par,seg)});
+  t.split(/(﴿[^﴾]*﴾)/).forEach(z=>{if(!z)return;if(z[0]==='﴿'&&z.slice(-1)==='﴾')e.append(el('span','hd-v',z));else marked(e,z)})}
 function mgItem(M,i,opt={}){const h=M.h[i],w=el('div','mg-h');
   const q=el('p',opt.big?'dy-t':'mg-t');hdFill(q,mgText(h));w.append(q);const meta=el('div','dy-meta');const meta_=opt.meta||mgMeta;const ms=el('span','dy-src',meta_(h));meta.append(ms);w.append(meta);
   const act=el('div','dy-act');
