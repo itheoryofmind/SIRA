@@ -1294,7 +1294,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 
 
     <section class="about" id="aboutSec">
-      <h2>عن الدرر السنية</h2>
+      <h2>عن الكتاب</h2>
       <p class="aboutq" id="aboutQ"></p>
       <p class="count" id="aboutSrc"></p>
       <div class="links" id="aboutLinks"></div>
@@ -1312,7 +1312,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
         <button class="action main" id="continueL" type="button"><b id="contTL">ابدأ القراءة</b><span id="contSL">من أول الجزء الأول</span></button>
         <button class="action" id="openToc" type="button"><b>أبواب الكتاب</b><span>الأجزاء والكتب والأبواب وفهارسها</span></button>
       </div>
-      <button class="treecard" id="openZubda" type="button"><svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="6" y="6" width="15" height="15" rx="2"/><rect x="27" y="6" width="15" height="15" rx="2"/><rect x="6" y="27" width="15" height="15" rx="2"/><rect x="27" y="27" width="15" height="15" rx="2"/></svg><span><b>الدرر في لمحة</b><small>الأجزاء الستة عشر وأبوابها على خريطة واحدة، ومن كل باب إلى صفحته</small></span></button>
+      <button class="treecard" id="openZubda" type="button"><svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="6" y="6" width="15" height="15" rx="2"/><rect x="27" y="6" width="15" height="15" rx="2"/><rect x="6" y="27" width="15" height="15" rx="2"/><rect x="27" y="27" width="15" height="15" rx="2"/></svg><span><b>الكتب في لمحة</b><small>الأجزاء الستة عشر وأبوابها على خريطة واحدة، ومن كل باب إلى صفحته</small></span></button>
       <button class="treecard" id="openTree" type="button"><svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="24" cy="8" r="4"/><circle cx="12" cy="24" r="4"/><circle cx="36" cy="24" r="4"/><circle cx="6" cy="40" r="4"/><circle cx="20" cy="40" r="4"/><circle cx="36" cy="40" r="4"/><path d="M22 11 14 21M26 11l8 10M11 28 7 36M13 28l6 8M36 28v8"/></svg><span><b>شجرة العلماء والخط الزمني</b><small>من أخذ عن مَن، وسنوات الوفاة، كما في تراجم الكتاب</small></span></button>
       <div class="idxcards">
         <button class="idxcard" type="button" data-tab="q"><b>المسائل</b><span>كل سؤال في الكتاب وموضع جوابه</span></button>
@@ -1330,7 +1330,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 
     <section id="planSec">
       <div class="card plan">
-        <div class="section-head" style="margin-bottom:6px"><h2>خطة ختم الدرر السنية</h2><button class="btn btn-link" id="planEdit" type="button" hidden>تغيير</button></div>
+        <div class="section-head" style="margin-bottom:6px"><h2>خطة الختم</h2><button class="btn btn-link" id="planEdit" type="button" hidden>تغيير</button></div>
         <div id="planBody"></div>
       </div>
     </section>
@@ -1355,7 +1355,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 
     <section id="dlSec">
       <div class="actions">
-        <a class="action" href="download/"><b>تحميل الدرر السنية كاملة</b><span>ملف PDF واحد</span></a>
+        <a class="action" href="download/"><b>تحميل الكتاب كاملاً</b><span>ملف PDF واحد</span></a>
         <button class="action" id="saveAll" type="button"><b>احفظه للقراءة بدون إنترنت</b><span id="saveAllInfo">الصور والنص · نحو ٣٨٠ ميجا · يفضّل على Wi‑Fi</span></button>
       </div>
     </section>
@@ -1595,7 +1595,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-0520';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-0535';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1648,7 +1648,7 @@ const MB={
 const HIDDEN=new Set([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]);const SIRA=[17,18,19,20,21,22,23,24,25,26,27,28,29,30];   // books withdrawn until their review is complete
 const mbOf=n=>Object.values(MB).find(b=>b.ps.includes(n))||null;
 const isZ=n=>!!mbOf(n),ZP=MB.z.ps;
-const BOOK=n=>mbOf(n)?mbOf(n).t:isB(n)?'مختصر سيرة الرسول ﷺ':'الدرر السنية في الأجوبة النجدية';
+const BOOK=n=>mbOf(n)?mbOf(n).t:isB(n)?'مختصر سيرة الرسول ﷺ':'الكتاب';
 const LRK=n=>mbOf(n)?mbOf(n).lr:isB(n)?'lastRead'+n:'lastRead';   // each other book keeps its own reading place
 // short spine labels, taken from the descriptions above
 const SPINE=['','العقائد','التوحيد','الأسماء والصفات','العبادات ١','العبادات ٢','البيع','الوقف','الجهاد ١','الجهاد ٢ · المرتد','حكم المرتد','مختصرات الردود ١','مختصرات الردود ٢','التفسير','النصائح','البيان الواضح ١','البيان الواضح ٢'];
@@ -2622,7 +2622,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#sheet').hidden
 $('#mFihris').onclick=async()=>{closeSheet();HL=[];if(VOLS[cur.n].ni){openZad(mbOf(cur.n));return}if(VIEW==='txt')await setView('img');go(VOLS[cur.n].f)};
 
 $('#mIdx').onclick=()=>{closeSheet();openIdx()};
-function citation(p){const mb=mbOf(cur.n);if(mb)return mb.cite(jOf(cur.n),p||cur.p);if(isB(cur.n))return '(مختصر سيرة الرسول ﷺ، للإمام محمد بن عبدالوهاب، مؤلفات الشيخ، القسم الثالث، ط. جامعة الإمام محمد بن سعود الإسلامية، ص '+ar(p||cur.p)+')';return '(الدرر السنية في الأجوبة النجدية، جمع عبدالرحمن بن محمد بن قاسم، '+partName(cur.n)+'، ص '+ar(p||cur.p)+')'}
+function citation(p){const mb=mbOf(cur.n);if(mb)return mb.cite(jOf(cur.n),p||cur.p);if(isB(cur.n))return '(مختصر سيرة الرسول ﷺ، للإمام محمد بن عبدالوهاب، مؤلفات الشيخ، القسم الثالث، ط. جامعة الإمام محمد بن سعود الإسلامية، ص '+ar(p||cur.p)+')';return '('+BOOK(cur.n)+'، ص '+ar(p||cur.p)+')'}
 const pageUrl=()=>location.origin+location.pathname+'#v'+cur.n+'p'+cur.p;
 async function copyText(t,okMsg){try{await navigator.clipboard.writeText(t);toast(okMsg)}catch(e){prompt('انسخ النص:',t)}}
 $('#mCite').onclick=()=>{closeSheet();copyText(citation(),'نُسخ الاستشهاد: '+partName(cur.n)+'، ص '+ar(cur.p))};
@@ -2630,7 +2630,7 @@ $('#mCopy').onclick=async()=>{closeSheet();
   try{const T=await textOf(cur.n);const t=pagePlain(T,cur.p);if(!t||cur.p>=VOLS[cur.n].f){toast('لا يوجد نص لهذه الصفحة، فاعتمد الصورة.',3500);return}
     copyText(t+'\n\n'+citation()+((T.p[cur.p][0]&2)?' [حدود الصفحة تقريبية؛ تُراجع صورتها]':''),'نُسخ نص الصفحة مع الاستشهاد')}catch(e){toast('تعذّر تحميل النص')}};
 $('#mLink').onclick=async()=>{closeSheet();const u=pageUrl(),t=citation();
-  if(navigator.share){try{await navigator.share({title:isB(cur.n)?'مختصر السيرة':mbOf(cur.n)?mbOf(cur.n).sh:'الدرر السنية',text:t,url:u});return}catch(e){if(e.name==='AbortError')return}}
+  if(navigator.share){try{await navigator.share({title:isB(cur.n)?'مختصر السيرة':mbOf(cur.n)?mbOf(cur.n).sh:'سيرته',text:t,url:u});return}catch(e){if(e.name==='AbortError')return}}
   copyText(t+'\n'+u,'نُسخ رابط الصفحة')};
 $('#mImg').onclick=async()=>{closeSheet();
   try{
@@ -2641,7 +2641,7 @@ $('#mImg').onclick=async()=>{closeSheet();
     x.fillStyle=CARD.mid;x.fillRect(0,src.height,c.width,band);x.fillStyle=CARD.ink;x.font=Math.round(band*.4)+'px Amiri, serif';x.textAlign='center';x.direction='rtl';x.textBaseline='middle';
     x.fillText((isB(cur.n)?BOOK(cur.n)+(mbOf(cur.n)&&mbOf(cur.n).ps.length>1?' ج'+ar(jOf(cur.n)):''):BOOK(cur.n)+' — '+partName(cur.n))+'، ص '+ar(cur.p),c.width/2,src.height+band/2,c.width-40);
     const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.9));
-    const file=new File([blob],(isB(cur.n)?(mbOf(cur.n)?mbOf(cur.n).sh+(mbOf(cur.n).ps.length>1?' ج'+jOf(cur.n):''):'مختصر السيرة'):'الدرر السنية - '+short(cur.n))+' ص'+cur.p+'.jpg',{type:'image/jpeg'});
+    const file=new File([blob],(isB(cur.n)?(mbOf(cur.n)?mbOf(cur.n).sh+(mbOf(cur.n).ps.length>1?' ج'+jOf(cur.n):''):'مختصر السيرة'):'سيرته - '+short(cur.n))+' ص'+cur.p+'.jpg',{type:'image/jpeg'});
     try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:citation()});return}}catch(e){if(e&&e.name==='AbortError')return}
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=file.name;document.body.append(a);a.click();a.remove();
   }catch(e){if(e.name!=='AbortError')toast('تعذّرت مشاركة الصورة')}};
@@ -2946,7 +2946,7 @@ function openTopics(){
     const d=el('div','tgrp');d.append(el('h3',null,'مسائل يكثر البحث عنها'),el('p','note','بحث في نص الكتاب كله، تظهر فيه كل مواضع ورودها.'));const c=el('div','chips');
     QUICK.forEach(w=>{const b=el('button','chip',w);b.type='button';b.onclick=()=>{$('#topicOverlay').hidden=true;$('#q').value=w;homeSearch(w)};c.append(b)});
     d.append(c);L.append(d);
-    L.append(el('p','note','كتب الدرر السنية مصنّفة، اضغط على أي كتاب لتنتقل إلى أوله.'));
+    L.append(el('p','note','الكتب مصنّفة، اضغط على أي كتاب لتنتقل إلى أوله.'));
   }
   if(L.children.length<3)TOPICS.forEach(([g,items])=>{const d=el('div','tgrp');d.append(el('h3',null,g));const c=el('div','chips');
     items.forEach(([t,n,p])=>{const b=el('button','chip',t);b.type='button';b.title=partName(n)+' · ص '+ar(p);
@@ -3604,13 +3604,13 @@ new MutationObserver(()=>{$('#navBtn').hidden=$('#home').hidden}).observe($('#ho
 async function renderAbout(){
   const L=$('#aboutLinks');L.innerHTML='';
   [['تقريظات الكتاب',1,5],['تمهيد الجامع',1,11],['تنبيهات الجامع',1,24],['بيان الأجزاء',16,494],['تراجم أصحاب الرسائل',16,314]].forEach(([t,n,p])=>{const b=el('button','btn btn-quiet',t);b.type='button';b.onclick=()=>openPart(n,p,null,false,'txt');L.append(b)});
-  try{const T=await textOf(1);const x=T.p[22];if(x&&!(x[0]&2)){const t=x.slice(1).filter(i=>typeof i==='string')[0];$('#aboutQ').textContent='«'+t.replace(/^[^.]{0,20}\.\s*/,'')+'»';$('#aboutSrc').textContent='من تمهيد الجامع عبدالرحمن بن قاسم، الجزء الأول، ص ٢٢'}}catch(e){}
+  try{const T=await textOf(1);const x=T.p[22];if(x&&!(x[0]&2)){const t=x.slice(1).filter(i=>typeof i==='string')[0];$('#aboutQ').textContent='«'+t.replace(/^[^.]{0,20}\.\s*/,'')+'»';$('#aboutSrc').textContent=''}}catch(e){}
 }
 
 /* ---------- backup of the reader's own data ---------- */
 const BK_KEYS=k=>/^(favs|notes|hls|plan|lastRead\d*|last\d+|mode|fs|view2|chosen)$/.test(k);
 $('#bkSave').onclick=async()=>{
-  const d={app:'durar',saved:new Date().toISOString(),data:{}};
+  const d={app:'sira',saved:new Date().toISOString(),data:{}};
   try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(BK_KEYS(k))d.data[k]=localStorage.getItem(k)}}catch(e){}
   const file=new File([JSON.stringify(d)],'سيرته - بياناتي.json',{type:'application/json'});
   try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return}}catch(e){if(e.name==='AbortError')return}
@@ -3619,7 +3619,7 @@ $('#bkSave').onclick=async()=>{
 $('#bkLoad').onclick=()=>$('#bkFile').click();
 $('#bkFile').onchange=async e=>{
   const f=e.target.files[0];if(!f)return;
-  try{const d=JSON.parse(await f.text());if(d.app!=='durar'||!d.data)throw 0;
+  try{const d=JSON.parse(await f.text());if(!['sira','\u0064urar'].includes(d.app)||!d.data)throw 0;
     if(!confirm('سيتم استبدال بياناتك الحالية بما في الملف. متابعة؟'))return;
     for(const [k,v] of Object.entries(d.data))if(BK_KEYS(k))localStorage.setItem(k,v);
     toast('استُرجعت بياناتك');renderHome();renderPlan();renderHls();
@@ -3842,7 +3842,7 @@ renderPrayer();setInterval(()=>{if(!$('#home').hidden)renderPrayer()},60000);
 // the printed page as a canvas: the part's PDF here; the Sira site replaces this with its page images
 let QIMG=async(n,p)=>{await loadPdf(n);if(!pdf||pdf._n!==n)throw 0;const pg=await pdf.getPage(p),b=pg.getViewport({scale:1}),v=pg.getViewport({scale:1400/b.width}),c=document.createElement('canvas');c.width=v.width;c.height=v.height;await pg.render({canvasContext:c.getContext('2d'),viewport:v}).promise;return c};
 function qPlate(n,BW,BH){   // the book's name plate, drawn like a cover (no publisher's artwork is copied); BW,BH: a wide band
-  const mb=mbOf(n);const L=mb?[mb.t,((mb.head||'').match(/<h3>(.*?)<\/h3>/)||['',''])[1],(mb.ps&&mb.ps.length>1?'الجزء '+ar(jOf(n)):'')]:isB(n)?['مختصر سيرة الرسول ﷺ','للإمام محمد بن عبدالوهاب','']:['الدرر السنية','في الأجوبة النجدية',partName(n)];
+  const mb=mbOf(n);const L=mb?[mb.t,((mb.head||'').match(/<h3>(.*?)<\/h3>/)||['',''])[1],(mb.ps&&mb.ps.length>1?'الجزء '+ar(jOf(n)):'')]:isB(n)?['مختصر سيرة الرسول ﷺ','للإمام محمد بن عبدالوهاب','']:[partName(n),'',''];
   if(BW){const c=document.createElement('canvas');c.width=BW;c.height=BH;const x=c.getContext('2d');x.direction='rtl';
     const g=x.createLinearGradient(0,0,0,BH);g.addColorStop(0,CARD.pl0);g.addColorStop(1,CARD.pl1);x.fillStyle=g;x.fillRect(0,0,BW,BH);
     x.strokeStyle=CARD.gold;x.lineWidth=5;x.strokeRect(40,40,BW-80,BH-80);x.lineWidth=1.5;x.strokeRect(56,56,BW-112,BH-112);
@@ -3921,7 +3921,7 @@ async function qEdit(pp,mode){
 }
 
 
-/* ---------- الدرر في لمحة: الأجزاء وموضوعاتها وأبوابها، من بيان الأجزاء وفهارس الكتاب نفسه ---------- */
+/* ---------- في لمحة: الأجزاء وموضوعاتها وأبوابها، من بيان الأجزاء وفهارس الكتاب نفسه ---------- */
 const ZG=[['العقيدة',[1,2,3]],['العبادات',[4,5]],['المعاملات',[6,7]],['الجهاد وحكم المرتد',[8,9,10]],['الردود',[11,12]],['التفسير',[13]],['النصائح والتراجم',[14,15,16]]];
 /* full-screen panels: the page behind stays still (iOS pulls it while scrolling the panel) */
 let PGLY=0;function pgLock(ov){if(document.body.classList.contains('pg-locked'))return;PGLY=window.scrollY;document.body.style.top=(-PGLY)+'px';document.body.classList.add('pg-locked');
@@ -3930,12 +3930,12 @@ async function openZubdaD(){
   let H=[];try{H=await getJSON('data/heads.json')}catch(e){}
   let ov=$('#zbD');if(!ov){ov=el('div','zbd');ov.id='zbD';document.body.append(ov)}ov.hidden=false;ov.innerHTML='';pgLock(ov);
   const top=el('div','zbt');const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.onclick=()=>{ov.hidden=true};
-  top.append(el('h2',null,'الدرر في لمحة'),x);ov.append(top);
+  top.append(el('h2',null,'الكتب في لمحة'),x);ov.append(top);
   ov.append(el('p','note','وصف كل جزء منقول من «بيان الأجزاء» في آخر الجزء السادس عشر، والأبواب من فهارس الكتاب. اضغط أي باب لتنتقل إلى صفحته.'));
   const map=el('div','zbmap');ZG.forEach(([g,ns])=>{const b=el('button','zbg');b.type='button';b.append(el('b',null,g),el('span',null,ns.length>1?'الأجزاء '+ns.map(ar).join('، '):'الجزء '+ar(ns[0])));b.onclick=()=>{const t=ov.querySelector('[data-zg="'+g+'"]');if(t)t.scrollIntoView({behavior:'smooth',block:'start'})};map.append(b)});ov.append(map);
   ZG.forEach(([g,ns])=>{const sec=el('section','zbsec');sec.dataset.zg=g;sec.append(el('h3',null,g));
     ns.forEach(n=>{const c=el('div','zbp');const hd=el('div','zbph');hd.append(el('b',null,partName(n)),el('span',null,CNT(VOLS[n].p,'صفحة')));c.append(hd,el('p','zbd',VOLS[n].d));
-      const L=H.filter(h=>h[0]===n);const ul=el('div','zbl');const show=k=>{ul.innerHTML='';L.slice(0,k).forEach(([_,p,t])=>{const a=el('button',null);a.type='button';a.append(el('span',null,t),el('small',null,'ص '+ar(p)));a.onclick=()=>{ov.hidden=true;openPart(n,p,null,false,'txt').then(()=>setBack('رجوع إلى «الدرر في لمحة»',()=>{ov.hidden=false}))};ul.append(a)});
+      const L=H.filter(h=>h[0]===n);const ul=el('div','zbl');const show=k=>{ul.innerHTML='';L.slice(0,k).forEach(([_,p,t])=>{const a=el('button',null);a.type='button';a.append(el('span',null,t),el('small',null,'ص '+ar(p)));a.onclick=()=>{ov.hidden=true;openPart(n,p,null,false,'txt').then(()=>setBack('رجوع إلى «الكتب في لمحة»',()=>{ov.hidden=false}))};ul.append(a)});
         if(L.length>k){const m=el('button','zbmore','عرض كل الأبواب ('+ar(L.length)+')');m.type='button';m.onclick=()=>show(L.length);ul.append(m)}};
       show(8);c.append(ul);const o=el('button','btn btn-quiet','افتح '+partName(n));o.type='button';o.onclick=()=>{ov.hidden=true;openPart(n,1)};c.append(o);sec.append(c)});
     ov.append(sec)});
@@ -3978,7 +3978,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkUpdat
 setTimeout(checkUpdate,1500);
 
 /* start */
-if(hasCaches){volCache().then(c=>c.delete(new Request('./_vol/8.pdf'))).catch(()=>{});caches.keys().then(ks=>ks.filter(k=>k.startsWith('durar-')).forEach(k=>caches.delete(k))).catch(()=>{})}
+if(hasCaches){volCache().then(c=>c.delete(new Request('./_vol/8.pdf'))).catch(()=>{});caches.keys().then(ks=>ks.filter(k=>k.startsWith('\u0064urar-')).forEach(k=>caches.delete(k))).catch(()=>{})}
 renderHome();renderShelfS();
 (function(){const h=location.hash,m=h.match(/^#v(\d+)p(\d+)/);if(m&&VOLS[+m[1]]){history.replaceState(null,'',location.pathname);history.pushState({r:1},'','#v'+m[1]+'p'+m[2]);openHash(h,false)}})();
 </script>
