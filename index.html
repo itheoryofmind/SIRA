@@ -1535,7 +1535,6 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
         <button type="button" id="sxTl"><b>الخط الزمني</b><span>الأحداث بترتيبها وصفحاتها</span></button>
         <button type="button" id="sxZubda"><b>أربعون محطة</b><span>السيرة في بطاقات، بلفظ الكتاب</span></button>
         <button type="button" class="wide" id="fxHajj"><b>حجة الوداع يوماً بيوم</b><span>من خروجه من المدينة إلى غدير خم، بلفظ ابن كثير</span></button>
-        <button type="button" class="wide" id="fxQa"><b>مسائل في السيرة</b><span>أسئلة تجيب عنها الكتب بلفظها</span></button>
         <p class="exg">من القرآن والصحيح</p>
         <button type="button" id="fxAyat"><b>ما نزل من القرآن في أحداث السيرة</b><span>أحداثٌ نصّت الكتب على أن آياتٍ نزلت فيها</span></button>
         <button type="button" id="fxMg"><b>المغازي في الصحيحين</b><span>أحاديث كل غزوة على ترتيب وقوعها</span></button>
@@ -1888,7 +1887,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1903';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1948';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3830,7 +3829,7 @@ sxFam=function(V,D){
   [['أبناؤه',sons],['بناته',dau]].forEach(([h,L])=>{if(!L.length)return;const g=el('div','ft-g');g.append(el('h4',null,h));const ul=el('ul');L.forEach(c=>{const li=node(c);if(c.t)li.querySelector('.fn-t').querySelectorAll('i').forEach(i=>{if(i.textContent==='بنت')i.remove()});ul.append(li)});g.append(ul);T.append(g)});
   V.append(T)};
 /* wiring */
-$('#fxEvent').onclick=fxEvent;$('#fxMg').onclick=()=>fxMgTL();$('#fxDal').onclick=()=>fxDal();$('#fxHajj').onclick=()=>fxHajj();$('#fxAhl').onclick=()=>fxAhl();$('#fxGz').onclick=()=>fxGz();$('#fxQa').onclick=()=>fxQa();$('#khHome').onclick=async()=>{await openZad(MB.k);setTimeout(()=>{const k=$('#sxKhul');k&&k.scrollIntoView({block:'start'})},120)};$('#khHomeTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
+$('#fxEvent').onclick=fxEvent;$('#fxMg').onclick=()=>fxMgTL();$('#fxDal').onclick=()=>fxDal();$('#fxHajj').onclick=()=>fxHajj();$('#fxAhl').onclick=()=>fxAhl();$('#fxGz').onclick=()=>fxGz();$('#khHome').onclick=async()=>{await openZad(MB.k);setTimeout(()=>{const k=$('#sxKhul');k&&k.scrollIntoView({block:'start'})},120)};$('#khHomeTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
 $('#sxSearchBtn').onclick=()=>{const q=$('#q');q.scrollIntoView({block:'center',behavior:'smooth'});q.focus({preventScroll:true})};
 $('#sxMenuBtn').onclick=()=>openNav();
 
