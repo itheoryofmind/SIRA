@@ -3,8 +3,11 @@
 // - every day at 6:00 in the reader's own time zone: the hadith the site shows that day (al-Albani graded it sahih or hasan)
 // - every Friday at 9:00 in the reader's own time zone: al-Ahzab 56
 // - for a reader who keeps a reading plan and asked for it: the day's pages of the Mukhtasar at 20:00 where the reader is
+// - an event of the Sira, and one of the rightly guided caliphs, each day in order (the site's timeline, in the Mukhtasar's words)
+// - each reader picks which of these, and the hour of each (where the reader is)
 // Web Push: RFC 8291 (aes128gcm) and RFC 8292 (VAPID), with WebCrypto only.
 import H from './hadith.js';
+import { SI, KH } from './tl.js';
 
 const SITE = 'https://seeratuh.com';
 const FRI = '0 6 * * 5';   // Friday 9:00 in Riyadh
@@ -106,7 +109,24 @@ function plan(pl) {
   return { t: 'ورد اليوم من السيرة', b: 'اليوم ' + AR(day) + ' من ' + AR(pl.d) + ': مختصر سيرة الرسول صلى الله عليه وسلم، الصفحات ' + AR(a) + '–' + AR(b) + '.', u: SITE + '/#v17p' + a, tag: 'plan' };
 }
 // what a reader asked for: sh (the hadith and the Friday reminder; every subscription before the plan had it), pl (the plan)
-const wantsSh = (m) => !m || m.sh !== 0;
+
+// the reader's day number (for the daily order of the Sira and the caliphs)
+const dayNo = (tz) => { const L = local(tz); return Date.UTC(L.y, L.m - 1, L.d) / 864e5; };
+function seq(L, sd, tz, kind) {
+  const n = ((dayNo(tz) - (+sd || 0)) % L.length + L.length) % L.length, x = L[n];
+  return { t: x[0], b: x[1], u: SITE + '/#v17p' + x[2], tag: kind };
+}
+// what a reader asked for, and when: h = {kind: hour}; readers kept before the choice of hours: the hadith at 6, Friday at 9, the plan at 20
+const KINDS = { sh: 6, fr: 9, si: 21, kh: 21, pl: 20 };
+function norm(m) {
+  m = m || {};
+  if (m.h && typeof m.h === 'object') return m;
+  const h = {};
+  if (m.sh !== 0) { h.sh = 6; h.fr = 9; }
+  if (planOf(m.pl)) h.pl = 20;
+  return { ...m, h };
+}
+const okH = (x) => Number.isInteger(+x) && +x >= 0 && +x <= 23;
 
 function valid(sub) {
   try {
@@ -129,12 +149,15 @@ async function due(env, force) {
   do {
     const l = await env.PUSH.list({ prefix: 's:', cursor });
     for (const k of l.keys) {
-      const m = k.metadata, tz = (m && okTz(m.tz)) ? m.tz : DEF_TZ;
-      if (force) { if (wantsSh(m)) out.push([k.name, force]); continue; }
+      const m = norm(k.metadata), tz = okTz(m.tz) ? m.tz : DEF_TZ;
+      if (force) { if ({ daily: 'sh', friday: 'fr' }[force] in m.h || force in m.h) out.push([k.name, force]); continue; }
       const L = local(tz);
-      if (wantsSh(m) && L.h === 6) out.push([k.name, 'daily']);
-      if (wantsSh(m) && L.wd === 'Fri' && L.h === 9) out.push([k.name, 'friday']);
-      if (m && planOf(m.pl) && L.h === 20) out.push([k.name, 'plan']);
+      for (const kind in m.h) {
+        if (m.h[kind] !== L.h) continue;
+        if (kind === 'fr' && L.wd !== 'Fri') continue;
+        if (kind === 'pl' && !planOf(m.pl)) continue;
+        out.push([k.name, kind === 'sh' ? 'daily' : kind === 'fr' ? 'friday' : kind]);
+      }
     }
     cursor = l.list_complete ? null : l.cursor;
   } while (cursor);
@@ -162,8 +185,9 @@ async function sendJobs(env, jobs) {
   for (const [id, kind] of jobs) {
     const v = await env.PUSH.getWithMetadata(id, 'json');
     if (!v || !v.value) continue;
-    const tz = (v.metadata && okTz(v.metadata.tz)) ? v.metadata.tz : DEF_TZ;
-    const msg = kind === 'friday' ? friday() : kind === 'plan' ? plan(planOf(v.metadata && v.metadata.pl) || { t: 0, d: 30 }) : today(tz);
+    const m = norm(v.metadata), tz = okTz(m.tz) ? m.tz : DEF_TZ, sd = m.sd || {};
+    const msg = kind === 'friday' ? friday() : (kind === 'plan' || kind === 'pl') ? plan(planOf(m.pl) || { t: 0, d: 30 })
+              : kind === 'si' ? seq(SI, sd.si, tz, 'si') : kind === 'kh' ? seq(KH, sd.kh, tz, 'kh') : today(tz);
     if (!msg) continue;   // the plan has ended
     const st = await send(env, v.value, msg).catch(() => 0);
     r.tried++;
@@ -178,7 +202,7 @@ export default {
     const u = new URL(req.url);
     if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
     if (u.pathname === '/key') return json({ key: (await vapid(env)).pub });
-    if (u.pathname === '/health') return json({ ok: true, hadiths: H.length });
+    if (u.pathname === '/health') return json({ ok: true, hadiths: H.length, sira: SI.length, caliphs: KH.length });
     if (req.method === 'POST' && u.pathname === '/inner/send') {
       if (req.headers.get('X-Inner') !== await inner(env)) return json({ ok: false }, 403);
       return json(await sendJobs(env, await req.json()));
@@ -187,7 +211,8 @@ export default {
     if (req.method === 'POST' && u.pathname === '/admin/send') {
       const k = await env.PUSH.get('admin');
       if (!k || req.headers.get('X-Admin') !== k) return json({ ok: false }, 403);
-      const r = await fanOut(env, await due(env, u.searchParams.get('kind') === 'friday' ? 'friday' : 'daily'));
+      const kd = u.searchParams.get('kind');
+      const r = await fanOut(env, await due(env, ['friday', 'si', 'kh'].includes(kd) ? kd : 'daily'));
       return json({ ok: true, ...r });
     }
     if (req.method === 'POST' && (u.pathname === '/sub' || u.pathname === '/unsub')) {
@@ -198,18 +223,34 @@ export default {
       if (u.pathname === '/unsub') { await env.PUSH.delete(id); return json({ ok: true }); }
       if (!valid(sub)) return json({ ok: false }, 400);
       const old = await env.PUSH.getWithMetadata(id);
-      const om = (old && old.value) ? (old.metadata || {}) : null;
-      // what this call says, over what was kept: tz always; sh and pl only when given
-      const md = { tz: okTz(body.tz) ? body.tz : (om && okTz(om.tz) ? om.tz : DEF_TZ),
-                   sh: 'sh' in body ? (body.sh ? 1 : 0) : (om ? (om.sh === 0 ? 0 : 1) : 1) };
+      // what this call says, over what was kept
+      const om = old && old.value ? norm(old.metadata) : null;
+      const md = { tz: okTz(body.tz) ? body.tz : (om && okTz(om.tz) ? om.tz : DEF_TZ) };
+      let h = om ? { ...om.h } : {};
+      if (body.h && typeof body.h === 'object') {   // the notifications page: the whole choice
+        h = {};
+        for (const k in KINDS) if (k in body.h && okH(body.h[k])) h[k] = +body.h[k];
+      }
+      if ('sh' in body) { if (body.sh) { h.sh = h.sh ?? 6; h.fr = h.fr ?? 9; } else { delete h.sh; delete h.fr; } }   // pages before the notifications page
       const pl = 'pl' in body ? planOf(body.pl) : (om ? planOf(om.pl) : null);
       if (pl) md.pl = pl;
-      if (!md.sh && !md.pl) { await env.PUSH.delete(id); return json({ ok: true, removed: true }); }
+      if ('pl' in body && !body.h) { if (pl) h.pl = h.pl ?? 20; else delete h.pl; }
+      if (!pl) delete h.pl;
+      md.h = h;
+      // where each reader is in the Sira and the caliphs: the day the reader turned it on (or the page's own count)
+      const sd = {}, osd = (om && om.sd) || {}, bsd = (body.sd && typeof body.sd === 'object') ? body.sd : {};
+      for (const k of ['si', 'kh']) if (k in h) { const x = Number.isInteger(bsd[k]) ? bsd[k] : Number.isInteger(osd[k]) ? osd[k] : dayNo(md.tz); sd[k] = x; }
+      if (Object.keys(sd).length) md.sd = sd;
+      if (!Object.keys(h).length) { await env.PUSH.delete(id); return json({ ok: true, removed: true }); }
       await env.PUSH.put(id, JSON.stringify({ endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } }), { metadata: md });
-      if (om || !md.sh) return json({ ok: true });   // the same reader again, or only the plan: no welcome for the hadith
+      if (body.test) {   // the page's test button
+        const st = await send(env, sub, { t: 'سِيرَتُه', b: 'هذا إشعار تجريبي، وستصلك الإشعارات التي اخترتها في أوقاتها.', u: SITE + '/', tag: 'test' }).catch(() => 0);
+        return json({ ok: true, sd, sent: st });
+      }
+      if (om) return json({ ok: true, sd });   // the same reader again
       // a first notification right away: the reader sees it works
-      const st = await send(env, sub, { t: 'سِيرَتُه', b: 'سيصلك كل يوم حديثٌ من شمائله صلى الله عليه وسلم، وكل جمعة تذكيرٌ بالصلاة عليه.', u: SITE + '/', tag: 'welcome' }).catch(() => 0);
-      return json({ ok: true, sent: st });
+      const st = await send(env, sub, { t: 'سِيرَتُه', b: 'فُعّلت الإشعارات، وتستطيع اختيار أنواعها وأوقاتها من صفحة «الإشعارات» في القائمة.', u: SITE + '/', tag: 'welcome' }).catch(() => 0);
+      return json({ ok: true, sd, sent: st });
     }
     return json({ ok: false }, 404);
   },
