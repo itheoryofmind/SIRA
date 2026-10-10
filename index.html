@@ -1330,6 +1330,15 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .hd-m{color:var(--brass)}
 .hd-n{color:var(--brass);font-weight:600}
 .btn.hd-b{border:1px solid color-mix(in srgb,var(--brass) 45%,var(--line));border-radius:16px;padding:3px 13px;min-height:32px;font-size:14px;text-decoration:none;margin-inline-end:6px}
+.hj{list-style:none;margin:14px 0 0;padding:0;position:relative}
+.hj::before{content:"";position:absolute;inset-inline-start:7px;top:8px;bottom:8px;width:2px;background:color-mix(in srgb,var(--brass) 45%,transparent)}
+.hj-s{position:relative;padding-inline-start:28px;margin-bottom:22px}
+.hj-s::before{content:"";position:absolute;inset-inline-start:1px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--ground);border:2px solid var(--brass)}
+.hj-d{display:block;font-size:13.5px;color:var(--brass)}
+.hj-t{display:block;font-family:"Amiri",serif;font-size:21px;margin:1px 0 6px}
+.hj-q{margin:6px 0 4px;font-size:16.5px;line-height:1.95}
+.hj-g{font-size:13px;min-height:32px;padding:0 12px;margin:0 0 6px}
+.hj-v{font-weight:400;color:var(--verse,var(--palm))}
 
 </style>
 
@@ -1471,6 +1480,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
         <p class="exg">وقائع السيرة</p>
         <button type="button" id="sxTl"><b>الخط الزمني</b><span>الأحداث بترتيبها وصفحاتها</span></button>
         <button type="button" id="sxZubda"><b>أربعون محطة</b><span>السيرة في بطاقات، بلفظ الكتاب</span></button>
+        <button type="button" class="wide" id="fxHajj"><b>حجة الوداع يوماً بيوم</b><span>من خروجه من المدينة إلى غدير خم، بلفظ ابن كثير</span></button>
         <p class="exg">من القرآن والصحيح</p>
         <button type="button" id="fxAyat"><b>ما نزل من القرآن في أحداث السيرة</b><span>أحداثٌ نصّت الكتب على أن آياتٍ نزلت فيها</span></button>
         <button type="button" id="fxMg"><b>المغازي في الصحيحين</b><span>أحاديث كل غزوة على ترتيب وقوعها</span></button>
@@ -1821,7 +1831,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1641';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1645';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1939,7 +1949,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_alam.json": "45d11458be", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "04657fd023", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "5cc261dc8f", "data/sx_msif.json": "ffe71c1bd5", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_alam.json": "45d11458be", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "04657fd023", "data/sx_hajj.json": "e037963d9d", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "5cc261dc8f", "data/sx_msif.json": "ffe71c1bd5", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3270,6 +3280,7 @@ function openNav(){
   grp('استكشف');
   it('الخط الزمني للسيرة',()=>{closeNav();openSX('tl')});
   it('المغازي في الصحيحين',()=>{closeNav();fxMgTL()});
+  it('حجة الوداع يوماً بيوم',()=>{closeNav();fxHajj()});
   it('دلائل النبوة',()=>{closeNav();fxDal()});
   it('شجرة النسب الشريف وآل عبد المطلب والخلفاء',()=>{closeNav();openSX('nasab')});
   grp('عن الموقع');
@@ -3759,7 +3770,7 @@ sxFam=function(V,D){
   [['أبناؤه',sons],['بناته',dau]].forEach(([h,L])=>{if(!L.length)return;const g=el('div','ft-g');g.append(el('h4',null,h));const ul=el('ul');L.forEach(c=>{const li=node(c);if(c.t)li.querySelector('.fn-t').querySelectorAll('i').forEach(i=>{if(i.textContent==='بنت')i.remove()});ul.append(li)});g.append(ul);T.append(g)});
   V.append(T)};
 /* wiring */
-$('#fxEvent').onclick=fxEvent;$('#fxMg').onclick=()=>fxMgTL();$('#fxDal').onclick=()=>fxDal();$('#khHome').onclick=async()=>{await openZad(MB.k);setTimeout(()=>{const k=$('#sxKhul');k&&k.scrollIntoView({block:'start'})},120)};$('#khHomeTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
+$('#fxEvent').onclick=fxEvent;$('#fxMg').onclick=()=>fxMgTL();$('#fxDal').onclick=()=>fxDal();$('#fxHajj').onclick=()=>fxHajj();$('#khHome').onclick=async()=>{await openZad(MB.k);setTimeout(()=>{const k=$('#sxKhul');k&&k.scrollIntoView({block:'start'})},120)};$('#khHomeTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
 $('#sxSearchBtn').onclick=()=>{const q=$('#q');q.scrollIntoView({block:'center',behavior:'smooth'});q.focus({preventScroll:true})};
 $('#sxMenuBtn').onclick=()=>openNav();
 
@@ -4093,6 +4104,14 @@ function evRoute(){const h=location.hash;let m;
   else if(h==='#fr')go(fxFriday)}
 addEventListener('hashchange',evRoute);evRoute();
 
+/* ---------- حجة الوداع يوماً بيوم: Ibn Kathir's words, stop by stop ---------- */
+async function fxHajj(){const S=await getJSON('data/sx_hajj.json');const P=fxOpen('حجة الوداع يوماً بيوم');
+  P.inn.append(el('p','fx-lead','حجته صلى الله عليه وسلم من خروجه من المدينة إلى رجوعه، محطةً محطة، بلفظ ابن كثير في «كتاب حجة الوداع» من «البداية والنهاية» وما نقله فيه، ومع كل نص صفحته.'));
+  const ol=el('ol','hj');S.forEach(s=>{const li=el('li','hj-s');li.append(el('span','hj-d',s.d),el('b','hj-t',s.t));
+    s.q.forEach(q=>{const bq=el('blockquote','hj-q');('«'+q.x.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').replace(/\d+/g,d=>ar(+d))+'»').split(/(﴿[^﴾]*﴾)/).forEach(x=>{if(!x)return;bq.append(x[0]==='﴿'?el('span','dl-q hj-v',x):document.createTextNode(x))});li.append(bq);
+      const g=el('button','btn btn-quiet hj-g','البداية والنهاية، ج٧، ص '+ar(q.p));g.type='button';g.onclick=()=>{P.close();openPart(35,q.p,[q.x.split(' ').slice(0,4).join(' ')],false,'txt')};li.append(g)});ol.append(li)});
+  P.inn.append(ol);
+  P.inn.append(el('p','fx-note','الأيام والتواريخ بلفظ ابن كثير حيث ذكرها، ومنها ما رجّحه بعد بحثه في «باب تاريخ خروجه» (ص ٤١٠–٤١٥). والنص مراجَع على صور المطبوع.'))}
 /* ---------- دلائل النبوة: Ibn Kathir's chapters, in his order and his words ---------- */
 const alMeta=(h,full)=>'صحيح البخاري، كتاب المناقب، رقم '+ar(+h.no)+'، الطبعة السلطانية ج٤ ص '+ar(h.p)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'');
 const msMeta=(h)=>'صحيح مسلم، كتاب الفضائل، رقم '+ar(+h.no)+' بترقيم عبد الباقي، الطبعة العامرة ج٧ ص '+ar(h.p);
