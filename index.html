@@ -541,6 +541,7 @@ textarea.notebox{width:100%;min-height:80px;border:1px solid var(--line);border-
 .prc.sun{opacity:.7}.prc.next{background:var(--brass-soft);outline:2px solid var(--brass)}.prc.next span{color:var(--brass);font-weight:700}
 .prnext{margin:8px 0 0;font-size:14px;color:var(--brass);text-align:center}
 .prset{display:flex;flex-wrap:wrap;gap:8px}
+.prpush{display:block;margin:10px auto 0}
 .prpick{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
 .prpick select{font:inherit;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
 @media (max-width:420px){.prgrid{grid-template-columns:repeat(3,1fr)}}
@@ -1108,6 +1109,9 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 /* the year a book left undated, as al-Azimi gives it */
 .yr-ev .yr-az{display:block;font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.7}
 
+/* the chosen year: a small heading, the square already shows the number */
+.yr-p h3{font-size:18px;line-height:1.5}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -1584,7 +1588,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-0456';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-0514';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3187,7 +3191,7 @@ function yrSub(k){if(k===40)return'قبل البعثة، وفي تمامها ب�
   if(k===63)return'بالمدينة: السنة العاشرة من الهجرة وأول الحادية عشرة';return'بالمدينة: السنة '+ar(k-53)+' من الهجرة'}
 async function showYear(k){const F=await sxFeat();const G=$('#yrGrid'),P=$('#yrPanel');G.dataset.sel=k;
   [...G.children].forEach((b,i)=>b.classList.toggle('sel',i+1===k));P.hidden=false;P.innerHTML='';
-  P.append(el('h3',null,k===1?'سنة مولده صلى الله عليه وسلم':'سنة بلغ فيها صلى الله عليه وسلم '+ar(k)+' من عمره'),el('p','sub',yrSub(k)));
+  P.append(el('h3',null,k===1?'سنة مولده ﷺ':'عمره ﷺ: '+(k===2?'سنتان':ar(k)+(k<=10?' سنين':' سنة'))),el('p','sub',yrSub(k)));
   const L=F.years[k]||[];
   if(!L.length)P.append(el('p','yr-none','لم تذكر كتب الموقع حدثاً نصّت على أنه في هذه السنة.'));
   L.forEach(it=>{if(it.mk&&!it.q){const d=el('button','yr-mk');d.type='button';d.append(el('span',null,it.t),el('small',null,'ص '+ar(it.p)));d.onclick=()=>openPart(17,it.p,null,false,'txt');P.append(d);return}   // the book's own year mark: a divider, not a quote
@@ -3196,7 +3200,8 @@ async function showYear(k){const F=await sxFeat();const G=$('#yrGrid'),P=$('#yrP
     if(it.az)b.append(el('small','yr-az',it.az));b.append(ft);
     b.onclick=()=>openPart(n,it.p,it.w?[it.w]:null,false,'txt');P.append(b)});
   const n=el('p','yr-note','رقم كل مربع هو ما بلغه صلى الله عليه وسلم من العمر في تلك السنة: بُعث على رأس الأربعين، وهاجر وهو ابن ثلاث وخمسين، فمربعات مكة من ٤١ إلى ٥٣، ومربعات المدينة من ٥٤ إلى ٦٣. وأحداث المدينة على سني الهجرة كما رتّبها المختصر، فمطابقتها بسني العمر تقريبية. وما لم يؤرخه المختصر وُضع على ما ذكره موسى العازمي في «اللؤلؤ المكنون في سيرة النبي المأمون»، لعنايته بتحقيق السيرة. وتوفي صلى الله عليه وسلم وهو ابن ثلاث وستين، كما في صحيح البخاري عن عائشة رضي الله عنها: ');
-  const s=el('button','yr-src','صحيح البخاري، كتاب المغازي، ج'+ar(jOf(F.src63.n))+'، ص '+ar(F.src63.p));s.type='button';s.onclick=()=>openPart(F.src63.n,F.src63.p,['ثلاث وستين'],false,'txt');n.append(s);P.append(n)}
+  const s=el('button','yr-src','صحيح البخاري، كتاب المغازي، ج'+ar(jOf(F.src63.n))+'، ص '+ar(F.src63.p));s.type='button';s.onclick=()=>openPart(F.src63.n,F.src63.p,['ثلاث وستين'],false,'txt');n.append(s);P.append(n);
+  {const r=P.getBoundingClientRect();if(r.top>innerHeight*0.55)scrollBy({top:r.top-innerHeight*0.2,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}}
 
 /* ---------- reader: your place in his life (Mukhtasar only) ---------- */
 function yrBar(){let w=$('#yrbarW');const R=$('#reader');if(!R)return;
@@ -3760,7 +3765,34 @@ function renderPrayer(){
     B.append(el('p','prnext','بقي على '+PR.N[nextI]+': '+(hh?u(hh,'ساعة','ساعتان','ساعات')+(mm?' و':''):'')+(mm||!hh?u(mm,'دقيقة','دقيقتان','دقائق'):'')))}
   const mk=LS.get('prMethod',null)||PR.defM(pl.country);
   B.append(el('p','note','حساب فلكي في جهازك بطريقة '+PR.M[mk][0]+(LS.get('prAsr','s')==='h'?'، والعصر على المذهب الحنفي':'')+'. قد يختلف عن تقويم بلدك أو أذان مسجدك دقيقة أو دقيقتين، فالمعتمد الأذان.'));
+  prPushRow(B,pl);
 }
+/* ---------- the reminder before the adhan: a notification about ten minutes before each of the five prayers ---------- */
+const PRPU='https://push.dorarnajdiah.com';
+const PRP={ios:/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),
+  app:!!(window.navigator.standalone||matchMedia('(display-mode: standalone)').matches),
+  can:()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window,on:null};
+async function prpSub(){try{const r=await navigator.serviceWorker.getRegistration();return r?await r.pushManager.getSubscription():null}catch(e){return null}}
+function prpMeta(pl){return {la:pl.lat,lo:pl.lng,tz:pl.tz,mk:LS.get('prMethod',null)||PR.defM(pl.country),h:LS.get('prAsr','s')==='h'?1:0,nm:/^موقعك/.test(pl.name||'')?'':(pl.name||'')}}
+const prpPost=(path,body)=>fetch(PRPU+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+function prPushRow(B,pl){
+  const b=el('button','btn btn-quiet prpush');b.type='button';
+  const set=on=>{PRP.on=on;b.textContent=on?'التنبيه قبل الأذان مفعّل · إيقافه':'نبّهني قبل الأذان';b.dataset.on=on?1:''};
+  if(!PRP.can()){if(PRP.ios&&!PRP.app){set(false);b.onclick=()=>toast('لتصلك التنبيهات في الآيفون: أضف الموقع إلى الشاشة الرئيسية من زر المشاركة في سفاري، ثم افتحه من أيقونته واضغط هذا الزر.',7000);B.append(b)}return}
+  set(!!PRP.on);B.append(b);
+  if(PRP.on===null)prpSub().then(s=>{set(!!s);prpSync(pl,s)});else if(PRP.on)prpSync(pl);
+  b.onclick=async()=>{b.disabled=true;try{
+      if(b.dataset.on){const s=await prpSub();if(s){prpPost('/unsub',{sub:{endpoint:s.endpoint}}).catch(()=>{});await s.unsubscribe()}LS.set('prPushMeta','');set(false);toast('أوقف التنبيه قبل الأذان.');return}
+      const perm=await Notification.requestPermission();if(perm!=='granted'){toast('لم يُسمح بالإشعارات. تستطيع السماح بها من إعدادات الجوال.',5000);return}
+      const reg=await navigator.serviceWorker.ready;const {key}=await (await fetch(PRPU+'/key')).json();
+      const k=key.replace(/-/g,'+').replace(/_/g,'/');const s=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:Uint8Array.from(atob(k+'='.repeat((4-k.length%4)%4)),c=>c.charCodeAt(0))});
+      const m=prpMeta(pl);const r=await prpPost('/sub',{sub:s,place:m});if(!r.ok)throw 0;LS.set('prPushMeta',JSON.stringify(m));
+      set(true);toast('فُعّل التنبيه: يصلك قبل أذان كل صلاة من الصلوات الخمس بنحو عشر دقائق، على مواقيت '+(m.nm||'موقعك')+'.',6000)
+    }catch(e){toast('تعذّر تفعيل التنبيه الآن. حاول بعد قليل.',4000)}finally{b.disabled=false}};
+}
+// a new place, method or Asr choice: the reminders follow it
+async function prpSync(pl,s){const m=JSON.stringify(prpMeta(pl));if(LS.get('prPushMeta','')===m)return;
+  try{s=s||await prpSub();if(!s)return;const r=await prpPost('/sub',{sub:s,place:JSON.parse(m)});if(r.ok)LS.set('prPushMeta',m)}catch(e){}}
 function prSave(pl){LS.set('prPlace',pl);renderPrayer()}
 function prNearest(lat,lng){let b=null,bd=1e9;for(const c of PR.C){const d=(c[2]-lat)**2+((c[3]-lng)*Math.cos(lat*Math.PI/180))**2;if(d<bd){bd=d;b=c}}return b}
 function prLocate(){
