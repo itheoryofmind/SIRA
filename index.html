@@ -1078,7 +1078,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 
 /* a year's events: each is a card that plainly opens the book; the source under the note is a quiet link */
 .yr-ev{border:1px solid var(--line)!important;border-radius:14px;background:var(--raised)!important;padding:12px 14px!important;margin-top:10px}
-.yr-ev:active{background:var(--brass-soft)!important}
+.yr-ev:active{background:var(--raised)!important}
 .yr-ev q mark{background:none!important;color:var(--brass);padding:0;border-radius:0;font-weight:600}
 .yr-ft{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
 .yr-ft small{margin:0!important;color:var(--muted)!important;font-size:13px}
@@ -1121,6 +1121,11 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 
 /* the reading plan's reminder */
 .pl-push{margin-top:10px;text-align:center}
+
+/* a year's event read in place */
+.yr-ev{cursor:default}
+.yr-ev .yr-more{display:block;margin:6px 0 0;border:0;background:none;padding:0;color:var(--brass);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.yr-ft .go{border:0;background:none;padding:0;font:inherit;cursor:pointer}
 
 </style>
 
@@ -1600,7 +1605,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-0544';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-0722';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3202,6 +3207,18 @@ function fxOpen(t){const ov=el('div','fx');ov.setAttribute('role','dialog');ov.s
 const goBtn=(F,label,n,p,hl)=>{const b=el('button','btn btn-quiet',label);b.type='button';b.onclick=()=>openPart(n,p,hl||null,false,'txt');return b};
 const pgT=(n,p)=>SXBN(n)+'، ص '+ar(p);
 /* a quote with the dating words marked */
+// an event's passage from its first words to the book's next heading (at most about 1600 letters, ending at a full stop)
+async function evFull(it){const n=it.n||17,T=await getJSON('data/t'+n+'.json');const P=T.p;
+  // found by its letters only, so a dash or a comma in the excerpt does not hide it
+  const nz=t=>{let o='';const m=[];for(let i=0;i<t.length;i++)if(/[\u0621-\u064A]/.test(t[i])){o+=t[i];m.push(i)}return [o,m]};
+  const key=nz(it.q.replace(/…$/,''))[0].slice(0,22);if(key.length<8)return '';let out='',on=false;
+  for(let p=it.p;p<Math.min(P.length,it.p+6);p++){const x=P[p];if(!x)continue;
+    for(const y of x.slice(1)){
+      if(typeof y==='string'){if(!on){const [o,m]=nz(y),i=o.indexOf(key);if(i<0)continue;on=true;out=y.slice(m[i])}else out+=' '+y}
+      else if(on&&y&&(y.h||y.e))return trimFull(out)}
+    if(out.length>1600)break}
+  return trimFull(out)}
+function trimFull(t){t=t.replace(/\s*\((?:\d+|[٠-٩]+)\)/g,'').replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').replace(/\s+/g,' ').trim();if(t.length<=1600)return t;const c=t.slice(0,1600),j=c.lastIndexOf('.');return (j>800?c.slice(0,j+1):c.slice(0,c.lastIndexOf(' ')))+' …'}
 function quoteW(q,w){const e=el('q');const i=w?q.indexOf(w):-1;if(i<0){e.textContent=q;return e}
   e.append(document.createTextNode(q.slice(0,i)),el('mark',null,w),document.createTextNode(q.slice(i+w.length)));return e}
 
@@ -3220,9 +3237,15 @@ async function showYear(k){const F=await sxFeat();const G=$('#yrGrid'),P=$('#yrP
   if(!L.length)P.append(el('p','yr-none','لم تذكر كتب الموقع حدثاً نصّت على أنه في هذه السنة.'));
   L.forEach(it=>{if(it.mk&&!it.q){const d=el('button','yr-mk');d.type='button';d.append(el('span',null,it.t),el('small',null,'ص '+ar(it.p)));d.onclick=()=>openPart(17,it.p,null,false,'txt');P.append(d);return}   // the book's own year mark: a divider, not a quote
     const n=it.n||17,ih=n===23;
-    const b=el('button','yr-ev');b.type='button';const ft=el('span','yr-ft');ft.append(el('small',null,(ih?'السيرة النبوية لابن هشام، ج١، ص ':'مختصر السيرة، ص ')+ar(it.p)),el('span','go',ih?'اقرأه في السيرة':'اقرأه في المختصر'));b.append(el('b',null,it.t),quoteW(it.q,it.w));
+    const b=el('div','yr-ev');const go=el('button','go',ih?'اقرأه في السيرة':'اقرأه في المختصر');go.type='button';
+    const ft=el('span','yr-ft');ft.append(el('small',null,(ih?'السيرة النبوية لابن هشام، ج١، ص ':'مختصر السيرة، ص ')+ar(it.p)),go);
+    let qv=quoteW(it.q,it.w);b.append(el('b',null,it.t),qv);
+    // the rest of the passage here, without leaving the page: up to the book's next heading
+    const more=el('button','yr-more','أكمل القراءة');more.type='button';
+    more.onclick=async()=>{more.disabled=true;try{const t=await evFull(it);if(t&&t.length>it.q.replace(/…$/,'').length+20){const nq=quoteW(t,it.w);qv.replaceWith(nq);qv=nq;more.remove()}else{more.remove()}}catch(e){more.disabled=false}};
+    if(it.q&&it.q.length>8)b.append(more);
     if(it.az)b.append(el('small','yr-az',it.az));b.append(ft);
-    b.onclick=()=>openPart(n,it.p,it.w?[it.w]:null,false,'txt');P.append(b)});
+    go.onclick=()=>openPart(n,it.p,it.w?[it.w]:null,false,'txt');P.append(b)});
   const n=el('p','yr-note','رقم كل مربع هو ما بلغه صلى الله عليه وسلم من العمر في تلك السنة: بُعث على رأس الأربعين، وهاجر وهو ابن ثلاث وخمسين، فمربعات مكة من ٤١ إلى ٥٣، ومربعات المدينة من ٥٤ إلى ٦٣. وأحداث المدينة على سني الهجرة كما رتّبها المختصر، فمطابقتها بسني العمر تقريبية. وما لم يؤرخه المختصر وُضع على ما ذكره موسى العازمي في «اللؤلؤ المكنون في سيرة النبي المأمون»، لعنايته بتحقيق السيرة. وتوفي صلى الله عليه وسلم وهو ابن ثلاث وستين، كما في صحيح البخاري عن عائشة رضي الله عنها: ');
   const s=el('button','yr-src','صحيح البخاري، كتاب المغازي، ج'+ar(jOf(F.src63.n))+'، ص '+ar(F.src63.p));s.type='button';s.onclick=()=>openPart(F.src63.n,F.src63.p,['ثلاث وستين'],false,'txt');n.append(s);P.append(n);
   {const r=P.getBoundingClientRect();if(r.top>innerHeight*0.72)scrollBy({top:r.top-innerHeight*0.62,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}}
