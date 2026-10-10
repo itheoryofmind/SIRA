@@ -1203,7 +1203,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .mg-ev{border:1px solid var(--line);border-radius:14px;background:var(--raised);overflow:hidden}
 .mg-ev.rest{border-style:dashed}
 .mg-hd{display:flex;width:100%;align-items:center;justify-content:space-between;gap:10px;border:0;background:none;padding:13px 14px 4px;font:inherit;color:var(--ink);cursor:pointer;text-align:start}
-.mg-hd::after{content:"";flex:none;width:9px;height:9px;border-inline-end:2px solid var(--brass);border-bottom:2px solid var(--brass);transform:rotate(45deg);margin-top:-4px;transition:transform .2s}
+.mg-hd::after{content:"";flex:none;width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin-top:-4px;transition:transform .2s}
 .mg-hd[aria-expanded="true"]::after{transform:rotate(-135deg);margin-top:4px}
 .mg-tt{display:flex;flex-direction:column}
 .mg-tt b{font-size:17px}
@@ -1383,6 +1383,17 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .gz-ns span{flex:1}
 .hd-u{font-size:1.2em;line-height:2.2;letter-spacing:0}
 
+.qa{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.qa-i{border:1px solid var(--line);border-radius:14px;background:var(--raised)}
+.qa-q{list-style:none;cursor:pointer;padding:12px 14px;font-weight:600;line-height:1.7;display:flex;gap:8px;align-items:flex-start}
+.qa-q::-webkit-details-marker{display:none}
+.qa-q::before{content:'';flex:none;width:7px;height:7px;margin-top:.7em;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .2s}
+.qa-i:not([open]) .qa-q::before{transform:rotate(135deg);margin-top:.6em}
+.qa-h{color:inherit}
+.qa-q:focus-visible{outline:2px solid var(--brass);border-radius:14px}
+.qa-a{padding:0 14px 8px}
+.qa-a .gz-d:last-child{border-bottom:0}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -1524,6 +1535,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
         <button type="button" id="sxTl"><b>الخط الزمني</b><span>الأحداث بترتيبها وصفحاتها</span></button>
         <button type="button" id="sxZubda"><b>أربعون محطة</b><span>السيرة في بطاقات، بلفظ الكتاب</span></button>
         <button type="button" class="wide" id="fxHajj"><b>حجة الوداع يوماً بيوم</b><span>من خروجه من المدينة إلى غدير خم، بلفظ ابن كثير</span></button>
+        <button type="button" class="wide" id="fxQa"><b>مسائل في السيرة</b><span>أسئلة تجيب عنها الكتب بلفظها</span></button>
         <p class="exg">من القرآن والصحيح</p>
         <button type="button" id="fxAyat"><b>ما نزل من القرآن في أحداث السيرة</b><span>أحداثٌ نصّت الكتب على أن آياتٍ نزلت فيها</span></button>
         <button type="button" id="fxMg"><b>المغازي في الصحيحين</b><span>أحاديث كل غزوة على ترتيب وقوعها</span></button>
@@ -1876,7 +1888,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1820';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1827';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1994,7 +2006,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "2300e37ee1", "data/sira_x.json": "4619001fb4", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "3d8be8faee", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "04657fd023", "data/sx_gz.json": "0f5b77ad74", "data/sx_hajj.json": "e037963d9d", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "a289ab8bdd", "data/sx_msif.json": "2934e9e698", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "2300e37ee1", "data/sira_x.json": "4619001fb4", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "3d8be8faee", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "04657fd023", "data/sx_gz.json": "0f5b77ad74", "data/sx_hajj.json": "e037963d9d", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "a289ab8bdd", "data/sx_msif.json": "2934e9e698", "data/sx_nuzul.json": "8c593e4af8", "data/sx_qa.json": "5fbbf0d8a5", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3326,6 +3338,7 @@ function openNav(){
   it('الخط الزمني للسيرة',()=>{closeNav();openSX('tl')});
   it('المغازي في الصحيحين',()=>{closeNav();fxMgTL()});
   it('الغزوات في سطور',()=>{closeNav();fxGz()});
+  it('مسائل في السيرة',()=>{closeNav();fxQa()});
   it('أهل بيته ﷺ',()=>{closeNav();fxAhl()});
   it('حجة الوداع يوماً بيوم',()=>{closeNav();fxHajj()});
   it('دلائل النبوة',()=>{closeNav();fxDal()});
@@ -3817,7 +3830,7 @@ sxFam=function(V,D){
   [['أبناؤه',sons],['بناته',dau]].forEach(([h,L])=>{if(!L.length)return;const g=el('div','ft-g');g.append(el('h4',null,h));const ul=el('ul');L.forEach(c=>{const li=node(c);if(c.t)li.querySelector('.fn-t').querySelectorAll('i').forEach(i=>{if(i.textContent==='بنت')i.remove()});ul.append(li)});g.append(ul);T.append(g)});
   V.append(T)};
 /* wiring */
-$('#fxEvent').onclick=fxEvent;$('#fxMg').onclick=()=>fxMgTL();$('#fxDal').onclick=()=>fxDal();$('#fxHajj').onclick=()=>fxHajj();$('#fxAhl').onclick=()=>fxAhl();$('#fxGz').onclick=()=>fxGz();$('#khHome').onclick=async()=>{await openZad(MB.k);setTimeout(()=>{const k=$('#sxKhul');k&&k.scrollIntoView({block:'start'})},120)};$('#khHomeTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
+$('#fxEvent').onclick=fxEvent;$('#fxMg').onclick=()=>fxMgTL();$('#fxDal').onclick=()=>fxDal();$('#fxHajj').onclick=()=>fxHajj();$('#fxAhl').onclick=()=>fxAhl();$('#fxGz').onclick=()=>fxGz();$('#fxQa').onclick=()=>fxQa();$('#khHome').onclick=async()=>{await openZad(MB.k);setTimeout(()=>{const k=$('#sxKhul');k&&k.scrollIntoView({block:'start'})},120)};$('#khHomeTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
 $('#sxSearchBtn').onclick=()=>{const q=$('#q');q.scrollIntoView({block:'center',behavior:'smooth'});q.focus({preventScroll:true})};
 $('#sxMenuBtn').onclick=()=>openNav();
 
@@ -4183,6 +4196,21 @@ async function fxGz(){const G=await getJSON('data/sx_gz.json');const P=fxOpen('�
     if(n){const b=el('button','btn btn-link hd-b',ar(n)+(n===1?' حديث':n===2?' حديثان':n<=10?' أحاديث':' حديثاً')+' في الصحيحين');b.type='button';b.onclick=()=>{P.close();fxMgTL(g.k)};act.append(b)}
     const r=el('button','btn btn-link hd-b','مختصر السيرة، ص '+ar(g.p));r.type='button';r.onclick=()=>{P.close();openPart(17,g.p,null,false,'txt')};act.append(r);c.append(act);L.append(c)});
   P.inn.append(L,el('p','fx-note','البطاقات على ترتيب صفحة «المغازي في الصحيحين». وكل نص فيها منقول بلفظه من كتاب في الموقع ومراجَع على صوره، وموجود في موضعه منه، وبجانبه مصدره، وما في الصحيحين مقدَّم. وإذا اختلفت الروايات في عدد أو تفصيل ذُكرت كلها منسوبة إلى قائليها. والعنوان الصغير قبل كل نص من وضعنا للتوضيح، والنص بعده لفظ الكتاب.'))}
+/* ---------- مسائل في السيرة: our questions, the books' exact words as answers ---------- */
+async function fxQa(){const Q=await getJSON('data/sx_qa.json');const P=fxOpen('مسائل في السيرة');
+  P.inn.append(el('p','fx-lead','أسئلة في السيرة، وجواب كل سؤال نصٌّ منقول بلفظه من كتب الموقع مع مصدره، وما في الصحيحين مقدَّم. اضغط السؤال ليظهر جوابه.'));
+  const SRC={bk:'صحيح البخاري',ba:'صحيح البخاري',ms:'صحيح مسلم',fd:'صحيح مسلم',ih:'سيرة ابن هشام',ik:'البداية والنهاية',zad:'زاد المعاد',mk:'مختصر السيرة'};
+  const VOL={23:1,24:2,18:1,19:2,20:3,21:4,22:5,31:3,32:4,33:5,34:6,35:7,36:8,37:9};
+  const OPEN={bk:()=>fxMgTL(),ms:()=>fxMgTL(),fd:()=>fxSifa(),ba:()=>fxDal()};
+  Q.forEach(c=>{P.inn.append(sawEl('h3','dl-bk qa-h',c.c));const L=el('div','qa');
+    c.q.forEach(it=>{const d=document.createElement('details');d.className='qa-i';const s=document.createElement('summary');s.className='qa-q';
+      const qt=el('span');hdFill(qt,it.q,[]);s.append(qt);d.append(s);const box=el('div','qa-a');
+      it.a.forEach(x=>{const r=el('div','gz-d');const t=el('p','gz-dq');hdFill(t,x.x.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾'),x.pm);r.append(t);
+        const sh=x.src in OPEN;const ref=sh?SRC[x.src]+'، رقم '+String(x.no).replace(/\d+/g,n=>ar(+n)):SRC[x.src]+(VOL[x.n]?'، ج'+ar(VOL[x.n]):'')+'، ص '+ar(x.p);
+        const b=el('button','gz-pg',ref);b.type='button';
+        b.onclick=sh?()=>{P.close();OPEN[x.src]()}:()=>{P.close();openPart(x.n,x.p,[x.x.split(' ').slice(0,3).join(' ')],false,'txt')};
+        r.append(b);box.append(r)});d.append(box);L.append(d)});P.inn.append(L)});
+  P.inn.append(el('p','fx-note','الأسئلة من وضعنا للتوضيح، والأجوبة لفظ الكتب كما هي، وكل نص منها موجود في موضعه من كتابه ومراجَع عليه، وزر المصدر تحته يفتح موضعه. وما كان من الحديث فلفظ النبي صلى الله عليه وسلم فيه بالذهبي.'))}
 /* ---------- أهل بيته ﷺ: his wives and children in the words of al-Bidaya ---------- */
 async function fxAhl(){const A=await getJSON('data/sx_ahl.json');const P=fxOpen('أهل بيته صلى الله عليه وسلم');
   const pg=(p,w)=>{const g=el('button','btn btn-quiet hj-g','البداية والنهاية، ج٨، ص '+ar(p));g.type='button';g.onclick=()=>{P.close();openPart(36,p,[w.split(' ').slice(0,3).join(' ')],false,'txt')};return g};
