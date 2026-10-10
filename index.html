@@ -1595,7 +1595,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-0518';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-0520';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3220,7 +3220,7 @@ async function showYear(k){const F=await sxFeat();const G=$('#yrGrid'),P=$('#yrP
     b.onclick=()=>openPart(n,it.p,it.w?[it.w]:null,false,'txt');P.append(b)});
   const n=el('p','yr-note','رقم كل مربع هو ما بلغه صلى الله عليه وسلم من العمر في تلك السنة: بُعث على رأس الأربعين، وهاجر وهو ابن ثلاث وخمسين، فمربعات مكة من ٤١ إلى ٥٣، ومربعات المدينة من ٥٤ إلى ٦٣. وأحداث المدينة على سني الهجرة كما رتّبها المختصر، فمطابقتها بسني العمر تقريبية. وما لم يؤرخه المختصر وُضع على ما ذكره موسى العازمي في «اللؤلؤ المكنون في سيرة النبي المأمون»، لعنايته بتحقيق السيرة. وتوفي صلى الله عليه وسلم وهو ابن ثلاث وستين، كما في صحيح البخاري عن عائشة رضي الله عنها: ');
   const s=el('button','yr-src','صحيح البخاري، كتاب المغازي، ج'+ar(jOf(F.src63.n))+'، ص '+ar(F.src63.p));s.type='button';s.onclick=()=>openPart(F.src63.n,F.src63.p,['ثلاث وستين'],false,'txt');n.append(s);P.append(n);
-  {const r=P.getBoundingClientRect();if(r.top>innerHeight*0.72)scrollBy({top:r.top-innerHeight*0.62,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}   // a small nudge: the year's heading comes into view, the squares stay}
+  {const r=P.getBoundingClientRect();if(r.top>innerHeight*0.72)scrollBy({top:r.top-innerHeight*0.62,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}}
 
 /* ---------- reader: your place in his life (Mukhtasar only) ---------- */
 function yrBar(){let w=$('#yrbarW');const R=$('#reader');if(!R)return;
