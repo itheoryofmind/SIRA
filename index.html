@@ -1157,6 +1157,14 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .nt-tm select{border:0;background:none;font:inherit;font-size:16px;color:var(--ink);padding:3px 0}
 .nt-test{display:block;width:100%;margin-top:14px;border:1px solid var(--brass);border-radius:11px;padding:11px;background:none;color:var(--brass);font:inherit;font-size:15px;font-weight:700;cursor:pointer}
 .nt-note{font-size:12.5px;color:var(--muted);line-height:1.8;margin:12px 4px 0}
+#ntSheet{overflow-x:hidden;overscroll-behavior-x:none}
+#ntBody{max-width:100%;overflow-x:hidden}
+.nt-tz{overflow:hidden}
+.nt-tzbtn{overflow:hidden}
+.nt-tzsel{max-width:100%;min-width:0}
+.nt-box,.nt-r,.nt-top{min-width:0;max-width:100%}
+.nt-tm{max-width:100%;box-sizing:border-box}
+.nt-tm select{max-width:150px;min-width:0;width:auto}
 
 </style>
 
@@ -1635,7 +1643,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-0938';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-0939';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
