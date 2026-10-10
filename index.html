@@ -1581,7 +1581,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-09-1956';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-0437';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3400,7 +3400,7 @@ async function renderDaily(){const F=await sxFeat();const sec=$('#sxDaily'),C=$(
   const L=[];F.sifa.forEach(s=>s.c.forEach(c=>c.had.forEach(h=>{if(h.g==='صحيح'||h.g==='حسن')L.push({h,ch:c.h})})));if(!L.length)return;
   const day=Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);const {h,ch}=L[day%L.length];
   C.innerHTML='';C.append(el('p','dy-ch',ch));
-  const t=h.x.filter(x=>typeof x==='string').join(' ');const q=el('p','dy-t',t);C.append(q);
+  const t=h.x.filter(x=>typeof x==='string').join(' ').replace(/\s+([)\]»])/g,'$1');const q=el('p','dy-t',t);C.append(q);
   const meta=el('div','dy-meta');meta.append(el('span','gr',gtxt(h.g)),el('span','dy-src','الشمائل المحمدية، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p)));C.append(meta);
   const act=el('div','dy-act');
   if(t.length>320){q.classList.add('clip');const m=el('button','btn btn-link','أكمل الحديث');m.type='button';m.onclick=()=>{q.classList.remove('clip');m.remove()};act.append(m)}
