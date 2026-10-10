@@ -93,9 +93,9 @@ function today(tz) {
   return { t: 'من شمائله صلى الله عليه وسلم', b: h.t, u: SITE + '/#hd=' + i, tag: 'shamail' };   // the site opens the hadith itself, in place
 }
 
-// the day's hadith from Kitab al-Maghazi (the site's home card shows the same one)
-function maghazi(tz) {
-  const i = dayNo(tz) % MG.length, x = MG[i];
+// the next hadith from Kitab al-Maghazi, by event (the site's home card shows the same one)
+function maghazi(tz, sd) {
+  const i = ((dayNo(tz) - (+sd || 0)) % MG.length + MG.length) % MG.length, x = MG[i];   // each reader in order, from the day the reader began
   return { t: x[0], b: x[1], u: SITE + '/#mg=' + i, tag: 'maghazi' };
 }
 
@@ -195,7 +195,7 @@ async function sendJobs(env, jobs) {
     if (!v || !v.value) continue;
     const m = norm(v.metadata), tz = okTz(m.tz) ? m.tz : DEF_TZ, sd = m.sd || {};
     const msg = kind === 'friday' ? friday() : (kind === 'plan' || kind === 'pl') ? plan(planOf(m.pl) || { t: 0, d: 30 })
-              : kind === 'si' ? seq(m.cx ? SIKH : SI, sd.si, tz, 'si') : kind === 'kh' ? seq(KH, sd.kh, tz, 'kh') : kind === 'mg' ? maghazi(tz) : today(tz);
+              : kind === 'si' ? seq(m.cx ? SIKH : SI, sd.si, tz, 'si') : kind === 'kh' ? seq(KH, sd.kh, tz, 'kh') : kind === 'mg' ? maghazi(tz, sd.mg) : today(tz);
     if (!msg) continue;   // the plan has ended
     const st = await send(env, v.value, msg).catch(() => 0);
     r.tried++;
@@ -248,7 +248,7 @@ export default {
       if ('cx' in body ? !!body.cx : !!(om && om.cx)) md.cx = 1;   // after the Sira, the caliphs
       // where each reader is in the Sira and the caliphs: the day the reader turned it on (or the page's own count)
       const sd = {}, osd = (om && om.sd) || {}, bsd = (body.sd && typeof body.sd === 'object') ? body.sd : {};
-      for (const k of ['si', 'kh']) if (k in h) { const x = Number.isInteger(bsd[k]) ? bsd[k] : Number.isInteger(osd[k]) ? osd[k] : dayNo(md.tz); sd[k] = x; }
+      for (const k of ['si', 'kh', 'mg']) if (k in h) { const x = Number.isInteger(bsd[k]) ? bsd[k] : Number.isInteger(osd[k]) ? osd[k] : dayNo(md.tz); sd[k] = x; }
       if (Object.keys(sd).length) md.sd = sd;
       if (!Object.keys(h).length) { await env.PUSH.delete(id); return json({ ok: true, removed: true }); }
       await env.PUSH.put(id, JSON.stringify({ endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } }), { metadata: md });

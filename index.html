@@ -1198,6 +1198,26 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .ev-ayah{text-align:center;font-size:24px;margin:6px 0 14px}
 .ev-ft .gr{margin-inline-end:6px}
 
+.mg-chap{margin:0 0 6px;font-size:13.5px;color:var(--muted);line-height:1.7}
+.mg-list{display:flex;flex-direction:column;gap:10px}
+.mg-ev{border:1px solid var(--line);border-radius:14px;background:var(--raised);overflow:hidden}
+.mg-ev.rest{border-style:dashed}
+.mg-hd{display:flex;width:100%;align-items:center;justify-content:space-between;gap:10px;border:0;background:none;padding:13px 14px 4px;font:inherit;color:var(--ink);cursor:pointer;text-align:start}
+.mg-hd::after{content:"";flex:none;width:9px;height:9px;border-inline-end:2px solid var(--brass);border-bottom:2px solid var(--brass);transform:rotate(45deg);margin-top:-4px;transition:transform .2s}
+.mg-hd[aria-expanded="true"]::after{transform:rotate(-135deg);margin-top:4px}
+.mg-tt{display:flex;flex-direction:column}
+.mg-tt b{font-size:17px}
+.mg-tt small{color:var(--brass);font-size:13px}
+.mg-src,.mg-note{margin:0;padding:0 14px 12px;font-size:13px;color:var(--muted);line-height:1.8}
+.mg-body{border-top:1px solid var(--line);padding:4px 14px 12px}
+.mg-ch h4{margin:14px 0 4px;font-size:15px;color:var(--palm)}
+.mg-tr{margin:0 0 6px;font-size:13.5px;color:var(--muted);line-height:1.8}
+.mg-h{padding:8px 0 10px;border-bottom:1px solid var(--line)}
+.mg-ch .mg-h:last-child{border-bottom:0}
+.mg-t{margin:0;font-family:var(--text);font-size:18px;line-height:1.95}
+.mg-t.clip{display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.dy-card .mg-h{border-bottom:0;padding:0}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -1332,6 +1352,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
       <div class="ex">
         <button type="button" class="wide" id="fxEvent"><b>الحدث في كل الكتب</b><span>اختر حدثاً واقرأه في كل كتاب بصفحته</span></button>
         <button type="button" id="fxDay"><b>يومه صلى الله عليه وسلم</b><span>هديه في يومه وليلته من زاد المعاد</span></button>
+        <button type="button" id="fxMg"><b>المغازي في صحيح البخاري</b><span>أحاديث كل غزوة على ترتيب وقوعها</span></button>
         <button type="button" id="fxAyat"><b>ما نزل من القرآن في أحداث السيرة</b><span>أحداثٌ نصّت الكتب على أن آياتٍ نزلت فيها</span></button>
         <button type="button" id="fxSifa"><b>صفته <span class="saw">ﷺ</span> كأنك تراه</b><span>خَلقه وخُلقه من الشمائل</span></button>
         <button type="button" id="fxRoad"><b>طريق الهجرة</b><span>المنازل كما ذكرها ابن إسحاق</span></button>
@@ -1680,7 +1701,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1018';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1046';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1787,7 +1808,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_feat.json": "04657fd023", "data/sx_mg.json": "5bb3f77de8", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/saadi.json": "bf53b5261e"};
+const DH={"data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_feat.json": "04657fd023", "data/sx_mg.json": "5af9e2d322", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3116,6 +3137,7 @@ function openNav(){
   SXBOOKS.filter(b=>b.open).forEach(b=>it(b.t,()=>{closeNav();b.open()}));
   grp('استكشف');
   it('الخط الزمني للسيرة',()=>{closeNav();openSX('tl')});
+  it('المغازي في صحيح البخاري',()=>{closeNav();fxMgTL()});
   it('شجرة النسب الشريف وآل عبد المطلب والخلفاء',()=>{closeNav();openSX('nasab')});
   grp('عن الموقع');
   it('منهج الموقع ومواضع الخلاف مع المطبوع',()=>{closeNav();fxMethod()});
@@ -3536,7 +3558,7 @@ sxFam=function(V,D){
   [['أبناؤه',sons],['بناته',dau]].forEach(([h,L])=>{if(!L.length)return;const g=el('div','ft-g');g.append(el('h4',null,h));const ul=el('ul');L.forEach(c=>{const li=node(c);if(c.t)li.querySelector('.fn-t').querySelectorAll('i').forEach(i=>{if(i.textContent==='بنت')i.remove()});ul.append(li)});g.append(ul);T.append(g)});
   V.append(T)};
 /* wiring */
-$('#fxEvent').onclick=fxEvent;$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
+$('#fxEvent').onclick=fxEvent;$('#fxMg').onclick=()=>fxMgTL();$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
 $('#sxSearchBtn').onclick=()=>{const q=$('#q');q.scrollIntoView({block:'center',behavior:'smooth'});q.focus({preventScroll:true})};
 $('#sxMenuBtn').onclick=()=>openNav();
 
@@ -3555,17 +3577,27 @@ async function renderDaily(){const F=await sxFeat();const sec=$('#sxDaily'),C=$(
 renderDaily();
 /* ---------- the day's hadith from Kitab al-Maghazi (Bukhari): the home card, and the notification opens the same one ---------- */
 const mgDay=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);
+// each reader goes through the hadiths in order, from the day the card was first shown (or the notification turned on)
+function mgStart(){let d=LS.get('mgStart',null);if(!Number.isInteger(d)){d=mgDay();LS.set('mgStart',d)}return d}
+const mgIdx=N=>((mgDay()-mgStart())%N+N)%N;
 function mgText(h,full){return full||!h.s?h.x:h.s}
 function mgMeta(h,full){return 'صحيح البخاري، كتاب المغازي، رقم '+ar(+h.no)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'')}
-async function renderMg(){const sec=$('#sxMg'),C=$('#mgCard');if(!sec||!C)return;const L=await getJSON('data/sx_mg.json');if(!L||!L.length)return;
-  const h=L[mgDay()%L.length];C.innerHTML='';C.append(el('p','dy-ch',h.ch||'كتاب المغازي'));
-  const q=el('p','dy-t',mgText(h));C.append(q);const meta=el('div','dy-meta');const ms=el('span','dy-src',mgMeta(h));meta.append(ms);C.append(meta);
+const mgCh=(M,h)=>(h.ch==='باب'||h.ch==='باب:')?'باب بلا ترجمة، تابع لما قبله':h.ch;
+// one hadith: the text from the Companion on, with the whole chain a tap away
+function mgItem(M,i,opt={}){const h=M.h[i],w=el('div','mg-h');
+  const q=el('p',opt.big?'dy-t':'mg-t',mgText(h));w.append(q);const meta=el('div','dy-meta');const ms=el('span','dy-src',mgMeta(h));meta.append(ms);w.append(meta);
   const act=el('div','dy-act');
-  if(q.textContent.length>320){q.classList.add('clip');const m=el('button','btn btn-link','أكمل الحديث');m.type='button';m.onclick=()=>{q.classList.remove('clip');m.remove()};act.append(m)}
-  if(h.s){const f=el('button','btn btn-link','بإسناده');f.type='button';f.onclick=()=>{q.textContent=h.x;q.classList.remove('clip');ms.textContent=mgMeta(h,1);f.remove();const m=act.querySelector('.btn-link');if(m&&m.textContent==='أكمل الحديث')m.remove()};act.append(f)}
-  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>openPart(h.n,h.p,null,false,'txt');act.append(go);C.append(act);
+  if(q.textContent.length>(opt.clip||320)){q.classList.add('clip');const m=el('button','btn btn-link','أكمل الحديث');m.type='button';m.onclick=()=>{q.classList.remove('clip');m.remove()};act.append(m)}
+  if(h.s){const f=el('button','btn btn-link','بإسناده');f.type='button';f.onclick=()=>{q.textContent=h.x;q.classList.remove('clip');ms.textContent=mgMeta(h,1);f.remove();[...act.querySelectorAll('.btn-link')].forEach(x=>{if(x.textContent==='أكمل الحديث')x.remove()})};act.append(f)}
+  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{if(opt.before)opt.before();openPart(h.n,h.p,null,false,'txt')};act.append(go);w.append(act);return {w,act}}
+async function renderMg(){const sec=$('#sxMg'),C=$('#mgCard');if(!sec||!C)return;const M=await getJSON('data/sx_mg.json');if(!M||!M.h||!M.h.length)return;
+  const i=mgIdx(M.h.length),h=M.h[i];C.innerHTML='';
+  const top=el('p','dy-ch');top.textContent=M.ev[h.ev].t+'، '+'الحديث '+ar(i+1)+' من '+ar(M.h.length);C.append(top);
+  C.append(el('p','mg-chap',mgCh(M,h)));
+  const {w,act}=mgItem(M,i,{big:1});C.append(w);
+  const all=el('button','btn btn-link','المغازي كلها على ترتيبها');all.type='button';all.onclick=()=>fxMgTL(h.ev);act.append(all);
   const bell=el('button','btn btn-link dy-bell');bell.type='button';act.append(bell);
-  ntBtn(bell,'mg',['ذكّرني كل يوم بحديث من المغازي','تذكير المغازي مفعّل · إيقافه','فُعّل: يصلك كل يوم حديث من كتاب المغازي في صحيح البخاري. وتستطيع تغيير وقته من صفحة «الإشعارات» في القائمة.','أوقف تذكير المغازي.']);
+  ntBtn(bell,'mg',['ذكّرني كل يوم بحديث من المغازي','تذكير المغازي مفعّل · إيقافه','فُعّل: يصلك كل يوم الحديث التالي من كتاب المغازي على ترتيب الأحداث. وتستطيع تغيير وقته من صفحة «الإشعارات» في القائمة.','أوقف تذكير المغازي.']);
   sec.hidden=false}
 setTimeout(renderMg,0);
 
@@ -3600,11 +3632,13 @@ async function ntSync(n,ask,test){
   let s=await pushSub();
   if(!Object.keys(n.h).length){if(s)await pushDrop(s);ntSet(n);return true}
   if(!s){if(!ask)return false;s=await pushGet();if(!s)return false}
+  if('mg' in n.h){n.sd=n.sd||{};n.sd.mg=mgStart()}
   const body={sub:s,tz:myTz(),h:n.h,sd:n.sd,cx:n.cx!==false,pl:pl?{t:pl.t,d:pl.d}:null};if(test)body.test=1;
   const r=await fetch(PUSHU+'/sub',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw 0;
   const j=await r.json();n.sd=j.sd||{};ntSet(n);LS.set('pushTz',myTz());return true}
 // the time zone of the phone changed (travel): tell the sender
 setTimeout(async()=>{try{if(!canPush()||LS.get('pushTz','')===myTz())return;if(!(await pushSub()))return;await ntSync(ntGet(),false)}catch(e){}},5000);
+// the Maghazi notification follows the same order as the home card
 const ntOn=async k=>!!(await pushSub())&&(k in ntGet().h);
 const IOSHINT='لتصلك الإشعارات في الآيفون: أضف الموقع إلى الشاشة الرئيسية من زر المشاركة في سفاري، ثم افتحه من أيقونته.';
 // one kind turned on or off from elsewhere in the site (the hadith card, the plan)
@@ -3783,7 +3817,7 @@ function evShell(label){
   const B=document.getElementById('evBody');B.innerHTML='';
   document.getElementById('evBack').hidden=false;S.hidden=false;S.scrollTop=0;return B}
 const evClose=()=>{const S=document.getElementById('evSheet');if(S){S.hidden=true;document.getElementById('evBack').hidden=true}};
-async function fxEvent(k){
+async function fxTlEv(k){
   const X=await getJSON('data/sira_x.json'),L=X.tl.it,it=L[k];if(!it||!it.q)return;
   const B=evShell(it.t);
   B.append(sawEl('p','ev-era',(X.tl.eras[it.e]||'')),sawEl('h3','ev-t',it.t));
@@ -3808,18 +3842,34 @@ async function fxHadith(i){const F=await sxFeat();const L=[];F.sifa.forEach(s=>s
   const ft=el('div','ev-ft');const m=el('small');m.append(el('span','gr',gtxt(h.g)),document.createTextNode(' الشمائل المحمدية، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p)));ft.append(m);
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(25,h.p,null,false,'txt')};ft.append(go);B.append(ft)}
 // a hadith of Kitab al-Maghazi, in full with its chain
-async function fxMaghazi(i){const L=await getJSON('data/sx_mg.json');const h=L[i];if(!h)return;const B=evShell(h.ch||'كتاب المغازي');
-  B.append(el('p','ev-era','من المغازي'),sawEl('h3','ev-t',h.ch||'كتاب المغازي'));
+async function fxMaghazi(i){const M=await getJSON('data/sx_mg.json');const h=M.h[i];if(!h)return;const ev=M.ev[h.ev];const B=evShell(ev.t);
+  B.append(el('p','ev-era','من المغازي، الحديث '+ar(i+1)+' من '+ar(M.h.length)),sawEl('h3','ev-t',ev.t),el('p','mg-chap',mgCh(M,h)));
   const q=el('p','ev-q');q.textContent=h.x;B.append(q);
   const ft=el('div','ev-ft');ft.append(el('small',null,mgMeta(h,1)));
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(h.n,h.p,null,false,'txt')};ft.append(go);B.append(ft)}
+// Kitab al-Maghazi by event: Bukhari's own chapters, the events in the order of the Mukhtasar
+async function fxMgTL(open){const M=await getJSON('data/sx_mg.json');const P=fxOpen('المغازي في صحيح البخاري');
+  P.inn.append(el('p','fx-lead','أحاديث كتاب المغازي من صحيح البخاري، مجموعةً على الغزوات والأحداث بحسب أبواب البخاري نفسه، والأحداث مرتبة على ترتيب وقوعها في مختصر السيرة. اضغط الحدث لترى أحاديثه.'));
+  const list=el('div','mg-list');P.inn.append(list);
+  M.ev.forEach((ev,k)=>{const n=ev.ch.reduce((a,c)=>a+c.hs.length,0);if(!n)return;
+    const card=el('section','mg-ev'+(ev.rest?' rest':''));const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
+    const tt=el('span','mg-tt');tt.append(sawEl('b',null,ev.t),el('small',null,ar(n)+(n===1?' حديث':n===2?' حديثان':n<=10?' أحاديث':' حديثاً')));hd.append(tt);card.append(hd);
+    if(ev.rest)card.append(el('p','mg-note','أبواب لم يذكر مختصر السيرة أحداثها في سياقه، فبقيت هنا على ترتيب البخاري دون أن يُقدَّر لها موضع.'));
+    else{const src=el('p','mg-src');src.textContent='في مختصر السيرة ص '+ar(ev.mp)+(ev.dq?'، وفيه: «'+ev.dq+'»':'');card.append(src)}
+    const body=el('div','mg-body');body.hidden=true;card.append(body);
+    const fill=()=>{if(body.childElementCount)return;ev.ch.forEach(c=>{const cb=el('div','mg-ch');
+        cb.append(el('h4',null,(c.t==='باب'||c.t==='باب:')?'باب بلا ترجمة':c.t));if(c.tr)cb.append(el('p','mg-tr',c.tr));
+        c.hs.forEach(i=>cb.append(mgItem(M,i,{clip:260,before:P.close}).w));body.append(cb)})};
+    hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};
+    list.append(card);if(open===k){fill();body.hidden=false;hd.setAttribute('aria-expanded','true');setTimeout(()=>card.scrollIntoView({block:'start'}),50)}});
+  P.inn.append(el('p','fx-note','الحديث تحت الحدث الذي بوّب عليه البخاري، والباب الذي بلا ترجمة تابع للباب الذي قبله على عادته. وما ذُكر من تاريخ فهو بلفظ مختصر السيرة وصفحته، وكلام البخاري في أول الباب منقول كما هو، وقد يذكر فيه قولاً آخر في التاريخ. وحُذف الإسناد إلى الصحابي حيث كان ذلك بيّناً، ونُصّ عليه تحت الحديث، والحديث بإسناده بضغطة.'))}
 // Friday: al-Ahzab 56, in the Mushaf's script
 async function fxFriday(){const Q=await getJSON('data/quran.json');const v=Q.a[32][55];const B=evShell('يوم الجمعة');
   B.append(el('p','ev-era','يوم الجمعة'),sawEl('h3','ev-t','الصلاة على النبي ﷺ'));
   const q=el('p','fx-q ev-ayah');q.textContent='﴿'+v+'﴾';B.append(q,el('p','ev-ft',''));B.lastChild.append(el('small',null,'سورة الأحزاب، الآية ٥٦'))}
 function evRoute(){const h=location.hash;let m;
   const go=f=>{history.replaceState(null,'',location.pathname+location.search);setTimeout(f,400)};
-  if((m=/^#ev=(\d+)$/.exec(h)))go(()=>fxEvent(+m[1]));
+  if((m=/^#ev=(\d+)$/.exec(h)))go(()=>fxTlEv(+m[1]));
   else if((m=/^#hd=(\d+)$/.exec(h)))go(()=>fxHadith(+m[1]));
   else if((m=/^#mg=(\d+)$/.exec(h)))go(()=>fxMaghazi(+m[1]));
   else if(h==='#fr')go(fxFriday)}
