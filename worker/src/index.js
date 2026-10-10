@@ -2,6 +2,7 @@
 // - keeps the devices that asked for it (the push address the browser gives and the reader's time zone; no name, no e-mail)
 // - every day at 6:00 in the reader's own time zone: the hadith the site shows that day (al-Albani graded it sahih or hasan)
 // - every Friday at 9:00 in the reader's own time zone: al-Ahzab 56
+// - for a reader who keeps a reading plan and asked for it: the day's pages of the Mukhtasar at 20:00 where the reader is
 // Web Push: RFC 8291 (aes128gcm) and RFC 8292 (VAPID), with WebCrypto only.
 import H from './hadith.js';
 
@@ -94,6 +95,19 @@ function friday() {
   return { t: 'يوم الجمعة', b: '﴿' + VERSE + '﴾ [الأحزاب: ٥٦]', u: SITE + '/', tag: 'friday' };
 }
 
+// the reading plan of the site: the Mukhtasar from page 3 to 329, in d days from the reader's first day t
+const PL_A = 3, PL_B = 329, PL_N = PL_B - PL_A + 1;
+const AR = (n) => String(n).replace(/[0-9]/g, (c) => '٠١٢٣٤٥٦٧٨٩'[c]);
+const planOf = (x) => (x && Number.isFinite(+x.t) && [30, 60, 100].includes(+x.d)) ? { t: +x.t, d: +x.d } : null;
+function plan(pl) {
+  const day = Math.floor((Date.now() - pl.t) / 864e5) + 1;
+  if (day < 1 || day > pl.d) return null;
+  const per = Math.ceil(PL_N / pl.d), a = PL_A + (day - 1) * per, b = Math.min(PL_B, a + per - 1);
+  return { t: 'ورد اليوم من السيرة', b: 'اليوم ' + AR(day) + ' من ' + AR(pl.d) + ': مختصر سيرة الرسول صلى الله عليه وسلم، الصفحات ' + AR(a) + '–' + AR(b) + '.', u: SITE + '/#v17p' + a, tag: 'plan' };
+}
+// what a reader asked for: sh (the hadith and the Friday reminder; every subscription before the plan had it), pl (the plan)
+const wantsSh = (m) => !m || m.sh !== 0;
+
 function valid(sub) {
   try {
     const u = new URL(sub.endpoint);
@@ -115,11 +129,12 @@ async function due(env, force) {
   do {
     const l = await env.PUSH.list({ prefix: 's:', cursor });
     for (const k of l.keys) {
-      const tz = (k.metadata && okTz(k.metadata.tz)) ? k.metadata.tz : DEF_TZ;
-      if (force) { out.push([k.name, force]); continue; }
+      const m = k.metadata, tz = (m && okTz(m.tz)) ? m.tz : DEF_TZ;
+      if (force) { if (wantsSh(m)) out.push([k.name, force]); continue; }
       const L = local(tz);
-      if (L.h === 6) out.push([k.name, 'daily']);
-      if (L.wd === 'Fri' && L.h === 9) out.push([k.name, 'friday']);
+      if (wantsSh(m) && L.h === 6) out.push([k.name, 'daily']);
+      if (wantsSh(m) && L.wd === 'Fri' && L.h === 9) out.push([k.name, 'friday']);
+      if (m && planOf(m.pl) && L.h === 20) out.push([k.name, 'plan']);
     }
     cursor = l.list_complete ? null : l.cursor;
   } while (cursor);
@@ -148,7 +163,9 @@ async function sendJobs(env, jobs) {
     const v = await env.PUSH.getWithMetadata(id, 'json');
     if (!v || !v.value) continue;
     const tz = (v.metadata && okTz(v.metadata.tz)) ? v.metadata.tz : DEF_TZ;
-    const st = await send(env, v.value, kind === 'friday' ? friday() : today(tz)).catch(() => 0);
+    const msg = kind === 'friday' ? friday() : kind === 'plan' ? plan(planOf(v.metadata && v.metadata.pl) || { t: 0, d: 30 }) : today(tz);
+    if (!msg) continue;   // the plan has ended
+    const st = await send(env, v.value, msg).catch(() => 0);
     r.tried++;
     if (st >= 200 && st < 300) r.sent++;
     if (st === 404 || st === 410) { await env.PUSH.delete(id); r.removed++; }   // the reader turned it off or removed the app
@@ -180,10 +197,16 @@ export default {
       const id = await idOf(sub.endpoint);
       if (u.pathname === '/unsub') { await env.PUSH.delete(id); return json({ ok: true }); }
       if (!valid(sub)) return json({ ok: false }, 400);
-      const tz = okTz(body.tz) ? body.tz : DEF_TZ;
-      const known = await env.PUSH.get(id);
-      await env.PUSH.put(id, JSON.stringify({ endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } }), { metadata: { tz } });
-      if (known) return json({ ok: true });   // the same reader again (a new time zone): no second welcome
+      const old = await env.PUSH.getWithMetadata(id);
+      const om = (old && old.value) ? (old.metadata || {}) : null;
+      // what this call says, over what was kept: tz always; sh and pl only when given
+      const md = { tz: okTz(body.tz) ? body.tz : (om && okTz(om.tz) ? om.tz : DEF_TZ),
+                   sh: 'sh' in body ? (body.sh ? 1 : 0) : (om ? (om.sh === 0 ? 0 : 1) : 1) };
+      const pl = 'pl' in body ? planOf(body.pl) : (om ? planOf(om.pl) : null);
+      if (pl) md.pl = pl;
+      if (!md.sh && !md.pl) { await env.PUSH.delete(id); return json({ ok: true, removed: true }); }
+      await env.PUSH.put(id, JSON.stringify({ endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } }), { metadata: md });
+      if (om || !md.sh) return json({ ok: true });   // the same reader again, or only the plan: no welcome for the hadith
       // a first notification right away: the reader sees it works
       const st = await send(env, sub, { t: 'سِيرَتُه', b: 'سيصلك كل يوم حديثٌ من شمائله صلى الله عليه وسلم، وكل جمعة تذكيرٌ بالصلاة عليه.', u: SITE + '/', tag: 'welcome' }).catch(() => 0);
       return json({ ok: true, sent: st });
