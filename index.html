@@ -1269,7 +1269,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
         <button type="button" id="sxZubda"><b>أربعون محطة</b><span>السيرة في بطاقات، بلفظ الكتاب</span></button>
         <button type="button" id="sxAtlas"><b>الأطلس</b><span>مواضع الأحداث بإحداثياتها</span></button>
         <button type="button" id="sxTl"><b>الخط الزمني</b><span>الأحداث بترتيبها وصفحاتها</span></button>
-        <button type="button" id="sxTree"><b>شجرة النسب</b><span>آل عبد المطلب والخلفاء</span></button>
+        <button type="button" id="sxTree"><b>شجرة النسب الشريف</b><span>آل عبد المطلب والخلفاء</span></button>
       </div>
     </section>
 
@@ -1598,7 +1598,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <div class="overlay" id="sxOverlay" hidden role="dialog" aria-label="الخط الزمني والشجرة">
   <div class="head"><h2 style="flex:1" id="sxTitle">مختصر السيرة</h2><button class="icon" id="sxClose" aria-label="إغلاق"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div class="body">
-    <div class="tabs sxtabs" role="tablist" style="grid-template-columns:repeat(4,1fr)"><button type="button" data-v="tl" role="tab">الخط الزمني</button><button type="button" data-v="nasab" role="tab">النسب</button><button type="button" data-v="fam" role="tab">آل عبد المطلب</button><button type="button" data-v="cal" role="tab">الخلفاء</button></div>
+    <div class="tabs sxtabs" role="tablist" style="grid-template-columns:repeat(4,1fr)"><button type="button" data-v="tl" role="tab">الخط الزمني</button><button type="button" data-v="nasab" role="tab">النسب الشريف</button><button type="button" data-v="fam" role="tab">آل عبد المطلب</button><button type="button" data-v="cal" role="tab">الخلفاء</button></div>
     <div id="sxView"></div>
   </div>
 </div>
@@ -1610,7 +1610,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-0836';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-0848';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3045,7 +3045,7 @@ function openNav(){
   SXBOOKS.filter(b=>b.open).forEach(b=>it(b.t,()=>{closeNav();b.open()}));
   grp('استكشف');
   it('الخط الزمني للسيرة',()=>{closeNav();openSX('tl')});
-  it('شجرة النسب وآل عبد المطلب والخلفاء',()=>{closeNav();openSX('nasab')});
+  it('شجرة النسب الشريف وآل عبد المطلب والخلفاء',()=>{closeNav();openSX('nasab')});
   grp('عن الموقع');
   it('منهج الموقع ومواضع الخلاف مع المطبوع',()=>{closeNav();fxMethod()});
   it('أرسل ملاحظة',()=>{closeNav();openFb('notes')});
