@@ -117,6 +117,7 @@ function seq(L, sd, tz, kind) {
   return { t: x[0], b: x[1], u: SITE + '/#v17p' + x[2], tag: kind };
 }
 // what a reader asked for, and when: h = {kind: hour}; readers kept before the choice of hours: the hadith at 6, Friday at 9, the plan at 20
+const SIKH = SI.concat(KH);   // the Sira, then the caliphs, for a reader who asked to go on
 const KINDS = { sh: 6, fr: 9, si: 21, kh: 21, pl: 20 };
 function norm(m) {
   m = m || {};
@@ -187,7 +188,7 @@ async function sendJobs(env, jobs) {
     if (!v || !v.value) continue;
     const m = norm(v.metadata), tz = okTz(m.tz) ? m.tz : DEF_TZ, sd = m.sd || {};
     const msg = kind === 'friday' ? friday() : (kind === 'plan' || kind === 'pl') ? plan(planOf(m.pl) || { t: 0, d: 30 })
-              : kind === 'si' ? seq(SI, sd.si, tz, 'si') : kind === 'kh' ? seq(KH, sd.kh, tz, 'kh') : today(tz);
+              : kind === 'si' ? seq(m.cx ? SIKH : SI, sd.si, tz, 'si') : kind === 'kh' ? seq(KH, sd.kh, tz, 'kh') : today(tz);
     if (!msg) continue;   // the plan has ended
     const st = await send(env, v.value, msg).catch(() => 0);
     r.tried++;
@@ -237,6 +238,7 @@ export default {
       if ('pl' in body && !body.h) { if (pl) h.pl = h.pl ?? 20; else delete h.pl; }
       if (!pl) delete h.pl;
       md.h = h;
+      if ('cx' in body ? !!body.cx : !!(om && om.cx)) md.cx = 1;   // after the Sira, the caliphs
       // where each reader is in the Sira and the caliphs: the day the reader turned it on (or the page's own count)
       const sd = {}, osd = (om && om.sd) || {}, bsd = (body.sd && typeof body.sd === 'object') ? body.sd : {};
       for (const k of ['si', 'kh']) if (k in h) { const x = Number.isInteger(bsd[k]) ? bsd[k] : Number.isInteger(osd[k]) ? osd[k] : dayNo(md.tz); sd[k] = x; }
