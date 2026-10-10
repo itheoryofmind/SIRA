@@ -1190,11 +1190,13 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .ntcard .nt-x{position:absolute;top:6px;inset-inline-end:6px;color:var(--muted)}
 .nt-off{display:block;width:100%;margin-top:10px;border:1px solid color-mix(in srgb,var(--clay) 45%,transparent);border-radius:11px;padding:11px;background:none;color:var(--clay);font:inherit;font-size:15px;font-weight:700;cursor:pointer}
 .ev-sheet{overflow-x:hidden}
-.ev-era{margin:4px 0 2px;font-size:13px;color:var(--brass);font-weight:700}
-.ev-t{font-family:var(--display);font-size:24px;line-height:1.5;margin:0 0 10px}
+.ev-era{margin:4px 0 2px;font-family:var(--ui);font-size:13px;color:var(--brass);font-weight:700}
+.ev-t{font-family:"Amiri",serif;font-weight:700;font-size:23px;line-height:1.5;margin:0 0 10px}
 .ev-q{display:block;font-family:var(--text);font-size:20px;line-height:2;quotes:none;margin:0 0 14px}
 .ev-q::before,.ev-q::after{content:none}
 .ev-ft{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid var(--line);padding-top:10px;color:var(--muted)}
+.ev-ayah{text-align:center;font-size:24px;margin:6px 0 14px}
+.ev-ft .gr{margin-inline-end:6px}
 
 </style>
 
@@ -1674,7 +1676,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1009';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1013';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3746,22 +3748,29 @@ async function fxOffline(){
 }catch(e){}})();
 
 /* ---------- one event of the timeline, opened from a notification: read here, in full, without going into the book ---------- */
-async function fxEvent(k){
-  const X=await getJSON('data/sira_x.json'),L=X.tl.it,it=L[k];if(!it||!it.q)return;
+// text with ﷺ set small and light, as elsewhere on the site
+function sawEl(tag,cls,t){if(cls==='ev-t')return el(tag,cls,t.replace(/ﷺ/g,'صلى الله عليه وسلم'));   // in a heading: written out (the ligature breaks bold Arabic on some phones)
+  const e=el(tag,cls);t.split('ﷺ').forEach((x,i)=>{if(i)e.append(el('span','saw','ﷺ'));e.append(document.createTextNode(x))});return e}
+// the sheet a notification opens: its body, emptied
+function evShell(label){
   let S=document.getElementById('evSheet');
   if(!S){const bk=el('div','sheet-back');bk.id='evBack';S=el('div','sheet ev-sheet');S.id='evSheet';S.setAttribute('role','dialog');
     const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');
     x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.style.cssText='position:absolute;inset-inline-start:6px;top:6px';hd.append(x);
     const B=el('div');B.id='evBody';S.append(hd,B);document.body.append(bk,S);
     const close=()=>{bk.hidden=true;S.hidden=true};bk.onclick=close;x.onclick=close}
-  S.setAttribute('aria-label',it.t);
+  S.setAttribute('aria-label',label);
   const B=document.getElementById('evBody');B.innerHTML='';
-  B.append(el('p','ev-era',(X.tl.eras[it.e]||'')),el('h3','ev-t',it.t));
+  document.getElementById('evBack').hidden=false;S.hidden=false;S.scrollTop=0;return B}
+const evClose=()=>{const S=document.getElementById('evSheet');if(S){S.hidden=true;document.getElementById('evBack').hidden=true}};
+async function fxEvent(k){
+  const X=await getJSON('data/sira_x.json'),L=X.tl.it,it=L[k];if(!it||!it.q)return;
+  const B=evShell(it.t);
+  B.append(sawEl('p','ev-era',(X.tl.eras[it.e]||'')),sawEl('h3','ev-t',it.t));
   let qv=quoteW(it.q,it.w);qv.classList.add('ev-q');B.append(qv);
   const ft=el('div','ev-ft');ft.append(el('small',null,'مختصر سيرة الرسول ﷺ، للإمام محمد بن عبد الوهاب، ص '+ar(it.p)));
-  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{document.getElementById('evBack').hidden=true;S.hidden=true;openPart(17,it.p,it.w?[it.w]:null,false,'txt')};
+  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(17,it.p,it.w?[it.w]:null,false,'txt')};
   ft.append(go);B.append(ft);
-  document.getElementById('evBack').hidden=false;S.hidden=false;S.scrollTop=0;
   // the whole passage, up to the book's next heading
   try{let t=await evFull(it);
     // stop where the timeline's next event begins, so the reader gets this event only
@@ -3771,7 +3780,22 @@ async function fxEvent(k){
       if(i>0)t=t.slice(0,m[i]).replace(/[\s«"(]+$/,'').trim()
       if(/[:،]$/.test(t)){const j=Math.max(t.lastIndexOf('. '),t.lastIndexOf('». '));if(j>t.length/3)t=t.slice(0,t.indexOf(' ',j)).trim()}}
     if(t&&t.length>it.q.replace(/…$/,'').length+20){const nq=quoteW(t,it.w);nq.classList.add('ev-q');qv.replaceWith(nq);qv=nq}}catch(e){}}
-function evRoute(){const m=/^#ev=(\d+)$/.exec(location.hash);if(!m)return;history.replaceState(null,'',location.pathname+location.search);setTimeout(()=>fxEvent(+m[1]),400)}
+// the day's hadith of «من شمائله», in the same order as the home card and the notification
+async function fxHadith(i){const F=await sxFeat();const L=[];F.sifa.forEach(s=>s.c.forEach(c=>c.had.forEach(h=>{if(h.g==='صحيح'||h.g==='حسن')L.push({h,ch:c.h})})));
+  const x=L[i];if(!x)return;const {h,ch}=x;const B=evShell('من شمائله صلى الله عليه وسلم');
+  B.append(sawEl('p','ev-era','من شمائله ﷺ'),sawEl('h3','ev-t',ch));
+  const t=h.x.filter(y=>typeof y==='string').join(' ').replace(/\s+([)\]»])/g,'$1');const q=el('p','ev-q');q.textContent=t;B.append(q);
+  const ft=el('div','ev-ft');const m=el('small');m.append(el('span','gr',gtxt(h.g)),document.createTextNode(' الشمائل المحمدية، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p)));ft.append(m);
+  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(25,h.p,null,false,'txt')};ft.append(go);B.append(ft)}
+// Friday: al-Ahzab 56, in the Mushaf's script
+async function fxFriday(){const Q=await getJSON('data/quran.json');const v=Q.a[32][55];const B=evShell('يوم الجمعة');
+  B.append(el('p','ev-era','يوم الجمعة'),sawEl('h3','ev-t','الصلاة على النبي ﷺ'));
+  const q=el('p','fx-q ev-ayah');q.textContent='﴿'+v+'﴾';B.append(q,el('p','ev-ft',''));B.lastChild.append(el('small',null,'سورة الأحزاب، الآية ٥٦'))}
+function evRoute(){const h=location.hash;let m;
+  const go=f=>{history.replaceState(null,'',location.pathname+location.search);setTimeout(f,400)};
+  if((m=/^#ev=(\d+)$/.exec(h)))go(()=>fxEvent(+m[1]));
+  else if((m=/^#hd=(\d+)$/.exec(h)))go(()=>fxHadith(+m[1]));
+  else if(h==='#fr')go(fxFriday)}
 addEventListener('hashchange',evRoute);evRoute();
 
 /* ---------- مواضع الخلاف مع المطبوع: علامات حمراء، وقراءة الصفحات المعلَّمة وحدها ---------- */

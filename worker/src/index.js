@@ -88,14 +88,14 @@ function local(tz, t = Date.now()) {
 function today(tz) {
   const L = local(tz);
   const day = Date.UTC(L.y, L.m - 1, L.d) / 864e5;
-  const h = H[day % H.length];
-  return { t: 'من شمائله صلى الله عليه وسلم', b: h.t, u: SITE + '/#v25p' + h.p, tag: 'shamail' };
+  const i = day % H.length, h = H[i];
+  return { t: 'من شمائله صلى الله عليه وسلم', b: h.t, u: SITE + '/#hd=' + i, tag: 'shamail' };   // the site opens the hadith itself, in place
 }
 
 // every Friday to all who turned the notifications on: al-Ahzab 56 only (King Fahd Complex text)
 const VERSE = "إِنَّ ٱللَّهَ وَمَلَٰٓئِكَتَهُۥ يُصَلُّونَ عَلَى ٱلنَّبِيِّۚ يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ صَلُّواْ عَلَيۡهِ وَسَلِّمُواْ تَسۡلِيمًا";
 function friday() {
-  return { t: 'يوم الجمعة', b: '﴿' + VERSE + '﴾ [الأحزاب: ٥٦]', u: SITE + '/', tag: 'friday' };
+  return { t: 'يوم الجمعة', b: '﴿' + VERSE + '﴾ [الأحزاب: ٥٦]', u: SITE + '/#fr', tag: 'friday' };
 }
 
 // the reading plan of the site: the Mukhtasar from page 3 to 329, in d days from the reader's first day t
