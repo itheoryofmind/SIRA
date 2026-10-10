@@ -1,12 +1,3 @@
-# Review version: not indexed by search engines yet. Link previews (WhatsApp, X) are allowed.
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: WhatsApp
-Allow: /
-
 User-agent: *
-Disallow: /
+Allow: /
+Sitemap: https://seeratuh.com/sitemap.xml
