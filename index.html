@@ -1189,6 +1189,12 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 .ntcard .nt-go{flex:none;padding:8px 16px;font-size:14.5px;border-radius:10px;margin-inline-start:32px;background:var(--brass);color:var(--surface);border:0}
 .ntcard .nt-x{position:absolute;top:6px;inset-inline-end:6px;color:var(--muted)}
 .nt-off{display:block;width:100%;margin-top:10px;border:1px solid color-mix(in srgb,var(--clay) 45%,transparent);border-radius:11px;padding:11px;background:none;color:var(--clay);font:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.ev-sheet{overflow-x:hidden}
+.ev-era{margin:4px 0 2px;font-size:13px;color:var(--brass);font-weight:700}
+.ev-t{font-family:var(--display);font-size:24px;line-height:1.5;margin:0 0 10px}
+.ev-q{display:block;font-family:var(--text);font-size:20px;line-height:2;quotes:none;margin:0 0 14px}
+.ev-q::before,.ev-q::after{content:none}
+.ev-ft{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid var(--line);padding-top:10px;color:var(--muted)}
 
 </style>
 
@@ -1668,7 +1674,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-0955';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1009';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3738,6 +3744,35 @@ async function fxOffline(){
   $('#ntGo').onclick=()=>{box.hidden=true;fxNotif()};
   $('#ntX').onclick=()=>{box.hidden=true;LS.set('ntCardX',Date.now())};
 }catch(e){}})();
+
+/* ---------- one event of the timeline, opened from a notification: read here, in full, without going into the book ---------- */
+async function fxEvent(k){
+  const X=await getJSON('data/sira_x.json'),L=X.tl.it,it=L[k];if(!it||!it.q)return;
+  let S=document.getElementById('evSheet');
+  if(!S){const bk=el('div','sheet-back');bk.id='evBack';S=el('div','sheet ev-sheet');S.id='evSheet';S.setAttribute('role','dialog');
+    const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');
+    x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.style.cssText='position:absolute;inset-inline-start:6px;top:6px';hd.append(x);
+    const B=el('div');B.id='evBody';S.append(hd,B);document.body.append(bk,S);
+    const close=()=>{bk.hidden=true;S.hidden=true};bk.onclick=close;x.onclick=close}
+  S.setAttribute('aria-label',it.t);
+  const B=document.getElementById('evBody');B.innerHTML='';
+  B.append(el('p','ev-era',(X.tl.eras[it.e]||'')),el('h3','ev-t',it.t));
+  let qv=quoteW(it.q,it.w);qv.classList.add('ev-q');B.append(qv);
+  const ft=el('div','ev-ft');ft.append(el('small',null,'مختصر سيرة الرسول ﷺ، للإمام محمد بن عبد الوهاب، ص '+ar(it.p)));
+  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{document.getElementById('evBack').hidden=true;S.hidden=true;openPart(17,it.p,it.w?[it.w]:null,false,'txt')};
+  ft.append(go);B.append(ft);
+  document.getElementById('evBack').hidden=false;S.hidden=false;S.scrollTop=0;
+  // the whole passage, up to the book's next heading
+  try{let t=await evFull(it);
+    // stop where the timeline's next event begins, so the reader gets this event only
+    const nx=L.slice(k+1).find(y=>y.q&&y.p<=it.p+6);
+    if(t&&nx){const nz=x=>{let o='';const m=[];for(let i=0;i<x.length;i++)if(/[\u0621-\u064A]/.test(x[i])){o+=x[i];m.push(i)}return [o,m]};
+      const [o,m]=nz(t),key=nz(nx.q.replace(/…$/,''))[0].slice(0,18),i=key.length>=8?o.indexOf(key,nz(it.q)[0].length>10?10:0):-1;
+      if(i>0)t=t.slice(0,m[i]).replace(/[\s«"(]+$/,'').trim()
+      if(/[:،]$/.test(t)){const j=Math.max(t.lastIndexOf('. '),t.lastIndexOf('». '));if(j>t.length/3)t=t.slice(0,t.indexOf(' ',j)).trim()}}
+    if(t&&t.length>it.q.replace(/…$/,'').length+20){const nq=quoteW(t,it.w);nq.classList.add('ev-q');qv.replaceWith(nq);qv=nq}}catch(e){}}
+function evRoute(){const m=/^#ev=(\d+)$/.exec(location.hash);if(!m)return;history.replaceState(null,'',location.pathname+location.search);setTimeout(()=>fxEvent(+m[1]),400)}
+addEventListener('hashchange',evRoute);evRoute();
 
 /* ---------- مواضع الخلاف مع المطبوع: علامات حمراء، وقراءة الصفحات المعلَّمة وحدها ---------- */
 let MK={};getJSON('data/marks.json').then(d=>{MK=d||{};renderMkBooks()}).catch(()=>{});

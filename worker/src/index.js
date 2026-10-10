@@ -114,7 +114,7 @@ function plan(pl) {
 const dayNo = (tz) => { const L = local(tz); return Date.UTC(L.y, L.m - 1, L.d) / 864e5; };
 function seq(L, sd, tz, kind) {
   const n = ((dayNo(tz) - (+sd || 0)) % L.length + L.length) % L.length, x = L[n];
-  return { t: x[0], b: x[1], u: SITE + '/#v17p' + x[2], tag: kind };
+  return { t: x[0], b: x[1], u: SITE + '/#ev=' + x[3], tag: kind };   // the site opens the event itself, in place
 }
 // what a reader asked for, and when: h = {kind: hour}; readers kept before the choice of hours: the hadith at 6, Friday at 9, the plan at 20
 const SIKH = SI.concat(KH);   // the Sira, then the caliphs, for a reader who asked to go on
