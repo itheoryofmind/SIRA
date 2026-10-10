@@ -8,6 +8,7 @@
 // Web Push: RFC 8291 (aes128gcm) and RFC 8292 (VAPID), with WebCrypto only.
 import H from './hadith.js';
 import { SI, KH } from './tl.js';
+import MG from './mg.js';
 
 const SITE = 'https://seeratuh.com';
 const FRI = '0 6 * * 5';   // Friday 9:00 in Riyadh
@@ -92,6 +93,12 @@ function today(tz) {
   return { t: 'من شمائله صلى الله عليه وسلم', b: h.t, u: SITE + '/#hd=' + i, tag: 'shamail' };   // the site opens the hadith itself, in place
 }
 
+// the day's hadith from Kitab al-Maghazi (the site's home card shows the same one)
+function maghazi(tz) {
+  const i = dayNo(tz) % MG.length, x = MG[i];
+  return { t: x[0], b: x[1], u: SITE + '/#mg=' + i, tag: 'maghazi' };
+}
+
 // every Friday to all who turned the notifications on: al-Ahzab 56 only (King Fahd Complex text)
 const VERSE = "إِنَّ ٱللَّهَ وَمَلَٰٓئِكَتَهُۥ يُصَلُّونَ عَلَى ٱلنَّبِيِّۚ يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ صَلُّواْ عَلَيۡهِ وَسَلِّمُواْ تَسۡلِيمًا";
 function friday() {
@@ -118,7 +125,7 @@ function seq(L, sd, tz, kind) {
 }
 // what a reader asked for, and when: h = {kind: hour}; readers kept before the choice of hours: the hadith at 6, Friday at 9, the plan at 20
 const SIKH = SI.concat(KH);   // the Sira, then the caliphs, for a reader who asked to go on
-const KINDS = { sh: 6, fr: 9, si: 21, kh: 21, pl: 20 };
+const KINDS = { mg: 7, sh: 6, fr: 9, si: 21, kh: 21, pl: 20 };
 function norm(m) {
   m = m || {};
   if (m.h && typeof m.h === 'object') return m;
@@ -188,7 +195,7 @@ async function sendJobs(env, jobs) {
     if (!v || !v.value) continue;
     const m = norm(v.metadata), tz = okTz(m.tz) ? m.tz : DEF_TZ, sd = m.sd || {};
     const msg = kind === 'friday' ? friday() : (kind === 'plan' || kind === 'pl') ? plan(planOf(m.pl) || { t: 0, d: 30 })
-              : kind === 'si' ? seq(m.cx ? SIKH : SI, sd.si, tz, 'si') : kind === 'kh' ? seq(KH, sd.kh, tz, 'kh') : today(tz);
+              : kind === 'si' ? seq(m.cx ? SIKH : SI, sd.si, tz, 'si') : kind === 'kh' ? seq(KH, sd.kh, tz, 'kh') : kind === 'mg' ? maghazi(tz) : today(tz);
     if (!msg) continue;   // the plan has ended
     const st = await send(env, v.value, msg).catch(() => 0);
     r.tried++;
@@ -203,7 +210,7 @@ export default {
     const u = new URL(req.url);
     if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
     if (u.pathname === '/key') return json({ key: (await vapid(env)).pub });
-    if (u.pathname === '/health') return json({ ok: true, hadiths: H.length, sira: SI.length, caliphs: KH.length });
+    if (u.pathname === '/health') return json({ ok: true, hadiths: H.length, maghazi: MG.length, sira: SI.length, caliphs: KH.length });
     if (req.method === 'POST' && u.pathname === '/inner/send') {
       if (req.headers.get('X-Inner') !== await inner(env)) return json({ ok: false }, 403);
       return json(await sendJobs(env, await req.json()));

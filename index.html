@@ -1323,6 +1323,10 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
       <h2 id="dyH">من شمائله صلى الله عليه وسلم</h2>
       <div class="dy-card" id="dyCard"></div>
     </section>
+    <section class="sx-sec sx-day" id="sxMg" aria-labelledby="mgH" hidden>
+      <h2 id="mgH">من المغازي</h2>
+      <div class="dy-card" id="mgCard"></div>
+    </section>
     <section class="sx-sec" aria-labelledby="exH">
       <h2 id="exH">أبواب الموقع</h2>
       <div class="ex">
@@ -1676,7 +1680,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-1013';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-1018';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -1783,7 +1787,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_feat.json": "04657fd023", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/saadi.json": "bf53b5261e"};
+const DH={"data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/sira_x.json": "b8152c9d9a", "data/sx_feat.json": "04657fd023", "data/sx_mg.json": "5bb3f77de8", "data/sx_nuzul.json": "8c593e4af8", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3549,6 +3553,21 @@ async function renderDaily(){const F=await sxFeat();const sec=$('#sxDaily'),C=$(
   const bell=el('button','btn btn-link dy-bell');bell.type='button';act.append(bell);pushBtn(bell);
   sec.hidden=false}
 renderDaily();
+/* ---------- the day's hadith from Kitab al-Maghazi (Bukhari): the home card, and the notification opens the same one ---------- */
+const mgDay=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);
+function mgText(h,full){return full||!h.s?h.x:h.s}
+function mgMeta(h,full){return 'صحيح البخاري، كتاب المغازي، رقم '+ar(+h.no)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'')}
+async function renderMg(){const sec=$('#sxMg'),C=$('#mgCard');if(!sec||!C)return;const L=await getJSON('data/sx_mg.json');if(!L||!L.length)return;
+  const h=L[mgDay()%L.length];C.innerHTML='';C.append(el('p','dy-ch',h.ch||'كتاب المغازي'));
+  const q=el('p','dy-t',mgText(h));C.append(q);const meta=el('div','dy-meta');const ms=el('span','dy-src',mgMeta(h));meta.append(ms);C.append(meta);
+  const act=el('div','dy-act');
+  if(q.textContent.length>320){q.classList.add('clip');const m=el('button','btn btn-link','أكمل الحديث');m.type='button';m.onclick=()=>{q.classList.remove('clip');m.remove()};act.append(m)}
+  if(h.s){const f=el('button','btn btn-link','بإسناده');f.type='button';f.onclick=()=>{q.textContent=h.x;q.classList.remove('clip');ms.textContent=mgMeta(h,1);f.remove();const m=act.querySelector('.btn-link');if(m&&m.textContent==='أكمل الحديث')m.remove()};act.append(f)}
+  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>openPart(h.n,h.p,null,false,'txt');act.append(go);C.append(act);
+  const bell=el('button','btn btn-link dy-bell');bell.type='button';act.append(bell);
+  ntBtn(bell,'mg',['ذكّرني كل يوم بحديث من المغازي','تذكير المغازي مفعّل · إيقافه','فُعّل: يصلك كل يوم حديث من كتاب المغازي في صحيح البخاري. وتستطيع تغيير وقته من صفحة «الإشعارات» في القائمة.','أوقف تذكير المغازي.']);
+  sec.hidden=false}
+setTimeout(renderMg,0);
 
 /* notifications: the browser gives a push address, kept at push.seeratuh.com with the reader's choices and time zone; no name, no e-mail */
 const PUSHU='https://push.seeratuh.com';
@@ -3560,6 +3579,7 @@ async function pushSub(){try{const r=await navigator.serviceWorker.getRegistrati
 const devTz=()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone||''}catch(e){return ''}};
 // the kinds, their default hours, and their wording
 const NTF=[['sh',6,'حديث من الشمائل كل يوم','حديث من الشمائل المحمدية مع حكمه.'],
+  ['mg',7,'حديث من المغازي كل يوم','حديث من كتاب المغازي في صحيح البخاري، على ترتيب الكتاب.'],
   ['si',21,'محطة من السيرة كل يوم','حدث من سيرته <span class="saw">ﷺ</span> على ترتيب وقوعه، من المولد إلى الوفاة، بلفظ مختصر السيرة.'],
   ['kh',21,'من أخبار الخلفاء الراشدين','خبر كل يوم على الترتيب، من حديث السقيفة وبيعة أبي بكر الصديق إلى صلح الحسن بن علي ومعاوية رضي الله عنهم.'],
   ['pl',20,'ورد خطة القراءة','تذكير بورد اليوم من خطتك.'],
@@ -3787,6 +3807,12 @@ async function fxHadith(i){const F=await sxFeat();const L=[];F.sifa.forEach(s=>s
   const t=h.x.filter(y=>typeof y==='string').join(' ').replace(/\s+([)\]»])/g,'$1');const q=el('p','ev-q');q.textContent=t;B.append(q);
   const ft=el('div','ev-ft');const m=el('small');m.append(el('span','gr',gtxt(h.g)),document.createTextNode(' الشمائل المحمدية، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p)));ft.append(m);
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(25,h.p,null,false,'txt')};ft.append(go);B.append(ft)}
+// a hadith of Kitab al-Maghazi, in full with its chain
+async function fxMaghazi(i){const L=await getJSON('data/sx_mg.json');const h=L[i];if(!h)return;const B=evShell(h.ch||'كتاب المغازي');
+  B.append(el('p','ev-era','من المغازي'),sawEl('h3','ev-t',h.ch||'كتاب المغازي'));
+  const q=el('p','ev-q');q.textContent=h.x;B.append(q);
+  const ft=el('div','ev-ft');ft.append(el('small',null,mgMeta(h,1)));
+  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(h.n,h.p,null,false,'txt')};ft.append(go);B.append(ft)}
 // Friday: al-Ahzab 56, in the Mushaf's script
 async function fxFriday(){const Q=await getJSON('data/quran.json');const v=Q.a[32][55];const B=evShell('يوم الجمعة');
   B.append(el('p','ev-era','يوم الجمعة'),sawEl('h3','ev-t','الصلاة على النبي ﷺ'));
@@ -3795,6 +3821,7 @@ function evRoute(){const h=location.hash;let m;
   const go=f=>{history.replaceState(null,'',location.pathname+location.search);setTimeout(f,400)};
   if((m=/^#ev=(\d+)$/.exec(h)))go(()=>fxEvent(+m[1]));
   else if((m=/^#hd=(\d+)$/.exec(h)))go(()=>fxHadith(+m[1]));
+  else if((m=/^#mg=(\d+)$/.exec(h)))go(()=>fxMaghazi(+m[1]));
   else if(h==='#fr')go(fxFriday)}
 addEventListener('hashchange',evRoute);evRoute();
 
