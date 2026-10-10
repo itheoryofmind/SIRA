@@ -1248,7 +1248,6 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
         <span><i class="mk"></i>بمكة بعد البعثة: ١٣</span>
         <span><i class="md"></i>بالمدينة: ١٠</span>
         <span><i class="ev"></i>سنة ذُكر فيها حدث</span>
-        <span><i class="rd"></i>سنة قرأتَ أحداثها</span>
       </div>
       <div class="yr-p" id="yrPanel" hidden></div>
     </section>
@@ -1611,7 +1610,7 @@ svg.nm{display:inline-block;width:auto;aspect-ratio:1.222;fill:currentColor;over
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-10-0831';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-10-0836';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3230,7 +3229,7 @@ function quoteW(q,w){const e=el('q');const i=w?q.indexOf(w):-1;if(i<0){e.textCon
 
 /* ---------- the 63 years ---------- */
 async function renderYears(){const F=await sxFeat();const G=$('#yrGrid');if(!G)return;const sel=+G.dataset.sel||0;G.innerHTML='';const rc=readCells();
-  for(let k=1;k<=64-1;k++){const b=el('button','yr-c '+yrCls(k)+(F.years[k]?' ev':'')+(rc.has(k)?' read':'')+(k===sel?' sel':''));b.type='button';
+  for(let k=1;k<=64-1;k++){const b=el('button','yr-c '+yrCls(k)+(F.years[k]?' ev':'')+(k===sel?' sel':''));b.type='button';
     b.setAttribute('aria-label','سنة بلغ فيها '+ar(k)+' من عمره'+(F.years[k]?'، أحداثها: '+ar(F.years[k].length):''));
     {const n=el('span','n',ar(k));n.setAttribute('aria-hidden','true');b.append(n)}
     b.onclick=()=>showYear(k);G.append(b)}}
