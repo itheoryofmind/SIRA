@@ -1902,7 +1902,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-11-0952';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-11-1003';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2020,7 +2020,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "2300e37ee1", "data/sira_x.json": "4619001fb4", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "fade462fe9", "data/sx_bsif.json": "39e38ca8f7", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "cacdefa849", "data/sx_gz.json": "0f5b77ad74", "data/sx_hajj.json": "e037963d9d", "data/sx_hjr.json": "42b67a90f7", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "f44c5954df", "data/sx_msif.json": "cd72f8c2c1", "data/sx_nuzul.json": "8c593e4af8", "data/sx_qa.json": "c0d2e74e59", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "2300e37ee1", "data/sira_x.json": "4619001fb4", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "fade462fe9", "data/sx_bsif.json": "1db6d22374", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "cacdefa849", "data/sx_gz.json": "0f5b77ad74", "data/sx_hajj.json": "e037963d9d", "data/sx_hjr.json": "42b67a90f7", "data/sx_hjrb.json": "9316a1ca50", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "f44c5954df", "data/sx_msif.json": "cd72f8c2c1", "data/sx_nuzul.json": "8c593e4af8", "data/sx_qa.json": "5f12cf61d0", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3698,9 +3698,9 @@ async function fxSifa(){const F=await sxFeat();const P=fxOpen('صفته ﷺ كأ
   F.sifa.forEach((s,i)=>{const c=el('button','fx-chip',s.t);c.type='button';c.onclick=()=>{part=i;show()};ch.append(c)});
   show();
   P.inn.append(el('p','fx-note','يُعرض ما صححه الألباني أو حسّنه، والضعيف مخفي حتى تطلبه. والأحكام منقولة من مختصر الشمائل كما طبع.'));
-  const BS=await getJSON('data/sx_bsif.json');if(BS&&BS.ch){P.inn.append(el('h3','dl-bk','من صحيح البخاري'),el('p','dl-bs','«باب صفة النبي صلى الله عليه وسلم» من كتاب المناقب، والباب الذي يليه. اضغط الباب لترى أحاديثه.'));
-    dalChapters(P,BS,alMeta,'');
-    P.inn.append(el('p','fx-note','مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء الرابع ص ١٨٧–١٩١)، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن. وحُذف الإسناد إلى الصحابي حيث تعيّن بقراءتين مستقلتين، والحديث بإسناده بضغطة.'))}
+  const BS=await getJSON('data/sx_bsif.json');if(BS&&BS.ch){P.inn.append(el('h3','dl-bk','من صحيح البخاري'),el('p','dl-bs','«باب صفة النبي صلى الله عليه وسلم» من كتاب المناقب والباب الذي يليه، ثم «باب كيف كان عيش النبي صلى الله عليه وسلم وأصحابه» من كتاب الرقاق. اضغط الباب لترى أحاديثه.'));
+    dalChapters(P,BS,bMeta,'');
+    P.inn.append(el('p','fx-note','مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء الرابع ص ١٨٧–١٩١، والجزء الثامن ص ٩٦–٩٨)، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن. وحُذف الإسناد إلى الصحابي حيث تعيّن بقراءتين مستقلتين، والحديث بإسناده بضغطة.'))}
   const MS=await getJSON('data/sx_msif.json');if(MS&&MS.ch){P.inn.append(el('h3','dl-bk','من صحيح مسلم'),el('p','dl-bs','أبواب صفته وأخلاقه صلى الله عليه وسلم من «كتاب الفضائل» في صحيح مسلم، على ترتيبها، ثم أحاديث عيشه صلى الله عليه وسلم من أول «كتاب الزهد والرقائق». اضغط الباب لترى أحاديثه.'));
     dalChapters(P,MS,msMeta,'');
     P.inn.append(el('p','fx-note','أحاديث مسلم مراجَعة كلمةً كلمةً على صور الطبعة العامرة بإسطنبول (الجزء السابع ص ٥٩–٩٦، والجزء الثامن ص ٢١٥–٢٢٠)، وحُذف الإسناد إلى الصحابي حيث تعيّن بقراءتين مستقلتين، ونُصّ عليه تحت الحديث، والحديث بإسناده بضغطة. وعناوين الأبواب كما في حاشيتها، وهي من وضع الشرّاح لا من الإمام مسلم، والأرقام بترقيم محمد فؤاد عبد الباقي. وأبواب المعجزات من هذا الكتاب في صفحة «دلائل النبوة».'));P.inn.append(el('p','fx-note','والذهبي كلامه صلى الله عليه وسلم بلفظه، عُيّن حديثاً حديثاً بقراءتين مستقلتين، ولم يُلوَّن إلا ما تعيّن أنه من قوله، وأما وصف فعله وكلام الصحابة فبلون النص. والآيات بالأخضر بلفظ مصحف المدينة النبوية من مجمع الملك فهد، إلا مواضع يسيرة لم تتعيّن آيتها فبقيت بلفظ الكتاب.'))}}
@@ -3711,6 +3711,8 @@ async function fxRoad(){const F=await sxFeat();const P=fxOpen('طريق الهج
   const ol=el('ol','road');F.road.forEach((r,i)=>{const li=el('li',i===F.road.length-1?'end':null);li.append(el('b',null,r.t),el('small',null,'«'+r.q+'»'));ol.append(li)});
   P.inn.append(ol);
   const d=el('div','fx-src');d.append(el('h3',null,'النص كاملاً'),el('p','by',SXBN(23)+'، ص '+ar(491)+'–'+ar(492)),el('p','road-q',F.roadq),goBtn(P,'اقرأه في سيرة ابن هشام',23,491));P.inn.append(d);
+  const HB=await getJSON('data/sx_hjrb.json');if(HB&&HB.ch){P.inn.append(el('h3','dl-bk','من صحيح البخاري'),el('p','dl-bs','حديث عائشة رضي الله عنها في الهجرة، ثم خبر سراقة بن مالك بلسانه وقدومه صلى الله عليه وسلم المدينة.'));
+    dalChapters(P,HB,bMeta,'');P.inn.append(el('p','fx-note','من «كتاب مناقب الأنصار»، مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء الخامس ص ٥٨–٦١)، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن، والذهبي كلامه صلى الله عليه وسلم بلفظه.'))}
   const HJ=await getJSON('data/sx_hjr.json');if(HJ&&HJ.ch){P.inn.append(el('h3','dl-bk','من صحيح مسلم'),el('p','dl-bs','حديث الهجرة من رواية البراء عن أبي بكر رضي الله عنهما، وفيه الغار وسراقة ونزوله صلى الله عليه وسلم في بني النجار.'));
     dalChapters(P,HJ,msMeta,'');P.inn.append(el('p','fx-note','من «كتاب الزهد والرقائق»، مراجَع كلمةً كلمةً على صور الطبعة العامرة بإسطنبول (الجزء الثامن ص ٢٣٦–٢٣٧)، وعنوان الباب كما في حاشيتها، والذهبي كلامه صلى الله عليه وسلم بلفظه.'))}
   P.inn.append(el('p','fx-note','لم نرسم الطريق على خريطة، لأن تعيين هذه المواضع اليوم اجتهادٌ يختلف فيه الباحثون، فاقتصرنا على لفظ الرواية. وما نُسب فيه إلى ابن هشام فهو من كلامه لا من كلام ابن إسحاق.'))}
@@ -4229,9 +4231,9 @@ function fxData(){const s=$('#dataSec');if(!s)return;const home=s.parentNode,nex
 /* ---------- مسائل في السيرة: our questions, the books' exact words as answers ---------- */
 async function fxQa(){const Q=await getJSON('data/sx_qa.json');const P=fxOpen('مسائل في السيرة');
   P.inn.append(el('p','fx-lead','أسئلة في السيرة، وجواب كل سؤال نصٌّ منقول بلفظه من كتب الموقع مع مصدره، وما في الصحيحين مقدَّم. اضغط السؤال ليظهر جوابه.'));
-  const SRC={bk:'صحيح البخاري',ba:'صحيح البخاري',ms:'صحيح مسلم',fd:'صحيح مسلم',mm:'صحيح مسلم',hj:'صحيح مسلم',ih:'سيرة ابن هشام',ik:'البداية والنهاية',zad:'زاد المعاد',mk:'مختصر السيرة'};
+  const SRC={bk:'صحيح البخاري',ba:'صحيح البخاري',ms:'صحيح مسلم',fd:'صحيح مسلم',mm:'صحيح مسلم',hj:'صحيح مسلم',bs:'صحيح البخاري',ih:'سيرة ابن هشام',ik:'البداية والنهاية',zad:'زاد المعاد',mk:'مختصر السيرة'};
   const VOL={23:1,24:2,18:1,19:2,20:3,21:4,22:5,31:3,32:4,33:5,34:6,35:7,36:8,37:9};
-  const OPEN={bk:()=>fxMgTL(),ms:()=>fxMgTL(),fd:()=>fxSifa(),ba:()=>fxDal(),mm:()=>fxDal(),hj:()=>fxRoad()};
+  const OPEN={bk:()=>fxMgTL(),ms:()=>fxMgTL(),fd:()=>fxSifa(),ba:()=>fxDal(),mm:()=>fxDal(),hj:()=>fxRoad(),bs:()=>fxSifa()};
   Q.forEach(c=>{P.inn.append(sawEl('h3','dl-bk qa-h',c.c));const L=el('div','qa');
     c.q.forEach(it=>{const d=document.createElement('details');d.className='qa-i';const s=document.createElement('summary');s.className='qa-q';
       const qt=el('span');it.q.split(/(﴿[^﴾]*﴾)/).forEach(z=>{if(z)qt.append(z[0]==='﴿'?hdV(z):document.createTextNode(z))});s.append(qt);d.append(s);const box=el('div','qa-a');
@@ -4264,6 +4266,7 @@ async function fxHajj(){const S=await getJSON('data/sx_hajj.json');const P=fxOpe
   P.inn.append(ol);
   P.inn.append(el('p','fx-note','الأيام والتواريخ بلفظ ابن كثير حيث ذكرها، ومنها ما رجّحه بعد بحثه في «باب تاريخ خروجه» (ص ٤١٠–٤١٥). والنص مراجَع على صور المطبوع.'))}
 /* ---------- دلائل النبوة: Ibn Kathir's chapters, in his order and his words ---------- */
+const bMeta=(h,full)=>'صحيح البخاري، '+(h.k||'كتاب المناقب')+'، رقم '+ar(+h.no)+'، الطبعة السلطانية ج'+ar(h.v||4)+' ص '+ar(h.p)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'');
 const alMeta=(h,full)=>'صحيح البخاري، كتاب المناقب، رقم '+ar(+h.no)+'، الطبعة السلطانية ج٤ ص '+ar(h.p)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'');
 const msMeta=(h,full)=>'صحيح مسلم، '+(h.k||'كتاب الفضائل')+'، رقم '+ar(+h.no)+' بترقيم عبد الباقي، الطبعة العامرة ج'+ar(h.v||7)+' ص '+ar(h.p)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'');
 function dalChapters(P,M,meta,note){const list=el('div','mg-list');P.inn.append(list);
