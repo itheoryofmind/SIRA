@@ -317,6 +317,13 @@ footer .waqf{max-width:520px;margin:8px auto 0;font-family:var(--text);font-size
 .q.qa::after{content:"تفسير";display:inline-block;font-family:var(--ui);font-size:11px;line-height:1;font-weight:600;color:var(--brass);border:1px solid var(--brass);border-radius:6px;padding:3px 5px 2px;margin-inline-start:4px;vertical-align:.35em;opacity:.8;width:max-content;word-spacing:0;letter-spacing:0;text-align:center;white-space:nowrap;text-indent:0}
 .ayaplace{font-family:var(--display);font-size:20px;margin:4px 0 10px;text-align:center;color:var(--brass)}
 .ayatext{font-family:"UthmanicHafs","Amiri",serif;font-size:calc(var(--tsize) * 1.25);line-height:2.4;text-align:center;color:var(--verse);padding:4px 2px 8px}
+.ft-url{margin:4px 0;font-size:14px;letter-spacing:.04em}
+.ft-share{margin:6px 0 4px}
+.sh-lead{text-align:center;color:var(--muted);margin:0 0 12px;line-height:1.8}
+.sh-qr{width:min(230px,66vw);margin:0 auto;background:#fff;padding:10px;border-radius:14px;border:1px solid var(--line)}
+.sh-qr svg{display:block;width:100%;height:auto}
+.sh-url{text-align:center;font-size:18px;margin:10px 0 4px;letter-spacing:.03em}
+.sh-msg{text-align:center;min-height:1.4em;font-size:14px;color:var(--muted);margin:4px 0 0}
 .ayabtns{display:flex;justify-content:center;gap:8px;margin:6px 0 4px}
 #ayaImg,#ayaCopyT,#ayaCopyO{border:1px solid var(--brass);color:var(--brass)}
 .ayabtns{flex-wrap:wrap}
@@ -1874,6 +1881,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
     <p class="ayasrc" id="tafPg" hidden></p><p class="ayasrc" id="tafSrc"></p></section>
   <p class="ayasrc">نص الآية وخطّها من مجمع الملك فهد لطباعة المصحف الشريف (مصحف المدينة النبوية، رواية حفص، الإصدار ٣٠)، كما نشره المجمع دون أي تعديل.</p>
 </div>
+
 <div class="sheet-back" id="chooseBack" hidden></div>
 <div class="sheet" id="choose" hidden role="dialog" aria-label="طريقة القراءة">
   <div class="grip"></div>
@@ -1935,7 +1943,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-11-1049';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-11-1056';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2957,6 +2965,8 @@ async function ayaImage(parts,label){
   await drawCard([{t:'﴿'+parts.join(' ')+'﴾',k:'q'}],label,location.host,'aya.png');
 }
 function closeAya(){$('#ayaBack').hidden=true;$('#aya').hidden=true}
+
+
 $('#ayaClose').onclick=closeAya;$('#ayaBack').onclick=closeAya;
 function openSheet(noteOnly){
   $('#sheetBack').hidden=false;$('#sheet').hidden=false;$('#sheet').classList.toggle('noteonly',!!noteOnly);
@@ -4251,7 +4261,10 @@ function evRoute(){const h=location.hash;let m;
   if((m=/^#ev=(\d+)$/.exec(h)))go(()=>fxTlEv(+m[1]));
   else if((m=/^#hd=(\d+)$/.exec(h)))go(()=>fxHadith(+m[1]));
   else if((m=/^#mg=(\d+)$/.exec(h)))go(()=>fxMaghazi(+m[1]));
-  else if(h==='#fr')go(fxFriday)}
+  else if(h==='#fr')go(fxFriday)
+  else if((m=/^#fx=(qa|sifa|hajj|ahl|road|dal|gz|mg)$/.exec(h)))go(()=>({qa:fxQa,sifa:fxSifa,hajj:fxHajj,ahl:fxAhl,road:fxRoad,dal:fxDal,gz:()=>fxGz(),mg:()=>fxMgTL()})[m[1]]())
+  else if((m=/^#gz=(\d+)$/.exec(h)))go(()=>fxGz(+m[1]))
+  else if((m=/^#yr=(\d+)$/.exec(h)))go(async()=>{await showYear(+m[1]);const g=$('#yrGrid');g&&g.scrollIntoView({block:'start'})})}
 addEventListener('hashchange',evRoute);evRoute();
 
 /* ---------- الغزوات في سطور: the Mukhtasar's words and figures, and the hadiths of the two Sahihs ---------- */

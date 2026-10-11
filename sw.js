@@ -13,8 +13,9 @@ self.addEventListener('fetch',e=>{
   const u=new URL(e.request.url);
   const cacheable=u.origin===location.origin||['fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname);
   if(!cacheable||/\/data\/[^/]+\.json$/.test(u.pathname))return;
-  if(e.request.mode==='navigate'){   // network first, so updates arrive
-    e.respondWith(fetch(e.request.url,{cache:'no-store'}).then(x=>{const y=x.clone();if(x.ok)caches.open(V).then(c=>c.put('index.html',y));return x}).catch(()=>caches.match('index.html')));return}
+  if(e.request.mode==='navigate'){   // network first, so updates arrive; the section pages for search engines are kept under their own address
+    const home=u.pathname==='/'||u.pathname==='/index.html',key=home?'index.html':u.origin+u.pathname;
+    e.respondWith(fetch(e.request.url,{cache:'no-store'}).then(x=>{const y=x.clone();if(x.ok)caches.open(V).then(c=>c.put(key,y));return x}).catch(()=>caches.match(key).then(r=>r||caches.match('index.html'))));return}
   const store=/\/img\/[^/]+\.png$/.test(u.pathname)?IMG:V;
   e.respondWith(caches.match(e.request,{ignoreVary:true}).then(r=>r||fetch(e.request).then(x=>{if(x.ok||x.type==='opaque'){const y=x.clone();caches.open(store).then(c=>c.put(e.request,y))}return x})));
 });
