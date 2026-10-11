@@ -1412,6 +1412,22 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .sf-sah{margin:6px 0 4px}
 .sf-sh{margin:8px 0 2px;font-size:13px;color:var(--muted)}
 
+.sf-ch{border:1px solid var(--line);border-radius:16px;background:var(--raised);margin:0 0 10px;overflow:hidden}
+.sf-hd{display:flex;width:100%;align-items:center;gap:10px;background:none;border:0;color:var(--ink);font:inherit;text-align:start;padding:14px;cursor:pointer}
+.sf-hd::after{content:'';flex:none;width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(135deg);transition:transform .2s}
+.sf-ch.open .sf-hd::after{transform:rotate(45deg)}
+.sf-hd:focus-visible{outline:2px solid var(--brass);outline-offset:-2px}
+.sf-tt{flex:1;display:flex;flex-direction:column;gap:2px}
+.sf-tt b{font-family:var(--text);font-size:19px;line-height:1.6}
+.sf-tt small{font-size:13px;color:var(--muted)}
+.sf-body{padding:0 14px 8px;border-top:1px solid var(--line)}
+.sf-grp{padding-top:10px}
+.sf-grp>h4{display:inline-block;margin:6px 0 4px;font-size:13px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 10px}
+.sf-grp.sah{border-bottom:2px solid var(--line);padding-bottom:8px}
+.sf-grp .fx-had:first-of-type{border-top:0}
+.sf-more{margin:6px 0}
+.fx-had .gr{color:var(--muted)}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -1905,7 +1921,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-11-1012';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-11-1031';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3690,19 +3706,25 @@ async function fxSifa(){const F=await sxFeat();const P=fxOpen('صفته ﷺ كأ
   P.inn.append(el('p','fx-lead','أبواب من الشمائل المحمدية للترمذي باختصار الألباني: خَلقه ﷺ، أي صورته، وخُلقه، أي أخلاقه. وفي أول كل باب ما في صحيحي البخاري ومسلم في موضوعه، ثم أحاديث الشمائل وتحت كل حديث حكم الشيخ الألباني عليه. ثم أبواب صفته وأخلاقه كاملة من الصحيحين.'));
   const ch=el('div','fx-chips'),box=el('div');let weak=false,part=0;P.inn.append(ch,box);
   const SB=await getJSON('data/sx_bsif.json'),SM=await getJSON('data/sx_msif.json'),SS=F.sifaS||{};
-  const sahih=(sec,c)=>{const m=SS[c.h];if(!m||!SB||!SM)return;const L=[...m.b.map(i=>[SB,i,bMeta,'صحيح البخاري']),...m.m.map(i=>[SM,i,msMeta,'صحيح مسلم'])];if(!L.length)return;
-    const w=el('div','sf-sah');w.append(el('p','sf-sh','من الصحيحين'));const lst=el('div');w.append(lst);
-    const put=(a,b)=>L.slice(a,b).forEach(([M,i,meta])=>lst.append(mgItem(M,i,{clip:260,meta,noBook:1}).w));put(0,4);
-    if(L.length>4){const b=el('button','btn btn-quiet','أحاديث الصحيحين كلها في هذا الباب ('+ar(L.length)+')');b.type='button';b.onclick=()=>{put(4,L.length);b.remove()};w.append(b)}
-    w.append(el('p','sf-sh','ومن الشمائل المحمدية'));sec.append(w)};
+  const sahihL=c=>{const m=SS[c.h];if(!m||!SB||!SM)return[];return[...m.b.map(i=>[SB,i,bMeta]),...m.m.map(i=>[SM,i,msMeta])]};
+  const shTxt=h=>h.x.filter(x=>typeof x==='string').join(' ').replace(/\s+([)\]»])/g,'$1');
+  const nOf=(n,one,two,few,many)=>n===1?one:n===2?two:ar(n)+(n<=10?few:many);
   const show=()=>{[...ch.children].forEach((c,j)=>{c.classList.toggle('on',j===part);c.setAttribute('aria-pressed',j===part)});box.innerHTML='';let hid=0;
-    F.sifa[part].c.forEach(c=>{const sec=el('div','fx-src');sec.append(el('h3',null,c.h));sahih(sec,c);
-      c.had.forEach(h=>{const ok=h.g==='صحيح'||h.g==='حسن';if(!ok&&!weak){hid++;return}
-        const d=el('div','fx-had'+(ok?'':' weak'));const p=el('p');p.append(el('span','no',ar(+h.no)||h.no));
-        h.x.forEach(x=>{if(typeof x==='string')p.append(document.createTextNode(x+' '))});d.append(p);
-        const gs=el('div','fx-gs');gs.append(el('span','gr',gtxt(h.g)));h.x.filter(x=>x&&x.gx).forEach(x=>gs.append(el('span','gr',gtxt(x.gx))));
-        gs.append(goBtn(P,'ص '+ar(h.p),25,h.p));d.append(gs);sec.append(d)});
-      box.append(sec)});
+    F.sifa[part].c.forEach((c,ci)=>{const S=sahihL(c),H=c.had.filter(h=>weak||h.g==='صحيح'||h.g==='حسن');hid+=c.had.length-H.length;
+      const card=el('section','sf-ch');const hd=el('button','sf-hd');hd.type='button';
+      const tt=el('span','sf-tt');tt.append(el('b',null,c.h.replace(/^[٠-٩]+\s*-\s*/,'')),el('small',null,[S.length?nOf(S.length,'حديث من الصحيحين','حديثان من الصحيحين',' أحاديث من الصحيحين',' حديثاً من الصحيحين'):'',H.length?nOf(H.length,'حديث من الشمائل','حديثان من الشمائل',' أحاديث من الشمائل',' حديثاً من الشمائل'):''].filter(Boolean).join('، و')));
+      hd.append(tt);card.append(hd);const body=el('div','sf-body');body.hidden=true;card.append(body);
+      const fill=()=>{if(body.childElementCount)return;
+        if(S.length){const g=el('div','sf-grp sah');g.append(el('h4',null,'من صحيحي البخاري ومسلم'));const lst=el('div');g.append(lst);
+          const put=(x,y)=>S.slice(x,y).forEach(([M,i,meta])=>lst.append(mgItem(M,i,{clip:260,meta,noBook:1}).w));put(0,3);
+          if(S.length>3){const more=el('button','btn btn-quiet sf-more','باقي أحاديث الصحيحين في هذا الباب ('+ar(S.length-3)+')');more.type='button';more.onclick=()=>{put(3,S.length);more.remove()};g.append(more)}
+          body.append(g)}
+        if(H.length){const g=el('div','sf-grp shm');g.append(el('h4',null,'من الشمائل المحمدية'));
+          H.forEach(h=>{const ok=h.g==='صحيح'||h.g==='حسن';const d=el('div','fx-had'+(ok?'':' weak'));const p=el('p');hdFill(p,shTxt(h),[]);d.append(p);
+            const gs=el('div','fx-gs');gs.append(el('span','gr',gtxt(h.g)));h.x.filter(x=>x&&x.gx).forEach(x=>gs.append(el('span','gr',gtxt(x.gx))));
+            gs.append(goBtn(P,'الشمائل، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p),25,h.p));d.append(gs);g.append(d)});body.append(g)}};
+      const tog=o=>{if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false');card.classList.toggle('open',o)};
+      hd.onclick=()=>tog(body.hidden);tog(ci===0);box.append(card)});
     if(hid||weak){const b=el('button','btn btn-quiet',weak?'إخفاء الأحاديث الضعيفة':'عرض الأحاديث الضعيفة أيضاً ('+ar(hid)+')');b.type='button';b.onclick=()=>{weak=!weak;show()};box.append(b)}};
   F.sifa.forEach((s,i)=>{const c=el('button','fx-chip',s.t);c.type='button';c.onclick=()=>{part=i;show()};ch.append(c)});
   show();
