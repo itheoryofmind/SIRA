@@ -1465,6 +1465,8 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .hj-h{margin:2px 0 4px;font-size:15.5px;line-height:1.85}
 .hj-gs{display:inline-block;font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:12px;padding:2px 8px}
 
+.shu-p{margin:10px 0 2px;font-size:16px;line-height:1.95}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -1618,6 +1620,11 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
         <p class="exg">نسبه وآله</p>
         <button type="button" id="sxTree"><b>شجرة النسب الشريف</b><span>نسبه <span class="saw">ﷺ</span>، وآل عبد المطلب</span></button>
         <button type="button" id="fxAhl"><b>أهل بيته <span class="saw">ﷺ</span></b><span>أزواجه وأولاده، بلفظ ابن كثير</span></button>
+        <p class="exg">من شؤونه <span class="saw">ﷺ</span></p>
+        <button type="button" id="shu-asma"><b>أسماؤه <span class="saw">ﷺ</span></b><span>من البخاري وزاد المعاد</span></button>
+        <button type="button" id="shu-khadam"><b>مواليه وخدمه وكتّابه</b><span>ومؤذنوه وأمراؤه وحرسه</span></button>
+        <button type="button" id="shu-silah"><b>سلاحه ودوابه ولباسه</b><span>وأثاثه وخاتمه ونعله</span></button>
+        <button type="button" id="shu-kutub"><b>كتبه إلى الملوك</b><span>وخاتمه الذي ختمها به</span></button>
         <p class="exg">الخلفاء الراشدون</p>
         <button type="button" id="khHome"><b>الخلافة الراشدة سنةً سنة</b><span>من «البداية والنهاية» لابن كثير</span></button>
         <button type="button" id="khHomeTl"><b>الخلفاء في الخط الزمني</b><span>من مختصر السيرة</span></button>
@@ -1756,7 +1763,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
       <div class="ft-btns">
         <button type="button" id="sxMethod"><b>منهج الموقع</b><span>كيف نُقلت الكتب، ومواضع الخلاف مع المطبوع</span></button>
         <button type="button" id="sxFb"><b>أرسل ملاحظة</b><span>خطأ، أو اقتراح، أو ملاحظة على الموقع</span></button>
-        <button type="button" id="sxShare"><b>شارك الموقع</b><span>برابطه، أو برمز QR يفتحه غيرك بكاميرا جواله</span></button>
+        <button type="button" id="sxShare"><b>شارك الموقع</b></button>
       </div>
       <p class="ft-url" dir="ltr">seeratuh.com</p>
       <p class="waqf">جهدٌ فردي غير ربحي لنشر سيرة النبي صلى الله عليه وسلم وتقريبها. ومن كان له حقٌّ فيما نُقل هنا، فنرحّب بتواصله عبر «أرسل ملاحظة».</p>
@@ -1962,7 +1969,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-11-1146';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-11-1158';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2080,7 +2087,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "2300e37ee1", "data/sira_x.json": "122baab48d", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "fade462fe9", "data/sx_bsif.json": "1db6d22374", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "0872b77cae", "data/sx_gz.json": "39c138c73d", "data/sx_hajj.json": "3dc45d5a91", "data/sx_hjr.json": "42b67a90f7", "data/sx_hjrb.json": "9316a1ca50", "data/sx_kh.json": "30ed283370", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "f44c5954df", "data/sx_msif.json": "cd72f8c2c1", "data/sx_nuzul.json": "8c593e4af8", "data/sx_qa.json": "fb522e5430", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "2300e37ee1", "data/sira_x.json": "122baab48d", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "fade462fe9", "data/sx_bsif.json": "1db6d22374", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "0872b77cae", "data/sx_gz.json": "39c138c73d", "data/sx_hajj.json": "3dc45d5a91", "data/sx_hjr.json": "42b67a90f7", "data/sx_hjrb.json": "9316a1ca50", "data/sx_kh.json": "b98d1213bb", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "f44c5954df", "data/sx_msif.json": "cd72f8c2c1", "data/sx_nuzul.json": "8c593e4af8", "data/sx_qa.json": "fb522e5430", "data/sx_shu.json": "d8bdd7a96c", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3417,6 +3424,10 @@ function openNav(){
   it('أحداث الخلافة الراشدة',()=>{closeNav();fxKh()});
   it('مسائل في السيرة',()=>{closeNav();fxQa()});
   it('أهل بيته ﷺ',()=>{closeNav();fxAhl()});
+  it('أسماؤه ﷺ',()=>{closeNav();fxShu('asma')});
+  it('مواليه وخدمه وكتّابه',()=>{closeNav();fxShu('khadam')});
+  it('سلاحه ودوابه ولباسه',()=>{closeNav();fxShu('silah')});
+  it('كتبه إلى الملوك',()=>{closeNav();fxShu('kutub')});
   it('حجة الوداع يوماً بيوم',()=>{closeNav();fxHajj()});
   it('دلائل النبوة',()=>{closeNav();fxDal()});
   it('شجرة النسب الشريف وآل عبد المطلب والخلفاء',()=>{closeNav();openSX('nasab')});
@@ -3932,7 +3943,7 @@ sxFam=function(V,D){
   [['أبناؤه',sons],['بناته',dau]].forEach(([h,L])=>{if(!L.length)return;const g=el('div','ft-g');g.append(el('h4',null,h));const ul=el('ul');L.forEach(c=>{const li=node(c);if(c.t)li.querySelector('.fn-t').querySelectorAll('i').forEach(i=>{if(i.textContent==='بنت')i.remove()});ul.append(li)});g.append(ul);T.append(g)});
   V.append(T)};
 /* wiring */
-$('#fxEvent').onclick=fxEvent;$('#fxMg').onclick=()=>fxMgTL();$('#fxDal').onclick=()=>fxDal();$('#fxHajj').onclick=()=>fxHajj();$('#fxAhl').onclick=()=>fxAhl();$('#fxGz').onclick=()=>fxGz();$('#fxKh').onclick=()=>fxKh();$('#khHome').onclick=async()=>{await openZad(MB.k);setTimeout(()=>{const k=$('#sxKhul');k&&k.scrollIntoView({block:'start'})},120)};$('#khHomeTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
+$('#fxEvent').onclick=fxEvent;$('#fxMg').onclick=()=>fxMgTL();$('#fxDal').onclick=()=>fxDal();$('#fxHajj').onclick=()=>fxHajj();$('#fxAhl').onclick=()=>fxAhl();$('#fxGz').onclick=()=>fxGz();$('#fxKh').onclick=()=>fxKh();['asma','khadam','silah','kutub'].forEach(k=>{const b=$('#shu-'+k);if(b)b.onclick=()=>fxShu(k)});$('#khHome').onclick=async()=>{await openZad(MB.k);setTimeout(()=>{const k=$('#sxKhul');k&&k.scrollIntoView({block:'start'})},120)};$('#khHomeTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
 $('#sxSearchBtn').onclick=()=>{const q=$('#q');q.scrollIntoView({block:'center',behavior:'smooth'});q.focus({preventScroll:true})};
 $('#sxMenuBtn').onclick=()=>openNav();
 
@@ -4285,10 +4296,27 @@ function evRoute(){const h=location.hash;let m;
   else if((m=/^#fx=(qa|sifa|hajj|ahl|road|dal|gz|mg|kh)$/.exec(h)))go(()=>({qa:fxQa,sifa:fxSifa,hajj:fxHajj,ahl:fxAhl,road:fxRoad,dal:fxDal,gz:()=>fxGz(),mg:()=>fxMgTL(),kh:()=>fxKh()})[m[1]]())
   else if((m=/^#gz=(\d+)$/.exec(h)))go(()=>fxGz(+m[1]))
   else if((m=/^#kh=(\d+)$/.exec(h)))go(()=>fxKh(+m[1]))
+  else if((m=/^#shu=(asma|khadam|silah|kutub)$/.exec(h)))go(()=>fxShu(m[1]))
   else if((m=/^#yr=(\d+)$/.exec(h)))go(async()=>{await showYear(+m[1]);const g=$('#yrGrid');g&&g.scrollIntoView({block:'start'})})}
 addEventListener('hashchange',evRoute);evRoute();
 
 /* ---------- الغزوات في سطور: the Mukhtasar's words and figures, and the hadiths of the two Sahihs ---------- */
+/* ---------- من شؤونه ﷺ: صحيح البخاري أولاً، ثم فصول «زاد المعاد» بلفظ المطبوع ---------- */
+async function fxShu(k){const S=await getJSON('data/sx_shu.json');const c=S.find(x=>x.s===k)||S[0];const P=fxOpen(c.t.replace(/ ﷺ$/,' صلى الله عليه وسلم'));
+  P.inn.append(el('p','fx-lead','ما في صحيح البخاري أولاً بلفظه وموضعه في الطبعة السلطانية، ثم فصول ابن القيم في «زاد المعاد» بلفظ المطبوع، ومع كل فقرة صفحتها.'));
+  const g=el('div','sf-grp sah');g.append(el('h4',null,'من صحيح البخاري'));
+  c.h.forEach(h=>{const d=el('div','fx-had');if(h.t)d.append(sawEl('span','gz-k',h.t));const p=el('p');hdFill(p,h.x,h.pm);d.append(p,el('span','kh-sr','صحيح البخاري، '+h.k+'، رقم '+ar(+h.no)+'، الطبعة السلطانية ج'+ar(h.v)+' ص '+h.p.replace(/\d+/g,d=>ar(+d))));g.append(d)});P.inn.append(g);
+  P.inn.append(el('p','gz-ih','من «زاد المعاد» لابن القيم، المجلد الأول'));
+  c.z.forEach((z,zi)=>{const card=el('section','sf-ch');const hd=el('button','sf-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
+    const tt=el('span','sf-tt');tt.append(sawEl('b',null,z.t.replace(/صلى الله عليه وسلم/g,'ﷺ')),el('small',null,'ص '+ar(z.p)));hd.append(tt);card.append(hd);
+    const body=el('div','sf-body');body.hidden=true;card.append(body);
+    const fill=()=>{if(body.childElementCount)return;let last=null;z.x.forEach(([pg,t,pm])=>{const p=el('p','shu-p');hdFill(p,t,pm);body.append(p);
+        if(pg!==last){last=pg}});
+      const pages=[...new Set(z.x.map(x=>x[0]))];const r=el('div','gz-a');pages.forEach(pg=>{const b=el('button','gz-pg','زاد المعاد، ج١، ص '+ar(pg));b.type='button';b.onclick=()=>{P.close();openPart(18,pg,null,false,'txt')};r.append(b)});body.append(r)};
+    hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;card.classList.toggle('open',o);hd.setAttribute('aria-expanded',o)};
+    if(zi===0){fill();body.hidden=false;card.classList.add('open');hd.setAttribute('aria-expanded','true')}
+    P.inn.append(card)});
+  (c.zl||[]).forEach(z=>{const b=el('button','btn btn-link hd-b',z.t.replace(/صلى الله عليه وسلم/g,'ﷺ')+': اقرأه في زاد المعاد، ص '+ar(z.p));b.type='button';b.onclick=()=>{P.close();openPart(18,z.p,null,false,'txt')};P.inn.append(b)})}
 async function fxKh(open){const G=await getJSON('data/sx_kh.json');const P=fxOpen('أحداث الخلافة الراشدة');
   P.inn.append(el('p','fx-lead','أبرز الأحداث من بيعة أبي بكر رضي الله عنه إلى عام الجماعة: لكل حدث أول كلام «مختصر السيرة» فيه، وما ذكره هو وابن كثير في «البداية والنهاية» من تاريخه ومكانه وأسماء أمرائه وأعداده بلفظهما. وما ورد فيه في الصحيحين يأتي أولاً تحت «التفصيل». وعلى طريقة أهل السنة في الإمساك عما شجر بين الصحابة رضي الله عنهم، اقتصرنا في الجمل وصفين على التاريخ والمكان والنتيجة.'));
   const VOL={28:9,29:10,30:11},BK={17:'مختصر السيرة',28:'البداية والنهاية',29:'البداية والنهاية',30:'البداية والنهاية'};
@@ -4352,7 +4380,7 @@ function fxData(){const s=$('#dataSec');if(!s)return;const home=s.parentNode,nex
 /* ---------- شارك الموقع: the link through the phone's share sheet (also from the home-screen app, which has no address bar), copy, and a QR code ---------- */
 const SITE_URL='https://seeratuh.com/',QR_SVG="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 29 29\" shape-rendering=\"crispEdges\" role=\"img\" aria-label=\"رمز QR لرابط الموقع\"><rect width=\"29\" height=\"29\" fill=\"#fff\"/><path fill=\"#000\" d=\"M2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1zM8 2h1v1h-1zM10 2h1v1h-1zM13 2h1v1h-1zM15 2h1v1h-1zM16 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM23 2h1v1h-1zM24 2h1v1h-1zM25 2h1v1h-1zM26 2h1v1h-1zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM14 3h1v1h-1zM16 3h1v1h-1zM20 3h1v1h-1zM26 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM11 4h1v1h-1zM12 4h1v1h-1zM13 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM23 4h1v1h-1zM24 4h1v1h-1zM26 4h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM15 5h1v1h-1zM16 5h1v1h-1zM18 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM23 5h1v1h-1zM24 5h1v1h-1zM26 5h1v1h-1zM2 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM17 6h1v1h-1zM20 6h1v1h-1zM22 6h1v1h-1zM23 6h1v1h-1zM24 6h1v1h-1zM26 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h1v1h-1zM20 7h1v1h-1zM26 7h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM21 8h1v1h-1zM22 8h1v1h-1zM23 8h1v1h-1zM24 8h1v1h-1zM25 8h1v1h-1zM26 8h1v1h-1zM10 9h1v1h-1zM11 9h1v1h-1zM13 9h1v1h-1zM14 9h1v1h-1zM16 9h1v1h-1zM17 9h1v1h-1zM18 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM12 10h1v1h-1zM13 10h1v1h-1zM14 10h1v1h-1zM17 10h1v1h-1zM19 10h1v1h-1zM20 10h1v1h-1zM21 10h1v1h-1zM22 10h1v1h-1zM23 10h1v1h-1zM26 10h1v1h-1zM2 11h1v1h-1zM3 11h1v1h-1zM6 11h1v1h-1zM7 11h1v1h-1zM9 11h1v1h-1zM12 11h1v1h-1zM16 11h1v1h-1zM17 11h1v1h-1zM18 11h1v1h-1zM22 11h1v1h-1zM23 11h1v1h-1zM25 11h1v1h-1zM4 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM8 12h1v1h-1zM10 12h1v1h-1zM11 12h1v1h-1zM14 12h1v1h-1zM16 12h1v1h-1zM17 12h1v1h-1zM21 12h1v1h-1zM22 12h1v1h-1zM23 12h1v1h-1zM24 12h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM13 13h1v1h-1zM16 13h1v1h-1zM17 13h1v1h-1zM24 13h1v1h-1zM25 13h1v1h-1zM2 14h1v1h-1zM4 14h1v1h-1zM5 14h1v1h-1zM7 14h1v1h-1zM8 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM14 14h1v1h-1zM16 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM20 14h1v1h-1zM23 14h1v1h-1zM24 14h1v1h-1zM25 14h1v1h-1zM26 14h1v1h-1zM2 15h1v1h-1zM3 15h1v1h-1zM4 15h1v1h-1zM5 15h1v1h-1zM6 15h1v1h-1zM10 15h1v1h-1zM12 15h1v1h-1zM16 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM22 15h1v1h-1zM25 15h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM8 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM15 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM18 16h1v1h-1zM21 16h1v1h-1zM22 16h1v1h-1zM23 16h1v1h-1zM24 16h1v1h-1zM11 17h1v1h-1zM14 17h1v1h-1zM16 17h1v1h-1zM17 17h1v1h-1zM21 17h1v1h-1zM22 17h1v1h-1zM24 17h1v1h-1zM25 17h1v1h-1zM2 18h1v1h-1zM3 18h1v1h-1zM5 18h1v1h-1zM8 18h1v1h-1zM9 18h1v1h-1zM12 18h1v1h-1zM13 18h1v1h-1zM15 18h1v1h-1zM16 18h1v1h-1zM18 18h1v1h-1zM19 18h1v1h-1zM20 18h1v1h-1zM21 18h1v1h-1zM22 18h1v1h-1zM23 18h1v1h-1zM24 18h1v1h-1zM10 19h1v1h-1zM12 19h1v1h-1zM14 19h1v1h-1zM16 19h1v1h-1zM17 19h1v1h-1zM18 19h1v1h-1zM22 19h1v1h-1zM2 20h1v1h-1zM3 20h1v1h-1zM4 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM7 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM11 20h1v1h-1zM12 20h1v1h-1zM13 20h1v1h-1zM14 20h1v1h-1zM15 20h1v1h-1zM16 20h1v1h-1zM18 20h1v1h-1zM20 20h1v1h-1zM22 20h1v1h-1zM2 21h1v1h-1zM8 21h1v1h-1zM11 21h1v1h-1zM13 21h1v1h-1zM15 21h1v1h-1zM18 21h1v1h-1zM22 21h1v1h-1zM23 21h1v1h-1zM24 21h1v1h-1zM2 22h1v1h-1zM4 22h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM11 22h1v1h-1zM14 22h1v1h-1zM15 22h1v1h-1zM18 22h1v1h-1zM19 22h1v1h-1zM20 22h1v1h-1zM21 22h1v1h-1zM22 22h1v1h-1zM23 22h1v1h-1zM24 22h1v1h-1zM25 22h1v1h-1zM26 22h1v1h-1zM2 23h1v1h-1zM4 23h1v1h-1zM5 23h1v1h-1zM6 23h1v1h-1zM8 23h1v1h-1zM11 23h1v1h-1zM12 23h1v1h-1zM15 23h1v1h-1zM16 23h1v1h-1zM17 23h1v1h-1zM19 23h1v1h-1zM20 23h1v1h-1zM21 23h1v1h-1zM24 23h1v1h-1zM25 23h1v1h-1zM26 23h1v1h-1zM2 24h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM8 24h1v1h-1zM12 24h1v1h-1zM17 24h1v1h-1zM18 24h1v1h-1zM20 24h1v1h-1zM23 24h1v1h-1zM25 24h1v1h-1zM2 25h1v1h-1zM8 25h1v1h-1zM11 25h1v1h-1zM12 25h1v1h-1zM14 25h1v1h-1zM16 25h1v1h-1zM17 25h1v1h-1zM19 25h1v1h-1zM21 25h1v1h-1zM22 25h1v1h-1zM23 25h1v1h-1zM24 25h1v1h-1zM25 25h1v1h-1zM2 26h1v1h-1zM3 26h1v1h-1zM4 26h1v1h-1zM5 26h1v1h-1zM6 26h1v1h-1zM7 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM12 26h1v1h-1zM13 26h1v1h-1zM15 26h1v1h-1zM16 26h1v1h-1zM17 26h1v1h-1zM24 26h1v1h-1zM25 26h1v1h-1zM26 26h1v1h-1z\"/></svg>";
 function fxShare(){const P=fxOpen('شارك الموقع');
-  P.inn.append(el('p','fx-lead','شارك الموقع برابطه، أو بهذا الرمز (QR): يوجّه إليه غيرك كاميرا جواله فيفتح الموقع مباشرة.'));
+  
   const w=el('div','sh-box');const q=el('div','sh-qr');q.innerHTML=QR_SVG;const u=el('p','sh-url',SITE_URL.replace('https://','').replace(/\/$/,''));u.dir='ltr';w.append(q,u);
   const a=el('div','sh-act');const sb=el('button','btn sh-main','إرسال الرابط');sb.type='button';const cb=el('button','btn btn-quiet','نسخ الرابط');cb.type='button';
   const msg=el('p','sh-msg');msg.setAttribute('role','status');
