@@ -2013,7 +2013,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-11-1652';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-11-1655';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4041,7 +4041,9 @@ const mgCh=(M,h)=>(h.ch==='باب'||h.ch==='باب:')?'باب بلا ترجمة�
 // one hadith: the text from the Companion on, with the whole chain a tap away
 const HDN=/(رسول الله صلى الله عليه وسلم|للنبي صلى الله عليه وسلم|النبي صلى الله عليه وسلم|نبي الله صلى الله عليه وسلم|رسول الله ﷺ|النبي ﷺ)/;
 let QV=null;getJSON('data/qv.json').then(x=>{QV=x||{}}).catch(()=>{QV={}});
-const hdV=z=>{const k=z.slice(1,-1).trim(),u=QV&&QV[k];const sp=el('span',u?'hd-v hd-u':'hd-v','﴿'+(u||k)+'﴾');return sp};
+// a fragment that two verses share in different Mushaf forms: the verse is chosen by the words just before it in the text
+const QVC={'غفور رحيم':[['ولا يأتل','غَفُورࣱ رَّحِيمٌ']]};
+const hdV=(z,prev)=>{const k=z.slice(1,-1).trim();let u=QV&&QV[k];if(prev&&QVC[k]){const c=QVC[k].find(([n])=>prev.includes(n));if(c)u=c[1]}const sp=el('span',u?'hd-v hd-u':'hd-v','﴿'+(u||k)+'﴾');return sp};
 // the Prophet's own words in the Sira books' quotations: phrases two readers agreed on (data/sx_gold.json, src/gold)
 let GOLD=null;getJSON('data/sx_gold.json').then(x=>{GOLD=x||{}}).catch(()=>{GOLD={}});
 const goldFor=t=>(GOLD&&t&&(GOLD[t]||(t[0]==='«'&&GOLD[t.slice(1,-1)])))||null;
@@ -4050,7 +4052,7 @@ function hdFill(e,t,pm,ph){if(ph===undefined&&!(pm&&pm.length))ph=goldFor(t);
   e.textContent='';let si=-1;const gold=new Set(pm||[]);t=t.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾');
   const plain=(par,x)=>x.split(HDN).forEach(y=>{if(!y)return;if(HDN.test(y)&&y.match(HDN)[0]===y)par.append(el('span','hd-n',y));else par.append(document.createTextNode(y))});
   const marked=(par,x)=>x.split(/(«[^«»]*»)/).forEach(seg=>{if(!seg)return;if(seg[0]==='«'&&seg.slice(-1)==='»'){si++;const m=gold.has(si)?el('span','hd-m'):el('span');seg.split(/(﴿[^﴾]*﴾)/).forEach(z=>{if(!z)return;m.append(z[0]==='﴿'?hdV(z):document.createTextNode(z))});par.append(m)}else plain(par,seg)});
-  t.split(/(﴿[^﴾]*﴾)/).forEach(z=>{if(!z)return;if(z[0]==='﴿'&&z.slice(-1)==='﴾')e.append(hdV(z));else marked(e,z)})}
+  let acc='';t.split(/(﴿[^﴾]*﴾)/).forEach(z=>{if(!z)return;if(z[0]==='﴿'&&z.slice(-1)==='﴾')e.append(hdV(z,acc.slice(-160)));else marked(e,z);acc+=z})}
 function shFill(e,t,gs){e.textContent='';let k=0;const put=(x,cls)=>{const a=el('span',cls);hdFill(a,x,[],[]);if(cls)e.append(a);else e.append(...a.childNodes)};(gs||[]).forEach(([s,f])=>{if(s>k)put(t.slice(k,s));put(t.slice(s,f),'hd-m');k=f});if(k<t.length)put(t.slice(k))}
 function mgItem(M,i,opt={}){const h=M.h[i],w=el('div','mg-h');
   const q=el('p',opt.big?'dy-t':'mg-t');hdFill(q,mgText(h),h.s?h.ps:h.pm);w.append(q);const meta=el('div','dy-meta');const meta_=opt.meta||mgMeta;const ms=el('span','dy-src',meta_(h));meta.append(ms);w.append(meta);if(h.mg)w.append(el('p','mg-note',h.mg));
