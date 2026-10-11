@@ -1633,6 +1633,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
         <button type="button" class="wide" id="shu-wafat"><b>مرضه ووفاته <span class="saw">ﷺ</span></b><span>أبوابها كاملة من كتاب المغازي في صحيح البخاري</span></button>
         <p class="exg">أصحابه رضي الله عنهم</p>
         <button type="button" class="wide" id="fxFad"><b>فضائل أصحاب النبي <span class="saw">ﷺ</span></b><span>كتاب فضائل الصحابة من صحيح البخاري كاملاً بأبوابه</span></button>
+        <button type="button" class="wide" id="fxAns"><b>مناقب الأنصار رضي الله عنهم</b><span>أبوابها من صحيح البخاري، ومعها فضل خديجة رضي الله عنها</span></button>
         <p class="exg">الخلفاء الراشدون</p>
         <button type="button" id="khHome"><b>الخلافة الراشدة سنةً سنة</b><span>من «البداية والنهاية» لابن كثير</span></button>
         <button type="button" id="khHomeTl"><b>الخلفاء في الخط الزمني</b><span>من مختصر السيرة</span></button>
@@ -1977,7 +1978,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-11-1240';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-11-1247';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2095,7 +2096,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "2300e37ee1", "data/sira_x.json": "122baab48d", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "fade462fe9", "data/sx_bfad.json": "ddae1b352c", "data/sx_bsif.json": "1db6d22374", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "0872b77cae", "data/sx_gz.json": "d0397fff4b", "data/sx_hajj.json": "3dc45d5a91", "data/sx_hjr.json": "42b67a90f7", "data/sx_hjrb.json": "9316a1ca50", "data/sx_kh.json": "b98d1213bb", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "f44c5954df", "data/sx_msif.json": "cd72f8c2c1", "data/sx_nuzul.json": "8c593e4af8", "data/sx_qa.json": "fb522e5430", "data/sx_shu.json": "e59092c65c", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "2300e37ee1", "data/sira_x.json": "122baab48d", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "fade462fe9", "data/sx_bans.json": "458eec535a", "data/sx_bfad.json": "ddae1b352c", "data/sx_bsif.json": "1db6d22374", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "0872b77cae", "data/sx_gz.json": "d0397fff4b", "data/sx_hajj.json": "3dc45d5a91", "data/sx_hjr.json": "42b67a90f7", "data/sx_hjrb.json": "9316a1ca50", "data/sx_kh.json": "b98d1213bb", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "f44c5954df", "data/sx_msif.json": "cd72f8c2c1", "data/sx_nuzul.json": "8c593e4af8", "data/sx_qa.json": "fb522e5430", "data/sx_shu.json": "e59092c65c", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3439,6 +3440,7 @@ function openNav(){
   it('من خصائصه ﷺ',()=>{closeNav();fxShu('khasais')});
   it('من حقوقه ﷺ',()=>{closeNav();fxShu('huquq')});
   it('فضائل أصحاب النبي ﷺ',()=>{closeNav();fxFad()});
+  it('مناقب الأنصار',()=>{closeNav();fxFad('ans')});
   it('حجة الوداع يوماً بيوم',()=>{closeNav();fxHajj()});
   it('دلائل النبوة',()=>{closeNav();fxDal()});
   it('شجرة النسب الشريف وآل عبد المطلب والخلفاء',()=>{closeNav();openSX('nasab')});
@@ -3954,7 +3956,7 @@ sxFam=function(V,D){
   [['أبناؤه',sons],['بناته',dau]].forEach(([h,L])=>{if(!L.length)return;const g=el('div','ft-g');g.append(el('h4',null,h));const ul=el('ul');L.forEach(c=>{const li=node(c);if(c.t)li.querySelector('.fn-t').querySelectorAll('i').forEach(i=>{if(i.textContent==='بنت')i.remove()});ul.append(li)});g.append(ul);T.append(g)});
   V.append(T)};
 /* wiring */
-$('#fxEvent').onclick=fxEvent;$('#fxMg').onclick=()=>fxMgTL();$('#fxDal').onclick=()=>fxDal();$('#fxHajj').onclick=()=>fxHajj();$('#fxAhl').onclick=()=>fxAhl();$('#fxGz').onclick=()=>fxGz();$('#fxKh').onclick=()=>fxKh();$('#fxFad').onclick=()=>fxFad();['asma','khadam','silah','kutub','khasais','huquq'].forEach(k=>{const b=$('#shu-'+k);if(b)b.onclick=()=>fxShu(k)});{const w=$('#shu-wafat');if(w)w.onclick=async()=>{const M=await getJSON('data/sx_mg.json');fxMgTL(M.ev.findIndex(e=>e.t.startsWith('مرضه ووفاته')))}}$('#khHome').onclick=async()=>{await openZad(MB.k);setTimeout(()=>{const k=$('#sxKhul');k&&k.scrollIntoView({block:'start'})},120)};$('#khHomeTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
+$('#fxEvent').onclick=fxEvent;$('#fxMg').onclick=()=>fxMgTL();$('#fxDal').onclick=()=>fxDal();$('#fxHajj').onclick=()=>fxHajj();$('#fxAhl').onclick=()=>fxAhl();$('#fxGz').onclick=()=>fxGz();$('#fxKh').onclick=()=>fxKh();$('#fxFad').onclick=()=>fxFad();$('#fxAns').onclick=()=>fxFad('ans');['asma','khadam','silah','kutub','khasais','huquq'].forEach(k=>{const b=$('#shu-'+k);if(b)b.onclick=()=>fxShu(k)});{const w=$('#shu-wafat');if(w)w.onclick=async()=>{const M=await getJSON('data/sx_mg.json');fxMgTL(M.ev.findIndex(e=>e.t.startsWith('مرضه ووفاته')))}}$('#khHome').onclick=async()=>{await openZad(MB.k);setTimeout(()=>{const k=$('#sxKhul');k&&k.scrollIntoView({block:'start'})},120)};$('#khHomeTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
 $('#sxSearchBtn').onclick=()=>{const q=$('#q');q.scrollIntoView({block:'center',behavior:'smooth'});q.focus({preventScroll:true})};
 $('#sxMenuBtn').onclick=()=>openNav();
 
@@ -4304,7 +4306,7 @@ function evRoute(){const h=location.hash;let m;
   else if((m=/^#hd=(\d+)$/.exec(h)))go(()=>fxHadith(+m[1]));
   else if((m=/^#mg=(\d+)$/.exec(h)))go(()=>fxMaghazi(+m[1]));
   else if(h==='#fr')go(fxFriday)
-  else if((m=/^#fx=(qa|sifa|hajj|ahl|road|dal|gz|mg|kh|fad)$/.exec(h)))go(()=>({qa:fxQa,sifa:fxSifa,hajj:fxHajj,ahl:fxAhl,road:fxRoad,dal:fxDal,gz:()=>fxGz(),mg:()=>fxMgTL(),kh:()=>fxKh(),fad:()=>fxFad()})[m[1]]())
+  else if((m=/^#fx=(qa|sifa|hajj|ahl|road|dal|gz|mg|kh|fad|ans)$/.exec(h)))go(()=>({qa:fxQa,sifa:fxSifa,hajj:fxHajj,ahl:fxAhl,road:fxRoad,dal:fxDal,gz:()=>fxGz(),mg:()=>fxMgTL(),kh:()=>fxKh(),fad:()=>fxFad(),ans:()=>fxFad('ans')})[m[1]]())
   else if((m=/^#gz=(\d+)$/.exec(h)))go(()=>fxGz(+m[1]))
   else if((m=/^#kh=(\d+)$/.exec(h)))go(()=>fxKh(+m[1]))
   else if((m=/^#shu=(asma|khadam|silah|kutub|khasais|huquq)$/.exec(h)))go(()=>fxShu(m[1]))
@@ -4314,8 +4316,9 @@ addEventListener('hashchange',evRoute);evRoute();
 /* ---------- الغزوات في سطور: the Mukhtasar's words and figures, and the hadiths of the two Sahihs ---------- */
 /* ---------- من شؤونه ﷺ: صحيح البخاري أولاً، ثم فصول «زاد المعاد» بلفظ المطبوع ---------- */
 /* ---------- فضائل الصحابة: كتاب فضائل أصحاب النبي ﷺ من صحيح البخاري بأبوابه وترتيبه ---------- */
-async function fxFad(){const M=await getJSON('data/sx_bfad.json');const P=fxOpen('فضائل أصحاب النبي صلى الله عليه وسلم');
-  P.inn.append(el('p','fx-lead','«كتاب فضائل أصحاب النبي ﷺ» من صحيح البخاري كاملاً، بأبوابه وترتيبه: يبدأ بفضل الصحابة عامة، ثم أبي بكر، ثم عمر، ثم عثمان، ثم علي رضي الله عنهم، ثم بقية الصحابة. اضغط الباب لترى أحاديثه.'));
+async function fxFad(k){const A=k==='ans';const M=await getJSON(A?'data/sx_bans.json':'data/sx_bfad.json');const P=fxOpen(A?'مناقب الأنصار':'فضائل أصحاب النبي صلى الله عليه وسلم');
+  P.inn.append(el('p','fx-lead',A?'أبواب «كتاب مناقب الأنصار» من صحيح البخاري في فضائل الأنصار وأعيانهم رضي الله عنهم، بأبوابه وترتيبه، ومعها أبواب خديجة وجرير وحذيفة وهند بنت عتبة التي تليها. اضغط الباب لترى أحاديثه.':'«كتاب فضائل أصحاب النبي ﷺ» من صحيح البخاري كاملاً، بأبوابه وترتيبه: يبدأ بفضل الصحابة عامة، ثم أبي بكر، ثم عمر، ثم عثمان، ثم علي رضي الله عنهم، ثم بقية الصحابة. اضغط الباب لترى أحاديثه.'));
+  const sw=el('div','gz-a');const o=el('button','btn btn-link hd-b',A?'فضائل أصحاب النبي ﷺ':'مناقب الأنصار رضي الله عنهم');o.type='button';o.onclick=()=>{P.close();fxFad(A?'':'ans')};sw.append(o);P.inn.append(sw);
   const list=el('div','mg-list');P.inn.append(list);
   M.ch.forEach(c=>{const n=c.hs.length;const card=el('section','mg-ev');const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
     const tt=el('span','mg-tt');tt.append(sawEl('b',null,c.t==='باب'?'باب بلا ترجمة':c.t),el('small',null,ar(n)+(n===1?' حديث':n===2?' حديثان':n<=10?' أحاديث':' حديثاً')));hd.append(tt);card.append(hd);
@@ -4323,7 +4326,7 @@ async function fxFad(){const M=await getJSON('data/sx_bfad.json');const P=fxOpen
     const body=el('div','mg-body');body.hidden=true;card.append(body);
     const fill=()=>{if(body.childElementCount)return;if(c.tr){const t=el('p','mg-tr');hdFill(t,c.tr,[]);body.append(t)}c.hs.forEach(i=>body.append(mgItem(M,i,{clip:260,meta:bMeta,noBook:1}).w))};
     hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};list.append(card)});
-  P.inn.append(el('p','fx-note','النص مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء الخامس ص ٢–٣٠)، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن. وحُذف الإسناد إلى الصحابي حيث كان ذلك بيّناً، والحديث بإسناده بضغطة.'))}
+  P.inn.append(el('p','fx-note','النص مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء الخامس ص '+(A?'٣٠–٤٠':'٢–٣٠')+')، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن. وحُذف الإسناد إلى الصحابي حيث كان ذلك بيّناً، والحديث بإسناده بضغطة.'))}
 async function fxShu(k){const S=await getJSON('data/sx_shu.json');const Q=await getJSON('data/quran.json');const c=S.find(x=>x.s===k)||S[0];const P=fxOpen(c.t.replace(/ ﷺ/,' صلى الله عليه وسلم'));
   const SN=['الفاتحة','البقرة','آل عمران','النساء','المائدة','الأنعام','الأعراف','الأنفال','التوبة','يونس','هود','يوسف','الرعد','إبراهيم','الحجر','النحل','الإسراء','الكهف','مريم','طه','الأنبياء','الحج','المؤمنون','النور','الفرقان','الشعراء','النمل','القصص','العنكبوت','الروم','لقمان','السجدة','الأحزاب','سبأ','فاطر','يس','الصافات','ص','الزمر','غافر','فصلت','الشورى','الزخرف','الدخان','الجاثية','الأحقاف','محمد','الفتح','الحجرات'];
   const sname=n=>n===59?'الحشر':n===108?'الكوثر':SN[n-1];
