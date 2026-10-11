@@ -2013,7 +2013,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-11-1643';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-11-1649';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2131,7 +2131,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "369da2f789", "data/sira_x.json": "ec410296f9", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "a7184d0237", "data/sx_badab.json": "609e97c735", "data/sx_bans.json": "93ff598518", "data/sx_bdaw.json": "a03449e75a", "data/sx_bfad.json": "9a339ee8b2", "data/sx_bilm.json": "7cc97eff06", "data/sx_bsal.json": "961df2ccd4", "data/sx_bsaw.json": "467277ef1e", "data/sx_bsif.json": "f5c22e5193", "data/sx_bsir.json": "85c94f35bc", "data/sx_dal.json": "5df08297ae", "data/sx_feat.json": "f6f00aa706", "data/sx_gz.json": "60f3e293e1", "data/sx_hady.json": "eae6804cae", "data/sx_hajj.json": "f0f799172c", "data/sx_hjr.json": "0adc5883c5", "data/sx_hjrb.json": "9316a1ca50", "data/sx_kh.json": "b98d1213bb", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "c632bba7fb", "data/sx_msal.json": "237cad357c", "data/sx_msaw.json": "a4bf768b3c", "data/sx_msh.json": "88bc8c9225", "data/sx_msif.json": "55acae6dc9", "data/sx_nuzul.json": "8c593e4af8", "data/sx_qa.json": "465bae7050", "data/sx_shs.json": "ddb58105a7", "data/sx_shu.json": "e59092c65c", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "369da2f789", "data/sira_x.json": "ec410296f9", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "a7184d0237", "data/sx_badab.json": "609e97c735", "data/sx_bans.json": "93ff598518", "data/sx_bdaw.json": "a03449e75a", "data/sx_bfad.json": "9a339ee8b2", "data/sx_bilm.json": "7cc97eff06", "data/sx_bsal.json": "961df2ccd4", "data/sx_bsaw.json": "467277ef1e", "data/sx_bsif.json": "f5c22e5193", "data/sx_bsir.json": "85c94f35bc", "data/sx_dal.json": "5df08297ae", "data/sx_feat.json": "f6f00aa706", "data/sx_gold.json": "232989842e", "data/sx_gz.json": "60f3e293e1", "data/sx_hady.json": "eae6804cae", "data/sx_hajj.json": "f0f799172c", "data/sx_hjr.json": "0adc5883c5", "data/sx_hjrb.json": "9316a1ca50", "data/sx_kh.json": "b98d1213bb", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "c632bba7fb", "data/sx_msal.json": "237cad357c", "data/sx_msaw.json": "a4bf768b3c", "data/sx_msh.json": "88bc8c9225", "data/sx_msif.json": "55acae6dc9", "data/sx_nuzul.json": "8c593e4af8", "data/sx_qa.json": "465bae7050", "data/sx_shs.json": "ddb58105a7", "data/sx_shu.json": "e59092c65c", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3697,7 +3697,7 @@ async function evFull(it){const n=it.n||17,T=await getJSON('data/t'+n+'.json');c
     if(out.length>1600)break}
   return trimFull(out)}
 function trimFull(t){t=t.replace(/\s*\((?:\d+|[٠-٩]+)\)/g,'').replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').replace(/\s+/g,' ').trim();if(t.length<=1600)return t;const c=t.slice(0,1600),j=c.lastIndexOf('.');return (j>800?c.slice(0,j+1):c.slice(0,c.lastIndexOf(' ')))+' …'}
-function quoteW(q,w){const e=el('q');const i=w?q.indexOf(w):-1;if(i<0){e.textContent=q;return e}
+function quoteW(q,w,ph){const e=el('q');if(ph&&ph.length){hdFill(e,q,[],ph);if(e.querySelector('.hd-m'))return e}const i=w?q.indexOf(w):-1;if(i<0){e.textContent=q;return e}
   e.append(document.createTextNode(q.slice(0,i)),el('mark',null,w),document.createTextNode(q.slice(i+w.length)));return e}
 
 /* ---------- the 63 years ---------- */
@@ -4042,11 +4042,16 @@ const mgCh=(M,h)=>(h.ch==='باب'||h.ch==='باب:')?'باب بلا ترجمة�
 const HDN=/(رسول الله صلى الله عليه وسلم|للنبي صلى الله عليه وسلم|النبي صلى الله عليه وسلم|نبي الله صلى الله عليه وسلم|رسول الله ﷺ|النبي ﷺ)/;
 let QV=null;getJSON('data/qv.json').then(x=>{QV=x||{}}).catch(()=>{QV={}});
 const hdV=z=>{const k=z.slice(1,-1).trim(),u=QV&&QV[k];const sp=el('span',u?'hd-v hd-u':'hd-v','﴿'+(u||k)+'﴾');return sp};
-function hdFill(e,t,pm){e.textContent='';let si=-1;const gold=new Set(pm||[]);t=t.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾');
+// the Prophet's own words in the Sira books' quotations: phrases two readers agreed on (data/sx_gold.json, src/gold)
+let GOLD=null;getJSON('data/sx_gold.json').then(x=>{GOLD=x||{}}).catch(()=>{GOLD={}});
+const goldFor=t=>(GOLD&&t&&(GOLD[t]||(t[0]==='«'&&GOLD[t.slice(1,-1)])))||null;
+function hdFill(e,t,pm,ph){if(ph===undefined&&!(pm&&pm.length))ph=goldFor(t);
+  if(ph&&ph.length){const rg=[];ph.forEach(w=>{const i=t.indexOf(w);if(i>=0&&t.indexOf(w,i+1)<0)rg.push([i,i+w.length])});rg.sort((a,b)=>a[0]-b[0]);if(rg.length){shFill(e,t,rg);return}}
+  e.textContent='';let si=-1;const gold=new Set(pm||[]);t=t.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾');
   const plain=(par,x)=>x.split(HDN).forEach(y=>{if(!y)return;if(HDN.test(y)&&y.match(HDN)[0]===y)par.append(el('span','hd-n',y));else par.append(document.createTextNode(y))});
   const marked=(par,x)=>x.split(/(«[^«»]*»)/).forEach(seg=>{if(!seg)return;if(seg[0]==='«'&&seg.slice(-1)==='»'){si++;const m=gold.has(si)?el('span','hd-m'):el('span');seg.split(/(﴿[^﴾]*﴾)/).forEach(z=>{if(!z)return;m.append(z[0]==='﴿'?hdV(z):document.createTextNode(z))});par.append(m)}else plain(par,seg)});
   t.split(/(﴿[^﴾]*﴾)/).forEach(z=>{if(!z)return;if(z[0]==='﴿'&&z.slice(-1)==='﴾')e.append(hdV(z));else marked(e,z)})}
-function shFill(e,t,gs){e.textContent='';let k=0;const put=(x,cls)=>{const a=el('span',cls);hdFill(a,x,[]);if(cls)e.append(a);else e.append(...a.childNodes)};(gs||[]).forEach(([s,f])=>{if(s>k)put(t.slice(k,s));put(t.slice(s,f),'hd-m');k=f});if(k<t.length)put(t.slice(k))}
+function shFill(e,t,gs){e.textContent='';let k=0;const put=(x,cls)=>{const a=el('span',cls);hdFill(a,x,[],[]);if(cls)e.append(a);else e.append(...a.childNodes)};(gs||[]).forEach(([s,f])=>{if(s>k)put(t.slice(k,s));put(t.slice(s,f),'hd-m');k=f});if(k<t.length)put(t.slice(k))}
 function mgItem(M,i,opt={}){const h=M.h[i],w=el('div','mg-h');
   const q=el('p',opt.big?'dy-t':'mg-t');hdFill(q,mgText(h),h.s?h.ps:h.pm);w.append(q);const meta=el('div','dy-meta');const meta_=opt.meta||mgMeta;const ms=el('span','dy-src',meta_(h));meta.append(ms);w.append(meta);if(h.mg)w.append(el('p','mg-note',h.mg));
   const act=el('div','dy-act');
@@ -4292,7 +4297,7 @@ async function fxTlEv(k){
   const X=await getJSON('data/sira_x.json'),L=X.tl.it,it=L[k];if(!it||!it.q)return;
   const B=evShell(it.t);
   B.append(sawEl('p','ev-era',(X.tl.eras[it.e]||'')),sawEl('h3','ev-t',it.t));
-  let qv=quoteW(it.q,it.w);qv.classList.add('ev-q');B.append(qv);
+  const gph=goldFor(it.q);let qv=quoteW(it.q,it.w,gph);qv.classList.add('ev-q');B.append(qv);
   const ft=el('div','ev-ft');ft.append(el('small',null,'مختصر سيرة الرسول ﷺ، للإمام محمد بن عبد الوهاب، ص '+ar(it.p)));
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(17,it.p,it.w?[it.w]:null,false,'txt')};
   ft.append(go);B.append(ft);
@@ -4304,7 +4309,7 @@ async function fxTlEv(k){
       const [o,m]=nz(t),key=nz(nx.q.replace(/…$/,''))[0].slice(0,18),i=key.length>=8?o.indexOf(key,nz(it.q)[0].length>10?10:0):-1;
       if(i>0)t=t.slice(0,m[i]).replace(/[\s«"(]+$/,'').trim()
       if(/[:،]$/.test(t)){const j=Math.max(t.lastIndexOf('. '),t.lastIndexOf('». '));if(j>t.length/3)t=t.slice(0,t.indexOf(' ',j)).trim()}}
-    if(t&&t.length>it.q.replace(/…$/,'').length+20){const nq=quoteW(t,it.w);nq.classList.add('ev-q');qv.replaceWith(nq);qv=nq}}catch(e){}}
+    if(t&&t.length>it.q.replace(/…$/,'').length+20){const nq=quoteW(t,it.w,gph);nq.classList.add('ev-q');qv.replaceWith(nq);qv=nq}}catch(e){}}
 // the day's hadith of «من شمائله», in the same order as the home card and the notification
 async function fxHadith(i){const F=await sxFeat();const L=await shList(F);
   const x=L[i];if(!x)return;const B=evShell('من شمائله صلى الله عليه وسلم');B.append(sawEl('p','ev-era','من شمائله ﷺ'),sawEl('h3','ev-t',x.ch));
@@ -4527,7 +4532,7 @@ async function fxHajj(){const S=await getJSON('data/sx_hajj.json');const P=fxOpe
       const lab=x.src==='ms'?'صحيح مسلم، رقم '+ar(+x.no)+' بترقيم عبد الباقي، الطبعة العامرة ج'+ar(x.v)+' ص '+String(x.p).replace(/\d+/g,d=>ar(+d)):'صحيح البخاري، رقم '+ar(+x.no)+(x.n?'':'، الطبعة السلطانية ج'+ar(x.v)+' ص '+x.p.replace(/\d+/g,d=>ar(+d)));
       if(x.n){const b=el('button','btn btn-quiet hj-g',lab);b.type='button';b.onclick=()=>{P.close();openPart(26,x.p,null,false,'txt')};li.append(b)}else li.append(el('span','hj-g hj-gs',lab))});
       li.append(el('p','hj-src','من البداية والنهاية'))}
-    s.q.forEach(q=>{const bq=el('blockquote','hj-q');('«'+q.x.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').replace(/\d+/g,d=>ar(+d))+'»').split(/(﴿[^﴾]*﴾)/).forEach(x=>{if(!x)return;bq.append(x[0]==='﴿'?hdV(x):document.createTextNode(x))});li.append(bq);
+    s.q.forEach(q=>{const bq=el('blockquote','hj-q');hdFill(bq,'«'+q.x.replace(/\d+/g,d=>ar(+d))+'»',[],goldFor(q.x));li.append(bq);
       const g=el('button','btn btn-quiet hj-g','البداية والنهاية، ج٧، ص '+ar(q.p));g.type='button';g.onclick=()=>{P.close();openPart(35,q.p,[q.x.split(' ').slice(0,4).join(' ')],false,'txt')};li.append(g)})},si===0,'hj-card'))});
   P.inn.append(ol);
   P.inn.append(el('p','fx-note','الأيام والتواريخ بلفظ ابن كثير حيث ذكرها، ومنها ما رجّحه بعد بحثه في «باب تاريخ خروجه» (ص ٤١٠–٤١٥). والنص مراجَع على صور المطبوع.'))}
@@ -4563,7 +4568,7 @@ async function fxDal(){const [A,G]=await Promise.all([getJSON('data/sx_alam.json
       if(g.q)card.append(el('p','mg-src','قال ابن كثير: '+g.q));
       const body=el('div','mg-body');body.hidden=true;card.append(body);
       const fill=()=>{if(body.childElementCount)return;g.it.forEach(it=>{const w=el('div','dl-it');const b=el('button','dl-t');b.type='button';b.setAttribute('aria-expanded','false');b.append(el('span',null,it.t),el('small',null,'ج'+ar(it.n===36?8:9)+'، ص '+ar(it.p)));w.append(b);
-          const d=el('div','dl-x');d.hidden=true;if(it.x)d.append(el('p','mg-t',it.x));
+          const d=el('div','dl-x');d.hidden=true;if(it.x){const pp=el('p','mg-t');hdFill(pp,it.x,[]);d.append(pp)}
           const go=el('button','btn btn-quiet','اقرأه كاملاً في الكتاب');go.type='button';go.onclick=()=>{P.close();openPart(it.n,it.p,[it.t.split(' ').slice(0,4).join(' ')],false,'txt')};d.append(go);w.append(d);
           b.onclick=()=>{d.hidden=!d.hidden;b.setAttribute('aria-expanded',d.hidden?'false':'true')};body.append(w)})};
       hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};list.append(card)});
