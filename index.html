@@ -314,7 +314,7 @@ footer .waqf{max-width:520px;margin:8px auto 0;font-family:var(--text);font-size
 .reffix{font:12px var(--ui);color:var(--brass);border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:0 7px;margin-inline:4px;vertical-align:middle;line-height:1.7}
 .q.qa{cursor:pointer;-webkit-tap-highlight-color:rgba(183,137,60,.18)}
 /* a clear but quiet cue that a verse opens: a small «تفسير» tag after it (tap the verse or the tag) */
-.q.qa::after{content:"تفسير";display:inline-block;font-family:var(--ui);font-size:11px;line-height:1;font-weight:600;color:var(--brass);border:1px solid var(--brass);border-radius:6px;padding:3px 5px 2px;margin-inline-start:4px;vertical-align:.35em;opacity:.8;width:max-content;word-spacing:0;letter-spacing:0;text-align:center;white-space:nowrap;text-indent:0}
+.q.qa::after{content:"\2060تفسير";display:inline;font-family:var(--ui);font-size:11px;line-height:1;font-weight:600;color:var(--brass);border:1px solid var(--brass);border-radius:6px;padding:3px 5px 2px;margin-inline-start:4px;vertical-align:.35em;opacity:.8;width:max-content;word-spacing:0;letter-spacing:0;text-align:center;white-space:nowrap;text-indent:0}
 .ayaplace{font-family:var(--display);font-size:20px;margin:4px 0 10px;text-align:center;color:var(--brass)}
 .ayatext{font-family:"UthmanicHafs","Amiri",serif;font-size:calc(var(--tsize) * 1.25);line-height:2.4;text-align:center;color:var(--verse);padding:4px 2px 8px}
 .ft-url{margin:4px 0;font-size:14px;letter-spacing:.04em}
@@ -349,7 +349,7 @@ footer .waqf{max-width:520px;margin:8px auto 0;font-family:var(--text);font-size
 .hdn .hn{font-weight:700;color:var(--ink);font-size:1.15em}
 .hdn .hg{background:none;font:inherit;cursor:pointer;border:1px solid currentColor;border-radius:999px;padding:.05em .7em;line-height:1.6}
 .hg.g-s{color:var(--palm)}.hg.g-h{color:var(--brass)}.hg.g-d{color:var(--clay)}
-.qb::after{content:attr(data-c);font-size:calc(var(--tsize) * 1.08);color:var(--brass);margin-inline:2px}
+.qb::after{content:attr(data-c);font-size:calc(var(--tsize) * 1.08);color:var(--brass);margin-inline:2px}.q>.qb:first-child::after{content:attr(data-c) "\2060"}.q>.qb:last-child::after{content:"\2060" attr(data-c)}
 .tfoot{margin-top:18px;padding-top:12px;border-top:1px dashed var(--line);font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
 .empty{max-width:520px;margin:30px auto;text-align:center;color:var(--muted);font-size:15px;display:flex;flex-direction:column;gap:10px;align-items:center}
 .empty svg{color:var(--brass)}
@@ -1390,7 +1390,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .gz-ns span{flex:1}
 .hd-u{font-size:1.2em;line-height:2.2;letter-spacing:0}
 
-.qa{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.qa-l{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
 .qa-i{border:1px solid var(--line);border-radius:14px;background:var(--raised)}
 .qa-q{list-style:none;cursor:pointer;padding:12px 14px;font-weight:600;line-height:1.7;display:flex;gap:8px;align-items:flex-start}
 .qa-q::-webkit-details-marker{display:none}
@@ -2013,7 +2013,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-11-1851';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-11-1857';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4506,7 +4506,7 @@ async function fxQa(){const Q=await getJSON('data/sx_qa.json');const P=fxOpen('�
   const SRC={bk:'صحيح البخاري',ba:'صحيح البخاري',ms:'صحيح مسلم',fd:'صحيح مسلم',mm:'صحيح مسلم',hj:'صحيح مسلم',bs:'صحيح البخاري',ih:'سيرة ابن هشام',ik:'البداية والنهاية',zad:'زاد المعاد',mk:'مختصر السيرة'};
   const VOL={23:1,24:2,18:1,19:2,20:3,21:4,22:5,31:3,32:4,33:5,34:6,35:7,36:8,37:9};
   const OPEN={bk:()=>fxMgTL(),ms:()=>fxMgTL(),fd:()=>fxSifa(),ba:()=>fxDal(),mm:()=>fxDal(),hj:()=>fxRoad(),bs:()=>fxSifa()};
-  Q.forEach(c=>{P.inn.append(sawEl('h3','dl-bk qa-h',c.c));const L=el('div','qa');
+  Q.forEach(c=>{P.inn.append(sawEl('h3','dl-bk qa-h',c.c));const L=el('div','qa-l');
     c.q.forEach(it=>{const d=document.createElement('details');d.className='qa-i';const s=document.createElement('summary');s.className='qa-q';
       const qt=el('span');it.q.split(/(﴿[^﴾]*﴾)/).forEach(z=>{if(z)qt.append(z[0]==='﴿'?hdV(z):document.createTextNode(z))});s.append(qt);d.append(s);const box=el('div','qa-a');
       it.a.forEach(x=>{const r=el('div','gz-d');const t=el('p','gz-dq');hdFill(t,x.x.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾'),x.pm);r.append(t);
