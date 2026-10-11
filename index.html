@@ -1402,6 +1402,13 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 
 .mg-gz{margin:0 14px 10px}
 
+.yr-sah{border-inline-start:3px solid var(--brass);padding-inline-start:12px;margin:6px 0 14px}
+.yr-sh{margin:0 0 4px;font-size:13px;color:var(--muted)}
+.yr-sq{padding:6px 0;border-bottom:1px dashed var(--line)}
+.yr-sq:last-child{border-bottom:0}
+.yr-sq p{margin:2px 0 6px;line-height:1.85}
+.yr-by{color:var(--muted)}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -1895,7 +1902,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-11-0940';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-11-0952';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2013,7 +2020,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "2300e37ee1", "data/sira_x.json": "4619001fb4", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "fade462fe9", "data/sx_bsif.json": "39e38ca8f7", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "04657fd023", "data/sx_gz.json": "0f5b77ad74", "data/sx_hajj.json": "e037963d9d", "data/sx_hjr.json": "42b67a90f7", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "f44c5954df", "data/sx_msif.json": "cd72f8c2c1", "data/sx_nuzul.json": "8c593e4af8", "data/sx_qa.json": "c0d2e74e59", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "2300e37ee1", "data/sira_x.json": "4619001fb4", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "fade462fe9", "data/sx_bsif.json": "39e38ca8f7", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "cacdefa849", "data/sx_gz.json": "0f5b77ad74", "data/sx_hajj.json": "e037963d9d", "data/sx_hjr.json": "42b67a90f7", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "f44c5954df", "data/sx_msif.json": "cd72f8c2c1", "data/sx_nuzul.json": "8c593e4af8", "data/sx_qa.json": "c0d2e74e59", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3570,11 +3577,14 @@ async function showYear(k){const F=await sxFeat();const G=$('#yrGrid'),P=$('#yrP
   [...G.children].forEach((b,i)=>b.classList.toggle('sel',i+1===k));P.hidden=false;P.innerHTML='';
   P.append(el('h3',null,k===1?'سنة مولده ﷺ':'عمره ﷺ: '+(k===2?'سنتان':ar(k)+(k<=10?' سنين':' سنة'))),el('p','sub',yrSub(k)));
   const L=F.years[k]||[];
-  if(!L.length)P.append(el('p','yr-none','لم تذكر كتب الموقع حدثاً نصّت على أنه في هذه السنة.'));
+  const YS=(F.ys||{})[k]||[];if(YS.length){const sb=el('div','yr-sah');sb.append(el('p','yr-sh','من الصحيحين'));
+    YS.forEach(s=>{const d=el('div','yr-sq');if(s.by)d.append(el('small','yr-by',s.by));const t=el('p');hdFill(t,s.x,[]);d.append(t);
+      const b=el('button','gz-pg',s.r);b.type='button';b.onclick=()=>{if(s.go==='sifa')fxSifa();else if(s.go.startsWith('mg:'))fxMgTL(+s.go.slice(3));else fxMgTL()};d.append(b);sb.append(d)});P.append(sb)}
+  if(!L.length&&!YS.length)P.append(el('p','yr-none','لم تذكر كتب الموقع حدثاً نصّت على أنه في هذه السنة.'));
   L.forEach(it=>{if(it.mk&&!it.q){const d=el('button','yr-mk');d.type='button';d.append(el('span',null,it.t),el('small',null,'ص '+ar(it.p)));d.onclick=()=>openPart(17,it.p,null,false,'txt');P.append(d);return}   // the book's own year mark: a divider, not a quote
     const n=it.n||17,ih=n===23;
-    const b=el('div','yr-ev');const go=el('button','go',ih?'اقرأه في السيرة':'اقرأه في المختصر');go.type='button';
-    const ft=el('span','yr-ft');ft.append(el('small',null,(ih?'السيرة النبوية لابن هشام، ج١، ص ':'مختصر السيرة، ص ')+ar(it.p)),go);
+    const b=el('div','yr-ev');const go=el('button','go',n===17?'اقرأه في المختصر':ih?'اقرأه في السيرة':'اقرأه في الكتاب');go.type='button';
+    const ft=el('span','yr-ft');ft.append(el('small',null,(n===17?'مختصر السيرة، ص ':ih?'السيرة النبوية لابن هشام، ج١، ص ':SXBN(n)+'، ص ')+ar(it.p)),go);
     let qv=quoteW(it.q,it.w);b.append(el('b',null,it.t),qv);
     // the rest of the passage here, without leaving the page: up to the book's next heading
     const more=el('button','yr-more','أكمل القراءة هنا');more.setAttribute('aria-label','أكمل قراءة النص في هذه الصفحة');more.type='button';
