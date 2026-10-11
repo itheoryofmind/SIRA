@@ -1476,6 +1476,26 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .hj-h.clip{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
 .hd-row{display:flex;width:100%;justify-content:space-between;align-items:baseline;gap:10px;text-align:start;background:none;border:0;border-bottom:1px dashed var(--line);color:var(--ink);font:inherit;font-size:15.5px;line-height:1.7;padding:9px 0;cursor:pointer}
 .hd-row small{flex:none;color:var(--muted);font-size:12px}
+/* readable stacked texts: every passage on its own tinted panel, sources as small labels, actions set apart */
+.qp{margin:12px 0 6px;padding:12px 14px;background:color-mix(in srgb,var(--palm) 7%,var(--raised));border-radius:12px;border:0;font-family:var(--text);font-size:19px;line-height:1.95;color:var(--ink)}
+.qp-act{display:flex;justify-content:flex-end;margin:6px 0 10px}
+.qp-act .btn{min-height:40px}
+.sf-ch .nz-q{padding:10px 0 4px;border-top:1px solid var(--line)}
+.sf-ch .nz-q:first-child{border-top:0}
+.sf-ch .nz-q>.by{display:inline-block;font-size:13px;color:var(--brass);background:color-mix(in srgb,var(--brass) 10%,transparent);border-radius:999px;padding:2px 10px;margin:4px 0 2px}
+.sf-ch .nz-q blockquote{margin:8px 0;padding:12px 14px;background:color-mix(in srgb,var(--palm) 7%,var(--raised));border-radius:12px;border:0}
+.hj-card .sf-body>.hj-src{display:inline-block;font-size:13px;color:var(--brass);background:color-mix(in srgb,var(--brass) 10%,transparent);border-radius:999px;padding:2px 10px;margin:14px 0 4px}
+.hj-card .hj-h,.hj-card .hj-q{margin:8px 0;padding:12px 14px;background:color-mix(in srgb,var(--palm) 7%,var(--raised));border-radius:12px;border:0;font-family:var(--text);font-size:19px;line-height:1.95}
+.hj-card .hj-g{margin:2px 0 10px}
+.hj-list{margin-top:12px}
+/* the same reading panel for every hadith/quote in the collapsible sections, so texts never run into each other */
+.mg-body .mg-h,.sf-body .fx-had{border:0;padding:10px 0 4px}
+.mg-body .mg-t,.sf-body .fx-had>p,.qa-a .gz-dq,.kh-ev .gz-dq,.sf-body .gz-dq{margin:4px 0 6px;padding:12px 14px;background:color-mix(in srgb,var(--palm) 7%,var(--raised));border-radius:12px;font-family:var(--text);font-size:19px;line-height:1.95;color:var(--ink)}
+.qa-a .gz-d,.sf-body .gz-d{border-bottom:0;padding:6px 0}
+.mg-body .mg-t.clip,.hj-card .hj-h.clip{display:block;-webkit-line-clamp:unset;max-height:calc(5 * 1.95em + 24px);overflow:hidden;-webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
+.mg-body .dy-meta,.sf-body .fx-gs{padding:0 4px}
+.sf-body .fx-had.weak>p{color:var(--muted)}
+.gz-a{margin-bottom:14px}
 
 </style>
 
@@ -1989,7 +2009,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-11-1536';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-11-1540';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3655,6 +3675,11 @@ function fxOpen(t){const ov=el('div','fx');ov.setAttribute('role','dialog');ov.s
   document.addEventListener('keydown',kd);x.onclick=close;return{ov,inn,close}}
 const goBtn=(F,label,n,p,hl)=>{const b=el('button','btn btn-quiet',label);b.type='button';b.onclick=()=>openPart(n,p,hl||null,false,'txt');return b};
 const pgT=(n,p)=>SXBN(n)+'، ص '+ar(p);
+// one collapsible card: a title, a small line under it, and a body filled when first opened. Used wherever several texts would otherwise stack up.
+function accCard(title,sub,fill,open,cls){const card=el('section','sf-ch'+(cls?' '+cls:''));const hd=el('button','sf-hd');hd.type='button';const tt=el('span','sf-tt');const b=el('b');b.append(title instanceof Node?title:document.createTextNode(title));tt.append(b);if(sub)tt.append(el('small',null,sub));hd.append(tt);card.append(hd);
+  const body=el('div','sf-body');body.hidden=true;card.append(body);let done=false;const tog=o=>{if(o&&!done){fill(body);done=true}body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false');card.classList.toggle('open',o)};hd.onclick=()=>tog(body.hidden);tog(!!open);return card}
+// a quoted passage on its own tinted panel; the Prophet's name in bold, verses in green
+function qPanel(t,pm){const q=el('blockquote','qp');hdFill(q,t,pm||[]);return q}
 /* a quote with the dating words marked */
 // an event's passage from its first words to the book's next heading (at most about 1600 letters, ending at a full stop)
 async function evFull(it){const n=it.n||17,T=await getJSON('data/t'+n+'.json');const P=T.p;
@@ -3741,7 +3766,7 @@ async function fxEvent(){const F=await sxFeat();const P=fxOpen('الحدث في 
   P.inn.append(el('p','fx-lead','اختر حدثاً تجد موضعه في كل كتاب من كتب الموقع، بعنوانه وصفحته في المطبوع، ومعه أول كلام المؤلف فيه بلفظه.'));
   const ch=el('div','fx-chips');ch.setAttribute('role','group');const box=el('div');P.inn.append(ch,box);
   const show=i=>{[...ch.children].forEach((c,j)=>{c.classList.toggle('on',j===i);c.setAttribute('aria-pressed',j===i)});box.innerHTML='';const E=F.events[i];
-    E.s.forEach(s=>{const d=el('div','fx-src');d.append(el('h3',null,SXBN(s.n)),el('p','by',(s.h?s.h+'، ':'')+'ص '+ar(s.p)),el('blockquote',null,s.x),goBtn(P,'اقرأه في الكتاب',s.n,s.p));box.append(d)});
+    E.s.forEach((s,j)=>box.append(accCard(SXBN(s.n),(s.h?s.h+'، ':'')+'ص '+ar(s.p),b=>{b.append(qPanel(s.x));const a=el('div','qp-act');a.append(goBtn(P,'اقرأه في الكتاب',s.n,s.p));b.append(a)},j===0)));
     LS.set('fxEv',i)};
   F.events.forEach((E,i)=>{const c=el('button','fx-chip',E.t);c.type='button';c.onclick=()=>{show(i);c.scrollIntoView({inline:'center',block:'nearest'})};ch.append(c)});
   const i0=Math.min(+(LS.get('fxEv',0))||0,F.events.length-1);show(i0);ch.children[i0].scrollIntoView({inline:'center',block:'nearest'});
@@ -3763,7 +3788,7 @@ async function fxDay(){const F=await sxFeat();const P=fxOpen('يومه صلى ا
   svg.append(mk('circle',{cx:C,cy:C,r:R0-8,class:'hub'}));const ht=mk('text',{x:C,y:C,class:'hubt'});ht.textContent='يومه وليلته';svg.append(ht);
   wrap.append(svg);P.inn.append(wrap,box);
   const show=i=>{segs.forEach((g,j)=>g.classList.toggle('on',j===i));box.innerHTML='';const D=F.day[i];box.append(el('h3',null,D.t));box.lastChild.className='fx-dh';
-    D.s.forEach(s=>{const d=el('div','fx-src');d.append(el('h3',null,s.h),el('p','by',pgT(s.n,s.p)),el('blockquote',null,s.x),goBtn(P,'اقرأه في زاد المعاد',s.n,s.p));box.append(d)})};
+    D.s.forEach((s,j)=>box.append(accCard(s.h,pgT(s.n,s.p),b=>{b.append(qPanel(s.x));const a=el('div','qp-act');a.append(goBtn(P,'اقرأه في زاد المعاد',s.n,s.p));b.append(a)},j===0)))};
   show(0);
   P.inn.append(el('p','fx-note','ترتيب الأوقات في الدائرة للتصفح، من الليل إلى الليل، وليس ترتيباً نصّ عليه ابن القيم. والنصوص بلفظ زاد المعاد، وقد يُختصر آخرها بنقاط.'))}
 
@@ -3775,15 +3800,14 @@ async function fxAyat(){const E=await getJSON('data/sx_nuzul.json');const P=fxOp
   const ch=el('div','fx-chips'),list=el('div','nz-list');P.inn.append(ch,list);
   list.addEventListener('click',e=>{const q=e.target.closest('.qa');if(q){openAya(+q.dataset.s,+q.dataset.a,+q.dataset.b)}});
   const show=gi=>{[...ch.children].forEach((c,j)=>{c.classList.toggle('on',j===gi);c.setAttribute('aria-pressed',j===gi)});list.innerHTML='';LS.set('nzG',gi);
-    E.filter(G[gi][1]).forEach(ev=>{const card=el('section','nz-ev');card.append(el('h3',null,ev.t));
+    E.filter(G[gi][1]).forEach((ev,ei)=>{list.append(accCard(ev.t,ev.q.map(q=>SXBN(q.n)).filter((v,i,a)=>a.indexOf(v)===i).join('، '),card=>{
       ev.q.forEach(q=>{const d=el('div','nz-q');
         d.append(el('p','by',SXBN(q.n)+'، ص '+ar(q.p)+(q.p2!==q.p?'–'+ar(q.p2):'')));
         const bq=el('blockquote');let len=0;
         q.x.forEach(x=>{const pp=el('p');if(x.t==='…'){pp.className='gap';pp.textContent='…'}else{const rep={};for(const k in x.u){const v=x.u[k];rep[k]=[0,+k,v[0],v[1],v[2],v[3]]}pp.append(richInline(x.t,[],false,rep));len+=x.t.length}bq.append(pp)});
         d.append(bq);
         if(len>520){bq.classList.add('clip');const m=el('button','btn btn-link nz-more','أكمل النص');m.type='button';m.onclick=()=>{bq.classList.remove('clip');m.remove()};d.append(m)}
-        d.append(goBtn(P,'اقرأه في الكتاب',q.n,q.p));card.append(d)});
-      list.append(card)})};
+        d.append(goBtn(P,'اقرأه في الكتاب',q.n,q.p));card.append(d)})},ei===0,'nz-card'))})};
   G.forEach(([t,f],i)=>{const c=el('button','fx-chip',t+' ('+ar(E.filter(f).length)+')');c.type='button';c.onclick=()=>show(i);ch.append(c)});
   show(Math.min(+(LS.get('nzG',0))||0,G.length-1));
   P.inn.append(el('p','fx-note','لم يُذكر هنا إلا ما نصّ فيه الكتاب نفسه على أن الآية أو السورة نزلت في ذلك الحدث، ويُنقل كلامه بلفظه دون تصرف، وما حُذف من وسطه عُلّم بنقاط. والروايات على عهدة رواتها كما ذكرها أصحاب الكتب، فالموقع ناقل لا يحكم عليها، وإذا اختلفت الكتب في سبب نزول ذُكر ما في كل كتاب. ونص الآيات من مصحف مجمع الملك فهد، وتُعرض كما اقتبسها المؤلف، فقد يكون المقتبس بعض آية.'))}
@@ -4482,20 +4506,20 @@ async function fxAhl(){const A=await getJSON('data/sx_ahl.json');const P=fxOpen(
       bq('ويتولون أزواج رسول الله صلى الله عليه وسلم أمهات المؤمنين، ويؤمنون بأنهن أزواجه في الآخرة، خصوصا خديجة رضي الله عنها أم أكثر أولاده، وأول من آمن به وعاضده على أمره، وكان لها منه المنزلة العالية. والصديقة بنت الصديق رضي الله عنهما، التي قال فيها النبي صلى الله عليه وسلم: «فضل عائشة على النساء كفضل الثريد على سائر الطعام»'),
       el('p','kh-src','مجموع الفتاوى ٣/١٥٤'));P.inn.append(Q)}
   P.inn.append(el('h3','dl-bk','أزواجه أمهات المؤمنين رضي الله عنهن'),el('p','dl-bs','على ترتيب زواجه بهن كما رواه يونس بن بكير عن ابن إسحاق، وقال ابن كثير بعده: «'+A.wn.q+'».'));
-  const ow=el('ol','ah');A.w.forEach(w=>{const li=el('li');li.append(el('b',null,w.n+' رضي الله عنها'),el('q',null,w.q));ow.append(li)});P.inn.append(ow,pg(219,A.w[0].q));
+  A.w.forEach((w,j)=>P.inn.append(accCard(ar(j+1)+'. '+w.n+' رضي الله عنها','',b=>{b.append(qPanel(w.q));const a=el('div','qp-act');a.append(pg(w.p||219,w.q));b.append(a)},j===0)));
   P.inn.append(el('h3','dl-bk','أولاده صلى الله عليه وسلم'),el('p','dl-bs','قال ابن كثير: «'+A.cn[0].q+'». وهم على ترتيب الزبير بن بكار في ولادتهم:'));
-  const oc=el('ol','ah');A.c.forEach(c=>{const li=el('li');li.append(el('b',null,c.n+(['زينب','أم كلثوم','فاطمة','رقية'].includes(c.n)?' رضي الله عنها':'')),el('q',null,c.q));oc.append(li)});P.inn.append(oc,pg(240,A.c[0].q));
+  A.c.forEach((c,j)=>P.inn.append(accCard(ar(j+1)+'. '+c.n+(['زينب','أم كلثوم','فاطمة','رقية'].includes(c.n)?' رضي الله عنها':''),'',b=>{b.append(qPanel(c.q));const a=el('div','qp-act');a.append(pg(c.p||240,c.q));b.append(a)},j===0)));
   P.inn.append(el('p','fx-note','الترتيبان من الروايتين كما ساقهما ابن كثير (ج٨ ص ٢١٩–٢٢٠ و٢٤٠)، وفي الكتاب خلاف في ترتيب الأزواج والأولاد ذكره ابن كثير في موضعه. والنص مراجَع على صور المطبوع.'))}
 /* ---------- حجة الوداع يوماً بيوم: Ibn Kathir's words, stop by stop ---------- */
 async function fxHajj(){const S=await getJSON('data/sx_hajj.json');const P=fxOpen('حجة الوداع يوماً بيوم');
   P.inn.append(el('p','fx-lead','حجته صلى الله عليه وسلم من خروجه من المدينة إلى رجوعه، محطةً محطة: ما في الصحيحين أولاً، ومنه حديث جابر الطويل في صحيح مسلم مقسّماً على المحطات، ثم لفظ ابن كثير في «كتاب حجة الوداع» من «البداية والنهاية» وما نقله فيه، ومع كل نص موضعه.'));
-  const ol=el('ol','hj');S.forEach(s=>{const li=el('li','hj-s');li.append(el('span','hj-d',s.d),el('b','hj-t',s.t));
+  const ol=el('div','hj-list');S.forEach((s,si)=>{ol.append(accCard(s.t,s.d,li=>{
     if(s.sh&&s.sh.length){li.append(el('p','hj-src',s.sh.some(x=>x.src==='ms')?'من الصحيحين':'من صحيح البخاري'));s.sh.forEach(x=>{if(x.k)li.append(sawEl('span','hj-k',x.k==='كتاب الحج'?'':x.k));const t=el('p','hj-h');hdFill(t,x.x,x.pm);li.append(t);if(x.x.length>420){t.classList.add('clip');const m=el('button','btn btn-link hd-b','أكمل');m.type='button';m.onclick=()=>{t.classList.remove('clip');m.remove()};li.append(m)}
       const lab=x.src==='ms'?'صحيح مسلم، رقم '+ar(+x.no)+' بترقيم عبد الباقي، الطبعة العامرة ج'+ar(x.v)+' ص '+String(x.p).replace(/\d+/g,d=>ar(+d)):'صحيح البخاري، رقم '+ar(+x.no)+(x.n?'':'، الطبعة السلطانية ج'+ar(x.v)+' ص '+x.p.replace(/\d+/g,d=>ar(+d)));
       if(x.n){const b=el('button','btn btn-quiet hj-g',lab);b.type='button';b.onclick=()=>{P.close();openPart(26,x.p,null,false,'txt')};li.append(b)}else li.append(el('span','hj-g hj-gs',lab))});
       li.append(el('p','hj-src','من البداية والنهاية'))}
     s.q.forEach(q=>{const bq=el('blockquote','hj-q');('«'+q.x.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').replace(/\d+/g,d=>ar(+d))+'»').split(/(﴿[^﴾]*﴾)/).forEach(x=>{if(!x)return;bq.append(x[0]==='﴿'?el('span','dl-q hj-v',x):document.createTextNode(x))});li.append(bq);
-      const g=el('button','btn btn-quiet hj-g','البداية والنهاية، ج٧، ص '+ar(q.p));g.type='button';g.onclick=()=>{P.close();openPart(35,q.p,[q.x.split(' ').slice(0,4).join(' ')],false,'txt')};li.append(g)});ol.append(li)});
+      const g=el('button','btn btn-quiet hj-g','البداية والنهاية، ج٧، ص '+ar(q.p));g.type='button';g.onclick=()=>{P.close();openPart(35,q.p,[q.x.split(' ').slice(0,4).join(' ')],false,'txt')};li.append(g)})},si===0,'hj-card'))});
   P.inn.append(ol);
   P.inn.append(el('p','fx-note','الأيام والتواريخ بلفظ ابن كثير حيث ذكرها، ومنها ما رجّحه بعد بحثه في «باب تاريخ خروجه» (ص ٤١٠–٤١٥). والنص مراجَع على صور المطبوع.'))}
 /* ---------- دلائل النبوة: Ibn Kathir's chapters, in his order and his words ---------- */
