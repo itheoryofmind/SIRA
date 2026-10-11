@@ -6,7 +6,7 @@
 // - an event of the Sira, and one of the rightly guided caliphs, each day in order (the site's timeline, in the Mukhtasar's words)
 // - each reader picks which of these, and the hour of each (where the reader is)
 // Web Push: RFC 8291 (aes128gcm) and RFC 8292 (VAPID), with WebCrypto only.
-import H from './hadith.js';
+import H, { DAY0 } from './hadith.js';
 import { SI, KH } from './tl.js';
 import MG from './mg.js';
 
@@ -89,7 +89,7 @@ function local(tz, t = Date.now()) {
 function today(tz) {
   const L = local(tz);
   const day = Date.UTC(L.y, L.m - 1, L.d) / 864e5;
-  const i = day % H.length, h = H[i];
+  const i = ((day - DAY0) % H.length + H.length) % H.length, h = H[i];   // DAY0 keeps the day's hadith when the list grew (2026-10-11)
   return { t: 'من شمائله صلى الله عليه وسلم', b: h.t, u: SITE + '/#hd=' + i, tag: 'shamail' };   // the site opens the hadith itself, in place
 }
 

@@ -1921,7 +1921,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-11-1031';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-11-1037';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2039,7 +2039,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "2300e37ee1", "data/sira_x.json": "4619001fb4", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "fade462fe9", "data/sx_bsif.json": "1db6d22374", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "a3bfcbb23b", "data/sx_gz.json": "0f5b77ad74", "data/sx_hajj.json": "e037963d9d", "data/sx_hjr.json": "42b67a90f7", "data/sx_hjrb.json": "9316a1ca50", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "f44c5954df", "data/sx_msif.json": "cd72f8c2c1", "data/sx_nuzul.json": "8c593e4af8", "data/sx_qa.json": "5f12cf61d0", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "2300e37ee1", "data/sira_x.json": "4619001fb4", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "fade462fe9", "data/sx_bsif.json": "1db6d22374", "data/sx_dal.json": "f07028f7f8", "data/sx_feat.json": "f4d20ea5f0", "data/sx_gz.json": "0f5b77ad74", "data/sx_hajj.json": "e037963d9d", "data/sx_hjr.json": "42b67a90f7", "data/sx_hjrb.json": "9316a1ca50", "data/sx_khn.json": "e46fb5df7f", "data/sx_mg.json": "f44c5954df", "data/sx_msif.json": "cd72f8c2c1", "data/sx_nuzul.json": "8c593e4af8", "data/sx_qa.json": "5f12cf61d0", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3892,9 +3892,18 @@ $('#sxSearchBtn').onclick=()=>{const q=$('#q');q.scrollIntoView({block:'center',
 $('#sxMenuBtn').onclick=()=>openNav();
 
 /* ---------- من شمائله: one hadith a day from al-Shamail, only those al-Albani graded sahih or hasan, with his grade as he printed it ---------- */
+// the list: al-Albani's sahih/hasan first, then the Sahihs' (appended, so the order of the first did not change); F.day0 keeps the day's place
+async function shList(F){const L=[];F.sifa.forEach(s=>s.c.forEach(c=>c.had.forEach(h=>{if(h.g==='صحيح'||h.g==='حسن')L.push({h,ch:c.h})})));
+  if((F.dayx||[]).length){const B=await getJSON('data/sx_bsif.json'),M=await getJSON('data/sx_msif.json');F.dayx.forEach(x=>{const S=x.k==='b'?B:M;if(S)L.push({sh:S.h[x.i],k:x.k,ch:x.ch})})}return L}
+const shIdx=(F,N)=>{const day=Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);return((day-(F.day0||0))%N+N)%N};
+const shSrc=x=>(x.k==='b'?bMeta:msMeta)(x.sh,false);
 async function renderDaily(){const F=await sxFeat();const sec=$('#sxDaily'),C=$('#dyCard');if(!sec||!C)return;
-  const L=[];F.sifa.forEach(s=>s.c.forEach(c=>c.had.forEach(h=>{if(h.g==='صحيح'||h.g==='حسن')L.push({h,ch:c.h})})));if(!L.length)return;
-  const day=Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);const {h,ch}=L[day%L.length];
+  const L=await shList(F);if(!L.length)return;
+  const X=L[shIdx(F,L.length)];if(X.sh){C.innerHTML='';C.append(el('p','dy-ch',X.ch));const q=el('p','dy-t');hdFill(q,X.sh.s,X.sh.ps||[]);C.append(q);
+    const meta=el('div','dy-meta');meta.append(el('span','dy-src',shSrc(X)));C.append(meta);const act=el('div','dy-act');
+    const go=el('button','btn btn-quiet','صفته ﷺ في الموقع');go.type='button';go.onclick=()=>fxSifa();act.append(go);C.append(act);
+    const bell=el('button','btn btn-link dy-bell');bell.type='button';act.append(bell);pushBtn(bell);sec.hidden=false;return}
+  const {h,ch}=X;
   C.innerHTML='';C.append(el('p','dy-ch',ch));
   const t=h.x.filter(x=>typeof x==='string').join(' ').replace(/\s+([)\]»])/g,'$1');const q=el('p','dy-t',t);C.append(q);
   const meta=el('div','dy-meta');meta.append(el('span','gr',gtxt(h.g)),el('span','dy-src','الشمائل المحمدية، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p)));C.append(meta);
@@ -4177,9 +4186,11 @@ async function fxTlEv(k){
       if(/[:،]$/.test(t)){const j=Math.max(t.lastIndexOf('. '),t.lastIndexOf('». '));if(j>t.length/3)t=t.slice(0,t.indexOf(' ',j)).trim()}}
     if(t&&t.length>it.q.replace(/…$/,'').length+20){const nq=quoteW(t,it.w);nq.classList.add('ev-q');qv.replaceWith(nq);qv=nq}}catch(e){}}
 // the day's hadith of «من شمائله», in the same order as the home card and the notification
-async function fxHadith(i){const F=await sxFeat();const L=[];F.sifa.forEach(s=>s.c.forEach(c=>c.had.forEach(h=>{if(h.g==='صحيح'||h.g==='حسن')L.push({h,ch:c.h})})));
-  const x=L[i];if(!x)return;const {h,ch}=x;const B=evShell('من شمائله صلى الله عليه وسلم');
-  B.append(sawEl('p','ev-era','من شمائله ﷺ'),sawEl('h3','ev-t',ch));
+async function fxHadith(i){const F=await sxFeat();const L=await shList(F);
+  const x=L[i];if(!x)return;const B=evShell('من شمائله صلى الله عليه وسلم');B.append(sawEl('p','ev-era','من شمائله ﷺ'),sawEl('h3','ev-t',x.ch));
+  if(x.sh){const q=el('p','ev-q');hdFill(q,x.sh.s,x.sh.ps||[]);B.append(q);const ft=el('div','ev-ft');ft.append(el('small',null,shSrc(x)));
+    const go=el('button','btn btn-quiet','صفته ﷺ في الموقع');go.type='button';go.onclick=()=>{evClose();fxSifa()};ft.append(go);B.append(ft);return}
+  const {h,ch}=x;
   const t=h.x.filter(y=>typeof y==='string').join(' ').replace(/\s+([)\]»])/g,'$1');const q=el('p','ev-q');q.textContent=t;B.append(q);
   const ft=el('div','ev-ft');const m=el('small');m.append(el('span','gr',gtxt(h.g)),document.createTextNode(' الشمائل المحمدية، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p)));ft.append(m);
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(25,h.p,null,false,'txt')};ft.append(go);B.append(ft)}
