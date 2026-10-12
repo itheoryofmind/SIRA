@@ -1521,6 +1521,13 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .mg-h .mg-t.clip{display:block;-webkit-line-clamp:unset;max-height:calc(5 * 1.95em + 24px);overflow:hidden;-webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
 .mg-h{border-bottom:0}
 
+.nt-pw{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:10px 12px;margin:0 0 14px}
+.nt-pw h5{margin:0 0 6px;font-size:16px;color:var(--ink);text-align:start}
+.nt-pg{display:flex;flex-direction:column;gap:2px;margin:6px 0}.nt-pg>b{font-size:14px;color:var(--muted);margin-bottom:2px;text-align:start}
+.nt-pi{display:flex;gap:8px;align-items:flex-start;text-align:start;border:0;background:none;padding:6px 2px;font:inherit;font-size:15px;color:var(--ink);line-height:1.6;cursor:pointer;border-bottom:1px dashed var(--line)}
+.nt-pi.rd{color:var(--muted)}.nt-pm{flex:none;width:16px;color:var(--brass);font-size:12px;padding-top:3px}.nt-pi.rd .nt-pm{color:var(--muted)}
+.nt-pn{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -2033,7 +2040,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-12-0136';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-12-0808';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4107,7 +4114,7 @@ renderDaily();
 const mgDay=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);
 // each reader goes through the hadiths in order, from the day the card was first shown (or the notification turned on)
 function mgStart(){let d=LS.get('mgStart',null);if(!Number.isInteger(d)){d=mgDay();LS.set('mgStart',d)}return d}
-const mgIdx=N=>Math.max(0,mgDay()-mgStart())%N;   // before the first day: the first hadith
+const mgIdx=N=>{const x=LS.get('mgIx',null);return Number.isInteger(x)?x%N:Math.max(0,mgDay()-mgStart())%N};   // with the notification on: the one waiting to be read   // before the first day: the first hadith
 function mgText(h,full){return full||!h.s?h.x:h.s}
 function mgMeta(h,full){return 'صحيح البخاري، كتاب المغازي، رقم '+ar(+h.no)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'')}
 const mgCh=(M,h)=>(h.ch==='باب'||h.ch==='باب:')?'باب بلا ترجمة، تابع لما قبله':h.ch;
@@ -4210,10 +4217,10 @@ function fxNotif(){
   if(!S){const bk=el('div','sheet-back');bk.id='ntBack';S=el('div','sheet');S.id='ntSheet';S.setAttribute('role','dialog');S.setAttribute('aria-label','الإشعارات');
     const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');
     x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.style.cssText='position:absolute;inset-inline-end:6px;top:6px';hd.append(x);
-    const B=el('div');B.id='ntBody';const h4=el('h4',null,'الإشعارات');let lp=0;h4.addEventListener('touchstart',()=>{lp=setTimeout(()=>WK()?wOwner():wAsk(),1500)},{passive:true});['touchend','touchmove','touchcancel'].forEach(e=>h4.addEventListener(e,()=>clearTimeout(lp),{passive:true}));S.append(hd,h4,B);document.body.append(bk,S);
+    const B=el('div');B.id='ntBody';const h4=el('h4',null,'الإشعارات');let lp=0;h4.addEventListener('touchstart',()=>{lp=setTimeout(()=>WK()?wOwner():wAsk(),1500)},{passive:true});['touchend','touchmove','touchcancel'].forEach(e=>h4.addEventListener(e,()=>clearTimeout(lp),{passive:true}));const PD=el('div','nt-pend');PD.id='ntPend';S.append(hd,h4,PD,B);document.body.append(bk,S);
     const close=()=>{if(NTD.dirty&&!confirm('لم تحفظ التغييرات. أتغلق الصفحة دون حفظ؟'))return;bk.hidden=true;S.hidden=true;sxUnlock()};bk.onclick=close;x.onclick=close}
   NTD={n:JSON.parse(JSON.stringify(ntGet())),dirty:false,msg:null};
-  document.getElementById('ntBack').hidden=false;S.hidden=false;sxLock();ntPaint()}
+  document.getElementById('ntBack').hidden=false;S.hidden=false;sxLock();ntPaint();seqPend()}
 // the page edits a draft; nothing reaches the sender until «حفظ»
 let NTD={n:null,dirty:false,msg:null};
 const ntList=(h,cx)=>NTF.filter(x=>x[0] in h).map(x=>x[2]+(x[0]==='si'&&cx!==false?'، ثم أخبار الخلفاء':'')+': '+hName(h[x[0]]));
@@ -4491,14 +4498,30 @@ function wSealForm(B,msg,show){const f=el('div','wl-f');const L=(lab,tag,ph)=>{c
       if(!j.ok){msg.textContent='الاسم أو الأجوبة لا تطابق.';return}const P=await WL.open(j.ct,j.iv,aes);tx.value=P.text||'';no.value=P.notes||'';kept=P.files||[];msg.textContent='فُتحت. الملفات المرفقة سابقًا: '+(kept.length?kept.map(x=>x.n).join('، '):'لا شيء')+'.'}
     catch(e){msg.textContent='تعذّر الفتح.'}finally{load.disabled=false}};
   const act=el('div','sh-act');act.append(save,load);f.append(act);B.append(f)}
+
+/* the ordered notifications (the Sira, the caliphs, the Maghazi) go on by reading: opening an item tells the sender, and the next one comes next time.
+   «ما فاتك» on the notifications page: what came lately, the waiting one first */
+async function seqPost(p,b){if(!canPush())return null;const s=await pushSub();if(!s)return null;
+  const r=await fetch(PUSHU+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint:s.endpoint,...(b||{})})});const j=await r.json();
+  if(j&&j.ix&&Number.isInteger(j.ix.mg))LS.set('mgIx',j.ix.mg);return j}
+const seqRead=b=>{seqPost('/read',b).catch(()=>{})};
+{const _e=fxTlEv,_m=fxMaghazi;fxTlEv=function(k){seqRead({kind:'ev',id:+k});return _e.apply(this,arguments)};fxMaghazi=function(i){seqRead({kind:'mg',i:+i});return _m.apply(this,arguments)}}
+async function seqPend(){const P=document.getElementById('ntPend');if(!P)return;P.textContent='';let j=null;try{j=await seqPost('/pending')}catch(e){}
+  if(!j||!j.p||!Object.keys(j.p).length)return;
+  const N={si:'السيرة',kh:'الخلفاء الراشدون',mg:'المغازي'};const w=el('div','nt-pw');w.append(el('h5',null,'ما فاتك'));
+  for(const k of ['si','kh','mg']){const L=j.p[k];if(!L)continue;const g=el('div','nt-pg');g.append(el('b',null,N[k]));
+    L.slice(-3).reverse().forEach(x=>{const b=el('button','nt-pi'+(x.read?' rd':''));b.type='button';b.append(el('span','nt-pm',x.read?'✓':'●'),el('span',null,x.t));
+      b.onclick=()=>{const bk=document.getElementById('ntBack'),S=document.getElementById('ntSheet');if(NTD.dirty&&!confirm('لم تحفظ التغييرات. أتغلق الصفحة دون حفظ؟'))return;bk.hidden=true;S.hidden=true;sxUnlock();k==='mg'?fxMaghazi(x.i):fxTlEv(x.ev)};g.append(b)});
+    w.append(g)}
+  w.append(el('p','nt-pn','● لم تقرأه بعد، ويصلك هو نفسه حتى تفتحه. ✓ قرأته.'));P.append(w)}
 function evRoute(){const h=location.hash;let m;
   const go=f=>{history.replaceState(null,'',location.pathname+location.search);setTimeout(f,400)};
   if((m=/^#wasi=([A-Za-z0-9_-]{30,})$/.exec(h))){history.replaceState(null,'',location.pathname+location.search);wClaim(m[1]);return}
   if(h==='#wasi'){history.replaceState(null,'',location.pathname+location.search);setTimeout(wOwner,400);return}
   if(h==='#wok'){history.replaceState(null,'',location.pathname+location.search);wOk();return}
-  if((m=/^#ev=(\d+)$/.exec(h)))go(()=>fxTlEv(+m[1]));
+  if((m=/^#ev=(\d+)(?:;r=[a-z]+\.\d+)?$/.exec(h)))go(()=>fxTlEv(+m[1]));
   else if((m=/^#hd=(\d+)$/.exec(h)))go(()=>fxHadith(+m[1]));
-  else if((m=/^#mg=(\d+)$/.exec(h)))go(()=>fxMaghazi(+m[1]));
+  else if((m=/^#mg=(\d+)(?:;r=[a-z]+\.\d+)?$/.exec(h)))go(()=>fxMaghazi(+m[1]));
   else if(h==='#fr')go(fxFriday)
   else if((m=/^#fx=(qa|sifa|hajj|ahl|road|dal|gz|mg|kh|fad|ans|sir|daw|adb|hady|sal|saw|ilm|msal|msaw|lbs|mlbs)$/.exec(h)))go(()=>({qa:fxQa,sifa:fxSifa,hajj:fxHajj,ahl:fxAhl,road:fxRoad,dal:fxDal,gz:()=>fxGz(),mg:()=>fxMgTL(),kh:()=>fxKh(),fad:()=>fxFad(),ans:()=>fxFad('ans'),sir:()=>fxFad('sir'),daw:()=>fxFad('daw'),adb:()=>fxFad('adb'),hady:()=>fxHady(),sal:()=>fxFad('sal'),saw:()=>fxFad('saw'),ilm:()=>fxFad('ilm'),msal:()=>fxFad('msal'),msaw:()=>fxFad('msaw'),lbs:()=>fxFad('lbs'),mlbs:()=>fxFad('mlbs')})[m[1]]())
   else if((m=/^#gz=(\d+)$/.exec(h)))go(()=>fxGz(+m[1]))

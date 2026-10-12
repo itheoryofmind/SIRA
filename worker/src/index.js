@@ -94,12 +94,19 @@ function today(tz) {
   return { t: 'من شمائله صلى الله عليه وسلم', b: h.t, u: SITE + '/#hd=' + i, tag: 'shamail' };   // the site opens the hadith itself, in place
 }
 
-// the next hadith from Kitab al-Maghazi, by event (the site's home card shows the same one)
-function maghazi(tz, sd) {
-  const d = dayNo(tz) - (+sd || 0);
-  if (d < 0) return null;   // the reader's first day has not come yet
-  const i = d % MG.length, x = MG[i];   // each reader in order, from the day the reader began
-  return { t: x[0], b: x[1], u: SITE + '/#mg=' + i, tag: 'maghazi' };
+// the ordered kinds (the Sira, the caliphs, the Maghazi) go on by the reader's reading, not by the date:
+// the item stays the same until the reader opens it (from the notification or in the site); then the next one comes
+const listOf = (m, kind) => kind === 'si' ? (m.cx ? SIKH : SI) : kind === 'kh' ? KH : MG;
+function curIx(m, kind, tz) {
+  const L = listOf(m, kind);
+  if (m.ix && Number.isInteger(m.ix[kind])) return ((m.ix[kind] % L.length) + L.length) % L.length;
+  const d = dayNo(tz) - (+((m.sd || {})[kind]) || 0);   // readers from before: where the date had brought them
+  return d < 0 ? null : d % L.length;
+}
+function seqMsg(m, kind, i) {
+  const x = listOf(m, kind)[i], again = !!(m.sn && m.sn[kind] === i);
+  const u = kind === 'mg' ? SITE + '/#mg=' + i + ';r=mg.' + i : SITE + '/#ev=' + x[3] + ';r=' + kind + '.' + i;
+  return { t: (again ? 'لم تقرأه بعد · ' : '') + x[0], b: x[1], u, tag: kind === 'mg' ? 'maghazi' : kind };
 }
 
 // every Friday to all who turned the notifications on: al-Ahzab 56 only (King Fahd Complex text)
@@ -122,12 +129,7 @@ function plan(pl) {
 
 // the reader's day number (for the daily order of the Sira and the caliphs)
 const dayNo = (tz) => { const L = local(tz); return Date.UTC(L.y, L.m - 1, L.d) / 864e5; };
-function seq(L, sd, tz, kind) {
-  const d = dayNo(tz) - (+sd || 0);
-  if (d < 0) return null;   // the reader's first day has not come yet
-  const n = d % L.length, x = L[n];
-  return { t: x[0], b: x[1], u: SITE + '/#ev=' + x[3], tag: kind };   // the site opens the event itself, in place
-}
+
 // what a reader asked for, and when: h = {kind: hour}; readers kept before the choice of hours: the hadith at 6, Friday at 9, the plan at 20
 const SIKH = SI.concat(KH);   // the Sira, then the caliphs, for a reader who asked to go on
 const KINDS = { mg: 7, sh: 6, fr: 9, si: 21, kh: 22, pl: 20 };
@@ -198,11 +200,16 @@ async function sendJobs(env, jobs) {
   for (const [id, kind] of jobs) {
     const v = await env.PUSH.getWithMetadata(id, 'json');
     if (!v || !v.value) continue;
-    const m = norm(v.metadata), tz = okTz(m.tz) ? m.tz : DEF_TZ, sd = m.sd || {};
-    const msg = kind === 'friday' ? friday() : (kind === 'plan' || kind === 'pl') ? plan(planOf(m.pl) || { t: 0, d: 30 })
-              : kind === 'si' ? seq(m.cx ? SIKH : SI, sd.si, tz, 'si') : kind === 'kh' ? seq(KH, sd.kh, tz, 'kh') : kind === 'mg' ? maghazi(tz, sd.mg) : today(tz);
-    if (!msg) continue;   // the plan has ended
+    const m = norm(v.metadata), tz = okTz(m.tz) ? m.tz : DEF_TZ;
+    let msg, si = null;
+    if (['si', 'kh', 'mg'].includes(kind)) { si = curIx(m, kind, tz); msg = si === null ? null : seqMsg(m, kind, si); }
+    else msg = kind === 'friday' ? friday() : (kind === 'plan' || kind === 'pl') ? plan(planOf(m.pl) || { t: 0, d: 30 }) : today(tz);
+    if (!msg) continue;   // the plan has ended, or the reader's first day has not come yet
     const st = await send(env, v.value, msg).catch(() => 0);
+    if (si !== null && st >= 200 && st < 300) {   // keep the place, and remember it was sent (to say «not read yet» if it comes again)
+      const md = { ...v.metadata, ix: { ...(m.ix || {}), [kind]: si }, sn: { ...(m.sn || {}), [kind]: si } };
+      await env.PUSH.put(id, JSON.stringify(v.value), { metadata: md });
+    }
     r.tried++;
     if (st >= 200 && st < 300) r.sent++;
     if (st === 404 || st === 410) { await env.PUSH.delete(id); r.removed++; }   // the reader turned it off or removed the app
@@ -228,6 +235,37 @@ export default {
       const kd = u.searchParams.get('kind');
       const r = await fanOut(env, await due(env, ['friday', 'si', 'kh'].includes(kd) ? kd : 'daily'));
       return json({ ok: true, ...r });
+    }
+    // the reader opened an item of an ordered kind: if it is the one waiting, the next one comes next time
+    if (req.method === 'POST' && (u.pathname === '/read' || u.pathname === '/pending')) {
+      let body; try { body = await req.json(); } catch (e) { return json({ ok: false }, 400); }
+      if (!body || typeof body.endpoint !== 'string') return json({ ok: false }, 400);
+      const id = await idOf(body.endpoint), v = await env.PUSH.getWithMetadata(id, 'json');
+      if (!v || !v.value) return json({ ok: false, none: 1 });
+      const m = norm(v.metadata), tz = okTz(m.tz) ? m.tz : DEF_TZ, ix = { ...(m.ix || {}) };
+      const kinds = ['si', 'kh', 'mg'].filter((k) => k in m.h || (m.ix && k in m.ix));
+      for (const k of kinds) if (!Number.isInteger(ix[k])) { const c = curIx(m, k, tz); if (c !== null) ix[k] = c; }
+      if (u.pathname === '/read') {
+        let moved = false;
+        for (const k of kinds) {
+          const L = listOf(m, k), c = ix[k];
+          if (!Number.isInteger(c)) continue;
+          const hit = body.kind === k ? body.i === c : (body.kind === 'ev' && k !== 'mg' && L[c] && L[c][3] === body.id);
+          if (hit) { ix[k] = (c + 1) % L.length; moved = true; }
+        }
+        if (moved) { const sn = { ...(m.sn || {}) }; const md = { ...v.metadata, ix, sn }; await env.PUSH.put(id, JSON.stringify(v.value), { metadata: md }); }
+        return json({ ok: true, moved, ix });
+      }
+      // what came lately, kind by kind: the waiting one and the five before it
+      const out = {};
+      for (const k of kinds) {
+        const L = listOf(m, k), c = ix[k];
+        if (!Number.isInteger(c)) continue;
+        const r = [];
+        for (let j = Math.max(0, c - 5); j <= c; j++) { const x = L[j]; r.push({ i: j, t: x[0], ev: k === 'mg' ? null : x[3], read: j < c }); }
+        out[k] = r;
+      }
+      return json({ ok: true, ix, p: out });
     }
     if (req.method === 'POST' && (u.pathname === '/sub' || u.pathname === '/unsub')) {
       let body; try { body = await req.json(); } catch (e) { return json({ ok: false }, 400); }
@@ -256,6 +294,8 @@ export default {
       const sd = {}, osd = (om && om.sd) || {}, bsd = (body.sd && typeof body.sd === 'object') ? body.sd : {};
       for (const k of ['si', 'kh', 'mg']) if (k in h) { const x = Number.isInteger(bsd[k]) ? bsd[k] : Number.isInteger(osd[k]) ? osd[k] : dayNo(md.tz); sd[k] = x; }
       if (Object.keys(sd).length) md.sd = sd;
+      if (om && om.ix) md.ix = om.ix;
+      if (om && om.sn) md.sn = om.sn;
       if (!Object.keys(h).length) { await env.PUSH.delete(id); return json({ ok: true, removed: true }); }
       await env.PUSH.put(id, JSON.stringify({ endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } }), { metadata: md });
       if (body.test) {   // the page's test button
