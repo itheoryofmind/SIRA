@@ -11,11 +11,14 @@ async function isOwner(k) {
   let d = 0; for (let i = 0; i < h.length; i++) d |= h.charCodeAt(i) ^ OWNER_H.charCodeAt(i);
   return d === 0 && h.length === OWNER_H.length;
 }
-async function allIds(env) {
+async function allIds(env, metas) {
   const ids = []; let cursor;
-  do { const l = await env.PUSH.list({ prefix: 's:', cursor }); for (const x of l.keys) ids.push(x.name); cursor = l.list_complete ? null : l.cursor; } while (cursor);
+  do { const l = await env.PUSH.list({ prefix: 's:', cursor }); for (const x of l.keys) { ids.push(x.name); if (metas) metas.push(x.metadata); } cursor = l.list_complete ? null : l.cursor; } while (cursor);
   return ids;
 }
+// how a count of choices is shown: [label, count, note], most first
+export const hourTxt = (h) => (h === 0 ? '١٢ ليلاً' : h < 12 ? h + ' صباحاً' : h === 12 ? '١٢ ظهراً' : (h - 12) + (h < 18 ? ' عصراً' : ' مساءً')).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
+export function topOf(arr) { const c = {}; for (const x of arr) c[x] = (c[x] || 0) + 1; return Object.entries(c).sort((a, b) => b[1] - a[1]); }
 // installed apps: each app, when opened from the home screen, sends a random number it made itself (nothing about the reader),
 // once at first and then about once a month; kept as i:<number> with the first and the last day it was seen
 export async function installSeen(req, env, cors) {
@@ -42,8 +45,8 @@ export async function ownerFetch(req, env, u, ctx) {
   if (req.method !== 'POST' || (u.pathname !== '/o/count' && u.pathname !== '/o/send')) return null;
   let b; try { b = JSON.parse(await req.text()); } catch (e) { return out({ ok: false }, 400); }
   if (!(await isOwner(b && b.k))) return out({ ok: false }, 403);
-  const ids = await allIds(env);
-  if (u.pathname === '/o/count') return out({ ok: true, n: ids.length, ins: await installs(env) });
+  const metas = [], ids = await allIds(env, u.pathname === '/o/count' ? metas : null);
+  if (u.pathname === '/o/count') return out({ ok: true, n: ids.length, ins: await installs(env), kinds: ctx.stats ? ctx.stats(metas) : [] });
   const t = String(b.t || '').trim().slice(0, 80) || ctx.name, body = String(b.b || '').trim().slice(0, 600);
   if (!body) return out({ ok: false, empty: 1 }, 400);
   const msg = { t, b: body, u: ctx.site + '/', tag: 'bc' + Date.now() };
@@ -69,7 +72,7 @@ textarea{min-height:150px;resize:vertical}
 .cnt{font-size:12.5px;color:var(--muted);text-align:left}
 .pv{background:#2a2720;border-radius:16px;padding:12px 14px}.pv b{display:block;font-size:15px}.pv p{margin:2px 0 0;font-size:15px;white-space:pre-wrap;color:var(--ink)}
 button{font:inherit;font-weight:700;border:0;border-radius:14px;padding:13px;width:100%;background:var(--brass);color:#1a1209;cursor:pointer}button:disabled{opacity:.5}
-.st{padding:6px 0 4px;border-bottom:1px dashed var(--line)}.st b{display:block;color:var(--ink);margin-bottom:2px}.sr{display:flex;justify-content:space-between;font-size:15px;color:var(--muted);padding:2px 0}.sv{color:var(--ink);font-weight:700}
+.st{padding:6px 0 4px;border-bottom:1px dashed var(--line)}.st b{display:block;color:var(--ink);margin-bottom:2px}.sr{display:flex;justify-content:space-between;font-size:15px;color:var(--muted);padding:2px 0}.sv{color:var(--ink);font-weight:700}.sg{font-size:13px;color:var(--brass);margin:10px 0 2px}.sk{padding-inline-start:10px}.sk small{display:block;font-size:12px;color:var(--muted);opacity:.8}
 .res div{padding:6px 0;border-bottom:1px dashed var(--line)}.res div:last-child{border:0}.good{color:var(--ok)}.err{color:var(--bad)}
 </style></head><body><main id="m"><p class="sub">…</p></main>
 <script>
@@ -87,7 +90,8 @@ const call=(base,p,o)=>fetch(base+p,{method:'POST',headers:{'Content-Type':'text
   for(const [id,nm] of SITES){const l=E('label');const i=E('input');i.type='checkbox';i.checked=id==='sira';box[id]=i;nn[id]=E('span','n','');l.append(i,E('span',null,nm),nn[id]);s.append(l)}
   const st=E('div','card');st.append(E('h2',null,'الأرقام'));const row=(nm,j)=>{const d=E('div','st');d.append(E('b',null,nm));
     if(!j||!j.ok){d.append(E('div','n','تعذّر الاتصال'));return d}
-    [['ثبّتوا التطبيق',j.ins.all],['فتحوه خلال آخر ٣٠ يوماً',j.ins.m30],['ثبّتوه خلال آخر ٧ أيام',j.ins.w7],['فعّلوا الإشعارات',j.n]].forEach(([a,v])=>{const r=E('div','sr');r.append(E('span',null,a),E('span','sv',ar(v)));d.append(r)});return d};
+    [['ثبّتوا التطبيق',j.ins.all],['فتحوه خلال آخر ٣٠ يوماً',j.ins.m30],['ثبّتوه خلال آخر ٧ أيام',j.ins.w7],['فعّلوا الإشعارات',j.n]].forEach(([a,v])=>{const r=E('div','sr');r.append(E('span',null,a),E('span','sv',ar(v)));d.append(r)});
+    (j.kinds||[]).forEach(g=>{d.append(E('div','sg',g.t));g.r.forEach(([a,v,nt])=>{const r=E('div','sr sk');const L=E('span');L.append(E('span',null,a));if(nt)L.append(E('small',null,nt));r.append(L,E('span','sv',ar(v)));d.append(r)})});return d};
   const sd=E('div','n','…');st.append(row('سِيرَتُه',c),sd,E('p','n','عُدّ التطبيق المثبت ابتداءً من ١٢ أكتوبر ٢٠٢٦: كل من يفتحه من الشاشة الرئيسية يُحسب مرة واحدة، ومن ثبّته قبل ذلك يُحسب عند أول فتح له.'));m.append(st);
   m.append(s);nn.sira.textContent='(المشتركون الآن: '+ar(c.n)+')';
   call(SITES[1][2],'/o/count').then(j=>{sd.replaceWith(row('الدرر السنية',j));nn.durar.textContent=j.ok?'(المشتركون الآن: '+ar(j.n)+')':'(تعذّر الاتصال)'});

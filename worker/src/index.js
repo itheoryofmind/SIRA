@@ -6,7 +6,7 @@
 // - an event of the Sira, and one of the rightly guided caliphs, each day in order (the site's timeline, in the Mukhtasar's words)
 // - each reader picks which of these, and the hour of each (where the reader is)
 // Web Push: RFC 8291 (aes128gcm) and RFC 8292 (VAPID), with WebCrypto only.
-import { ownerFetch, installSeen } from './owner.js';
+import { ownerFetch, installSeen, hourTxt, topOf } from './owner.js';
 import H, { DAY0 } from './hadith.js';
 import { SI, KH } from './tl.js';
 import MG from './mg.js';
@@ -218,11 +218,18 @@ async function sendJobs(env, jobs) {
   return r;
 }
 
+// for the keeper's page: how many chose each kind, and the hour most of them chose
+const OKINDS = [['sh', 'حديث من الشمائل كل يوم'], ['mg', 'حديث من المغازي كل يوم'], ['si', 'محطة من السيرة كل يوم'], ['kh', 'من أخبار الخلفاء الراشدين'], ['pl', 'ورد خطة القراءة'], ['fr', 'تذكير يوم الجمعة']];
+function siraStats(ms) {
+  const hs = ms.map((m) => norm(m).h);
+  return [{ t: 'الأنواع التي فعّلوها', r: OKINDS.map(([k, l]) => { const v = hs.filter((h) => k in h), tp = topOf(v.map((h) => +h[k]))[0]; return [l, v.length, tp ? 'أكثرهم الساعة ' + hourTxt(+tp[0]) : '']; }) }];
+}
+
 export default {
   async fetch(req, env) {
     const u = new URL(req.url);
     if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
-    { const o = await ownerFetch(req, env, u, { site: SITE, name: 'سِيرَتُه', page: 1, fanOut, job: (id, msg) => [id, 'bc', msg] }); if (o) return o; }
+    { const o = await ownerFetch(req, env, u, { site: SITE, name: 'سِيرَتُه', page: 1, fanOut, job: (id, msg) => [id, 'bc', msg], stats: siraStats }); if (o) return o; }
     if (req.method === 'POST' && u.pathname === '/i') return installSeen(req, env, cors);
     if (u.pathname === '/key') return json({ key: (await vapid(env)).pub });
     if (u.pathname === '/health') return json({ ok: true, hadiths: H.length, maghazi: MG.length, sira: SI.length, caliphs: KH.length });
