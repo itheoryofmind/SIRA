@@ -1537,6 +1537,10 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 
 .lib-key{font-size:13px;color:var(--muted);margin:8px 2px 0;line-height:1.7}
 
+.mg-trw{margin:2px 0 12px;padding:8px 12px 6px;border-inline-start:3px solid color-mix(in srgb,var(--brass) 55%,transparent);background:color-mix(in srgb,var(--brass) 5%,transparent);border-radius:0 10px 10px 0}
+.mg-trl{display:block;font-size:12px;color:var(--brass);margin-bottom:2px}
+.mg-trw .mg-tr{margin:0}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -2058,7 +2062,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-12-1023';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-12-1024';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4598,7 +4602,7 @@ async function fxFad(k){k=k||'';const C=FADC[k];const M=await getJSON('data/'+C.
     const tt=el('span','mg-tt');tt.append(ttlEl('b',null,c.t==='باب'?'باب بلا ترجمة':c.t),el('small',null,ar(n)+(n===1?' حديث':n===2?' حديثان':n<=10?' أحاديث':' حديثاً')));hd.append(tt);card.append(hd);
     if(c.t==='باب')card.append(el('p','mg-note','باب لم يترجم له البخاري، وهو تابع للباب الذي قبله على عادته.'));
     const body=el('div','mg-body');body.hidden=true;card.append(body);
-    const fill=()=>{if(body.childElementCount)return;if(c.tr){const t=el('p','mg-tr');hdFill(t,c.tr.replace(/\d+/g,d=>ar(+d)),[]);body.append(t)}c.hs.forEach(i=>body.append(mgItem(M,i,{clip:260,meta,noBook:1}).w))};
+    const fill=()=>{if(body.childElementCount)return;if(c.tr){const w=el('div','mg-trw');w.append(el('span','mg-trl','من ترجمة البخاري للباب: ما ذكره تحت عنوانه قبل أحاديثه'));const t=el('p','mg-tr');hdFill(t,c.tr.replace(/\d+/g,d=>ar(+d)),[]);w.append(t);body.append(w)}c.hs.forEach(i=>body.append(mgItem(M,i,{clip:260,meta,noBook:1}).w))};
     hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};list.append(card)});
   P.inn.append(el('p','fx-note',C.note||'النص مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء '+C.n+')، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن. وحُذف الإسناد إلى الصحابي حيث كان ذلك بيّناً، والحديث بإسناده بضغطة.'))}
 async function fxHady(){const G=await getJSON('data/sx_hady.json');const P=fxOpen('هديه صلى الله عليه وسلم');
