@@ -919,8 +919,8 @@ details.fx-src p{font-family:var(--text);font-size:17px;line-height:1.9;color:va
 .nb-l li{display:flex;flex-direction:column;align-items:center}
 .nb-bn{position:relative;font-family:Amiri,serif;font-size:14px;color:var(--brass);padding:12px 0 2px}
 .nb-bn::before{content:"";position:absolute;top:0;left:50%;height:10px;border-left:1.5px solid var(--gold);opacity:.7}
-.nb-n{border:0;background:none;color:var(--ink);font-family:Amiri,serif;font-weight:700;line-height:1.3;padding:2px 14px;touch-action:manipulation;display:flex;flex-direction:column;align-items:center}
-.nb-n small{font-family:var(--text);font-weight:400;font-size:13px;color:var(--muted)}
+.nbt-n{border:0;background:none;color:var(--ink);font-family:Amiri,serif;font-weight:700;line-height:1.3;padding:2px 14px;touch-action:manipulation;display:flex;flex-direction:column;align-items:center}
+.nbt-n small{font-family:var(--text);font-weight:400;font-size:13px;color:var(--muted)}
 .nb-fam{margin-top:2px;border:1px solid var(--line);background:var(--raised);color:var(--brass);border-radius:999px;padding:2px 12px;font-family:var(--text);font-size:14px}
 .nb-end{margin:18px auto 0;max-width:420px;padding-top:14px;border-top:1px solid var(--line);font-family:var(--text);font-size:15px;line-height:1.8;color:var(--muted)}
 .nb-end button{border:0;background:none;color:var(--brass);font:inherit;font-size:13px;margin-inline-start:6px}
@@ -2091,7 +2091,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-12-1316';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-12-1819';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4097,7 +4097,7 @@ sxNasab=function(V,D){
   const me=el('button','nb-me');me.type='button';me.append(el('span','nb-k','رسول الله'),el('b',null,'محمد'),el('small',null,'صلى الله عليه وسلم'));me.onclick=()=>sxQ(D.nasab.src,me);W.append(me);
   const ol=el('ol','nb-l');
   D.nasab.chain.slice(1).forEach((n,i)=>{const li=el('li');li.append(el('span','nb-bn','بن'));
-    const b=el('button','nb-n');b.type='button';b.style.fontSize=Math.round(27-i*0.45)+'px';b.append(n);
+    const b=el('button','nbt-n');b.type='button';b.style.fontSize=Math.round(27-i*0.45)+'px';b.append(n);
     const lab=i===0?'أبوه':i===1?'جدّه':null;if(lab)b.append(el('small',null,lab));
     b.onclick=()=>{if(n==='عبد المطلب'){sxQ(D.nasab.src,li);return}sxQ(D.nasab.src,li)};li.append(b);
     if(n==='عبد المطلب'){const f=el('button','nb-fam','آل عبد المطلب ←');f.type='button';f.onclick=()=>{$('#sxOverlay').scrollTop=0;openSX('fam')};li.append(f)}
@@ -4141,7 +4141,7 @@ async function renderDaily(){const F=await sxFeat();const sec=$('#sxDaily'),C=$(
   const meta=el('div','dy-meta');meta.append(el('span','gr',gtxt(h.g)),el('span','dy-src','مختصر الشمائل، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p)));C.append(meta);
   const act=el('div','dy-act');
   if(t.length>320){q.classList.add('clip');const m=el('button','btn btn-link','أكمل الحديث');m.type='button';m.onclick=()=>{q.classList.remove('clip');m.remove()};act.append(m)}
-  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>openPart(25,h.p,null,false,'txt');act.append(go);C.append(act);
+  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>openPart(25,h.p,[hdLead(t)],false,'txt');act.append(go);C.append(act);
   const bell=el('button','btn btn-link dy-bell');bell.type='button';act.append(bell);pushBtn(bell);
   sec.hidden=false}
 renderDaily();
@@ -4169,12 +4169,14 @@ function hdFill(e,t,pm,ph){if(ph===undefined&&!(pm&&pm.length))ph=goldFor(t);
   const marked=(par,x)=>x.split(/(«[^«»]*»)/).forEach(seg=>{if(!seg)return;if(seg[0]==='«'&&seg.slice(-1)==='»'){si++;const m=gold.has(si)?el('span','hd-m'):el('span');seg.split(/(﴿[^﴾]*﴾)/).forEach(z=>{if(!z)return;m.append(z[0]==='﴿'?hdV(z):document.createTextNode(z))});par.append(m)}else plain(par,seg)});
   let acc='';t.split(/(﴿[^﴾]*﴾)/).forEach(z=>{if(!z)return;if(z[0]==='﴿'&&z.slice(-1)==='﴾')e.append(hdV(z,acc.slice(-160)));else marked(e,z);acc+=z})}
 function shFill(e,t,gs){e.textContent='';let k=0;const put=(x,cls)=>{const a=el('span',cls);hdFill(a,x,[],[]);if(cls)e.append(a);else e.append(...a.childNodes)};(gs||[]).forEach(([s,f])=>{if(s>k)put(t.slice(k,s));put(t.slice(s,f),'hd-m');k=f});if(k<t.length)put(t.slice(k))}
+// the opening words of a hadith, to open the book on the hadith itself and not on the top of its page
+const hdLead=x=>String(x).replace(/[«»"]/g,'').trim().split(/\s+/).slice(0,5).join(' ');
 function mgItem(M,i,opt={}){const h=M.h[i],w=el('div','mg-h');
   const q=el('p',opt.big?'dy-t':'mg-t');hdFill(q,mgText(h),h.s?h.ps:h.pm);w.append(q);const meta=el('div','dy-meta');const meta_=opt.meta||mgMeta;const ms=el('span','dy-src',meta_(h));meta.append(ms);w.append(meta);if(h.mg)w.append(el('p','mg-note',h.mg));
   const act=el('div','dy-act');
   if(q.textContent.length>(opt.clip||320)){q.classList.add('clip');const m=el('button','btn btn-link hd-b','أكمل الحديث');m.type='button';m.onclick=()=>{q.classList.remove('clip');m.remove()};act.append(m)}
   if(h.s){const f=el('button','btn btn-link hd-b','بإسناده');f.type='button';let full=false;f.setAttribute('aria-pressed','false');f.onclick=()=>{full=!full;if(full){hdFill(q,h.x,h.pm);ms.textContent=meta_(h,1);f.textContent='بلا إسناد'}else{hdFill(q,mgText(h),h.ps);ms.textContent=meta_(h);f.textContent='بإسناده'}q.classList.remove('clip');f.setAttribute('aria-pressed',full?'true':'false');[...act.querySelectorAll('.btn-link')].forEach(x=>{if(x.textContent==='أكمل الحديث')x.remove()})};act.append(f)}
-  if(!opt.noBook){const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{if(opt.before)opt.before();openPart(h.n,h.p,null,false,'txt')};act.append(go)}w.append(act);return {w,act}}
+  if(!opt.noBook){const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{if(opt.before)opt.before();openPart(h.n,h.p,[hdLead(h.x)],false,'txt')};act.append(go)}w.append(act);return {w,act}}
 async function renderMg(){const sec=$('#sxMg'),C=$('#mgCard');if(!sec||!C)return;const M=await getJSON('data/sx_mg.json');if(!M||!M.h||!M.h.length)return;
   const i=mgIdx(M.h.length),h=M.h[i];C.innerHTML='';
   const top=el('p','dy-ch');top.textContent=M.ev[h.ev].t+'، '+'الحديث '+ar(i+1)+' من '+ar(M.h.length);C.append(top);
@@ -4435,7 +4437,7 @@ async function fxHadith(i){const F=await sxFeat();const L=await shList(F);
   const {h,ch}=x;
   const t=h.x.filter(y=>typeof y==='string').join(' ').replace(/\s+([)\]»])/g,'$1');const q=el('p','ev-q');q.textContent=t;B.append(q);
   const ft=el('div','ev-ft');const m=el('small');m.append(el('span','gr',gtxt(h.g)),document.createTextNode(' مختصر الشمائل، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p)));ft.append(m);
-  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(25,h.p,null,false,'txt')};ft.append(go);B.append(ft)}
+  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(25,h.p,[hdLead(t)],false,'txt')};ft.append(go);B.append(ft)}
 // a hadith of Kitab al-Maghazi, in full with its chain
 async function fxMaghazi(i){const M=await getJSON('data/sx_mg.json');const h=M.h[i];if(!h)return;const ev=M.ev[h.ev];const B=evShell(ev.t);
   B.append(el('p','ev-era','من المغازي، الحديث '+ar(i+1)+' من '+ar(M.h.length)),sawEl('h3','ev-t',ev.t),el('p','mg-chap',mgCh(M,h)));
