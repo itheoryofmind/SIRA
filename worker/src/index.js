@@ -9,7 +9,6 @@
 import H, { DAY0 } from './hadith.js';
 import { SI, KH } from './tl.js';
 import MG from './mg.js';
-import { willFetch, willTick } from './will.js';
 
 const SITE = 'https://seeratuh.com';
 const FRI = '0 6 * * 5';   // Friday 9:00 in Riyadh
@@ -222,7 +221,6 @@ export default {
     const u = new URL(req.url);
     if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
     if (u.pathname === '/key') return json({ key: (await vapid(env)).pub });
-    if (u.pathname.startsWith('/w/')) return willFetch(req, env, u, json, send, SITE);
     if (u.pathname === '/health') return json({ ok: true, hadiths: H.length, maghazi: MG.length, sira: SI.length, caliphs: KH.length });
     if (req.method === 'POST' && u.pathname === '/inner/send') {
       if (req.headers.get('X-Inner') !== await inner(env)) return json({ ok: false }, 403);
@@ -311,7 +309,8 @@ export default {
   },
   async scheduled(ev, env, ctx) {
     const r = await fanOut(env, await due(env));
-    if (new Date().getUTCMinutes() < 5) await willTick(env, send, SITE).catch((e) => console.log('will', String(e)));   // once an hour
+    // the old owner's-notice feature was removed: its stored records (keys beginning w:) are deleted once
+    if (!(await env.PUSH.get('wgone'))) { let c; do { const l = await env.PUSH.list({ prefix: 'w:', cursor: c }); for (const k of l.keys) await env.PUSH.delete(k.name); c = l.list_complete ? null : l.cursor; } while (c); await env.PUSH.put('wgone', '1'); }
     console.log('tried', r.tried, 'sent', r.sent, 'removed', r.removed);
   },
 };

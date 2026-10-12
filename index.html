@@ -249,19 +249,10 @@ footer .waqf{max-width:520px;margin:8px auto 0;font-family:var(--text);font-size
 .bar{height:6px;border-radius:3px;background:rgba(255,255,255,.2);overflow:hidden}
 .bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s}
 .toast.low{top:auto;bottom:calc(84px + env(safe-area-inset-bottom))}
-.wl-bar{position:fixed;inset-inline:12px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:90;display:flex;align-items:center;gap:10px;max-width:560px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 8px 10px 12px;box-shadow:0 6px 22px rgba(0,0,0,.18);font-size:14px;color:var(--muted);line-height:1.7}
-.wl-t{flex:1;display:flex;flex-direction:column}.wl-t b{color:var(--ink);font-size:13.5px}
-.wl-go{flex:none;border:0;border-radius:12px;background:var(--brass);color:#1a1209;font:inherit;font-weight:600;padding:8px 14px;cursor:pointer}
 .wl-x{flex:none;border:0;background:none;color:var(--muted);font-size:20px;width:36px;height:36px;cursor:pointer}
 .wl-ov{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
 .wl-box{position:relative;background:var(--surface);color:var(--ink);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:18px 18px calc(24px + env(safe-area-inset-bottom));font-size:16px;line-height:1.8}
 .wl-box h3{margin:0 0 6px;font-size:19px}.wl-box h4{margin:16px 0 6px;font-size:16px}.wl-box>.wl-x{position:absolute;inset-inline-end:8px;top:8px}
-.wl-m{color:var(--muted);font-size:14px;margin:0 0 10px}
-.wl-f{display:flex;flex-direction:column;gap:10px}.wl-l{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted)}
-.wl-l input,.wl-l textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--raised,var(--surface));border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;box-sizing:border-box}
-.wl-txt{white-space:pre-wrap;background:var(--raised,var(--surface));border:1px solid var(--line);border-radius:12px;padding:12px 14px}
-.wl-file{display:block;margin:8px 0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;color:var(--brass);text-decoration:none}
-.wl-out{margin-top:10px;font-size:15px}
 .toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translateX(-50%);z-index:300;background:var(--brown);color:var(--on-brown);padding:9px 16px;border-radius:20px;font-size:14px;box-shadow:var(--shadow);max-width:90vw;text-align:center;transition:opacity .3s}
 
 /* ---------- Reader ---------- */
@@ -2093,7 +2084,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-12-1108';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-12-1226';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2185,55 +2176,11 @@ document.querySelectorAll('.themes').forEach(box=>THEMES.forEach(([k,n,c])=>{con
 {let t=LS.get('theme','auto');if(t==='brown'){t='auto';LS.set('theme',t)}applyTheme(t)}
 function toast(msg,ms,low){const e=document.createElement('div');e.className='toast'+(low?' low':'');e.setAttribute('role','status');e.textContent=msg;document.body.append(e);setTimeout(()=>{e.style.opacity='0';setTimeout(()=>e.remove(),300)},ms||2200)}
 function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
-/* ---------- رسالة آلية من القائم على الموقع: a quiet notice after 90 days without his answer, and the page where his family opens what he left.
-   Sealed on his own phone: the key is made from his name and his answers here, so the server never sees the text, the name or the answers. ---------- */
-const WL={u:()=>window.WILLU||PRPU,
-  n:s=>String(s||'').normalize('NFC').replace(/[ً-ٰٟـ]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace(/\s+/g,' ').trim().toLowerCase(),
-  b64:b=>{b=new Uint8Array(b);let s='';for(let i=0;i<b.length;i+=32768)s+=String.fromCharCode.apply(null,b.subarray(i,i+32768));return btoa(s)},
-  unb64:s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0)),
-  hex:b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''),
-  async keys(parts,salt,it){const m=new TextEncoder().encode(parts.map(WL.n).join('␞'));const k=await crypto.subtle.importKey('raw',m,'PBKDF2',false,['deriveBits']);
-    const bits=new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:WL.unb64(salt),iterations:it},k,512));
-    return {aes:await crypto.subtle.importKey('raw',bits.slice(0,32),'AES-GCM',false,['encrypt','decrypt']),v:WL.hex(bits.slice(32))}},
-  async open(ct,iv,aes){const p=await crypto.subtle.decrypt({name:'AES-GCM',iv:WL.unb64(iv)},aes,WL.unb64(ct));return JSON.parse(new TextDecoder().decode(p))},
-  async seal(obj,parts,qs){const salt=WL.b64(crypto.getRandomValues(new Uint8Array(16))),it=600000,{aes,v}=await WL.keys(parts,salt,it);const iv=crypto.getRandomValues(new Uint8Array(12));
-    const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},aes,new TextEncoder().encode(JSON.stringify(obj)));return {ct:WL.b64(ct),iv:WL.b64(iv),salt,it,vh:v,qs}}};
-async function wlBanner(demo){try{
-  if(!demo){let dis=0;try{dis=+localStorage.getItem('wlDis')||0}catch(e){}if(Date.now()-dis<7*864e5)return;
-    const r=await (await fetch(WL.u()+'/w/s',{cache:'no-store'})).json();if(!r||!r.r)return}
-  if(document.getElementById('wlBar'))return;
-  const b=el('div','wl-bar');b.id='wlBar';b.setAttribute('role','status');
-  const t=el('div','wl-t');t.append(el('b',null,'رسالة آلية من القائم على الموقع'),el('span',null,'إذا ظهرت هذه الرسالة فقد انقطع تواصلي مع الموقع منذ مدة. إن كنت من أهلي أو ممن أوكلتُهم، فادخل من هنا.'));
-  const go=el('button','wl-go','ادخل');go.type='button';go.onclick=()=>wlFamily(demo);
-  const x=el('button','wl-x','×');x.type='button';x.setAttribute('aria-label','إخفاء');x.onclick=()=>{if(!demo)try{localStorage.setItem('wlDis',Date.now())}catch(e){}b.remove()};
-  b.append(t,go,x);document.body.append(b)}catch(e){}}
-setTimeout(()=>wlBanner(),3500);
-async function wlFamily(demo){const ov=el('div','wl-ov');ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');
-  const box=el('div','wl-box');const cl=el('button','wl-x','×');cl.type='button';cl.setAttribute('aria-label','إغلاق');cl.onclick=()=>ov.remove();
-  box.append(cl,el('h3',null,'لأهل القائم على الموقع'));const msg=el('p','wl-m','');box.append(msg);ov.append(box);document.body.append(ov);
-  let q=null;try{q=demo?{ok:true,qs:demo.qs||[],demo:1}:await (await fetch(WL.u()+'/w/q',{cache:'no-store'})).json()}catch(e){}
-  if(!q||!q.ok){msg.textContent='لا يوجد ما يُفتح الآن، أو تعذّر الاتصال. حاول بعد قليل.';return}
-  msg.textContent='اكتب اسمه، ثم أجب عن الأسئلة التي تركها. لا يضر اختلاف التشكيل أو الهمزات أو التاء المربوطة.';
-  const f=el('form','wl-f'),ins=[];const add=lab=>{const L=el('label','wl-l');L.append(el('span',null,lab));const i=el('input');i.type='text';i.autocomplete='off';i.setAttribute('autocapitalize','off');i.setAttribute('autocorrect','off');L.append(i);f.append(L);ins.push(i)};
-  add('اسمه كاملًا');q.qs.forEach(add);const b=el('button','wl-go','افتح');b.type='submit';f.append(b);const out=el('div','wl-out');box.append(f,out);
-  f.onsubmit=async ev=>{ev.preventDefault();if(q.demo){out.textContent='هذه معاينة لما يراه أهلك، ولا تفتح شيئًا.';return}b.disabled=true;out.textContent='يُتحقق من الإجابات…';
-    try{const {aes,v}=await WL.keys(ins.map(i=>i.value),q.salt,q.it);const r=await fetch(WL.u()+'/w/open',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({v})});
-      if(r.status===429){out.textContent='محاولات كثيرة. انتظر ساعة ثم حاول مرة أخرى.';return}const j=await r.json();
-      if(!j.ok){out.textContent='الاسم أو الإجابات لا تطابق ما تركه. تأكد منها وحاول مرة أخرى.';return}
-      const P=await WL.open(j.ct,j.iv,aes);f.remove();msg.remove();wlShow(out,P);const bar=document.getElementById('wlBar');if(bar)bar.remove()}
-    catch(e){out.textContent='حدث خطأ. حاول مرة أخرى.'}finally{b.disabled=false}}}
-function wlShow(out,P){out.textContent='';
-  if(P.text){out.append(el('h4',null,'الوصية'));out.append(el('div','wl-txt',P.text))}
-  if(P.notes){out.append(el('h4',null,'التسليم'));out.append(el('div','wl-txt',P.notes))}
-  if(P.files&&P.files.length){out.append(el('h4',null,'الملفات'));P.files.forEach(x=>{const a=el('a','wl-file',x.n);a.href=URL.createObjectURL(new Blob([WL.unb64(x.d)],{type:x.t||'application/octet-stream'}));a.download=x.n;a.target='_blank';out.append(a)})}
-  out.append(el('p','wl-m','احفظ ما هنا في مكان آمن. وتستطيع العودة إلى هذه الصفحة بإضافة #ahl إلى آخر رابط الموقع.'))}
 // بياناتك: shown in a sheet from the menu, and put back in its place (hidden) when the sheet closes
 function dataSheet(){const s=document.getElementById('dataSec');if(!s)return;const home=s.parentNode,next=s.nextSibling;
   const ov=el('div','wl-ov');ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label','بياناتك');const box=el('div','wl-box');const x=el('button','wl-x','×');x.type='button';x.setAttribute('aria-label','إغلاق');
   const close=()=>{s.hidden=true;home.insertBefore(s,next);ov.remove()};x.onclick=close;ov.onclick=e=>{if(e.target===ov)close()};
   s.hidden=false;box.append(x,s);ov.append(box);document.body.append(ov)}
-addEventListener('hashchange',()=>{if(location.hash==='#ahl'){history.replaceState(null,'',location.pathname+location.search);wlFamily()}});
-if(location.hash==='#ahl')setTimeout(()=>{history.replaceState(null,'',location.pathname+location.search);wlFamily()},800);
 
 
 if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='lib/pdf.worker.js';
@@ -4291,7 +4238,7 @@ function fxNotif(){
   if(!S){const bk=el('div','sheet-back');bk.id='ntBack';S=el('div','sheet');S.id='ntSheet';S.setAttribute('role','dialog');S.setAttribute('aria-label','الإشعارات');
     const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');
     x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.style.cssText='position:absolute;inset-inline-end:6px;top:6px';hd.append(x);
-    const B=el('div');B.id='ntBody';const h4=el('h4',null,'الإشعارات');let lp=0;h4.addEventListener('touchstart',()=>{lp=setTimeout(()=>WK()?wOwner():wAsk(),1500)},{passive:true});['touchend','touchmove','touchcancel'].forEach(e=>h4.addEventListener(e,()=>clearTimeout(lp),{passive:true}));const PD=el('div','nt-pend');PD.id='ntPend';S.append(hd,h4,PD,B);document.body.append(bk,S);
+    const B=el('div');B.id='ntBody';const h4=el('h4',null,'الإشعارات');const PD=el('div','nt-pend');PD.id='ntPend';S.append(hd,h4,PD,B);document.body.append(bk,S);
     const close=()=>{if(NTD.dirty&&!confirm('لم تحفظ التغييرات. أتغلق الصفحة دون حفظ؟'))return;bk.hidden=true;S.hidden=true;sxUnlock()};bk.onclick=close;x.onclick=close}
   NTD={n:JSON.parse(JSON.stringify(ntGet())),dirty:false,msg:null};
   document.getElementById('ntBack').hidden=false;S.hidden=false;sxLock();ntPaint();seqPend()}
@@ -4513,66 +4460,6 @@ async function fxFriday(){const Q=await getJSON('data/quran.json');const v=Q.a[3
   B.append(el('p','ev-era','يوم الجمعة'),sawEl('h3','ev-t','الصلاة على النبي ﷺ'));
   const q=el('p','fx-q ev-ayah');q.textContent='﴿'+v+'﴾';B.append(q,el('p','ev-ft',''));B.lastChild.append(el('small',null,'سورة الأحزاب، الآية ٥٦'))}
 
-/* ---------- صفحة القائم على الموقع: private. Reached only with his key (the private link, or pasted into the app by a long press on «الإشعارات»). ---------- */
-window.WILLU=PUSHU;
-const WK=()=>LS.get('wOwn','');
-async function wPost(p,b){const r=await fetch(PUSHU+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({k:WK(),...(b||{})})});let j={};try{j=await r.json()}catch(e){}j._st=r.status;return j}
-// each time he opens the site from his phone: that is an answer too; and his phone's push address is kept current
-async function wSync(){if(!WK())return;try{if(Date.now()-LS.get('wOkAt',0)>6*36e5){const j=await wPost('/w/ok');if(j.ok)LS.set('wOkAt',Date.now())}
-  if(canPush()&&Notification.permission==='granted'){const s=await pushSub()||await pushGet();if(s)await wPost('/w/sub',{sub:s.toJSON()})}}catch(e){}}
-setTimeout(wSync,5000);
-async function wClaim(k){const old=WK();LS.set('wOwn',k);const j=await wPost('/w/claim').catch(()=>({}));
-  if(!j.ok){if(old)LS.set('wOwn',old);else{try{localStorage.removeItem('wOwn')}catch(e){}}toast('هذا المفتاح غير صحيح.',3000);return}
-  LS.set('wOkAt',Date.now());wOwner(j.claimed?'سُجّل هذا الجهاز لك. احفظ المفتاح في مكان آمن (مثل الملاحظات المقفلة) لتستعمله إن غيّرت جوالك.':'')}
-async function wOk(){if(!WK())return;const j=await wPost('/w/ok').catch(()=>({}));if(j.ok){LS.set('wOkAt',Date.now());toast('الحمد لله، وصل ردك، وبدأ العدّ من جديد.',3500)}else toast('تعذّر الإرسال الآن، حاول بعد قليل.',3000)}
-function wAsk(){const k=prompt('مفتاح القائم على الموقع');if(k&&k.trim().length>=30)wClaim(k.trim())}
-const wDate=t=>t?new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-arab',{day:'numeric',month:'long',year:'numeric'}).format(new Date(t)):'—';
-async function wOwner(note){if(!WK()){wAsk();return}
-  const {inn}=fxOpen('صفحتك الخاصة');const put=(...x)=>inn.append(...x);if(note)put(el('p','wl-m',note));
-  const st=el('div','wl-txt');put(st);const msg=el('p','wl-m','');
-  const show=i=>{st.textContent='';if(!i||!i.ok){st.textContent='تعذّر الاتصال الآن.';return}
-    st.append(el('div',null,'آخر رد منك: '+wDate(i.last)),el('div',null,i.rel?(i.opened?'فتح أهلك الرسالة في '+wDate(i.opened)+'.':'الرسالة الآلية ظاهرة الآن للزوار.'):'تظهر الرسالة بعد '+ar(i.left)+' يومًا إن لم ترد.'),
-      el('div',null,'التنبيه على هذا الجوال: '+(i.phone?'مسجّل':'غير مسجّل')),el('div',null,'البريد: '+(i.mail?i.mail+(i.canMail?'':' (لم يُفعَّل الإرسال بعد)'):'لم يُضف')),
-      el('div',null,'الرسالة المختومة: '+(i.sealed?'محفوظة ('+ar(i.sealed.q)+' أسئلة، '+wDate(i.sealed.at)+')':'لم تُكتب بعد')),
-      i.until?el('div',null,'وضع السفر حتى: '+wDate(i.until)):'')};
-  const btn=(t,f,cls)=>{const b=el('button',cls||'btn btn-quiet',t);b.type='button';b.onclick=async()=>{b.disabled=true;try{await f()}finally{b.disabled=false}};return b};
-  const row=el('div','sh-act');row.style.margin='12px 0';put(row,msg);
-  row.append(btn('أنا بخير',async()=>{const j=await wPost('/w/ok');show(j);if(j.ok){LS.set('wOkAt',Date.now());msg.textContent='وصل ردك.'}},'btn'),
-    btn('سجّل هذا الجوال وجرّب التنبيه',async()=>{const s=await pushGet().catch(()=>null)||await pushSub();if(!s){msg.textContent='لم تُفعَّل الإشعارات على هذا الجوال. افتح الموقع من التطبيق المثبّت على الشاشة الرئيسية.';return}
-      const j=await wPost('/w/sub',{sub:s.toJSON(),test:1});msg.textContent=j.pushed?'أُرسل تنبيه تجريبي، ويفترض أن يصلك الآن.':'سُجّل الجوال، لكن التنبيه التجريبي لم يُرسل.';show(await wPost('/w/info'))}),
-    btn('معاينة ما يراه أهلك',async()=>{const i=await wPost('/w/mine');const d={qs:(i&&i.qs)||[]};wlBanner(d);wlFamily(d)}));
-  // mail
-  const mf=el('div','wl-f');const ml=el('label','wl-l');ml.append(el('span',null,'بريدك للتذكير (اختياري، لا يظهر لأحد)'));const mi=el('input');mi.type='email';mi.dir='ltr';ml.append(mi);mf.append(ml,btn('احفظ البريد وأرسل رسالة تجربة',async()=>{const j=await wPost('/w/mail',{mail:mi.value,test:1});msg.textContent=!j.ok?'البريد غير صحيح.':j.sent?'أُرسلت رسالة تجربة إلى بريدك.':j.canMail?'حُفظ البريد، لكن رسالة التجربة لم تُرسل.':'حُفظ البريد. سيعمل الإرسال بعد تفعيله في Cloudflare.';show(await wPost('/w/info'))}));
-  put(accCard('البريد','تذكير ثانٍ مع التنبيه',b=>b.append(mf)));
-  // travel
-  const tf=el('div','wl-f');const tl=el('label','wl-l');tl.append(el('span',null,'سأغيب حتى'));const ti=el('input');ti.type='date';tl.append(ti);
-  tf.append(tl,btn('فعّل وضع السفر',async()=>{const d=ti.value?Date.parse(ti.value+'T00:00:00'):0;const j=await wPost('/w/away',{until:d});show(j);msg.textContent=j.ok?(d?'يبدأ العدّ من التاريخ الذي اخترته.':'أُلغي وضع السفر.'):'تعذّر الحفظ.'}));
-  put(accCard('وضع السفر','إذا عرفت أنك ستغيب مدة طويلة',b=>b.append(tf)));
-  // the sealed message
-  put(accCard('الرسالة والملفات','تُختم على جوالك، ولا تُفتح إلا باسمك وإجاباتك',b=>wSealForm(b,msg,show)));
-  show(await wPost('/w/info'))}
-function wSealForm(B,msg,show){const f=el('div','wl-f');const L=(lab,tag,ph)=>{const l=el('label','wl-l');l.append(el('span',null,lab));const i=el(tag||'input');if(!tag)i.type='text';if(ph)i.placeholder=ph;i.setAttribute('autocapitalize','off');i.setAttribute('autocorrect','off');l.append(i);f.append(l);return i};
-  f.append(el('p','wl-m','اسمك يُكتب هنا ليكون جزءًا من المفتاح، ولا يُحفظ في أي مكان. اختر أسئلة يعرف أهلك أجوبتها ولا يعرفها غيرهم، ولا تكشف الأسئلة نفسها من أنت. لا يضر اختلاف التشكيل أو الهمزات.'));
-  const nm=L('اسمك كاملًا كما سيكتبه أهلك');const Q=[];for(let i=0;i<4;i++)Q.push([L('السؤال '+ar(i+1)+(i>1?' (اختياري)':''),null,''),L('جوابه')]);
-  const tx=L('الوصية','textarea');tx.rows=8;const no=L('التسليم: ما يحتاجه من يتولى الموقعين (الحسابات، النطاقات وتجديدها، وغيرها)','textarea');no.rows=8;
-  const fl=el('input');fl.type='file';fl.multiple=true;const fll=el('label','wl-l');fll.append(el('span',null,'ملفات مرفقة (حتى ١٢ ميغا مجموعها)'),fl);f.append(fll);
-  const parts=()=>{const q=Q.filter(([a,b])=>a.value.trim()&&b.value.trim());return {qs:q.map(([a])=>a.value.trim()),parts:[nm.value,...q.map(([,b])=>b.value)]}};
-  const rd=x=>new Promise((ok,no_)=>{const r=new FileReader();r.onload=()=>ok({n:x.name,t:x.type,d:WL.b64(r.result)});r.onerror=no_;r.readAsArrayBuffer(x)});
-  let kept=[];
-  const save=el('button','btn','اختم واحفظ');save.type='button';save.onclick=async()=>{const {qs,parts:p}=parts();
-    if(!nm.value.trim()||qs.length<2){msg.textContent='اكتب اسمك وسؤالين على الأقل مع أجوبتهما.';return}
-    const files=[...kept,...await Promise.all([...fl.files].map(rd))];const size=files.reduce((t,x)=>t+x.d.length,0);if(size>16e6){msg.textContent='الملفات أكبر من المسموح.';return}
-    if(!confirm('تأكد أن أهلك يعرفون أجوبة هذه الأسئلة كما كتبتها. هل تختم الرسالة الآن؟'))return;
-    save.disabled=true;msg.textContent='يُختم على جوالك…';
-    try{const pkg=await WL.seal({text:tx.value,notes:no.value,files,at:Date.now()},p,qs);const j=await wPost('/w/seal',{pkg});msg.textContent=j.ok?'خُتمت الرسالة وحُفظت. لا يفتحها أحد إلا باسمك وهذه الأجوبة.':j.big?'الرسالة أكبر من المسموح.':'تعذّر الحفظ.';if(j.ok){show(j);fl.value='';kept=files}}
-    catch(e){msg.textContent='تعذّر الختم.'}finally{save.disabled=false}};
-  const load=el('button','btn btn-quiet','افتح المحفوظ لتعديله');load.type='button';load.onclick=async()=>{const i=await wPost('/w/mine');if(!i.ok){msg.textContent='لا توجد رسالة محفوظة.';return}
-    i.qs.forEach((q,k)=>{if(Q[k])Q[k][0].value=q});if(!nm.value.trim()||Q.slice(0,i.qs.length).some(([,b])=>!b.value.trim())){msg.textContent='اكتب اسمك وأجوبة الأسئلة الظاهرة، ثم اضغط مرة أخرى.';return}
-    load.disabled=true;msg.textContent='يُفتح…';try{const {aes,v}=await WL.keys([nm.value,...Q.slice(0,i.qs.length).map(([,b])=>b.value)],i.salt,i.it);const j=await wPost('/w/mine',{v});
-      if(!j.ok){msg.textContent='الاسم أو الأجوبة لا تطابق.';return}const P=await WL.open(j.ct,j.iv,aes);tx.value=P.text||'';no.value=P.notes||'';kept=P.files||[];msg.textContent='فُتحت. الملفات المرفقة سابقًا: '+(kept.length?kept.map(x=>x.n).join('، '):'لا شيء')+'.'}
-    catch(e){msg.textContent='تعذّر الفتح.'}finally{load.disabled=false}};
-  const act=el('div','sh-act');act.append(save,load);f.append(act);B.append(f)}
-
 /* the ordered notifications (the Sira, the caliphs, the Maghazi) go on by reading: opening an item tells the sender, and the next one comes next time.
    «ما فاتك» on the notifications page: what came lately, the waiting one first */
 async function seqPost(p,b){if(!canPush())return null;const s=await pushSub();if(!s)return null;
@@ -4590,9 +4477,6 @@ async function seqPend(){const P=document.getElementById('ntPend');if(!P)return;
   w.append(el('p','nt-pn','● لم تقرأه بعد، ويصلك هو نفسه حتى تفتحه. ✓ قرأته.'));P.append(w)}
 function evRoute(){const h=location.hash;let m;
   const go=f=>{history.replaceState(null,'',location.pathname+location.search);setTimeout(f,400)};
-  if((m=/^#wasi=([A-Za-z0-9_-]{30,})$/.exec(h))){history.replaceState(null,'',location.pathname+location.search);wClaim(m[1]);return}
-  if(h==='#wasi'){history.replaceState(null,'',location.pathname+location.search);setTimeout(wOwner,400);return}
-  if(h==='#wok'){history.replaceState(null,'',location.pathname+location.search);wOk();return}
   if((m=/^#ev=(\d+)(?:;r=[a-z]+\.\d+)?$/.exec(h)))go(()=>fxTlEv(+m[1]));
   else if((m=/^#hd=(\d+)$/.exec(h)))go(()=>fxHadith(+m[1]));
   else if((m=/^#mg=(\d+)(?:;r=[a-z]+\.\d+)?$/.exec(h)))go(()=>fxMaghazi(+m[1]));
