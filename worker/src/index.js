@@ -6,7 +6,7 @@
 // - an event of the Sira, and one of the rightly guided caliphs, each day in order (the site's timeline, in the Mukhtasar's words)
 // - each reader picks which of these, and the hour of each (where the reader is)
 // Web Push: RFC 8291 (aes128gcm) and RFC 8292 (VAPID), with WebCrypto only.
-import { ownerFetch } from './owner.js';
+import { ownerFetch, installSeen } from './owner.js';
 import H, { DAY0 } from './hadith.js';
 import { SI, KH } from './tl.js';
 import MG from './mg.js';
@@ -223,6 +223,7 @@ export default {
     const u = new URL(req.url);
     if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
     { const o = await ownerFetch(req, env, u, { site: SITE, name: 'سِيرَتُه', page: 1, fanOut, job: (id, msg) => [id, 'bc', msg] }); if (o) return o; }
+    if (req.method === 'POST' && u.pathname === '/i') return installSeen(req, env, cors);
     if (u.pathname === '/key') return json({ key: (await vapid(env)).pub });
     if (u.pathname === '/health') return json({ ok: true, hadiths: H.length, maghazi: MG.length, sira: SI.length, caliphs: KH.length });
     if (req.method === 'POST' && u.pathname === '/inner/send') {

@@ -16,6 +16,23 @@ async function allIds(env) {
   do { const l = await env.PUSH.list({ prefix: 's:', cursor }); for (const x of l.keys) ids.push(x.name); cursor = l.list_complete ? null : l.cursor; } while (cursor);
   return ids;
 }
+// installed apps: each app, when opened from the home screen, sends a random number it made itself (nothing about the reader),
+// once at first and then about once a month; kept as i:<number> with the first and the last day it was seen
+export async function installSeen(req, env, cors) {
+  const id = (await req.text()).trim();
+  if (!/^[0-9a-f-]{36}$/.test(id)) return new Response('', { status: 400, headers: cors });
+  const k = 'i:' + id, now = Date.now(), v = await env.PUSH.getWithMetadata(k);
+  const f = (v && v.metadata && v.metadata.f) || now;
+  await env.PUSH.put(k, '', { metadata: { f, l: now } });
+  return new Response('{"ok":true}', { headers: { 'Content-Type': 'application/json', ...cors } });
+}
+async function installs(env) {
+  const r = { all: 0, m30: 0, w7: 0 }, now = Date.now(); let cursor;
+  do { const l = await env.PUSH.list({ prefix: 'i:', cursor });
+    for (const x of l.keys) { const m = x.metadata || {}; r.all++; if (now - (m.l || 0) < 30 * 864e5) r.m30++; if (now - (m.f || 0) < 7 * 864e5) r.w7++; }
+    cursor = l.list_complete ? null : l.cursor; } while (cursor);
+  return r;
+}
 const out = (o, st) => new Response(JSON.stringify(o), { status: st || 200, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': PAGE_ORIGIN, 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' } });
 
 // ctx: { site, name, fanOut(env, jobs), job(id, msg) }
@@ -26,7 +43,7 @@ export async function ownerFetch(req, env, u, ctx) {
   let b; try { b = JSON.parse(await req.text()); } catch (e) { return out({ ok: false }, 400); }
   if (!(await isOwner(b && b.k))) return out({ ok: false }, 403);
   const ids = await allIds(env);
-  if (u.pathname === '/o/count') return out({ ok: true, n: ids.length });
+  if (u.pathname === '/o/count') return out({ ok: true, n: ids.length, ins: await installs(env) });
   const t = String(b.t || '').trim().slice(0, 80) || ctx.name, body = String(b.b || '').trim().slice(0, 600);
   if (!body) return out({ ok: false, empty: 1 }, 400);
   const msg = { t, b: body, u: ctx.site + '/', tag: 'bc' + Date.now() };
@@ -52,6 +69,7 @@ textarea{min-height:150px;resize:vertical}
 .cnt{font-size:12.5px;color:var(--muted);text-align:left}
 .pv{background:#2a2720;border-radius:16px;padding:12px 14px}.pv b{display:block;font-size:15px}.pv p{margin:2px 0 0;font-size:15px;white-space:pre-wrap;color:var(--ink)}
 button{font:inherit;font-weight:700;border:0;border-radius:14px;padding:13px;width:100%;background:var(--brass);color:#1a1209;cursor:pointer}button:disabled{opacity:.5}
+.st{padding:6px 0 4px;border-bottom:1px dashed var(--line)}.st b{display:block;color:var(--ink);margin-bottom:2px}.sr{display:flex;justify-content:space-between;font-size:15px;color:var(--muted);padding:2px 0}.sv{color:var(--ink);font-weight:700}
 .res div{padding:6px 0;border-bottom:1px dashed var(--line)}.res div:last-child{border:0}.good{color:var(--ok)}.err{color:var(--bad)}
 </style></head><body><main id="m"><p class="sub">…</p></main>
 <script>
@@ -66,8 +84,12 @@ const call=(base,p,o)=>fetch(base+p,{method:'POST',headers:{'Content-Type':'text
   m.append(E('h1',null,'إرسال تنبيه'),E('p','sub','يصل إلى كل جهاز فعّل الإشعارات في الموقع الذي تختاره، ثم ترى هنا كم جهازاً وصل إليه.'));
   const s=E('div','card sites');s.append(E('h2',null,'إلى من'));const box={},nn={};
   for(const [id,nm] of SITES){const l=E('label');const i=E('input');i.type='checkbox';i.checked=id==='sira';box[id]=i;nn[id]=E('span','n','');l.append(i,E('span',null,nm),nn[id]);s.append(l)}
+  const st=E('div','card');st.append(E('h2',null,'الأرقام'));const row=(nm,j)=>{const d=E('div','st');d.append(E('b',null,nm));
+    if(!j||!j.ok){d.append(E('div','n','تعذّر الاتصال'));return d}
+    [['ثبّتوا التطبيق',j.ins.all],['فتحوه خلال آخر ٣٠ يوماً',j.ins.m30],['ثبّتوه خلال آخر ٧ أيام',j.ins.w7],['فعّلوا الإشعارات',j.n]].forEach(([a,v])=>{const r=E('div','sr');r.append(E('span',null,a),E('span','sv',ar(v)));d.append(r)});return d};
+  const sd=E('div','n','…');st.append(row('سِيرَتُه',c),sd,E('p','n','عُدّ التطبيق المثبت ابتداءً من ١٢ أكتوبر ٢٠٢٦: كل من يفتحه من الشاشة الرئيسية يُحسب مرة واحدة، ومن ثبّته قبل ذلك يُحسب عند أول فتح له.'));m.append(st);
   m.append(s);nn.sira.textContent='(المشتركون الآن: '+ar(c.n)+')';
-  call(SITES[1][2],'/o/count').then(j=>{nn.durar.textContent=j.ok?'(المشتركون الآن: '+ar(j.n)+')':'(تعذّر الاتصال)'});
+  call(SITES[1][2],'/o/count').then(j=>{sd.replaceWith(row('الدرر السنية',j));nn.durar.textContent=j.ok?'(المشتركون الآن: '+ar(j.n)+')':'(تعذّر الاتصال)'});
   const f=E('div','card');f.append(E('h2',null,'النص'));
   const lt=E('label',null,'العنوان (اتركه فارغاً ليكون اسم الموقع)');const ti=E('input');ti.type='text';ti.maxLength=80;
   const lb=E('label',null,'نص التنبيه');const tx=E('textarea');tx.maxLength=600;const cn=E('div','cnt','');

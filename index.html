@@ -2084,7 +2084,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-12-1231';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-12-1239';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2176,6 +2176,12 @@ document.querySelectorAll('.themes').forEach(box=>THEMES.forEach(([k,n,c])=>{con
 {let t=LS.get('theme','auto');if(t==='brown'){t='auto';LS.set('theme',t)}applyTheme(t)}
 function toast(msg,ms,low){const e=document.createElement('div');e.className='toast'+(low?' low':'');e.setAttribute('role','status');e.textContent=msg;document.body.append(e);setTimeout(()=>{e.style.opacity='0';setTimeout(()=>e.remove(),300)},ms||2200)}
 function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+// the count of installed apps: when opened from the home screen, a random number made on this device (nothing about the reader) is sent once, then about once a month
+(function(){try{if(!(matchMedia('(display-mode: standalone)').matches||navigator.standalone===true))return;
+  const h=location.hostname.replace(/^www\./,''),U=h==='seeratuh.com'?'https://push.seeratuh.com':h==='dorarnajdiah.com'?'https://push.dorarnajdiah.com':'';if(!U||!crypto.randomUUID)return;
+  let id=localStorage.getItem('iid');if(!id){id=crypto.randomUUID();localStorage.setItem('iid',id)}
+  if(Date.now()-(+localStorage.getItem('iat')||0)<25*864e5)return;
+  setTimeout(()=>fetch(U+'/i',{method:'POST',headers:{'Content-Type':'text/plain'},body:id}).then(r=>{if(r.ok)localStorage.setItem('iat',String(Date.now()))}).catch(()=>{}),5000)}catch(e){}})();
 // بياناتك: shown in a sheet from the menu, and put back in its place (hidden) when the sheet closes
 function dataSheet(){const s=document.getElementById('dataSec');if(!s)return;const home=s.parentNode,next=s.nextSibling;
   const ov=el('div','wl-ov');ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label','بياناتك');const box=el('div','wl-box');const x=el('button','wl-x','×');x.type='button';x.setAttribute('aria-label','إغلاق');
