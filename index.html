@@ -1541,6 +1541,13 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .mg-trl{display:block;font-size:12px;color:var(--brass);margin-bottom:2px}
 .mg-trw .mg-tr{margin:0}
 
+.ix-w{margin:4px 0 14px}.ix-l{font-size:13px;color:var(--muted);margin:0 0 8px;line-height:1.7}
+.ix-r{display:flex;flex-wrap:wrap;gap:6px}
+.ix-b{border:1px solid var(--line);background:var(--raised);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.ix-b.on{border-color:var(--brass);color:var(--brass);font-weight:700}
+.mg-ev.ix-on{outline:2px solid color-mix(in srgb,var(--brass) 45%,transparent);outline-offset:2px}
+.mg-ev{scroll-margin-top:80px}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -2062,7 +2069,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-12-1028';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-12-1059';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4580,7 +4587,7 @@ const FADC={
   '':{f:'sx_bfad',t:'فضائل أصحاب النبي صلى الله عليه وسلم',l:'«كتاب فضائل أصحاب النبي ﷺ» من صحيح البخاري كاملاً، بأبوابه وترتيبه: يبدأ بفضل الصحابة عامة، ثم أبي بكر، ثم عمر، ثم عثمان، ثم علي رضي الله عنهم، ثم بقية الصحابة. اضغط الباب لترى أحاديثه.',n:'الخامس ص ٢–٣٠',g:1},
   ans:{f:'sx_bans',t:'مناقب الأنصار',l:'أبواب «كتاب مناقب الأنصار» من صحيح البخاري في فضائل الأنصار وأعيانهم رضي الله عنهم، بأبوابه وترتيبه، ومعها أبواب خديجة وجرير وحذيفة وهند بنت عتبة التي تليها. اضغط الباب لترى أحاديثه.',n:'الخامس ص ٣٠–٤٠',g:1},
   sir:{f:'sx_bsir',t:'السيرة في صحيح البخاري',l:'أبواب السيرة في صحيح البخاري بأبوابها وترتيبها: يبدأ بـ«كتاب بدء الوحي» الذي افتتح به البخاري صحيحه، ثم أبواب السيرة من «كتاب مناقب الأنصار»: من خبر زيد بن عمرو بن نفيل وبنيان الكعبة وأيام الجاهلية، إلى المبعث وما لقي النبي ﷺ وأصحابه بمكة، وإسلام السابقين، والهجرة إلى الحبشة، والإسراء والمعراج، وبيعة العقبة، والهجرة إلى المدينة ومقدمه ﷺ إليها، ثم حديث صلح الحديبية الطويل من «كتاب الشروط». وكتاب المغازي في «المغازي في الصحيحين». اضغط الباب لترى أحاديثه.',n:'الأول ص ٦–١٠، والخامس ص ٤٠–٧١، والثالث ص ١٩٣–١٩٧',g:1,mg:1},
-  daw:{f:'sx_bdaw',t:'أدعيته وأذكاره صلى الله عليه وسلم',l:'«كتاب الدعوات» من صحيح البخاري كاملاً بأبوابه وترتيبه: ما كان النبي ﷺ يقوله ويدعو به ويعلّمه أصحابه، في الاستغفار والنوم والصباح والصلاة والكرب والسفر والتعوذ، وفضل الذكر والصلاة عليه ﷺ. اضغط الباب لترى أحاديثه.',n:'الثامن ص ٦٧–٨٨'},
+  daw:{f:'sx_bdaw',ix:[['النوم والاستيقاظ',[4,5,6,7,8,9,10,11,12]],['الصباح',[14]],['الوضوء والصلاة',[47,15,16,60,58]],['دخول الخلاء',[13]],['الاستغفار والتوبة',[1,2,3,57]],['الكرب والمرض',[25,26,41]],['التعوذ',[33,34,35,36,37,38,39,40,42,43,44,53]],['السفر',[48,49]],['الأهل والأولاد',[50,51,29]],['الاستخارة',[46]],['الذكر والتسبيح',[61,62,63,64,65]],['الصلاة على النبي صلى الله عليه وسلم',[30,31]],['آداب الدعاء',[18,19,20,21,22,23,54]]],t:'أدعيته وأذكاره صلى الله عليه وسلم',l:'«كتاب الدعوات» من صحيح البخاري كاملاً بأبوابه وترتيبه: ما كان النبي ﷺ يقوله ويدعو به ويعلّمه أصحابه، في الاستغفار والنوم والصباح والصلاة والكرب والسفر والتعوذ، وفضل الذكر والصلاة عليه ﷺ. اضغط الباب لترى أحاديثه.',n:'الثامن ص ٦٧–٨٨'},
   adb:{f:'sx_badab',t:'من أخلاقه ومعاملته صلى الله عليه وسلم',l:'أبواب من «كتاب الأدب» في صحيح البخاري، بأبوابها وترتيبها، في رحمته ﷺ بالصبيان، ورفقه، وحسن خلقه، وما كان يكون في أهله، وتبسمه، وصبره على الأذى، وحيائه، وتيسيره، وإكرامه الضيف. اضغط الباب لترى أحاديثه.',n:'الثامن ص ٧–٣٢'},
   sal:{f:'sx_bsal',pair:['msal','من صحيح مسلم'],t:'صفة صلاة النبي صلى الله عليه وسلم',l:'«أبواب صفة الصلاة» من كتاب الأذان في صحيح البخاري بأبوابها وترتيبها: من تكبيرة الإحرام ورفع اليدين، والقراءة، والركوع والسجود، والتشهد، إلى التسليم. اضغط الباب لترى أحاديثه.',n:'الأول ص ١٤٧–١٦٧'},
   saw:{f:'sx_bsaw',pair:['msaw','من صحيح مسلم'],t:'صيامه وقيامه واعتكافه صلى الله عليه وسلم',l:'«كتاب الصوم» من صحيح البخاري كاملاً بأبوابه وترتيبه، ثم كتاب صلاة التراويح، وكتاب فضل ليلة القدر، وكتاب الاعتكاف. اضغط الباب لترى أحاديثه.',n:'الثالث ص ٢٤–٥٣'},
@@ -4597,13 +4604,18 @@ async function fxFad(k){k=k||'';const C=FADC[k];const M=await getJSON('data/'+C.
   if(C.g){const sw=el('div','gz-a');[['','فضائل الصحابة'],['ans','مناقب الأنصار'],['sir','السيرة في صحيح البخاري']].filter(([kk])=>kk!==k).forEach(([kk,t])=>{const o=el('button','btn btn-link hd-b',t);o.type='button';o.onclick=()=>{P.close();fxFad(kk)};sw.append(o)});if(C.mg){const o=el('button','btn btn-link hd-b','المغازي في الصحيحين');o.type='button';o.onclick=()=>{P.close();fxMgTL()};sw.append(o)}P.inn.append(sw)}
   if(C.pair){const sw=el('div','gz-a');const o=el('button','btn btn-link hd-b',C.pair[1]);o.type='button';o.onclick=()=>{P.close();fxFad(C.pair[0])};sw.append(o);P.inn.append(sw)}
   const meta=C.mix?((h,f)=>(h.src==='ms'?msMeta(h,f):bMeta(h,f))+(h.cut?'، '+h.cut:'')):C.ms?msMeta:bMeta;
-  const list=el('div','mg-list');P.inn.append(list);
+  const list=el('div','mg-list');const OPEN=[];
+  if(C.ix){const w=el('div','ix-w');w.append(el('p','ix-l','أبواب البخاري بحسب المواقف (التقسيم للتسهيل، والأبواب وترتيبها كما في الصحيح):'));const row=el('div','ix-r');
+    C.ix.forEach(([t,ids])=>{const b=el('button','ix-b',t);b.type='button';b.onclick=()=>{list.querySelectorAll('.mg-ev.ix-on').forEach(x=>x.classList.remove('ix-on'));row.querySelectorAll('.ix-b').forEach(x=>x.classList.toggle('on',x===b));
+      ids.forEach(i=>{const o=OPEN[i];if(o){o.open();o.card.classList.add('ix-on')}});const f=Math.min(...ids);OPEN[f]&&OPEN[f].card.scrollIntoView({behavior:'smooth',block:'start'})};row.append(b)});
+    w.append(row);P.inn.append(w)}
+  P.inn.append(list);
   M.ch.forEach(c=>{const n=c.hs.length;const card=el('section','mg-ev');const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
     const tt=el('span','mg-tt');tt.append(ttlEl('b',null,c.t==='باب'?'باب بلا ترجمة':c.t),el('small',null,ar(n)+(n===1?' حديث':n===2?' حديثان':n<=10?' أحاديث':' حديثاً')));hd.append(tt);card.append(hd);
     if(c.t==='باب')card.append(el('p','mg-note','باب لم يترجم له البخاري، وهو تابع للباب الذي قبله على عادته.'));
     const body=el('div','mg-body');body.hidden=true;card.append(body);
     const fill=()=>{if(body.childElementCount)return;if(c.tr){const w=el('div','mg-trw');w.append(el('span','mg-trl','من ترجمة البخاري للباب: ما ذكره تحت عنوانه قبل أحاديثه'));const t=el('p','mg-tr');hdFill(t,c.tr.replace(/\d+/g,d=>ar(+d)),[]);w.append(t);body.append(w)}c.hs.forEach(i=>body.append(mgItem(M,i,{clip:260,meta,noBook:1}).w))};
-    hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};list.append(card)});
+    hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};OPEN.push({card,open:()=>{if(body.hidden)hd.onclick()}});list.append(card)});
   P.inn.append(el('p','fx-note',C.note||'النص مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء '+C.n+')، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن. وحُذف الإسناد إلى الصحابي حيث كان ذلك بيّناً، والحديث بإسناده بضغطة.'))}
 async function fxHady(){const G=await getJSON('data/sx_hady.json');const P=fxOpen('هديه صلى الله عليه وسلم');
   P.inn.append(el('p','fx-lead','فصول ابن القيم في هدي النبي صلى الله عليه وسلم من «زاد المعاد» بعناوينه وترتيبه. اضغط الفصل لتقرأه بلفظ المطبوع في صفحته.'));
