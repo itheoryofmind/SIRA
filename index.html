@@ -1671,7 +1671,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
       <h2 id="exH">أبواب الموقع</h2>
       <div class="ex">
         <p class="exg">صفته وهديه <span class="saw">ﷺ</span></p>
-        <button type="button" id="fxSifa"><b>صفته <span class="saw">ﷺ</span> كأنك تراه</b><span>الشمائل المحمدية كاملة، وما في الصحيحين</span></button>
+        <button type="button" id="fxSifa"><b>صفته <span class="saw">ﷺ</span> كأنك تراه</b><span>مختصر الشمائل المحمدية كاملًا، وما في الصحيحين</span></button>
         <button type="button" id="fxDay"><b>يومه صلى الله عليه وسلم</b><span>هديه في يومه وليلته من زاد المعاد</span></button>
         <button type="button" class="wide" id="fxHady"><b>هديه <span class="saw">ﷺ</span></b><span>فصول ابن القيم في زاد المعاد: في يومه، وعباداته، وأذكاره</span></button>
         <button type="button" id="fx-sal"><b>صفة صلاته <span class="saw">ﷺ</span></b><span>من صحيحي البخاري ومسلم</span></button>
@@ -2058,7 +2058,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-12-1006';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-12-1022';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2081,7 +2081,7 @@ const VOLS=[
  {n:16,p:512,f:497,d:'القسم الأخير من كتاب البيان الواضح وأنبل النصائح، وتراجم أصحاب الرسائل والأجوبة'},
  {n:17,p:329,f:9999,d:'مختصر سيرة الرسول ﷺ، للإمام محمد بن عبدالوهاب',ni:1,s:3},   
  {n:18,p:513,f:9999,d:'زاد المعاد، الجزء الأول',ni:1,s:35},{n:19,p:435,f:9999,d:'زاد المعاد، الجزء الثاني',ni:1,s:5},{n:20,p:609,f:9999,d:'زاد المعاد، الجزء الثالث',ni:1,s:5},{n:21,p:381,f:9999,d:'زاد المعاد، الجزء الرابع',ni:1,s:5},{n:22,p:740,f:9999,d:'زاد المعاد، الجزء الخامس',ni:1,s:5},
- {n:23,p:716,f:9999,d:'السيرة النبوية لابن هشام، الجزء الأول',ni:1,s:1},{n:24,p:671,f:9999,d:'السيرة النبوية لابن هشام، الجزء الثاني',ni:1,s:3},{n:25,p:210,f:9999,d:'الشمائل المحمدية للترمذي',ni:1,s:13},
+ {n:23,p:716,f:9999,d:'السيرة النبوية لابن هشام، الجزء الأول',ni:1,s:1},{n:24,p:671,f:9999,d:'السيرة النبوية لابن هشام، الجزء الثاني',ni:1,s:3},{n:25,p:210,f:9999,d:'مختصر الشمائل المحمدية للترمذي، اختصار الألباني',ni:1,s:13},
  {n:26,p:179,f:9999,d:'كتاب المغازي من صحيح البخاري، من الجزء الخامس',ni:1,s:71},{n:27,p:16,f:9999,d:'كتاب المغازي من صحيح البخاري، من الجزء السادس',ni:1,s:2},
  {n:28,p:672,f:9999,d:'البداية والنهاية لابن كثير، من الجزء التاسع: خلافة أبي بكر وأول خلافة عمر',ni:1,s:413},{n:29,p:686,f:9999,d:'البداية والنهاية لابن كثير، الجزء العاشر: خلافة عمر وعثمان وعلي',ni:1,s:5},{n:30,p:153,f:9999,d:'البداية والنهاية لابن كثير، من الجزء الحادي عشر: مقتل علي وعام الجماعة',ni:1,s:5},
  {n:31,p:621,f:9999,d:'البداية والنهاية لابن كثير، الجزء الثالث: من أول السيرة والنسب الشريف إلى المبعث والبشارات به',ni:1,s:353},
@@ -2103,7 +2103,7 @@ const MB={
     head:'<p>تهذيب</p><h3>أبي محمد عبد الملك بن هشام</h3><p>(ت ٢١٣هـ) لسيرة ابن إسحاق</p><p>تحقيق: مصطفى السقا وإبراهيم الأبياري وعبد الحفيظ شلبي · مطبعة مصطفى البابي الحلبي ١٣٧٥هـ · جزءان</p>',
     note:'النص من المكتبة الشاملة، وهو نص طبعة الحلبي بتحقيق السقا والأبياري وشلبي، مقسّم على صفحات المطبوع، ورقم كل صفحة هو رقمها في المطبوع. وقوبل بنسختين رقميتين أخريين (إحداهما من طبعة محمد محيي الدين عبد الحميد)، وروجعت كل مواضع الخلاف على صور صفحات المطبوع وصُحّح النص على ما فيها، ثم قورن بقراءتين آليتين لصور الصفحات وروجع ما اشتبه منه على الصور، وروجعت عناوين الأبواب والآيات المستشهد بها كلها على المطبوع كذلك. وحُذفت أرقام الآيات التي أضافتها النسخة الرقمية لأنها ليست في المطبوع. ولا تُعرض حواشي المحققين. والمعتمد عند النقل صورة الصفحة: زر «قارن بالصورة». والعناوين التي بين قوسين من وضع المحققين.',
     cite:(j,p)=>'(السيرة النبوية لابن هشام، تحقيق السقا والأبياري وشلبي، مطبعة الحلبي ١٣٧٥هـ، ج'+ar(j)+'، ص '+ar(p)+')'},
- s:{ps:[25],t:'الشمائل المحمدية',sh:'الشمائل المحمدية',lr:'lastReadS',start:[25,13],startS:'من أول الكتاب',brp:1,
+ s:{ps:[25],t:'مختصر الشمائل المحمدية',sh:'مختصر الشمائل',lr:'lastReadS',start:[25,13],startS:'من أول الكتاب',brp:1,
     head:'<p>للإمام</p><h3>أبي عيسى محمد بن عيسى الترمذي</h3><p>رحمه الله (ت ٢٧٩هـ)</p><p>مختصر الشمائل المحمدية، اختصره وحقّقه: محمد ناصر الدين الألباني · المكتبة الإسلامية، عمّان ١٤٠٦هـ</p><p>أحكام الأحاديث فيه أحكام الشيخ الألباني كما طبعها، لا أحكام الموقع</p>',
     note:'النص نص مختصر الشمائل للشيخ الألباني من المكتبة الشاملة، مقسّم على صفحات المطبوع، ورقم كل صفحة هو رقمها في المطبوع. وحُدّدت مواضع انتقال الصفحات بمطابقته بقراءة آلية لصور الصفحات، ثم قُرئ كاملاً صفحةً صفحة على صور المطبوع مرتين، وقوبل بقراءتين آليتين، ثم نُسخت صفحاته كلها من الصور نسخاً مستقلاً لم يُنظر فيه إلى النص وقوبل به كلمةً كلمة، وروجع كل خلاف على الصور، وصُحّح على المطبوع: ما سقط من كلمات وأسطر، والصلاة على النبي ﷺ حيث سقطت، وأرقام الأحاديث وأحكامها. وأحكام الأحاديث (صححه، حسّنه، ضعّفه) كلها أحكام الشيخ الألباني في كتابه هذا، منقولة كما طُبعت بجانب رقم كل حديث، فإن طُبع حكم آخر بجانب جزء من الحديث كُتب قبل ذلك الجزء. وليست من كلام الترمذي، ولا حكماً من الموقع؛ فالموقع ناقل لا محقق، ومن أراد التفصيل فليرجع إلى تخريج الشيخ في حاشية المطبوع. وما بين المعقوفين [ ] فهو كذلك في المطبوع. ولا تُعرض حواشي المحقق وتخريجاته. والمعتمد عند النقل صورة الصفحة: زر «قارن بالصورة».',
     cite:(j,p)=>'(مختصر الشمائل المحمدية للترمذي، اختصار وتحقيق الألباني، المكتبة الإسلامية بعمّان ١٤٠٦هـ، ص '+ar(p)+')'},
@@ -3626,7 +3626,7 @@ const SXBOOKS=[
   {t:'مختصر سيرة الرسول صلى الله عليه وسلم',by:'الإمام محمد بن عبد الوهاب',era:'السيرة',tone:'var(--verse)',info:'٣٢٧ صفحة',st:'review',stT:'روجع على المطبوع',open:()=>openBook()},
   {t:'السيرة النبوية',by:'ابن هشام، تحقيق السقا والأبياري وشلبي',era:'السيرة',tone:'var(--verse)',info:'جزءان',st:'done',stT:'روجع على المطبوع',open:()=>openZad(MB.h)},
   {t:'زاد المعاد في هدي خير العباد',by:'ابن قيم الجوزية، تحقيق الأرناؤوطين',era:'الهدي',tone:'var(--brass)',info:'خمسة أجزاء',st:'done',stT:'روجع على المطبوع',open:()=>openZad(MB.z)},
-  {t:'الشمائل المحمدية',by:'الترمذي، مختصر الألباني',era:'الشمائل',tone:'var(--palm)',info:'٣٥٢ حديثاً',st:'done',stT:'روجع على المطبوع',open:()=>openZad(MB.s)},
+  {t:'مختصر الشمائل المحمدية',by:'الترمذي، اختصار الألباني',era:'الشمائل',tone:'var(--palm)',info:'٣٥٢ حديثاً',st:'done',stT:'روجع على المطبوع',open:()=>openZad(MB.s)},
   {t:'كتاب المغازي',by:'من صحيح البخاري، الطبعة السلطانية',era:'المغازي',tone:'var(--clay)',info:'الأحاديث ٣٩٤٩–٤٤٧٣',st:'done',stT:'روجع على المطبوع',open:()=>openZad(MB.m)},
   {t:'السيرة النبوية من البداية والنهاية',by:'ابن كثير، تحقيق التركي',era:'السيرة',tone:'var(--verse)',info:'سبعة أجزاء، وفيه الشمائل ودلائل النبوة',st:'done',stT:'روجع على المطبوع',open:()=>openZad(MB.kb)},
   {t:'الخلفاء الراشدون',by:'من البداية والنهاية لابن كثير، تحقيق التركي',era:'الخلافة',tone:'var(--muted)',info:'من سنة ١١ إلى سنة ٤١هـ',st:'done',stT:'روجع على المطبوع',open:()=>openZad(MB.k)}
@@ -3634,7 +3634,7 @@ const SXBOOKS=[
 
 /* مكتبة السيرة: the books on one shelf, each volume a spine; the gold line is where the reader stopped, the green dot a volume kept for reading offline */
 const LIB=[['مختصر السيرة',[17],null,['#3f4a2c','#262e1a']],['سيرة ابن هشام',[23,24],'h',['#5a3520','#3b2213']],['زاد المعاد',[18,19,20,21,22],'z',['#4a2a3a','#2c1824']],
-  ['الشمائل',[25],'s',['#2f4a40','#1b2e27']],['المغازي',[26,27],'m',['#5c2e22','#3a1b12']],['البداية والنهاية',[31,32,33,34,35,36,37],'kb',['#3f3320','#282013']],['الخلفاء الراشدون',[28,29,30],'k',['#33405a','#1e2738']]];
+  ['مختصر الشمائل',[25],'s',['#2f4a40','#1b2e27']],['المغازي',[26,27],'m',['#5c2e22','#3a1b12']],['البداية والنهاية',[31,32,33,34,35,36,37],'kb',['#3f3320','#282013']],['الخلفاء الراشدون',[28,29,30],'k',['#33405a','#1e2738']]];
 const LIBJ=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر'];
 function libOpen(n,key){const last=LS.get('last'+n,0);if(last>1){openPart(n,last,null,false,'txt');return}if(n===17){openBook();return}if(key&&MB[key])openZad(MB[key])}
 async function renderLib(){const S=$('#libShelf');if(!S)return;
@@ -3955,7 +3955,7 @@ async function fxSifa(){const F=await sxFeat();const P=fxOpen('صفته ﷺ كأ
           if(S.length>3){const more=el('button','btn btn-quiet sf-more','باقي أحاديث الصحيحين في هذا الباب ('+ar(S.length-3)+')');more.type='button';more.onclick=()=>{put(3,S.length);more.remove()};g.append(more)}
           body.append(g)}
         XG.forEach(([D,lab,meta,key,more,XC])=>{const g=el('div','sf-grp sah');g.append(el('h4',null,lab));XC.forEach(([k,hs])=>{const ch=D.ch[k];g.append(ttlEl('p','sf-bab',ch.t));hs.forEach(i=>g.append(mgItem(D,i,{clip:260,meta,noBook:1}).w))});const mo=el('button','btn btn-quiet sf-more',more);mo.type='button';mo.onclick=()=>{P.close();fxFad(key)};g.append(mo);body.append(g)});
-        if(H.length){const g=el('div','sf-grp shm');g.append(el('h4',null,'من الشمائل المحمدية'));
+        if(H.length){const g=el('div','sf-grp shm');g.append(el('h4',null,'من مختصر الشمائل المحمدية'));
           H.forEach(h=>{const ok=h.g==='صحيح'||h.g==='حسن';const d=el('div','fx-had'+(ok?'':' weak'));const p=el('p');shFill(p,shTxt(h),h.gs);d.append(p);
             const gs=el('div','fx-gs');gs.append(el('span','gr',gtxt(h.g)));h.x.filter(x=>x&&x.gx).forEach(x=>gs.append(el('span','gr',gtxt(x.gx))));
             gs.append(goBtn(P,'الشمائل، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p),25,h.p));d.append(gs);g.append(d)});body.append(g)}};
@@ -4142,7 +4142,7 @@ async function renderDaily(){const F=await sxFeat();const sec=$('#sxDaily'),C=$(
   const {h,ch}=X;
   C.innerHTML='';C.append(el('p','dy-ch',ch));
   const t=h.x.filter(x=>typeof x==='string').join(' ').replace(/\s+([)\]»])/g,'$1');const q=el('p','dy-t');shFill(q,t,h.gs);C.append(q);
-  const meta=el('div','dy-meta');meta.append(el('span','gr',gtxt(h.g)),el('span','dy-src','الشمائل المحمدية، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p)));C.append(meta);
+  const meta=el('div','dy-meta');meta.append(el('span','gr',gtxt(h.g)),el('span','dy-src','مختصر الشمائل، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p)));C.append(meta);
   const act=el('div','dy-act');
   if(t.length>320){q.classList.add('clip');const m=el('button','btn btn-link','أكمل الحديث');m.type='button';m.onclick=()=>{q.classList.remove('clip');m.remove()};act.append(m)}
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>openPart(25,h.p,null,false,'txt');act.append(go);C.append(act);
@@ -4199,7 +4199,7 @@ const canPush=()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notifi
 async function pushSub(){try{const r=await navigator.serviceWorker.getRegistration();return r?await r.pushManager.getSubscription():null}catch(e){return null}}
 const devTz=()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone||''}catch(e){return ''}};
 // the kinds, their default hours, and their wording
-const NTF=[['sh',6,'حديث من الشمائل كل يوم','حديث من الشمائل المحمدية مع حكمه.'],
+const NTF=[['sh',6,'حديث من الشمائل كل يوم','حديث من مختصر الشمائل المحمدية مع حكمه.'],
   ['mg',7,'حديث من المغازي كل يوم','حديث من كتاب المغازي في صحيح البخاري، على ترتيب الأحداث.'],
   ['si',21,'محطة من السيرة كل يوم','حدث من سيرته <span class="saw">ﷺ</span> على ترتيب وقوعه، من المولد إلى الوفاة، بلفظ مختصر السيرة.'],
   ['kh',22,'من أخبار الخلفاء الراشدين','خبر كل يوم على الترتيب، من حديث السقيفة وبيعة أبي بكر الصديق إلى صلح الحسن بن علي ومعاوية رضي الله عنهم.'],
@@ -4438,7 +4438,7 @@ async function fxHadith(i){const F=await sxFeat();const L=await shList(F);
     const go=el('button','btn btn-quiet','صفته ﷺ في الموقع');go.type='button';go.onclick=()=>{evClose();fxSifa()};ft.append(go);B.append(ft);return}
   const {h,ch}=x;
   const t=h.x.filter(y=>typeof y==='string').join(' ').replace(/\s+([)\]»])/g,'$1');const q=el('p','ev-q');q.textContent=t;B.append(q);
-  const ft=el('div','ev-ft');const m=el('small');m.append(el('span','gr',gtxt(h.g)),document.createTextNode(' الشمائل المحمدية، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p)));ft.append(m);
+  const ft=el('div','ev-ft');const m=el('small');m.append(el('span','gr',gtxt(h.g)),document.createTextNode(' مختصر الشمائل، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p)));ft.append(m);
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(25,h.p,null,false,'txt')};ft.append(go);B.append(ft)}
 // a hadith of Kitab al-Maghazi, in full with its chain
 async function fxMaghazi(i){const M=await getJSON('data/sx_mg.json');const h=M.h[i];if(!h)return;const ev=M.ev[h.ev];const B=evShell(ev.t);
@@ -4780,7 +4780,7 @@ async function fxDal(){const [A,G]=await Promise.all([getJSON('data/sx_alam.json
 
 /* ---------- مواضع الخلاف مع المطبوع: علامات حمراء، وقراءة الصفحات المعلَّمة وحدها ---------- */
 let MK={};getJSON('data/marks.json').then(d=>{MK=d||{};renderMkBooks()}).catch(()=>{});
-const MKGROUPS=[{t:'مختصر سيرة الرسول ﷺ',ns:[17]},{t:'السيرة النبوية لابن هشام',ns:[23,24]},{t:'زاد المعاد',ns:[18,19,20,21,22]},{t:'الشمائل المحمدية',ns:[25]},{t:'كتاب المغازي من صحيح البخاري',ns:[26,27]},{t:'الخلفاء الراشدون من البداية والنهاية',ns:[28,29,30]}];
+const MKGROUPS=[{t:'مختصر سيرة الرسول ﷺ',ns:[17]},{t:'السيرة النبوية لابن هشام',ns:[23,24]},{t:'زاد المعاد',ns:[18,19,20,21,22]},{t:'مختصر الشمائل المحمدية',ns:[25]},{t:'كتاب المغازي من صحيح البخاري',ns:[26,27]},{t:'الخلفاء الراشدون من البداية والنهاية',ns:[28,29,30]}];
 const MKKIND={fix:'صُحّح',mis:'خطأ طباعي',unc:'غير قاطع',q:'آية'};
 function mkPages(ns){const L=[];ns.forEach(n=>Object.keys(MK).filter(k=>+k.split(':')[0]===n).map(k=>+k.split(':')[1]).sort((a,b)=>a-b).forEach(p=>L.push([n,p])));return L}
 function renderMkBooks(){
