@@ -1548,6 +1548,30 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .mg-ev.ix-on{outline:2px solid color-mix(in srgb,var(--brass) 45%,transparent);outline-offset:2px}
 .mg-ev{scroll-margin-top:80px}
 
+/* themed sections (صفته، سلاحه، خصائصه، حقوقه...): every report is one card — its label on top, the text, and its source at the foot — so consecutive reports never run into each other */
+.sf-body .fx-had{border:1px solid var(--line);border-radius:14px;background:var(--raised);padding:12px 14px 10px;margin:12px 0}
+.sf-body .fx-had:first-of-type{border-top:1px solid var(--line)}
+.sf-body .fx-had>p{margin:0;padding:0;background:none;border-radius:0}
+.sf-body .fx-had>.gz-k{display:block;font-size:14px;font-weight:700;color:var(--brass);padding-bottom:7px;margin-bottom:8px;border-bottom:1px dashed var(--line)}
+.sf-body .fx-had>.kh-sr{display:block;border:0;border-top:1px dashed var(--line);border-radius:0;padding:8px 0 0;margin-top:10px;font-size:12.5px;line-height:1.7}
+.sf-body .fx-had .gr{margin-top:8px}
+.sf-grp>h4{display:block;border:0;border-inline-start:3px solid var(--brass);border-radius:0;padding:0 10px;margin:14px 0 4px;font-size:15px;font-weight:700;color:var(--ink)}
+.sf-grp.sah{border-bottom:0}
+/* one card per report, everywhere a list of texts follows each other: label → text → source, so no text runs into the next */
+.mg-h:not(.dy-card .mg-h),.hj-it,.gz-d:has(>.gz-dq){border:1px solid var(--line);border-radius:14px;background:var(--raised);padding:12px 14px 10px;margin:12px 0}
+.mg-h:not(.dy-card .mg-h) .mg-t,.hj-it>.hj-h,.gz-d:has(>.gz-dq)>.gz-dq{margin:0;padding:0;background:none;border-radius:0}
+.mg-h:not(.dy-card .mg-h) .mg-t.clip,.hj-it>.hj-h.clip{max-height:calc(5 * 1.95em)}
+.mg-h:not(.dy-card .mg-h) .dy-meta{border-top:1px dashed var(--line);padding:8px 0 0;margin-top:10px;font-size:12.5px;line-height:1.7}
+.mg-h:not(.dy-card .mg-h) .mg-note{padding:6px 0 0}
+.mg-h:not(.dy-card .mg-h) .dy-act{margin-top:8px}
+.hj-it>.hj-k:not(:empty),.gz-d:has(>.gz-dq)>.gz-k{display:block;font-size:14px;font-weight:700;color:var(--brass);padding-bottom:7px;margin-bottom:8px;border-bottom:1px dashed var(--line)}
+.hj-it>.hj-g{display:block;margin:10px 0 0;padding:8px 0 0;border:0;border-top:1px dashed var(--line);color:var(--muted);border-radius:0;background:none;text-align:start;min-height:0;font-size:12.5px;line-height:1.7}
+.hj-it>.hd-b{margin-top:6px}
+.gz-d:has(>.gz-dq)>.kh-sr{display:block;border:0;border-top:1px dashed var(--line);border-radius:0;padding:8px 0 0;margin-top:10px;font-size:12.5px;line-height:1.7}
+.gz-d:has(>.gz-dq)>.gz-pg,.gz-d:has(>.gz-dq)>button{margin-top:10px}
+.gz-d:has(>.gz-dq)>.gz-dq{color:var(--ink);font-family:var(--text);font-size:17px;line-height:1.95}
+.qa-a .gz-d:has(>.gz-dq)>.gz-dq,.kh-ev .gz-d:has(>.gz-dq)>.gz-dq,.sf-body .gz-d:has(>.gz-dq)>.gz-dq{font-size:19px}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -2069,7 +2093,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-12-1059';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-12-1108';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4747,9 +4771,9 @@ async function fxAhl(){const A=await getJSON('data/sx_ahl.json');const P=fxOpen(
 async function fxHajj(){const S=await getJSON('data/sx_hajj.json');const P=fxOpen('حجة الوداع يوماً بيوم');
   P.inn.append(el('p','fx-lead','حجته صلى الله عليه وسلم من خروجه من المدينة إلى رجوعه، محطةً محطة: ما في الصحيحين أولاً، ومنه حديث جابر الطويل في صحيح مسلم مقسّماً على المحطات، ثم لفظ ابن كثير في «كتاب حجة الوداع» من «البداية والنهاية» وما نقله فيه، ومع كل نص موضعه.'));
   const ol=el('div','hj-list');S.forEach((s,si)=>{ol.append(accCard(s.t,s.d,li=>{
-    if(s.sh&&s.sh.length){li.append(el('p','hj-src',s.sh.some(x=>x.src==='ms')?'من الصحيحين':'من صحيح البخاري'));s.sh.forEach(x=>{if(x.k)li.append(sawEl('span','hj-k',x.k==='كتاب الحج'?'':x.k));const t=el('p','hj-h');hdFill(t,x.x,x.pm);li.append(t);if(x.x.length>420){t.classList.add('clip');const m=el('button','btn btn-link hd-b','أكمل');m.type='button';m.onclick=()=>{t.classList.remove('clip');m.remove()};li.append(m)}
+    if(s.sh&&s.sh.length){li.append(el('p','hj-src',s.sh.some(x=>x.src==='ms')?'من الصحيحين':'من صحيح البخاري'));s.sh.forEach(x=>{const it=el('div','hj-it');if(x.k)it.append(sawEl('span','hj-k',x.k==='كتاب الحج'?'':x.k));const t=el('p','hj-h');hdFill(t,x.x,x.pm);it.append(t);if(x.x.length>420){t.classList.add('clip');const m=el('button','btn btn-link hd-b','أكمل');m.type='button';m.onclick=()=>{t.classList.remove('clip');m.remove()};it.append(m)}
       const lab=x.src==='ms'?'صحيح مسلم، رقم '+ar(+x.no)+' بترقيم عبد الباقي، الطبعة العامرة ج'+ar(x.v)+' ص '+String(x.p).replace(/\d+/g,d=>ar(+d)):'صحيح البخاري، رقم '+ar(+x.no)+(x.n?'':'، الطبعة السلطانية ج'+ar(x.v)+' ص '+x.p.replace(/\d+/g,d=>ar(+d)));
-      if(x.n){const b=el('button','btn btn-quiet hj-g',lab);b.type='button';b.onclick=()=>{P.close();openPart(26,x.p,null,false,'txt')};li.append(b)}else li.append(el('span','hj-g hj-gs',lab))});
+      if(x.n){const b=el('button','btn btn-quiet hj-g',lab);b.type='button';b.onclick=()=>{P.close();openPart(26,x.p,null,false,'txt')};it.append(b)}else it.append(el('span','hj-g hj-gs',lab));li.append(it)});
       li.append(el('p','hj-src','من البداية والنهاية'))}
     s.q.forEach(q=>{const bq=el('blockquote','hj-q');hdFill(bq,'«'+q.x.replace(/\d+/g,d=>ar(+d))+'»',[],goldFor(q.x));li.append(bq);
       const g=el('button','btn btn-quiet hj-g','البداية والنهاية، ج٧، ص '+ar(q.p));g.type='button';g.onclick=()=>{P.close();openPart(35,q.p,[q.x.split(' ').slice(0,4).join(' ')],false,'txt')};li.append(g)})},si===0,'hj-card'))});
