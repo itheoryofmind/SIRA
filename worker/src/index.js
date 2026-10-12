@@ -6,6 +6,7 @@
 // - an event of the Sira, and one of the rightly guided caliphs, each day in order (the site's timeline, in the Mukhtasar's words)
 // - each reader picks which of these, and the hour of each (where the reader is)
 // Web Push: RFC 8291 (aes128gcm) and RFC 8292 (VAPID), with WebCrypto only.
+import { ownerFetch } from './owner.js';
 import H, { DAY0 } from './hadith.js';
 import { SI, KH } from './tl.js';
 import MG from './mg.js';
@@ -196,12 +197,13 @@ async function fanOut(env, jobs) {
 
 async function sendJobs(env, jobs) {
   const r = { tried: 0, sent: 0, removed: 0 };
-  for (const [id, kind] of jobs) {
+  for (const [id, kind, bm] of jobs) {
     const v = await env.PUSH.getWithMetadata(id, 'json');
     if (!v || !v.value) continue;
     const m = norm(v.metadata), tz = okTz(m.tz) ? m.tz : DEF_TZ;
     let msg, si = null;
-    if (['si', 'kh', 'mg'].includes(kind)) { si = curIx(m, kind, tz); msg = si === null ? null : seqMsg(m, kind, si); }
+    if (kind === 'bc') msg = bm;   // the keeper's own notice, the same to everyone
+    else if (['si', 'kh', 'mg'].includes(kind)) { si = curIx(m, kind, tz); msg = si === null ? null : seqMsg(m, kind, si); }
     else msg = kind === 'friday' ? friday() : (kind === 'plan' || kind === 'pl') ? plan(planOf(m.pl) || { t: 0, d: 30 }) : today(tz);
     if (!msg) continue;   // the plan has ended, or the reader's first day has not come yet
     const st = await send(env, v.value, msg).catch(() => 0);
@@ -220,6 +222,7 @@ export default {
   async fetch(req, env) {
     const u = new URL(req.url);
     if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
+    { const o = await ownerFetch(req, env, u, { site: SITE, name: 'سِيرَتُه', page: 1, fanOut, job: (id, msg) => [id, 'bc', msg] }); if (o) return o; }
     if (u.pathname === '/key') return json({ key: (await vapid(env)).pub });
     if (u.pathname === '/health') return json({ ok: true, hadiths: H.length, maghazi: MG.length, sira: SI.length, caliphs: KH.length });
     if (req.method === 'POST' && u.pathname === '/inner/send') {
