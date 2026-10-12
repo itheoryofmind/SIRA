@@ -1563,6 +1563,13 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .gz-d:has(>.gz-dq)>.gz-dq{color:var(--ink);font-family:var(--text);font-size:17px;line-height:1.95}
 .qa-a .gz-d:has(>.gz-dq)>.gz-dq,.kh-ev .gz-d:has(>.gz-dq)>.gz-dq,.sf-body .gz-d:has(>.gz-dq)>.gz-dq{font-size:19px}
 
+/* a missed ordered notification: a small dot, nothing more */
+#sxMenuBtn.has-dot{position:relative}
+#sxMenuBtn.has-dot::after,#navBtn.has-dot::after{content:"";position:absolute;top:5px;inset-inline-end:5px;width:8px;height:8px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 2px var(--ground)}
+.nt-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--brass);margin-inline-start:8px;vertical-align:middle}
+.nt-tip{margin:4px 0 10px;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--brass) 9%,transparent);border:1px solid color-mix(in srgb,var(--brass) 30%,transparent)}
+.nt-tip p{margin:0;font-size:14.5px;line-height:1.8;color:var(--ink);text-align:start}.nt-tip .nt-du{margin-top:4px;color:var(--brass)}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -2084,7 +2091,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-12-1251';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-12-1316';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3545,6 +3552,7 @@ function openNav(){
   it('ابحث في الكتب',()=>{closeNav();window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>$('#q').focus(),350)});
   it('القراءة دون اتصال',()=>{closeNav();fxOffline()});
   it('الإشعارات',()=>{closeNav();fxNotif()});
+  if(typeof NTDOT!=='undefined'&&NTDOT)L.lastChild.append(el('span','nt-dot'));
   grp('الكتب');
   SXBOOKS.filter(b=>b.open).forEach(b=>it(b.t,()=>{closeNav();b.open()}));
   grp('استكشف');
@@ -4471,11 +4479,20 @@ async function fxFriday(){const Q=await getJSON('data/quran.json');const v=Q.a[3
 async function seqPost(p,b){if(!canPush())return null;const s=await pushSub();if(!s)return null;
   const r=await fetch(PUSHU+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint:s.endpoint,...(b||{})})});const j=await r.json();
   if(j&&j.ix&&Number.isInteger(j.ix.mg))LS.set('mgIx',j.ix.mg);return j}
-const seqRead=b=>{seqPost('/read',b).catch(()=>{})};
+const seqRead=b=>{seqPost('/read',b).then(()=>ntDot(1)).catch(()=>{})};
+/* a small dot on the menu button and on «الإشعارات» when an ordered notification came in the last twelve hours and was not opened; no text, no badge on the icon */
+let NTDOT=false,ntDotAt=0;
+let ntTip=0;
+async function ntDot(force){if(!canPush()||Notification.permission!=='granted'||LS.get('ntLearn',0))return;if(!force&&Date.now()-ntDotAt<6e5)return;ntDotAt=Date.now();
+  let j=null;try{const s=await pushSub();if(!s)return;const r=await fetch(PUSHU+'/pending',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint:s.endpoint})});j=await r.json()}catch(e){return}
+  NTDOT=!!(j&&j.w&&j.w.length);['#sxMenuBtn','#navBtn'].forEach(q=>{const b=document.querySelector(q);if(b)b.classList.toggle('has-dot',NTDOT)})}
+// once the reader opens «الإشعارات» while the dot is there, he knows the place: the dot never comes again, and he reads one short word about it
+{const _n=fxNotif;fxNotif=function(){if(NTDOT){ntTip=1;LS.set('ntLearn',1);NTDOT=false;['#sxMenuBtn','#navBtn'].forEach(q=>{const b=document.querySelector(q);if(b)b.classList.remove('has-dot')})}return _n.apply(this,arguments)}}
+setTimeout(ntDot,4000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')ntDot()});
 {const _e=fxTlEv,_m=fxMaghazi;fxTlEv=function(k){seqRead({kind:'ev',id:+k});return _e.apply(this,arguments)};fxMaghazi=function(i){seqRead({kind:'mg',i:+i});return _m.apply(this,arguments)}}
 async function seqPend(){const P=document.getElementById('ntPend');if(!P)return;P.textContent='';let j=null;try{j=await seqPost('/pending')}catch(e){}
   if(!j||!j.p||!Object.keys(j.p).length)return;
-  const N={si:'السيرة',kh:'الخلفاء الراشدون',mg:'المغازي'};const w=el('div','nt-pw');w.append(el('h5',null,'ما فاتك'));
+  const N={si:'السيرة',kh:'الخلفاء الراشدون',mg:'المغازي'};const w=el('div','nt-pw');w.append(el('h5',null,'ما فاتك'));if(ntTip){ntTip=0;const tp=el('div','nt-tip');tp.append(el('p',null,'هذه العلامة تظهر لك مرة واحدة فقط، لتعرف أن ما يفوتك من الإشعارات تجده هنا متى شئت.'),el('p','nt-du','نفعك الله بما تقرأ، ورزقك محبة نبيه صلى الله عليه وسلم واتباع سنته، وحشرك في زمرته.'));w.append(tp)}
   for(const k of ['si','kh','mg']){const L=j.p[k];if(!L)continue;const g=el('div','nt-pg');g.append(el('b',null,N[k]));
     L.slice(-3).reverse().forEach(x=>{const b=el('button','nt-pi'+(x.read?' rd':''));b.type='button';b.append(el('span','nt-pm',x.read?'✓':'●'),el('span',null,x.t));
       b.onclick=()=>{const bk=document.getElementById('ntBack'),S=document.getElementById('ntSheet');if(NTD.dirty&&!confirm('لم تحفظ التغييرات. أتغلق الصفحة دون حفظ؟'))return;bk.hidden=true;S.hidden=true;sxUnlock();k==='mg'?fxMaghazi(x.i):fxTlEv(x.ev)};g.append(b)});

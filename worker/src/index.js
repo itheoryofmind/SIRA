@@ -208,7 +208,7 @@ async function sendJobs(env, jobs) {
     if (!msg) continue;   // the plan has ended, or the reader's first day has not come yet
     const st = await send(env, v.value, msg).catch(() => 0);
     if (si !== null && st >= 200 && st < 300) {   // keep the place, and remember it was sent (to say «not read yet» if it comes again)
-      const md = { ...v.metadata, ix: { ...(m.ix || {}), [kind]: si }, sn: { ...(m.sn || {}), [kind]: si } };
+      const md = { ...v.metadata, ix: { ...(m.ix || {}), [kind]: si }, sn: { ...(m.sn || {}), [kind]: si }, st: { ...(m.st || {}), [kind]: Date.now() } };
       await env.PUSH.put(id, JSON.stringify(v.value), { metadata: md });
     }
     r.tried++;
@@ -274,7 +274,9 @@ export default {
         for (let j = Math.max(0, c - 5); j <= c; j++) { const x = L[j]; r.push({ i: j, t: x[0], ev: k === 'mg' ? null : x[3], read: j < c }); }
         out[k] = r;
       }
-      return json({ ok: true, ix, p: out });
+      // sent, not opened, and sent less than twelve hours ago: the app shows a small dot that leads to it
+      const w = kinds.filter((k) => m.sn && m.sn[k] === ix[k] && m.st && Date.now() - (m.st[k] || 0) < 12 * 36e5);
+      return json({ ok: true, ix, p: out, w });
     }
     if (req.method === 'POST' && (u.pathname === '/sub' || u.pathname === '/unsub')) {
       let body; try { body = await req.json(); } catch (e) { return json({ ok: false }, 400); }
