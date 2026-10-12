@@ -62,7 +62,7 @@ h1{font-size:22px;margin:0 0 4px}.sub{color:var(--muted);font-size:14px;margin:0
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 14px}
 .card h2{font-size:15px;color:var(--brass);margin:0 0 8px;padding-bottom:6px;border-bottom:1px dashed var(--line)}
 label{display:block;font-size:14px;color:var(--muted);margin:10px 0 4px}
-input[type=text],textarea{width:100%;font:inherit;font-size:17px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+input[type=text],input[type=password],textarea{width:100%;font:inherit;font-size:17px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
 textarea{min-height:150px;resize:vertical}
 .sites label{display:flex;align-items:center;gap:10px;color:var(--ink);font-size:16px;margin:6px 0}.sites input{width:22px;height:22px;accent-color:var(--brass)}
 .n{color:var(--muted);font-size:13px}
@@ -76,11 +76,12 @@ button{font:inherit;font-weight:700;border:0;border-radius:14px;padding:13px;wid
 const K='ok',SITES=[['sira','سِيرَتُه','https://push.seeratuh.com'],['durar','الدرر السنية','https://push.dorarnajdiah.com']];
 const ar=n=>new Intl.NumberFormat('ar-SA-u-nu-arab').format(n);
 const m=document.getElementById('m');const E=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
-let key='';try{const h=new URLSearchParams(location.hash.slice(1)).get('k');if(h){localStorage.setItem(K,h);history.replaceState(null,'',location.pathname)}key=localStorage.getItem(K)||''}catch(e){}
+let key='';try{const h=new URLSearchParams(location.hash.slice(1)).get('k');if(h)localStorage.setItem(K,h);key=h||localStorage.getItem(K)||''}catch(e){}
 const call=(base,p,o)=>fetch(base+p,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:key,...(o||{})})}).then(r=>r.json()).catch(()=>({ok:false}));
 (async()=>{
   const c=key?await call(SITES[0][2],'/o/count'):{ok:false};
-  m.textContent='';if(!c.ok){m.append(E('p','sub','هذه الصفحة خاصة.'));return}
+  m.textContent='';if(!c.ok){m.append(E('p','sub','هذه الصفحة خاصة.'));const i=E('input');i.type='password';i.autocomplete='off';i.placeholder='المفتاح';const g=E('button',null,'دخول');g.style.marginTop='10px';
+    g.onclick=()=>{const v=i.value.trim().replace(/^.*#k=/,'');if(!v)return;try{localStorage.setItem(K,v)}catch(e){}location.hash='k='+v;location.reload()};m.append(i,g);return}
   m.append(E('h1',null,'إرسال تنبيه'),E('p','sub','يصل إلى كل جهاز فعّل الإشعارات في الموقع الذي تختاره، ثم ترى هنا كم جهازاً وصل إليه.'));
   const s=E('div','card sites');s.append(E('h2',null,'إلى من'));const box={},nn={};
   for(const [id,nm] of SITES){const l=E('label');const i=E('input');i.type='checkbox';i.checked=id==='sira';box[id]=i;nn[id]=E('span','n','');l.append(i,E('span',null,nm),nn[id]);s.append(l)}
