@@ -17,7 +17,16 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 1 }
+        with:
+          fetch-depth: 1
+          # the page, its data and the search-engine pages only (not the page images, volumes and downloads)
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/img/
+            !/vols/
+            !/book/
+            !/download/
       - id: a
         name: Apply the waiting corrections
         env:
