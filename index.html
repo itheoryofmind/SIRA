@@ -1681,6 +1681,18 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 
 .dsec[data-c=ab],.dsec[data-c=me]{--gc:var(--brass)}
 
+/* caliphate year cards */
+.khc .yc-card{--era:var(--brass)}
+.yc-sec{font-family:var(--display);font-size:19px;font-weight:700;color:var(--brass);margin:22px 2px 8px}
+.yc-card .sf-ch.kh-ac{border-inline-start:3px solid var(--era);border-radius:10px}
+.yc-card .kh-ac .sf-tt b{font-family:var(--display);font-size:19px;color:var(--ink)}
+.yc-card .kh-ac .sf-tt small{color:var(--era)}
+.yc-card .kh-ac.open>.sf-hd{background:color-mix(in srgb,var(--era) 10%,transparent)}
+.yc-card .kh-ac .sf-body{padding:4px 16px 14px}
+.yc-card .kh-rd .kh-rp,.yc-card .kh-rd p{font-family:var(--text);font-size:20px;line-height:1.9;color:var(--read);margin:0 0 .8em}
+.yc-card .kh-rd .kh-rh{font-family:var(--display);font-size:19px;color:var(--brass);margin:14px 0 6px}
+.yc-card .yr-ev .yr-ft .go,.yc-card .kh-ac .yr-ft .go{background:none;border:0;color:var(--brass);font:600 15px var(--ui);padding:6px 0}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -2207,7 +2219,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-16-1541';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-16-1552';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4116,7 +4128,7 @@ async function renderKhul(){const F=await sxFeat();const K=F.khul,G=$('#khGrid')
   K.years.forEach(Y=>{const b=el('button','kh-c'+(Y.c.length>1?' two':'')+(Y.c.includes('mk')?' mx':'')+(Y.y===sel?' sel':''),ar(Y.y));b.type='button';
     const cv=c=>'var(--'+(c==='mk'?'mkk':c)+')';b.style.setProperty('--c1',cv(Y.c[0]));if(Y.c[1])b.style.setProperty('--c2',cv(Y.c[1]));
     if(KHSELC&&!Y.c.includes(KHSELC))b.classList.add('off');
-    b.setAttribute('aria-label','سنة '+ar(Y.y)+' من الهجرة: '+Y.c.map(c=>KHN[c]).join(' ثم '));b.onclick=()=>showKhul(Y.y);G.append(b)})}
+    b.setAttribute('aria-label','سنة '+ar(Y.y)+' من الهجرة: '+Y.c.map(c=>KHN[c]).join(' ثم '));b.onclick=()=>fxKhCards(Y.y);G.append(b)})}
 
 async function khWho(c){const F=await sxFeat();KHSELC=KHSELC===c?null:c;
   [...$('#khKey').children].forEach(k=>{k.classList.toggle('on',k.dataset.c===KHSELC);if(k.tagName==='BUTTON')k.setAttribute('aria-pressed',k.dataset.c===KHSELC)});
@@ -4157,7 +4169,9 @@ async function khRead(n,p,t){const lt=x=>x.replace(/[^ء-ي]/g,'');const S_=docu
   B.append(el('p','ev-era',SXBN(n)),sawEl('h3','ev-t',t));const box=el('div','kh-rd');B.append(box);
   const ft=el('div','ev-ft');ft.append(el('small',null,SXBN(n)+'، ص '+ar(p)));
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(n,p,null,false,'txt')};ft.append(go);B.append(ft);
-  // the chapter whole: from its heading to the next heading, a paragraph broken by a page joined again
+  await khFill(box,n,p,t)}
+// a chapter of al-Bidaya whole: from its heading to the next heading, a paragraph broken by a page joined again
+async function khFill(box,n,p,t){const lt=x=>x.replace(/[^ء-ي]/g,'');
   try{const P=(await getJSON('data/t'+n+'.json')).p;let on=false,txt=0;const L=[];
     out:for(let q=p;q<P.length;q++){const x=P[q];if(!x)continue;
       for(const [ii,y] of x.slice(1).entries()){
@@ -4165,8 +4179,34 @@ async function khRead(n,p,t){const lt=x=>x.replace(/[^ء-ي]/g,'');const S_=docu
           if(!on){if(q===p&&lt(h)===lt(t))on=true;continue}
           if(txt)break out;L.push(['h',h]);continue}
         if(on&&typeof y==='string'){if(ii===0&&(x[0]&1)&&L.length&&L[L.length-1][0]==='p'){L[L.length-1][1]+=' '+y;L[L.length-1][2].push(y)}else L.push(['p',y,[y]]);txt+=y.length}}}
-    L.forEach(([k,v,pts])=>{if(k==='h'){box.append(sawEl('h4','kh-rh',v));return}const e=el('p','kh-rp');const ph=[].concat(...pts.map(z=>goldFor(z)||[]),goldFor(v)||[]);hdFill(e,v.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾'),[],ph.map(w=>w.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾')));box.append(e)});
+    L.forEach(([k,v,pts])=>{if(k==='h'){box.append(sawEl('h4','kh-rh',v));return}const e=el('p','kh-rp');const ph=[].concat(...pts.map(z=>goldFor(z)||[]),goldFor(v)||[]);hdFill(e,v.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾'),[],ph.map(w=>w.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾')));pgMarks(e);box.append(e)});
     if(!box.childElementCount)box.append(el('p','kh-rp','تعذّر عرض هذا الباب هنا، فاقرأه في الكتاب.'))}catch(e){box.append(el('p','kh-rp','تعذّر عرض هذا الباب هنا، فاقرأه في الكتاب.'))}}
+/* the caliphate years as cards, like his years ﷺ: previous / next year, each year's chapters readable in place */
+async function fxKhCards(y){const F=await sxFeat();const K=F.khul;const W=fxOpen('الخلافة الراشدة سنةً سنة');W.ov.classList.add('yc','khc');
+  const box=el('div','yc-card');const nav=el('div','yc-nav');const pv=el('button','yc-b');pv.type='button';const ct=el('span','yc-ct');const nx=el('button','yc-b');nx.type='button';nav.append(pv,ct,nx);W.inn.append(box,nav);
+  const ys=K.years.map(Y=>Y.y);const cv=c=>'var(--'+(c==='mk'?'mkk':c)+')';
+  const show=y=>{const Y=K.years.find(x=>x.y===y);box.innerHTML='';box.style.setProperty('--era',cv(Y.c[0]));
+    const who=Y.c.filter(c=>['ab','um','uth','ali'].includes(c));const P_=[];
+    if(who.length)P_.push('خلافة '+who.map(c=>KHG[c]).join(' ثم ')+(who.length>1?' رضي الله عنهما':' رضي الله عنه'));
+    if(Y.c.includes('has'))P_.push((who.length?'ثم ':'')+'خلافة الحسن بن علي رضي الله عنهما'+(Y.c.includes('mk')?'، وبها كملت الثلاثون، ثم نزل عن الأمر':''));
+    if(Y.c.includes('mk'))P_.push('ثم أول المُلك: معاوية رضي الله عنه');
+    const hd=el('div','yc-hd');const n=el('span','yc-n',ar(y));n.setAttribute('aria-hidden','true');const tt=el('div','yc-tt');tt.append(el('h3',null,'سنة '+ar(y)+' من الهجرة'),el('p','sub',P_.join('، ')));hd.append(n,tt);box.append(hd);
+    const card=(title,body,src,go)=>{const c=el('div','yr-ev');if(title)c.append(el('b',null,title));const w=el('div','yc-txt');const p=el('p');hdFill(p,body,[]);pgMarks(p);w.append(p);c.append(w);
+      const ft=el('span','yr-ft');ft.append(el('small',null,src));const g=el('button','go','اقرأه في الكتاب');g.type='button';g.onclick=()=>{W.close();openPart(go[0],go[1],null,false,'txt')};ft.append(g);c.append(ft);box.append(c)};
+    const q=K.q[y];if(q)card('قال ابن كثير','«'+q.q+'»',pgT(q.n,q.p),[q.n,q.p]);
+    if(Y.x)card('أول ما ذكره ابن كثير في هذه السنة',Y.x,pgT(Y.n,Y.p),[Y.n,Y.p]);
+    box.append(el('p','yc-sec','أبواب السنة في «البداية والنهاية» كاملة، اضغط الباب لتقرأه هنا'));
+    Y.h.forEach(h=>box.append(accCard(h.t,'ص '+ar(h.p),async b=>{const r=el('div','yc-txt kh-rd');b.append(r);await khFill(r,h.n,h.p,h.t);
+      const ft=el('span','yr-ft');ft.append(el('small',null,pgT(h.n,h.p)));const g=el('button','go','اقرأه في الكتاب');g.type='button';g.onclick=()=>{W.close();openPart(h.n,h.p,null,false,'txt')};ft.append(g);b.append(ft)},false,'kh-ac')));
+    box.append(el('p','yr-note','عُدّت الثلاثون كما قال ابن كثير: من وفاته صلى الله عليه وسلم في ربيع الأول سنة ١١ إلى نزول الحسن رضي الله عنه عن الخلافة في ربيع الأول سنة ٤١، فهي تمتد على إحدى وثلاثين سنة هجرية أولاها وآخرتها ناقصتان.'));
+    const i=ys.indexOf(y),p=ys[i-1],nn=ys[i+1];
+    pv.textContent=p?'→ سنة '+ar(p):'';pv.disabled=!p;pv.onclick=()=>p&&show(p);nx.textContent=nn?'سنة '+ar(nn)+' ←':'';nx.disabled=!nn;nx.onclick=()=>nn&&show(nn);
+    ct.textContent=ar(i+1)+' من '+ar(ys.length);W.ov.scrollTop=0;
+    const G=$('#khGrid');if(G){G.dataset.sel=y;[...G.children].forEach((b,j)=>b.classList.toggle('sel',K.years[j].y===y))}};
+  const kd=e=>{if(!W.ov.isConnected){document.removeEventListener('keydown',kd);return}if(e.key==='ArrowLeft')nx.click();else if(e.key==='ArrowRight')pv.click()};document.addEventListener('keydown',kd);
+  let sx=null,sy=0;W.ov.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+  W.ov.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.8)(dx>0?nx:pv).click()},{passive:true});
+  show(y)}
 const goP=(t,n,p)=>{const b=el('button','btn btn-quiet',t);b.type='button';b.style.margin='4px 0 8px';b.onclick=()=>{evClose();openPart(n,p,null,false,'txt')};return b};
 
 // the caliphs' lineages on the Prophet's line, from Ka'b ibn Lu'ayy down; each branch is Ibn Kathir's wording
