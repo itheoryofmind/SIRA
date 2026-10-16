@@ -1586,6 +1586,14 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .cm-p{margin:6px 0;line-height:1.95}
 .cm-pg{margin:8px 0 0;font-size:12.5px;color:var(--muted)}
 
+/* the years as cards */
+.yc .fx-in{padding-bottom:84px}
+.yc-card .yr-ev q{color:var(--ink)}
+.yc-nav{position:fixed;inset-inline:0;bottom:0;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:var(--ground);border-top:1px solid var(--line)}
+.yc-b{min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:12px;background:var(--raised);color:var(--ink);font:600 16px/1.3 var(--text);padding:8px 12px;touch-action:manipulation}
+.yc-b:disabled{visibility:hidden}
+.yc-ct{font-size:14px;color:var(--muted);white-space:nowrap}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -2107,7 +2115,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-16-1430';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-16-1445';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3843,18 +3851,21 @@ async function renderYears(){const F=await sxFeat();const G=$('#yrGrid');if(!G)r
   for(let k=1;k<=64-1;k++){const b=el('button','yr-c '+yrCls(k)+(F.years[k]?' ev':'')+(k===sel?' sel':''));b.type='button';
     b.setAttribute('aria-label','سنة بلغ فيها '+ar(k)+' من عمره'+(F.years[k]?'، أحداثها: '+ar(F.years[k].length):''));
     {const n=el('span','n',ar(k));n.setAttribute('aria-hidden','true');b.append(n)}
-    b.onclick=()=>showYear(k);G.append(b)}}
+    b.onclick=()=>fxYearCards(k);G.append(b)}}
 function yrSub(k){if(k===40)return'قبل البعثة، وفي تمامها بُعث صلى الله عليه وسلم';if(k<40)return'قبل البعثة';if(k===53)return'بمكة: السنة ١٣ من البعثة، وفي تمامها هاجر صلى الله عليه وسلم';if(k<=53)return'بمكة: السنة '+ar(k-40)+' من البعثة';
   if(k===63)return'بالمدينة: السنة العاشرة من الهجرة وأول الحادية عشرة';return'بالمدينة: السنة '+ar(k-53)+' من الهجرة'}
 async function showYear(k){const F=await sxFeat();const G=$('#yrGrid'),P=$('#yrPanel');G.dataset.sel=k;
-  [...G.children].forEach((b,i)=>b.classList.toggle('sel',i+1===k));P.hidden=false;P.innerHTML='';
+  [...G.children].forEach((b,i)=>b.classList.toggle('sel',i+1===k));P.hidden=false;P.innerHTML='';yrFill(P,F,k,false);
+  {const r=P.getBoundingClientRect();if(r.top>innerHeight*0.72)scrollBy({top:r.top-innerHeight*0.62,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}}
+// one year's content; full=true loads each event's whole passage at once (the card reader)
+function yrFill(P,F,k,full,onGo){
   P.append(el('h3',null,k===1?'سنة مولده ﷺ':'عمره ﷺ: '+(k===2?'سنتان':ar(k)+(k<=10?' سنين':' سنة'))),el('p','sub',yrSub(k)));
   const L=F.years[k]||[];
   const YS=(F.ys||{})[k]||[];if(YS.length){const sb=el('div','yr-sah');sb.append(el('p','yr-sh','من الصحيحين'));
     YS.forEach(s=>{const d=el('div','yr-sq');if(s.by)d.append(el('small','yr-by',s.by));const t=el('p');hdFill(t,s.x,[]);d.append(t);
       if(s.go){const b=el('button','gz-pg',s.r);b.type='button';b.onclick=()=>{if(s.go==='sifa')fxSifa();else if(s.go.startsWith('mg:'))fxMgTL(+s.go.slice(3));else fxMgTL()};d.append(b)}else d.append(el('small','yr-by',s.r));sb.append(d)});P.append(sb)}
   if(!L.length&&!YS.length)P.append(el('p','yr-none','لم تذكر كتب الموقع حدثاً نصّت على أنه في هذه السنة.'));
-  L.forEach(it=>{if(it.mk&&!it.q){const d=el('button','yr-mk');d.type='button';d.append(el('span',null,it.t),el('small',null,'ص '+ar(it.p)));d.onclick=()=>openPart(17,it.p,null,false,'txt');P.append(d);return}   // the book's own year mark: a divider, not a quote
+  L.forEach(it=>{if(it.mk&&!it.q){const d=el('button','yr-mk');d.type='button';d.append(el('span',null,it.t),el('small',null,'ص '+ar(it.p)));d.onclick=()=>{onGo&&onGo();openPart(17,it.p,null,false,'txt')};P.append(d);return}   // the book's own year mark: a divider, not a quote
     const n=it.n||17,ih=n===23;
     const b=el('div','yr-ev');const go=el('button','go',n===17?'اقرأه في المختصر':ih?'اقرأه في السيرة':'اقرأه في الكتاب');go.type='button';
     const ft=el('span','yr-ft');ft.append(el('small',null,(n===17?'مختصر السيرة، ص ':ih?'السيرة النبوية لابن هشام، ج١، ص ':SXBN(n)+'، ص ')+ar(it.p)),go);
@@ -3864,10 +3875,25 @@ async function showYear(k){const F=await sxFeat();const G=$('#yrGrid'),P=$('#yrP
     more.onclick=async()=>{more.disabled=true;try{const t=await evFull(it);if(t&&t.length>it.q.replace(/…$/,'').length+20){const nq=quoteW(t,it.w);qv.replaceWith(nq);qv=nq;more.remove()}else{more.remove()}}catch(e){more.disabled=false}};
     if(it.q&&it.q.length>8)b.append(more);
     if(it.az)b.append(el('small','yr-az',it.az));b.append(ft);
-    go.onclick=()=>openPart(n,it.p,it.w?[it.w]:null,false,'txt');P.append(b)});
+    go.onclick=()=>{onGo&&onGo();openPart(n,it.p,it.w?[it.w]:null,false,'txt')};P.append(b);if(full&&it.q&&it.q.length>8)more.click()});
   const n=el('p','yr-note','رقم كل مربع هو ما بلغه صلى الله عليه وسلم من العمر في تلك السنة: بُعث على رأس الأربعين، وهاجر وهو ابن ثلاث وخمسين، فمربعات مكة من ٤١ إلى ٥٣، ومربعات المدينة من ٥٤ إلى ٦٣. وأحداث المدينة على سني الهجرة كما رتّبها المختصر، فمطابقتها بسني العمر تقريبية. وما لم يؤرخه المختصر وُضع على ما ذكره موسى العازمي في «اللؤلؤ المكنون في سيرة النبي المأمون»، لعنايته بتحقيق السيرة. وتوفي صلى الله عليه وسلم وهو ابن ثلاث وستين، كما في صحيح البخاري عن عائشة رضي الله عنها: ');
   const s=el('button','yr-src','صحيح البخاري، كتاب المغازي، ج'+ar(jOf(F.src63.n))+'، ص '+ar(F.src63.p));s.type='button';s.onclick=()=>openPart(F.src63.n,F.src63.p,['ثلاث وستين'],false,'txt');n.append(s);P.append(n);
-  {const r=P.getBoundingClientRect();if(r.top>innerHeight*0.72)scrollBy({top:r.top-innerHeight*0.62,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}}
+}
+/* the years as cards: previous / next go to the nearest year that has events */
+const yrHas=(F,k)=>!!((F.years[k]||[]).length||((F.ys||{})[k]||[]).length);
+async function fxYearCards(k){const F=await sxFeat();const W=fxOpen('سنوات عمره ﷺ');W.ov.classList.add('yc');
+  const box=el('div','yc-card');const nav=el('div','yc-nav');const pv=el('button','yc-b');pv.type='button';const ct=el('span','yc-ct');const nx=el('button','yc-b');nx.type='button';nav.append(pv,ct,nx);W.inn.append(box,nav);
+  const ks=[];for(let i=1;i<=63;i++)if(yrHas(F,i))ks.push(i);
+  const near=(k,d)=>{for(let i=k+d;i>=1&&i<=63;i+=d)if(yrHas(F,i))return i;return 0};
+  const lab=i=>i===1?'سنة مولده':'عمره '+ar(i);
+  const show=k=>{box.innerHTML='';yrFill(box,F,k,true,W.close);const p=near(k,-1),n=near(k,1);
+    pv.textContent=p?'→ '+lab(p):'';pv.disabled=!p;pv.onclick=()=>p&&show(p);nx.textContent=n?lab(n)+' ←':'';nx.disabled=!n;nx.onclick=()=>n&&show(n);
+    const j=ks.indexOf(k);ct.textContent=j>=0?ar(j+1)+' من '+ar(ks.length):'';
+    W.ov.scrollTop=0;const g=$('#yrGrid');if(g){g.dataset.sel=k;[...g.children].forEach((b,i)=>b.classList.toggle('sel',i+1===k))}};
+  const kd=e=>{if(!W.ov.isConnected){document.removeEventListener('keydown',kd);return}if(e.key==='ArrowLeft')nx.click();else if(e.key==='ArrowRight')pv.click()};document.addEventListener('keydown',kd);
+  let sx=null,sy=0;W.ov.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+  W.ov.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.8)(dx>0?nx:pv).click()},{passive:true});
+  show(k)}
 
 /* ---------- reader: your place in his life (Mukhtasar only) ---------- */
 function yrBar(){let w=$('#yrbarW');const R=$('#reader');if(!R)return;
@@ -4569,7 +4595,7 @@ function evRoute(){const h=location.hash;let m;
   else if((m=/^#gz=(\d+)$/.exec(h)))go(()=>fxGz(+m[1]))
   else if((m=/^#kh=(\d+)$/.exec(h)))go(()=>fxKh(+m[1]))
   else if((m=/^#shu=(asma|khadam|silah|kutub|khasais|huquq)$/.exec(h)))go(()=>fxShu(m[1]))
-  else if((m=/^#yr=(\d+)$/.exec(h)))go(async()=>{await showYear(+m[1]);const g=$('#yrGrid');g&&g.scrollIntoView({block:'start'})})}
+  else if((m=/^#yr=(\d+)$/.exec(h)))go(()=>fxYearCards(+m[1]))}
 addEventListener('hashchange',evRoute);evRoute();
 
 /* ---------- الغزوات في سطور: the Mukhtasar's words and figures, and the hadiths of the two Sahihs ---------- */
