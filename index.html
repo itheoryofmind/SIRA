@@ -1720,6 +1720,12 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .jh-sh{font-size:13px;color:var(--muted)}
 .jh-ld{color:var(--muted)}
 
+/* a verse pressed: its mushaf text under it */
+p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:pointer}
+.q-mus{display:block;margin:6px 0 8px;padding:8px 12px;border-radius:8px;background:color-mix(in srgb,var(--verse,var(--palm)) 10%,var(--surface));border-inline-start:3px solid var(--verse,var(--palm))}
+.q-mus .q-mt{display:block;font-family:"UthmanicHafs","Amiri",serif;font-size:1.15em;line-height:2.1;color:var(--verse,var(--palm))}
+.q-mus small{display:block;font-family:var(--ui);font-size:12px;color:var(--muted);margin-top:2px}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -2247,7 +2253,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-16-1741';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-16-1743';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -5000,6 +5006,24 @@ async function fxJihad(key){const M=await getJSON('data/sx_jh.json');const P=fxO
     B.items.forEach(x=>{if(x.k==='h'){flush();cur=x;pre=[]}else if(cur)pre.push(x);else{const d=jhItem(B,x);L.append(d)}});flush()};
   M.books.forEach(b=>{const o=el('button','btn btn-link hd-b',b.name);o.type='button';o.dataset.k=b.key;o.onclick=()=>show(b.key);sw.append(o)});
   show(key&&M.books.some(b=>b.key===key)?key:'bukhari')}
+
+/* a verse as the book has it; pressed, its text from the Madinah mushaf (Hafs), fully vocalised, shows under it */
+let QDATA=null;
+const qName=s=>s.replace(/[ًٌٍَُِّْ]/g,'').replace(/[إأآ]/g,'ا').replace(/^سورة\s+/,'').trim();
+document.addEventListener('click',async e=>{const v=e.target.closest&&e.target.closest('.hd-v');if(!v)return;const inHead=!!v.closest('button');
+  const nx=v.nextSibling;const after=nx&&nx.nodeType===3?nx.data:(nx&&nx.textContent)||'';
+  const m=/^\s*\[([^\]:]+):\s*(\d+)(?:\s*[-–]\s*(\d+))?\]/.exec(after);if(!m)return;
+  if(!inHead&&v._box&&v._box.isConnected){v._box.remove();v._box=null;return}
+  try{QDATA=QDATA||await getJSON('data/quran.json')}catch(_){return}
+  const si=QDATA.n.findIndex(n=>qName(n)===qName(m[1]));if(si<0)return;
+  const a1=+m[2],a2=+(m[3]||m[2]);const ay=QDATA.a[si];if(!ay||!ay[a1-1])return;
+  const box=el('span','q-mus');v._box=box;
+  box.append(el('span','q-mt',ay.slice(a1-1,a2).join(' ')),el('small',null,'سورة '+QDATA.n[si]+'، '+(a2>a1?'الآيات '+ar(a1)+'–'+ar(a2):'الآية '+ar(a1))+'، من مصحف المدينة النبوية، رواية حفص'));
+  if(inHead){   // a verse in a chapter title: its mushaf text opens at the top of the chapter
+    const card=v.closest('.sf-ch,.mg-ev');const body=card&&card.querySelector('.sf-body,.mg-body');if(!body)return;
+    const k='q'+si+'-'+a1+'-'+a2;if(body.querySelector('.q-mus[data-k="'+k+'"]'))return;box.dataset.k=k;v._box=null;
+    setTimeout(()=>body.prepend(box),0);return}
+  if(nx&&nx.nodeType===3){if(nx.data.length>m[0].length)nx.splitText(m[0].length);nx.after(box)}else v.after(box)});
 
 /* ---------- مواضع الخلاف مع المطبوع: علامات حمراء، وقراءة الصفحات المعلَّمة وحدها ---------- */
 let MK={};getJSON('data/marks.json').then(d=>{MK=d||{};renderMkBooks()}).catch(()=>{});
