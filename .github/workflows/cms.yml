@@ -1,0 +1,40 @@
+name: لوحة المحتوى
+# every few minutes: the corrections the keeper saved on push.seeratuh.com/c are written into the site and published
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch: {}
+permissions:
+  contents: write
+  pages: write
+concurrency:
+  group: cms
+  cancel-in-progress: false
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 1 }
+      - id: a
+        name: Apply the waiting corrections
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: python3 .github/cms/apply.py
+      - name: Publish the site
+        if: steps.a.outputs.pushed == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: curl -sS -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/${{ github.repository }}/pages/builds" || true
+      # GitHub stops a schedule after sixty days with no change in the repository; a quiet line here keeps it running
+      - name: Keep the schedule alive
+        if: steps.a.outputs.pushed != '1'
+        run: |
+          last=$(git log -1 --format=%ct)
+          if [ $(( $(date +%s) - last )) -gt $((45*86400)) ]; then
+            date -u +%F > .github/cms/alive
+            git add .github/cms/alive
+            git -c user.name="لوحة المحتوى" -c user.email=cms@seeratuh.com commit -qm "لوحة المحتوى: إبقاء الجدولة"
+            git push -q origin HEAD
+          fi

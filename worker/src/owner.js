@@ -5,7 +5,7 @@ export const OWNER_H = 'a1cb1d5fd3785c36ee881003acbe3710c8bcde4058a777fb0ceed768
 const PAGE_ORIGIN = 'https://push.seeratuh.com';
 const enc = new TextEncoder();
 const hex = (b) => [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, '0')).join('');
-async function isOwner(k) {
+export async function isOwner(k) {
   if (typeof k !== 'string' || k.length < 30 || k.length > 100) return false;
   const h = hex(await crypto.subtle.digest('SHA-256', enc.encode(k)));
   let d = 0; for (let i = 0; i < h.length; i++) d |= h.charCodeAt(i) ^ OWNER_H.charCodeAt(i);
@@ -85,7 +85,7 @@ const call=(base,p,o)=>fetch(base+p,{method:'POST',headers:{'Content-Type':'text
   const c=key?await call(SITES[0][2],'/o/count'):{ok:false};
   m.textContent='';if(!c.ok){m.append(E('p','sub','هذه الصفحة خاصة.'));const i=E('input');i.type='password';i.autocomplete='off';i.placeholder='المفتاح';const g=E('button',null,'دخول');g.style.marginTop='10px';
     g.onclick=()=>{const v=i.value.trim().replace(/^.*#k=/,'');if(!v)return;try{localStorage.setItem(K,v)}catch(e){}location.hash='k='+v;location.reload()};m.append(i,g);return}
-  m.append(E('h1',null,'إرسال تنبيه'),E('p','sub','يصل إلى كل جهاز فعّل الإشعارات في الموقع الذي تختاره، ثم ترى هنا كم جهازاً وصل إليه.'));
+  {const tp=E('div');tp.style.cssText='display:flex;justify-content:space-between;align-items:baseline';tp.append(E('h1',null,'إرسال تنبيه'));const ln=E('a',null,'لوحة المحتوى ←');ln.href='/c';ln.style.cssText='color:var(--brass);font-size:14px;text-decoration:none';tp.append(ln);m.append(tp)}m.append(E('p','sub','يصل إلى كل جهاز فعّل الإشعارات في الموقع الذي تختاره، ثم ترى هنا كم جهازاً وصل إليه.'));
   const s=E('div','card sites');s.append(E('h2',null,'إلى من'));const box={},nn={};
   for(const [id,nm] of SITES){const l=E('label');const i=E('input');i.type='checkbox';i.checked=id==='sira';box[id]=i;nn[id]=E('span','n','');l.append(i,E('span',null,nm),nn[id]);s.append(l)}
   const st=E('div','card');st.append(E('h2',null,'الأرقام'));const row=(nm,j)=>{const d=E('div','st');d.append(E('b',null,nm));
