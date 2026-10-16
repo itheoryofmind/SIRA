@@ -1594,6 +1594,48 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .yc-b:disabled{visibility:hidden}
 .yc-ct{font-size:14px;color:var(--muted);white-space:nowrap}
 
+/* ===== reading the years as cards: one big numeral per year in its era's colour, warm reading ink, the book's own paragraphs ===== */
+:root{--read:#22302A;--era:var(--brass)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=white]):not([data-theme=brown]){--read:#E6DDC8}}
+:root[data-theme=night]{--read:#DCD3BE}
+.yc-card[data-era=pre]{--era:var(--brass)}.yc-card[data-era=mk]{--era:var(--makkah)}.yc-card[data-era=md]{--era:var(--madinah)}
+.yc-hd{display:flex;align-items:center;gap:16px;margin:4px 0 14px;padding-bottom:12px;border-bottom:2px solid color-mix(in srgb,var(--era) 45%,transparent)}
+.yc-n{font-family:var(--display);font-weight:700;font-size:72px;line-height:1;color:var(--era);min-width:64px;text-align:center}
+.yc-tt h3{font-family:var(--display);font-size:26px;margin:0;line-height:1.35;color:var(--ink)}
+.yc-tt .sub{margin:2px 0 0;font-size:14.5px;color:var(--era);font-weight:600}
+.yc-card .yr-ev{background:var(--surface)!important;border:1px solid var(--line)!important;border-inline-start:4px solid var(--era)!important;border-radius:12px;padding:16px 18px!important;margin-top:14px}
+.yc-card .yr-ev>b{font-family:var(--display);font-size:23px;font-weight:700;color:var(--brass);line-height:1.45;margin-bottom:8px}
+.yc-card .yr-ev q,.yc-txt p{font-family:var(--text);font-size:20.5px;line-height:1.9;color:var(--read)}
+.yc-txt p{margin:0 0 .8em}
+.yc-txt p:last-child{margin-bottom:0}
+.yc-txt q{display:inline;color:inherit;font:inherit}.yc-txt q::before,.yc-txt q::after{content:none}
+.yc-pg{font-size:.62em;color:var(--muted);vertical-align:.35em;font-family:var(--ui);padding:0 1px}
+.yc-card .yr-ev .yr-ft{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+.yc-card .yr-ev .yr-ft small{color:var(--muted);font-size:13px}
+.yc-card .yr-ev .yr-az{color:var(--muted)}
+.yc-card .yr-sah{border-inline-start:4px solid var(--gold);background:var(--surface);border-radius:16px;padding:12px 16px;margin-top:14px}
+.yc-card .yr-sah p{font-family:var(--text);font-size:20px;line-height:2;color:var(--read)}
+.yc-card .yr-note{font-size:13px;line-height:1.8;color:var(--muted);margin-top:22px;opacity:.85}
+.yc-card .yr-none{font-size:18px;text-align:center;padding:28px 8px}
+.yc-nav{box-shadow:0 -6px 18px rgba(0,0,0,.18)}
+.yc-b{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 40%,var(--line))}
+
+/* ===== side menu: each group a panel in its own colour ===== */
+.dlist{padding:6px 12px 18px}
+.dsec{--gc:var(--muted);margin-top:16px}
+:root{--plum:#6A4C7D}
+@media (prefers-color-scheme:dark){:root:not([data-theme=white]):not([data-theme=brown]){--plum:#B9A0CC}}
+:root[data-theme=night]{--plum:#A78FBA}
+.dsec[data-c=rd]{--gc:var(--brass)}.dsec[data-c=bk]{--gc:var(--palm)}.dsec[data-c=sr]{--gc:var(--makkah)}.dsec[data-c=sh]{--gc:var(--clay)}.dsec[data-c=sn]{--gc:var(--plum)}
+.dsec:not(:has(.dpan button)){display:none}
+.dlist .dgrp{display:flex;align-items:center;gap:8px;margin:0 6px 8px;padding:0;font-family:var(--display);font-size:19px;font-weight:700;color:var(--gc)}
+.dlist .dgrp::before{content:"";width:9px;height:9px;background:var(--gc);transform:rotate(45deg);border-radius:1px;flex:none}
+.dpan{background:var(--surface);border:1px solid var(--line);border-inline-start:3px solid var(--gc);border-radius:14px;overflow:hidden}
+.dlist .dpan button{position:relative;display:block;width:100%;text-align:start;border:0;border-top:1px solid var(--line);background:none;color:var(--ink);font-family:var(--ui);font-size:16.5px;line-height:1.5;padding:12px 16px;min-height:48px}
+.dlist .dpan button:first-child{border-top:0}
+.dlist .dpan button:active{background:color-mix(in srgb,var(--gc) 14%,transparent)}
+.dlist .dpan button:focus-visible{outline:2px solid var(--gc);outline-offset:-2px}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -2115,7 +2157,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-16-1445';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-16-1500';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3570,53 +3612,56 @@ function goSec(id){closeNav();const e=$('#'+id);if(e&&!e.hidden)e.scrollIntoView
 function closeNav(){$('#nav').hidden=true;$('#navBack').hidden=true}
 function openNav(){
   const L=$('#navList');L.innerHTML='';
-  const grp=t=>L.append(el('div','dgrp',t));
-  const it=(t,f,show=true)=>{if(!show)return;const b=el('button',null,t);b.type='button';b.onclick=f;L.append(b)};
-  grp('القراءة');
+  // each group is its own panel with its own colour, so the eye finds a group before reading its items
+  let G=L;const grp=(t,c)=>{const w=el('section','dsec');w.dataset.c=c||'q';const h=el('h3','dgrp',t);w.append(h);G=el('div','dpan');w.append(G);L.append(w)};
+  const it=(t,f,show=true)=>{if(!show)return;const b=el('button',null,t);b.type='button';b.onclick=f;G.append(b)};
+  grp('القراءة','rd');
   it($('#contT').textContent,()=>{closeNav();$('#continue').click()});
   it('ابحث في الكتب',()=>{closeNav();window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>$('#q').focus(),350)});
   it('القراءة دون اتصال',()=>{closeNav();fxOffline()});
   it('الإشعارات',()=>{closeNav();fxNotif()});
-  if(typeof NTDOT!=='undefined'&&NTDOT)L.lastChild.append(el('span','nt-dot'));
-  grp('الكتب');
+  if(typeof NTDOT!=='undefined'&&NTDOT)G.lastChild.append(el('span','nt-dot'));
+  grp('الكتب','bk');
   SXBOOKS.filter(b=>b.open).forEach(b=>it(b.t,()=>{closeNav();b.open()}));
-  grp('استكشف');
+  grp('سيرته وأحداثها','sr');
   it('الخط الزمني للسيرة',()=>{closeNav();openSX('tl')});
   it('السيرة في صحيح البخاري',()=>{closeNav();fxFad('sir')});
   it('المغازي في الصحيحين',()=>{closeNav();fxMgTL()});
   it('الغزوات في سطور',()=>{closeNav();fxGz()});
+  it('حجة الوداع يوماً بيوم',()=>{closeNav();fxHajj()});
+  it('مرضه ووفاته ووصاياه ﷺ',()=>{closeNav();fxFad('wafat')});
   it('أحداث الخلافة الراشدة',()=>{closeNav();fxKh()});
   it('مسائل في السيرة',()=>{closeNav();fxQa()});
+  it('شجرة النسب الشريف وآل عبد المطلب والخلفاء',()=>{closeNav();openSX('nasab')});
+  grp('شمائله وأحواله ﷺ','sh');
   it('أهل بيته ﷺ',()=>{closeNav();fxAhl()});
   it('أسماؤه ﷺ',()=>{closeNav();fxShu('asma')});
+  it('من خصائصه ﷺ',()=>{closeNav();fxShu('khasais')});
+  it('من حقوقه ﷺ',()=>{closeNav();fxShu('huquq')});
+  it('دلائل النبوة',()=>{closeNav();fxDal()});
+  it('هديه ﷺ',()=>{closeNav();fxHady()});
   it('مواليه وخدمه وكتّابه',()=>{closeNav();fxShu('khadam')});
   it('سلاحه ودوابه ولباسه',()=>{closeNav();fxShu('silah')});
   it('كتبه إلى الملوك',()=>{closeNav();fxShu('kutub')});
-  it('من خصائصه ﷺ',()=>{closeNav();fxShu('khasais')});
-  it('من حقوقه ﷺ',()=>{closeNav();fxShu('huquq')});
-  it('خطبه ﷺ',()=>{closeNav();fxFad('khutab')});
-  it('وصاياه لأصحابه ﷺ',()=>{closeNav();fxFad('wasaya')});
-  it('مرضه ووفاته ووصاياه ﷺ',()=>{closeNav();fxFad('wafat')});
-  it('هديه ﷺ',()=>{closeNav();fxHady()});
+  grp('من سنته في الصحيحين','sn');
+  it('التوحيد والعقيدة في الصحيحين',()=>{closeNav();fxFad('aq')});
   it('صفة صلاته ﷺ',()=>{closeNav();fxFad('sal')});
   it('صيامه وقيامه واعتكافه ﷺ',()=>{closeNav();fxFad('saw')});
+  it('أدعيته وأذكاره ﷺ',()=>{closeNav();fxFad('daw')});
+  it('خطبه ﷺ',()=>{closeNav();fxFad('khutab')});
+  it('وصاياه لأصحابه ﷺ',()=>{closeNav();fxFad('wasaya')});
   it('تعليمه أصحابه ﷺ',()=>{closeNav();fxFad('ilm')});
   it('كتاب الأدب من صحيح البخاري',()=>{closeNav();fxFad('adb')});
+  it('الأطعمة والأشربة والطب واللباس',()=>{closeNav();fxFad('lbs')});
   it('كتاب المناقب من صحيح البخاري',()=>{closeNav();fxFad('mnq')});
   it('كتاب الفضائل من صحيح مسلم',()=>{closeNav();fxFad('mfad')});
-  it('الأطعمة والأشربة والطب واللباس',()=>{closeNav();fxFad('lbs')});
-  it('أدعيته وأذكاره ﷺ',()=>{closeNav();fxFad('daw')});
-  it('التوحيد والعقيدة في الصحيحين',()=>{closeNav();fxFad('aq')});
   it('فضائل أصحاب النبي ﷺ',()=>{closeNav();fxFad()});
   it('مناقب الأنصار',()=>{closeNav();fxFad('ans')});
-  it('حجة الوداع يوماً بيوم',()=>{closeNav();fxHajj()});
-  it('دلائل النبوة',()=>{closeNav();fxDal()});
-  it('شجرة النسب الشريف وآل عبد المطلب والخلفاء',()=>{closeNav();openSX('nasab')});
-  grp('عن الموقع');
+  grp('عن الموقع','ab');
   it('منهج الموقع ومواضع الخلاف مع المطبوع',()=>{closeNav();fxMethod()});
   it('أرسل ملاحظة',()=>{closeNav();openFb('notes')});
   it('شارك الموقع',()=>{closeNav();fxShare()});
-  grp('ملاحظاتي');
+  grp('ملاحظاتي','me');
   it('المفضلة والتعليقات',()=>goSec('favSec'),!$('#favSec').hidden);
   it('تظليلاتي',()=>goSec('hlSec'),!$('#hlSec').hidden);
   it('بياناتك (نسخة احتياطية)',()=>{closeNav();fxData()});
@@ -3830,7 +3875,7 @@ function accCard(title,sub,fill,open,cls){const card=el('section','sf-ch'+(cls?'
 function qPanel(t,pm){const q=el('blockquote','qp');hdFill(q,t,pm||[]);return q}
 /* a quote with the dating words marked */
 // an event's passage from its first words to the book's next heading (at most about 1600 letters, ending at a full stop)
-async function evFull(it){const n=it.n||17,T=await getJSON('data/t'+n+'.json');const P=T.p;
+async function evFull(it,arr){const n=it.n||17,T=await getJSON('data/t'+n+'.json');const P=T.p;
   // the passage from the quoted words to the book's next heading, unshortened
   const nz=t=>{let o='';for(let i=0;i<t.length;i++)if(/[\u0621-\u064A]/.test(t[i]))o+=t[i];return o};
   const key=nz(it.q.replace(/…$/,'')).slice(0,22);if(key.length<8)return '';
@@ -3840,7 +3885,7 @@ async function evFull(it){const n=it.n||17,T=await getJSON('data/t'+n+'.json');c
   const a=k;
   const out=[];let prevP=-1;for(let q=a;q<S.length;q++){const [p,y0]=S[q];if(hd(y0))break;if(typeof y0!=='string')continue;const y=q===a?y0.slice(Math.max(0,idxOf(y0,key))):y0;
     if(out.length&&p!==prevP&&!/[.!؟?»"]\s*$/.test(out[out.length-1]))out[out.length-1]+=' '+y;else out.push(y);prevP=p}
-  return out.map(trimFull).join(' ')}
+  return arr?out.map(trimFull):out.map(trimFull).join(' ')}
 function idxOf(y,key){let o='',m=[];for(let i=0;i<y.length;i++)if(/[\u0621-\u064A]/.test(y[i])){o+=y[i];m.push(i)}const i=o.indexOf(key);return i<0?0:m[i]}
 function trimFull(t){return t.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').replace(/\s+/g,' ').trim()}
 function quoteW(q,w,ph){const e=el('q');if(ph&&ph.length){hdFill(e,q,[],ph);if(e.querySelector('.hd-m'))return e}const i=w?q.indexOf(w):-1;if(i<0){e.textContent=q;return e}
@@ -3857,9 +3902,14 @@ function yrSub(k){if(k===40)return'قبل البعثة، وفي تمامها ب�
 async function showYear(k){const F=await sxFeat();const G=$('#yrGrid'),P=$('#yrPanel');G.dataset.sel=k;
   [...G.children].forEach((b,i)=>b.classList.toggle('sel',i+1===k));P.hidden=false;P.innerHTML='';yrFill(P,F,k,false);
   {const r=P.getBoundingClientRect();if(r.top>innerHeight*0.72)scrollBy({top:r.top-innerHeight*0.62,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}}
+// page numbers the book prints inside the text, e.g. [9], set small so they don't break the reading
+function pgMarks(p){const tw=document.createTreeWalker(p,NodeFilter.SHOW_TEXT);const ns=[];while(tw.nextNode())ns.push(tw.currentNode);
+  ns.forEach(n=>{if(!/\[\d+\]/.test(n.data))return;const f=document.createDocumentFragment();n.data.split(/(\[\d+\])/).forEach(x=>{if(/^\[\d+\]$/.test(x))f.append(el('span','yc-pg',x));else if(x)f.append(document.createTextNode(x))});n.replaceWith(f)})}
 // one year's content; full=true loads each event's whole passage at once (the card reader)
 function yrFill(P,F,k,full,onGo){
-  P.append(el('h3',null,k===1?'سنة مولده ﷺ':'عمره ﷺ: '+(k===2?'سنتان':ar(k)+(k<=10?' سنين':' سنة'))),el('p','sub',yrSub(k)));
+  if(full){P.dataset.era=yrCls(k)||'pre';const hd=el('div','yc-hd');const n=el('span','yc-n',ar(k));n.setAttribute('aria-hidden','true');
+    const tt=el('div','yc-tt');tt.append(el('h3',null,k===1?'سنة مولده ﷺ':(k===2?'سنتان':(k<=10?'سنين':'سنة'))+' من عمره ﷺ'),el('p','sub',yrSub(k)));hd.append(n,tt);P.append(hd)}
+  else P.append(el('h3',null,k===1?'سنة مولده ﷺ':'عمره ﷺ: '+(k===2?'سنتان':ar(k)+(k<=10?' سنين':' سنة'))),el('p','sub',yrSub(k)));
   const L=F.years[k]||[];
   const YS=(F.ys||{})[k]||[];if(YS.length){const sb=el('div','yr-sah');sb.append(el('p','yr-sh','من الصحيحين'));
     YS.forEach(s=>{const d=el('div','yr-sq');if(s.by)d.append(el('small','yr-by',s.by));const t=el('p');hdFill(t,s.x,[]);d.append(t);
@@ -3875,7 +3925,7 @@ function yrFill(P,F,k,full,onGo){
     more.onclick=async()=>{more.disabled=true;try{const t=await evFull(it);if(t&&t.length>it.q.replace(/…$/,'').length+20){const nq=quoteW(t,it.w);qv.replaceWith(nq);qv=nq;more.remove()}else{more.remove()}}catch(e){more.disabled=false}};
     if(it.q&&it.q.length>8)b.append(more);
     if(it.az)b.append(el('small','yr-az',it.az));b.append(ft);
-    go.onclick=()=>{onGo&&onGo();openPart(n,it.p,it.w?[it.w]:null,false,'txt')};P.append(b);if(full&&it.q&&it.q.length>8)more.click()});
+    go.onclick=()=>{onGo&&onGo();openPart(n,it.p,it.w?[it.w]:null,false,'txt')};P.append(b);if(full&&it.q&&it.q.length>8){more.hidden=true;evFull(it,1).then(ps=>{if(!ps||!ps.length||ps.join(' ').length<=it.q.replace(/…$/,'').length+20){more.remove();return}const w=el('div','yc-txt');let mk=false;ps.forEach(t=>{let p;if(!mk&&it.w&&t.includes(it.w)){p=el('p');p.append(quoteW(t,it.w));mk=true}else{p=el('p');hdFill(p,t,[])}pgMarks(p);w.append(p)});qv.replaceWith(w);qv=w;more.remove()}).catch(()=>{more.hidden=false})}});
   const n=el('p','yr-note','رقم كل مربع هو ما بلغه صلى الله عليه وسلم من العمر في تلك السنة: بُعث على رأس الأربعين، وهاجر وهو ابن ثلاث وخمسين، فمربعات مكة من ٤١ إلى ٥٣، ومربعات المدينة من ٥٤ إلى ٦٣. وأحداث المدينة على سني الهجرة كما رتّبها المختصر، فمطابقتها بسني العمر تقريبية. وما لم يؤرخه المختصر وُضع على ما ذكره موسى العازمي في «اللؤلؤ المكنون في سيرة النبي المأمون»، لعنايته بتحقيق السيرة. وتوفي صلى الله عليه وسلم وهو ابن ثلاث وستين، كما في صحيح البخاري عن عائشة رضي الله عنها: ');
   const s=el('button','yr-src','صحيح البخاري، كتاب المغازي، ج'+ar(jOf(F.src63.n))+'، ص '+ar(F.src63.p));s.type='button';s.onclick=()=>openPart(F.src63.n,F.src63.p,['ثلاث وستين'],false,'txt');n.append(s);P.append(n);
 }
