@@ -2219,7 +2219,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-16-1552';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-16-1705';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3683,10 +3683,10 @@ function openNav(){
   it('القراءة دون اتصال',()=>{closeNav();fxOffline()});
   it('الإشعارات',()=>{closeNav();fxNotif()});
   if(typeof NTDOT!=='undefined'&&NTDOT)G.lastChild.append(el('span','nt-dot'));
-  grp('الكتب','bk');
-  SXBOOKS.filter(b=>b.open).forEach(b=>it(b.t,()=>{closeNav();b.open()}));
   // the site's sections, in the same groups, order and colours as the home page tiles; each opens exactly what its tile opens
   document.querySelectorAll('.ex>*').forEach(e=>{if(e.classList.contains('exg')){grp(e.textContent.trim(),e.dataset.g)}else if(e.tagName==='BUTTON'){const b=e.querySelector('b');it(b?b.textContent.trim():e.textContent.trim(),()=>{closeNav();CURG=e.dataset.g;CURGT=Date.now();e.click()})}});
+  grp('الكتب','bk');
+  SXBOOKS.filter(b=>b.open).forEach(b=>it(b.t,()=>{closeNav();b.open()}));
   grp('عن الموقع','ab');
   it('منهج الموقع ومواضع الخلاف مع المطبوع',()=>{closeNav();fxMethod()});
   it('أرسل ملاحظة',()=>{closeNav();openFb('notes')});
