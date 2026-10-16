@@ -65,11 +65,17 @@ async function encrypt(sub, payload) {
   return cat(salt, rs, new Uint8Array([asPub.length]), asPub, ct);
 }
 
+// a notification carries the whole text; when the whole text does not fit one notification, it carries a pointer to it instead (never a part of it)
+const fitMsg = (msg) => {
+  const s = JSON.stringify(msg);
+  if (enc.encode(s).length <= 3800) return s;
+  return JSON.stringify(Object.assign({}, msg, { b: 'النص أطول مما يتسع له الإشعار، فاضغط لتقرأه كاملاً في الموقع.' }));
+};
 async function send(env, sub, msg) {
   const r = await fetch(sub.endpoint, {
     method: 'POST',
     headers: { 'TTL': '86400', 'Urgency': 'normal', 'Content-Encoding': 'aes128gcm', 'Content-Type': 'application/octet-stream', 'Authorization': await vapidHeader(env, sub.endpoint) },
-    body: await encrypt(sub, JSON.stringify(msg)),
+    body: await encrypt(sub, fitMsg(msg)),
   });
   return r.status;
 }

@@ -2100,7 +2100,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-16-0929';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-16-1002';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2218,19 +2218,19 @@ const volCache=()=>caches.open('sira-vols-v1'), dataCache=()=>caches.open('sira-
 async function isSaved(n){if(!hasCaches)return false;try{return !!(await (await volCache()).match(volKey(n)))}catch(e){return false}}
 async function saveVol(n,onp){
   if(!hasCaches)throw new Error('no-cache');
-  if(VOLS[n].ni){await textOf(n);await quran().catch(()=>{});await saadi().catch(()=>{});await (await volCache()).put(volKey(n),new Response('text'));return}   // text only: nothing to download but the text
+  if(VOLS[n].ni){await textOf(n);await quran().catch(()=>{});await (await volCache()).put(volKey(n),new Response('text'));return}   // text only: nothing to download but the text
   if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
   const r=await fetch('vols/'+n+'.pdf'+vq(n),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);
   const total=+r.headers.get('content-length')||0,rd=r.body.getReader(),parts=[];let got=0;
   for(;;){const {done,value}=await rd.read();if(done)break;parts.push(value);got+=value.length;if(onp&&total)onp(got/total)}
   await (await volCache()).put(volKey(n),new Response(new Blob(parts,{type:'application/pdf'})));
-  if(n){await textOf(n).catch(()=>{});await quran().catch(()=>{});await saadi().catch(()=>{})}   // the verses cited in the part, and their tafsir, open offline too
+  if(n){await textOf(n).catch(()=>{});await quran().catch(()=>{})}   // the verses cited in the part, and their tafsir, open offline too
 }
 async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(n))}
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "2b9f8b0fe0", "data/quran.json": "3b7af2ab79", "data/qv.json": "7b60653830", "data/sira_x.json": "ec410296f9", "data/sx_ahl.json": "d79f3b8a50", "data/sx_alam.json": "ca08eb1602", "data/sx_badab.json": "eddcd84ec9", "data/sx_bans.json": "cecd319e7a", "data/sx_bdaw.json": "2a1b5ec65c", "data/sx_bfad.json": "bccac42523", "data/sx_bilm.json": "6c1d5ccfb9", "data/sx_bmnq.json": "d1c643ad83", "data/sx_bsal.json": "d524018e2e", "data/sx_bsaw.json": "0a351cdaa2", "data/sx_bsif.json": "35b1c4acba", "data/sx_bsir.json": "ce73f2406b", "data/sx_dal.json": "8dab7b0190", "data/sx_feat.json": "41e4d49a69", "data/sx_gold.json": "2bbba2a016", "data/sx_gz.json": "5fa5782022", "data/sx_hady.json": "30c9c7c9f0", "data/sx_hajj.json": "15c3efb0ee", "data/sx_hjr.json": "1560a6d13c", "data/sx_hjrb.json": "4d54ad1b2c", "data/sx_kh.json": "75829d62b8", "data/sx_khn.json": "8196fb815a", "data/sx_khutab.json": "9f4b90c0e9", "data/sx_mfad.json": "1900f7d7ed", "data/sx_mg.json": "a9da8977e8", "data/sx_msal.json": "06fb240c61", "data/sx_msaw.json": "6f8ad9ae97", "data/sx_msh.json": "c7ad582fea", "data/sx_msif.json": "9e04bf9e8e", "data/sx_nuzul.json": "d791220b3d", "data/sx_qa.json": "c8326dd6b9", "data/sx_shs.json": "a93997ab61", "data/sx_shu.json": "103e62fc65", "data/sx_wafat.json": "482be035e9", "data/sx_wasaya.json": "6d468cded7", "data/t17.json": "86c024b72e", "data/t18.json": "eac1d30d9f", "data/t19.json": "6de8758823", "data/t20.json": "7e5e3238ba", "data/t21.json": "3490cdd076", "data/t22.json": "dce445d532", "data/t23.json": "09ee9bc255", "data/t24.json": "769913f1a6", "data/t25.json": "0aa32a3d51", "data/t26.json": "982bb6cb57", "data/t27.json": "651931d6ea", "data/t28.json": "0538698377", "data/t29.json": "925c6db4d9", "data/t30.json": "f564991943", "data/t31.json": "b58d19f797", "data/t32.json": "b7ffea3f14", "data/t33.json": "2de7bb520e", "data/t34.json": "72445d764a", "data/t35.json": "8aaf401e30", "data/t36.json": "6d9143da69", "data/t37.json": "3373731797", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "f4db3e9583", "data/marks.json": "2b9f8b0fe0", "data/quran.json": "3b7af2ab79", "data/qv.json": "7b60653830", "data/sira_x.json": "2bda9ece69", "data/sx_ahl.json": "d79f3b8a50", "data/sx_alam.json": "ca08eb1602", "data/sx_badab.json": "eddcd84ec9", "data/sx_bans.json": "cecd319e7a", "data/sx_bdaw.json": "2a1b5ec65c", "data/sx_bfad.json": "bccac42523", "data/sx_bilm.json": "6c1d5ccfb9", "data/sx_bmnq.json": "d1c643ad83", "data/sx_bsal.json": "d524018e2e", "data/sx_bsaw.json": "0a351cdaa2", "data/sx_bsif.json": "35b1c4acba", "data/sx_bsir.json": "ce73f2406b", "data/sx_dal.json": "8dab7b0190", "data/sx_feat.json": "41e4d49a69", "data/sx_gold.json": "667d65852d", "data/sx_gz.json": "e0651877bd", "data/sx_hady.json": "30c9c7c9f0", "data/sx_hajj.json": "15c3efb0ee", "data/sx_hjr.json": "1560a6d13c", "data/sx_hjrb.json": "4d54ad1b2c", "data/sx_kh.json": "052a915f65", "data/sx_khn.json": "8196fb815a", "data/sx_khutab.json": "9f4b90c0e9", "data/sx_mfad.json": "1900f7d7ed", "data/sx_mg.json": "a9da8977e8", "data/sx_msal.json": "06fb240c61", "data/sx_msaw.json": "6f8ad9ae97", "data/sx_msh.json": "c7ad582fea", "data/sx_msif.json": "9e04bf9e8e", "data/sx_nuzul.json": "d791220b3d", "data/sx_qa.json": "c8326dd6b9", "data/sx_shs.json": "a93997ab61", "data/sx_shu.json": "103e62fc65", "data/sx_wafat.json": "482be035e9", "data/sx_wasaya.json": "6d468cded7", "data/t17.json": "86c024b72e", "data/t18.json": "eac1d30d9f", "data/t19.json": "6de8758823", "data/t20.json": "7e5e3238ba", "data/t21.json": "3490cdd076", "data/t22.json": "dce445d532", "data/t23.json": "09ee9bc255", "data/t24.json": "769913f1a6", "data/t25.json": "0aa32a3d51", "data/t26.json": "982bb6cb57", "data/t27.json": "651931d6ea", "data/t28.json": "0538698377", "data/t29.json": "925c6db4d9", "data/t30.json": "f564991943", "data/t31.json": "b58d19f797", "data/t32.json": "b7ffea3f14", "data/t33.json": "2de7bb520e", "data/t34.json": "72445d764a", "data/t35.json": "8aaf401e30", "data/t36.json": "6d9143da69", "data/t37.json": "3373731797"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3093,7 +3093,7 @@ async function openAya(s,a,b){
     (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('نُسخت الآية، ألصقها حيث تريد',1800)).catch(()=>toast('تعذّر النسخ',1600))};
   $('#ayaImg').onclick=()=>ayaImage(parts,'سورة '+name+' · '+(b>a?'الآيات '+ar(a)+'–'+ar(b):'الآية '+ar(a)));
   $('#ayaBack').hidden=false;$('#aya').hidden=false;$('#aya').scrollTop=0;
-  showTafsir(s,a,b,name,parts);
+  $('#tafSec').hidden=true;
 }
 /* تفسير السعدي under the verse, with copy options; the text was checked word for word against the printed Risala edition */
 let tafTok=0;
@@ -3716,7 +3716,7 @@ async function openZubda(){const X=await getJSON('data/sira_x.json');const it=X.
   const draw=()=>{LS.set('zubAt',i);const s=L[i];ov.innerHTML='';
     const top=el('div','zt');const x=el('button','zx','✕');x.type='button';x.setAttribute('aria-label','إغلاق');x.onclick=shut;
     const bar=el('div','zbar');L.forEach((_,j)=>{const d=el('i',j<=i?'on':'');bar.append(d)});top.append(x,bar);
-    const card=el('div','zcard');card.append(el('p','zera',eras[s.e]||''),el('p','znum','المحطة '+ar(i+1)+' من '+ar(L.length)),el('h3',null,s.t),el('blockquote',null,'«'+s.q+'»'));
+    const card=el('div','zcard');card.append(el('p','zera',eras[s.e]||''),el('p','znum','المحطة '+ar(i+1)+' من '+ar(L.length)),el('h3',null,s.t),(()=>{const b=el('blockquote');markFill(b,s.q,s.ws);return b})());
     const go=el('button','btn btn-primary','اقرأها في الكتاب · ص '+ar(s.p));go.type='button';go.onclick=()=>openPart(17,s.p,null,false,'txt');card.append(go,el('p','zsrc','من «مختصر سيرة الرسول صلى الله عليه وسلم» للإمام محمد بن عبد الوهاب، ص '+ar(s.p)));
     const nav=el('div','znav');const pv=el('button','btn btn-quiet','السابقة'),nx=el('button','btn btn-primary',i===L.length-1?'تمّت':'التالية');[pv,nx].forEach(b=>b.type='button');pv.disabled=i===0;
     pv.onclick=()=>{i--;draw()};nx.onclick=()=>{if(i===L.length-1){shut();LS.set('zubAt',0);return}i++;draw()};nav.append(pv,nx);
@@ -3781,7 +3781,7 @@ async function openAtlas(){const X=await getJSON('data/sira_x.json');const it=X.
   };
   const show=p=>{card.hidden=false;card.innerHTML='';card.scrollTop=0;{const sv=box.querySelector('svg');if(sv)setTimeout(()=>ov.scrollBy({top:sv.getBoundingClientRect().top-70,behavior:'smooth'}),30)}box.querySelectorAll('.sel').forEach(e=>e.classList.remove('sel'));(box.querySelector('[data-k="'+p[0]+'"]')||{classList:{add(){}}}).classList.add('sel');const cx_=el('button','at-cx','✕');cx_.type='button';cx_.setAttribute('aria-label','إغلاق');cx_.onclick=()=>{card.hidden=true;box.querySelectorAll('.sel').forEach(e=>e.classList.remove('sel'))};card.append(cx_);const hd=el('div','at-ch');hd.append(el('b',null,p[0]+(p[3]?'':' — موضع تقريبي')));
     const mp=el('a','at-maps','افتحه في الخرائط');mp.href='https://maps.apple.com/?ll='+p[1]+','+p[2]+'&q='+encodeURIComponent(p[0]);mp.target='_blank';mp.rel='noopener';hd.append(mp);card.append(hd);
-    p[4].forEach(i=>{const s=it[i];const r=el('div','at-ev');r.append(el('b',null,s.t),el('p',null,'«'+s.q+'»'));const g=el('button','btn btn-link','ص '+ar(s.p)+' من مختصر السيرة');g.type='button';g.onclick=()=>openPart(17,s.p,null,false,'txt');r.append(g);card.append(r)});
+    p[4].forEach(i=>{const s=it[i];const r=el('div','at-ev');r.append(el('b',null,s.t),(()=>{const b=el('p');markFill(b,s.q,s.ws);return b})());const g=el('button','btn btn-link','ص '+ar(s.p)+' من مختصر السيرة');g.type='button';g.onclick=()=>openPart(17,s.p,null,false,'txt');r.append(g);card.append(r)});
     card.scrollIntoView({behavior:'smooth',block:'start'})};
   draw(null)}
 $('#sxAtlas').onclick=openAtlas;
@@ -3827,7 +3827,7 @@ async function evFull(it){const n=it.n||17,T=await getJSON('data/t'+n+'.json');c
     if(out.length&&p!==prevP&&!/[.!؟?»"]\s*$/.test(out[out.length-1]))out[out.length-1]+=' '+y;else out.push(y);prevP=p}
   return out.map(trimFull).join(' ')}
 function idxOf(y,key){let o='',m=[];for(let i=0;i<y.length;i++)if(/[\u0621-\u064A]/.test(y[i])){o+=y[i];m.push(i)}const i=o.indexOf(key);return i<0?0:m[i]}
-function trimFull(t){return t.replace(/\s*\((?:\d+|[٠-٩]+)\)/g,'').replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').replace(/\s+/g,' ').trim()}
+function trimFull(t){return t.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').replace(/\s+/g,' ').trim()}
 function quoteW(q,w,ph){const e=el('q');if(ph&&ph.length){hdFill(e,q,[],ph);if(e.querySelector('.hd-m'))return e}const i=w?q.indexOf(w):-1;if(i<0){e.textContent=q;return e}
   e.append(document.createTextNode(q.slice(0,i)),el('mark',null,w),document.createTextNode(q.slice(i+w.length)));return e}
 
@@ -3953,12 +3953,12 @@ async function fxSifa(){const F=await sxFeat();const P=fxOpen('صفته ﷺ كأ
   const ch=el('div','fx-chips'),box=el('div');let weak=false,part=0;P.inn.append(ch,box);
   const SB=await getJSON('data/sx_bsif.json'),SM=await getJSON('data/sx_msif.json'),SS=F.sifaS||{},SX=await getJSON('data/sx_shs.json'),SX6=await getJSON('data/sx_msh.json');const XS=[[SX,'من صحيح البخاري',bMeta,'lbs','أبواب البخاري في هذا الموضوع كاملة'],[SX6,'من صحيح مسلم',msMeta,'mlbs','أبواب مسلم في هذا الموضوع كاملة']].filter(x=>x[0]&&x[0].smap);
   const sahihL=c=>{const m=SS[c.h];if(!m||!SB||!SM)return[];return[...m.b.map(i=>[SB,i,bMeta]),...m.m.map(i=>[SM,i,msMeta])]};
-  const shTxt=h=>h.x.filter(x=>typeof x==='string').join(' ').replace(/\s+([)\]»])/g,'$1');
+  const shTxt=h=>h.x.filter(x=>typeof x==='string').join(' ');
   const nOf=(n,one,two,few,many)=>n===1?one:n===2?two:ar(n)+(n<=10?few:many);
   const show=()=>{[...ch.children].forEach((c,j)=>{c.classList.toggle('on',j===part);c.setAttribute('aria-pressed',j===part)});box.innerHTML='';let hid=0;
     F.sifa[part].c.forEach((c,ci)=>{const XG=XS.map(([D,lab,meta,key,more])=>[D,lab,meta,key,more,D.smap[c.h]||[]]).filter(x=>x[5].length),nX=XG.reduce((a,x)=>a+x[5].reduce((b,y)=>b+y[1].length,0),0);const S=sahihL(c),H=c.had.filter(h=>weak||h.g==='صحيح'||h.g==='حسن');hid+=c.had.length-H.length;
       const card=el('section','sf-ch');const hd=el('button','sf-hd');hd.type='button';
-      const tt=el('span','sf-tt');tt.append(el('b',null,c.h.replace(/^[٠-٩]+\s*-\s*/,'').replace(/\s*:\s*$/,'')),el('small',null,[(S.length+nX)?nOf(S.length+nX,'حديث من الصحيحين','حديثان من الصحيحين',' أحاديث من الصحيحين',' حديثاً من الصحيحين'):'',H.length?nOf(H.length,'حديث من الشمائل','حديثان من الشمائل',' أحاديث من الشمائل',' حديثاً من الشمائل'):''].filter(Boolean).join('، و')));
+      const tt=el('span','sf-tt');tt.append(el('b',null,c.h),el('small',null,[(S.length+nX)?nOf(S.length+nX,'حديث من الصحيحين','حديثان من الصحيحين',' أحاديث من الصحيحين',' حديثاً من الصحيحين'):'',H.length?nOf(H.length,'حديث من الشمائل','حديثان من الشمائل',' أحاديث من الشمائل',' حديثاً من الشمائل'):''].filter(Boolean).join('، و')));
       hd.append(tt);card.append(hd);const body=el('div','sf-body');body.hidden=true;card.append(body);
       const fill=()=>{if(body.childElementCount)return;
         if(c.n)body.append(el('p','mg-note',c.n));else if(!S.length&&!H.length)body.append(el('p','mg-note','أحاديث هذا الباب ضعيفة، وتظهر إذا اخترت «عرض الأحاديث الضعيفة» في آخر القائمة.'));
@@ -3986,10 +3986,10 @@ async function fxSifa(){const F=await sxFeat();const P=fxOpen('صفته ﷺ كأ
 
 /* ---------- طريق الهجرة ---------- */
 async function fxRoad(){const F=await sxFeat();const P=fxOpen('طريق الهجرة');
-  P.inn.append(el('p','fx-lead','المنازل التي سلكها الدليل عبد الله بن أرقط بالنبي صلى الله عليه وسلم وأبي بكر رضي الله عنه من مكة إلى قباء، بترتيبها كما ذكرها ابن إسحاق في سيرة ابن هشام.'));
-  const ol=el('ol','road');F.road.forEach((r,i)=>{const li=el('li',i===F.road.length-1?'end':null);li.append(el('b',null,r.t),el('small',null,'«'+r.q+'»'));ol.append(li)});
+  P.inn.append(el('p','fx-lead','المنازل التي سلكها الدليل عبد الله بن أرقط بالنبي صلى الله عليه وسلم وأبي بكر رضي الله عنه من مكة إلى قباء، بترتيبها كما ذكرها ابن إسحاق في سيرة ابن هشام، والنص كاملاً تحتها وفيه مواضعها معلَّمة.'));
+  const ol=el('ol','road');F.road.forEach((r,i)=>{const li=el('li',i===F.road.length-1?'end':null);li.append(el('b',null,r.t));ol.append(li)});
   P.inn.append(ol);
-  const d=el('div','fx-src');d.append(el('h3',null,'النص كاملاً'),el('p','by',SXBN(23)+'، ص '+ar(491)+'–'+ar(492)),el('p','road-q',F.roadq),goBtn(P,'اقرأه في سيرة ابن هشام',23,491));P.inn.append(d);
+  const d=el('div','fx-src');d.append(el('h3',null,'النص كاملاً'),el('p','by',SXBN(23)+'، ص '+ar(491)+'–'+ar(492)),(()=>{const p=el('p','road-q');markFill(p,F.roadq,F.road.map(r=>r.q));return p})(),goBtn(P,'اقرأه في سيرة ابن هشام',23,491));P.inn.append(d);
   const HB=await getJSON('data/sx_hjrb.json');if(HB&&HB.ch){P.inn.append(el('h3','dl-bk','من صحيح البخاري'),el('p','dl-bs','حديث عائشة رضي الله عنها في الهجرة، ثم خبر سراقة بن مالك بلسانه وقدومه صلى الله عليه وسلم المدينة.'));
     dalChapters(P,HB,bMeta,'');P.inn.append(el('p','fx-note','الباب كاملاً من «كتاب مناقب الأنصار» بلفظ النسخة الرقمية حرفاً بحرف، والذهبي كلامه صلى الله عليه وسلم بلفظه.'))}
   const HJ=await getJSON('data/sx_hjr.json');if(HJ&&HJ.ch){P.inn.append(el('h3','dl-bk','من صحيح مسلم'),el('p','dl-bs','حديث الهجرة من رواية البراء عن أبي بكر رضي الله عنهما، وفيه الغار وسراقة ونزوله صلى الله عليه وسلم في بني النجار.'));
@@ -4003,7 +4003,7 @@ const KHG={ab:'أبي بكر الصديق',um:'عمر بن الخطاب',uth:'ع
 async function renderKhul(){const F=await sxFeat();const K=F.khul,G=$('#khGrid');if(!G||!K)return;
   if(!$('#khSaf').childElementCount){const s=$('#khSaf');s.append(document.createTextNode('قال صلى الله عليه وسلم: «'+K.saf.q+'». أورده ابن كثير من حديث سفينة رضي الله عنه. '));
     const b=el('button','btn btn-link',pgT(K.saf.n,K.saf.p));b.type='button';b.onclick=()=>openPart(K.saf.n,K.saf.p,['ثلاثون سنة'],false,'txt');s.append(b);
-    const it=el('div','kh-it');it.append(el('p',null,'وقال شيخ الإسلام ابن تيمية: «ووفاة النبي صلى الله عليه وسلم كانت في شهر ربيع الأول سنة إحدى عشرة من هجرته، وإلى عام ثلاثين سنة كان إصلاح ابن رسول الله صلى الله عليه وسلم الحسن بن علي السيد بين فئتين من المؤمنين بنزوله عن الأمر عام إحدى وأربعين في شهر جمادى الأولى، وسمي "عام الجماعة" لاجتماع الناس على "معاوية" وهو أول الملوك».'),el('small',null,'مجموع الفتاوى ٣٥/١٩'));s.after(it);
+    const it=el('div','kh-it');it.append(el('p',null,'وقال شيخ الإسلام ابن تيمية:'),...ibtEl('wfa'));s.after(it);
     const key=$('#khKey');['ab','um','uth','ali','has','mk'].forEach(c=>{const sp=el('button','kh-k');sp.type='button';sp.onclick=()=>khWho(c);const i=el('i');i.style.background='var(--'+(c==='mk'?'mkk':c)+')';sp.append(i,document.createTextNode(c==='mk'?'ثم المُلك: معاوية رضي الله عنه':c==='has'?'الحسن بن علي: تمام الثلاثين':KHN[c]));sp.dataset.c=c;key.append(sp)})}
   G.innerHTML='';const sel=+G.dataset.sel||0;
   K.years.forEach(Y=>{const b=el('button','kh-c'+(Y.c.length>1?' two':'')+(Y.c.includes('mk')?' mx':'')+(Y.y===sel?' sel':''),ar(Y.y));b.type='button';
@@ -4016,9 +4016,9 @@ async function khWho(c){const F=await sxFeat();KHSELC=KHSELC===c?null:c;
   [...$('#khGrid').children].forEach((b,i)=>b.classList.toggle('off',!!KHSELC&&!F.khul.years[i].c.includes(KHSELC)));
   if(!KHSELC){evClose();return}const W=el('div','yr-p kh-w');evShell(KHN[c]).append(W);
   const a=(F.khul.ages||[]).find(x=>x.k===c);W.append(el('h3',null,KHN[c]+(c==='has'?' رضي الله عنهما':' رضي الله عنه')));
-  if(c==='has'){const q=F.khul.q[41];W.append(el('p','sub','قال ابن كثير:'),el('blockquote',null,'«'+q.q+'»'),goP(pgT(q.n,q.p),q.n,q.p));W.append(el('p','sub','والخلفاء الراشدون أربعة، قال شيخ الإسلام ابن تيمية:'),el('blockquote',null,'«وكان أمير المؤمنين علي بن أبي طالب رضي الله عنه آخر الخلفاء الراشدين المهديين»'),el('p','kh-src','مجموع الفتاوى ٣/٤٠٦'))}
+  if(c==='has'){const q=F.khul.q[41];W.append(el('p','sub','قال ابن كثير:'),el('blockquote',null,'«'+q.q+'»'),goP(pgT(q.n,q.p),q.n,q.p));W.append(el('p','sub','وقال شيخ الإسلام ابن تيمية:'),...ibtEl('alw'))}
   if(c==='mk'){const K=F.khul;W.append(el('p','sub','قال ابن كثير في أول ترجمته:'),el('blockquote',null,'«'+K.mkq.q+'»'),goP(pgT(30,146),30,146),
-      el('p','sub','وقال شيخ الإسلام ابن تيمية:'),el('blockquote',null,'«واتفق العلماء على أن معاوية أفضل ملوك هذه الأمة، فإن الأربعة قبله كانوا خلفاء نبوة، وهو أول الملوك؛ كان ملكه ملكا ورحمة»'),el('p','kh-src','مجموع الفتاوى ٤/٤٧٨'));return}
+      el('p','sub','وقال شيخ الإسلام ابن تيمية:'),...ibtEl('mk'));return}
   const S=(F.khul.sec||{})[c]||[];if(S.length){W.append(el('p','sub','أبواب عنه في الكتاب:'));S.forEach(h=>{const b=el('button','kh-h');b.type='button';b.append(el('span',null,h.t),el('small',null,(h.n===28?'ج٩':h.n===29?'ج١٠':'ج١١')+'، ص '+ar(h.p)));b.onclick=()=>khRead(h.n,h.p,h.t);W.append(b)});if(a)W.append(el('p','sub','عمره ومدة خلافته:'))}
   if(a)a.q.forEach(q=>{W.append(el('blockquote',null,'«'+q.q+'»'));W.append(goP(pgT(q.n,q.p)+(q.p2?'–'+ar(q.p2):''),q.n,q.p))});
   else{const ys=F.khul.years.filter(y=>y.c.includes(c));W.append(el('p','sub','سنوات خلافته في الكتاب: '+ys.map(y=>ar(y.y)).join('، ')))}}
@@ -4038,26 +4038,28 @@ async function showKhul(y){const F=await sxFeat();const K=F.khul,Y=K.years.find(
 /* a hadith shown from its Companion, with its chain one press away */
 function shBox(x,cls){const t=el('p',cls);hdFill(t,x.x,x.pm||[]);if(!x.s)return[t];const b=el('button','btn btn-link hd-b','بلا إسناد');b.type='button';let full=true;b.onclick=()=>{full=!full;t.innerHTML='';if(full)hdFill(t,x.x,x.pm||[]);else hdFill(t,x.s,x.ps||[]);b.textContent=full?'بلا إسناد':'بإسناده'};return[t,b]}
 /* a chapter of a book as the site has it: from its heading on page p to the next heading, whole (paragraphs running over a page joined) */
-async function secFull(n,p,t){try{const P=(await getJSON('data/t'+n+'.json')).p;const lt=x=>x.replace(/[^\u0621-\u064A]/g,'');const fix=x=>x.replace(/\s*\((?:\d+|[٠-٩]+)\)/g,'').replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').replace(/\s+/g,' ').trim();
-  const out=[];let on=false,lastQ=-1;
-  for(let q=p;q<P.length&&q<p+400;q++){const x=P[q];if(!x)continue;for(const y of x.slice(1)){
+async function secFull(n,p,t){try{const P=(await getJSON('data/t'+n+'.json')).p;const lt=x=>x.replace(/[^ء-ي]/g,'');
+  // the section whole, from its heading to the next heading; a paragraph broken by a page joined again
+  const out=[];let on=false;
+  for(let q=p;q<P.length;q++){const x=P[q];if(!x)continue;for(const [ii,y] of x.slice(1).entries()){
     if(y&&typeof y==='object'&&(y.h||y.e)){const h=y.h||y.e;if(!on){if(q===p&&(lt(h)===lt(t)||lt(h).startsWith(lt(t).slice(0,20))))on=true;continue}if(out.length)return out;continue}
-    if(on&&typeof y==='string'){const f=fix(y);if(!f)continue;if(out.length&&q!==lastQ&&!/[.!؟?»"]$/.test(out[out.length-1]))out[out.length-1]+=' '+f;else out.push(f);lastQ=q}}}
+    if(on&&typeof y==='string'){if(ii===0&&(x[0]&1)&&out.length){const o=out[out.length-1];o.t+=' '+y;o.parts.push(y)}else out.push({t:y,parts:[y]})}}}
   return out}catch(e){return []}}
-async function khRead(n,p,t){const lt=x=>x.replace(/[^\u0621-\u064A]/g,'');const S_=document.getElementById('evSheet'),prev=S_&&!S_.hidden?[...document.getElementById('evBody').childNodes]:null,y0=S_?S_.scrollTop:0;const B=evShell(t);
-  if(prev){const bk=el('button','btn btn-link kh-back','رجوع');bk.type='button';bk.onclick=()=>{document.getElementById('evBody').replaceChildren(...prev);S_.scrollTop=y0};B.append(bk)}const jz=n===28?9:n===29?10:11;
-  B.append(el('p','ev-era','البداية والنهاية، ج'+ar(jz)),sawEl('h3','ev-t',t));const box=el('div','kh-rd');B.append(box);
-  const ft=el('div','ev-ft');ft.append(el('small',null,'البداية والنهاية لابن كثير، تحقيق التركي، ج'+ar(jz)+'، ص '+ar(p)));
+async function khRead(n,p,t){const lt=x=>x.replace(/[^ء-ي]/g,'');const S_=document.getElementById('evSheet'),prev=S_&&!S_.hidden?[...document.getElementById('evBody').childNodes]:null,y0=S_?S_.scrollTop:0;const B=evShell(t);
+  if(prev){const bk=el('button','btn btn-link kh-back','رجوع');bk.type='button';bk.onclick=()=>{document.getElementById('evBody').replaceChildren(...prev);S_.scrollTop=y0};B.append(bk)}
+  B.append(el('p','ev-era',SXBN(n)),sawEl('h3','ev-t',t));const box=el('div','kh-rd');B.append(box);
+  const ft=el('div','ev-ft');ft.append(el('small',null,SXBN(n)+'، ص '+ar(p)));
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(n,p,null,false,'txt')};ft.append(go);B.append(ft);
-  try{const P=(await getJSON('data/t'+n+'.json')).p;let on=false,txt=0,cut=false;const fix=x=>x.replace(/\s*\((?:\d+|[٠-٩]+)\)/g,'').replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').replace(/\s+/g,' ').trim();
-    out:for(let q=p;q<P.length&&q<p+400;q++){const x=P[q];if(!x)continue;
-      for(const y of x.slice(1)){
+  // the chapter whole: from its heading to the next heading, a paragraph broken by a page joined again
+  try{const P=(await getJSON('data/t'+n+'.json')).p;let on=false,txt=0;const L=[];
+    out:for(let q=p;q<P.length;q++){const x=P[q];if(!x)continue;
+      for(const [ii,y] of x.slice(1).entries()){
         if(y&&typeof y==='object'&&(y.h||y.e)){const h=y.h||y.e;
           if(!on){if(q===p&&lt(h)===lt(t))on=true;continue}
-          if(txt)break out;box.append(sawEl('h4','kh-rh',h));continue}
-        if(on&&typeof y==='string'){const f=fix(y);if(!f)continue;const lp=box.lastElementChild;if(lp&&lp.classList.contains('kh-rp')&&lp.dataset.q!=q&&!/[.!؟?»]$/.test(lp.textContent))lp.textContent+=' '+f;else{const e=el('p','kh-rp',f);e.dataset.q=q;box.append(e)}txt+=f.length}}}
-    if(!box.childElementCount)box.append(el('p','kh-rp','تعذّر عرض هذا الباب هنا، فاقرأه في الكتاب.'));
-    if(cut)box.append(el('p','kh-rc','وللباب بقية في الكتاب.'))}catch(e){box.append(el('p','kh-rp','تعذّر عرض هذا الباب هنا، فاقرأه في الكتاب.'))}}
+          if(txt)break out;L.push(['h',h]);continue}
+        if(on&&typeof y==='string'){if(ii===0&&(x[0]&1)&&L.length&&L[L.length-1][0]==='p'){L[L.length-1][1]+=' '+y;L[L.length-1][2].push(y)}else L.push(['p',y,[y]]);txt+=y.length}}}
+    L.forEach(([k,v,pts])=>{if(k==='h'){box.append(sawEl('h4','kh-rh',v));return}const e=el('p','kh-rp');const ph=[].concat(...pts.map(z=>goldFor(z)||[]),goldFor(v)||[]);hdFill(e,v.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾'),[],ph.map(w=>w.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾')));box.append(e)});
+    if(!box.childElementCount)box.append(el('p','kh-rp','تعذّر عرض هذا الباب هنا، فاقرأه في الكتاب.'))}catch(e){box.append(el('p','kh-rp','تعذّر عرض هذا الباب هنا، فاقرأه في الكتاب.'))}}
 const goP=(t,n,p)=>{const b=el('button','btn btn-quiet',t);b.type='button';b.style.margin='4px 0 8px';b.onclick=()=>{evClose();openPart(n,p,null,false,'txt')};return b};
 
 // the caliphs' lineages on the Prophet's line, from Ka'b ibn Lu'ayy down; each branch is Ibn Kathir's wording
@@ -4079,15 +4081,27 @@ function khCal(V,D){const src=(o,w)=>{const d=el('div','sxd');d.append('«'+o.q+
   V.append(el('h3','kh-calh','قائمة الخلفاء'),el('p','sxnote','الخلفاء بترتيب «مختصر سيرة الرسول ﷺ» للإمام محمد بن عبد الوهاب، ومع كل واحد كيف تولى ومدته بلفظ الكتاب إن ذكرها. اضغط للنص والصفحة.'));
   const G={r:'الخلفاء الراشدون ومن بعدهم',u:'بنو أمية',z:'',a:'بنو العباس'};let last=null;const L=el('div','tline');V.append(L);
   D.cal.forEach(c=>{const g=c.g==='z'?'u':c.g;if(g!==last){last=g;L.append(el('div','tera',G[g]))}
-    const k=el('div','tev');k.append(el('b',null,c.n));if(c.dur)k.append(el('span','tw',c.dur.q.replace(/^و?(كانت|بقي|فبقي)\s*/,'').slice(0,60)));
+    const k=el('div','tev');k.append(el('b',null,c.n));
     k.onclick=()=>{if(k.dataset.o)return;k.dataset.o=1;src(c.how,k);if(c.dur)src(c.dur,k)};L.append(k)});
   D.calnote.forEach(o=>src(o,V))}
+
+// a paragraph of the book with phrases marked in it (each phrase exactly as it stands in the paragraph)
+function markFill(e,t,ws){const R=[];(ws||[]).forEach(w=>{let i=t.indexOf(w);while(i>=0&&R.some(([a,b])=>i<b&&i+w.length>a))i=t.indexOf(w,i+1);if(i>=0)R.push([i,i+w.length])});R.sort((a,b)=>a[0]-b[0]);
+  const gp=[].concat(goldFor(t)||[],...t.split('\n').map(z=>z===t?[]:(goldFor(z)||[])));const put=(par,x)=>{const s_=el('span');hdFill(s_,x.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾'),[],gp.filter(g=>x.includes(g)));par.append(...s_.childNodes)};
+  let k=0;R.forEach(([a,b])=>{if(a>k)put(e,t.slice(k,a));const m=el('mark','gz-w');put(m,t.slice(a,b));e.append(m);k=b});if(k<t.length)put(e,t.slice(k))}
+// the facts of an event: each paragraph once, whole, with what each label refers to marked in it
+function factParas(L,refB,openAt){const out=[];const G=[];L.forEach(f=>{let g=G.find(x=>x.q===f.q);if(!g){g={q:f.q,n:f.n,p:f.p,p2:f.p2,ks:[],ws:[],ex:[]};G.push(g)}g.ks.push(f.k);if(!g.ws.includes(f.w))g.ws.push(f.w);if(f.nt)g.ex.push(f.nt);if(f.ns)g.ex.push(Object.assign({ns:1},f.ns))});
+  G.forEach(g=>{const w=el('div','gz-fp');w.append(el('p','gz-fk',g.ks.join(' · ')));const b=el('blockquote','gz-fb');markFill(b,g.q,g.ws);w.append(b);
+    const s=el('button','kh-fp',refB(g.n,g.p)+(g.p2?'–'+ar(g.p2):''));s.type='button';s.onclick=()=>openAt(g.n,g.p,g.q);w.append(s);out.push(w);g.ex.forEach(x=>out.push(x))});return out}
+// شيخ الإسلام ابن تيمية: الفقرة كاملة من «مجموع الفتاوى» بلفظ المكتبة الشاملة حرفاً بحرف، والأقواس { } كما فيها (تحيط بالآية والحديث)
+const IBT={"alw": {"t": "وكذلك يجب الاقتصاد والاعتدال في أمر \" الصحابة \" و \" القرابة \" - رضي الله عنهم - فإن الله تعالى أثنى على أصحاب نبيه صلى الله عليه وسلم من السابقين والتابعين لهم بإحسان. وأخبر أنه رضي عنهم ورضوا عنه؛ وذكرهم في آيات من كتابه؛ مثل قوله تعالى {محمد رسول الله والذين معه أشداء على الكفار رحماء بينهم تراهم ركعا سجدا يبتغون فضلا من الله ورضوانا سيماهم في وجوههم من أثر السجود ذلك مثلهم في التوراة ومثلهم في الإنجيل كزرع أخرج شطأه فآزره فاستغلظ فاستوى على سوقه يعجب الزراع ليغيظ بهم الكفار وعد الله الذين آمنوا وعملوا الصالحات منهم مغفرة وأجرا عظيما} وقال تعالى: {لقد رضي الله عن المؤمنين إذ يبايعونك تحت الشجرة فعلم ما في قلوبهم فأنزل السكينة عليهم وأثابهم فتحا قريبا} . وفي الصحاح عن النبي صلى الله عليه وسلم أنه قال: {لا تسبوا أصحابي فوالذي نفسي بيده لو أن أحدكم أنفق مثل أحد ذهبا ما بلغ مد أحدهم ولا نصيفه} . وقد اتفق أهل السنة والجماعة على ما تواتر عن أمير المؤمنين علي بن أبي طالب - رضي الله عنه - أنه قال: خير هذه الأمة بعد نبيها أبو بكر ثم عمر رضي الله عنهما واتفق أصحاب رسول الله صلى الله عليه وسلم على بيعة عثمان بعد عمر رضي الله عنهما وثبت عن النبي صلى الله عليه وسلم أنه قال: {خلافة النبوة ثلاثون سنة ثم تصير ملكا} وقال صلى الله عليه وسلم {عليكم بسنتي وسنة الخلفاء الراشدين المهديين من بعدي تمسكوا بها وعضوا عليها بالنواجذ وإياكم ومحدثات الأمور فإن كل بدعة ضلالة} . وكان أمير المؤمنين علي بن أبي طالب رضي الله عنه آخر الخلفاء الراشدين المهديين. وقد اتفق عامة أهل السنة من العلماء والعباد والأمراء والأجناد على أن يقولوا: أبو بكر ثم عمر؛ ثم عثمان؛ ثم علي رضي الله عنهم. ودلائل ذلك وفضائل الصحابة ك ثير؛ ليس هذا موضعه. وكذلك نؤمن \" بالإمساك عما شجر بينهم \" ونعلم أن بعض المنقول في ذلك كذب. وهم كانوا مجتهدين؛ إما مصيبين لهم أجران؛ أو مثابين على عملهم الصالح مغفور لهم خطؤهم؛ وما كان لهم من السيئات - وقد سبق لهم من الله الحسنى - فإن الله يغفرها لهم: إما بتوبة أو بحسنات ماحية أو مصائب مكفرة؛ أو غير ذلك. فإنهم خير قرون هذه الأمة كما قال صلى الله عليه وسلم {خير القرون قرني الذي بعثت فيهم؛ ثم الذين يلونهم} وهذه خير أمة أخرجت للناس.", "v": 3, "p1": 405, "p2": 406, "g": ["لا تسبوا أصحابي فوالذي نفسي بيده لو أن أحدكم أنفق مثل أحد ذهبا ما بلغ مد أحدهم ولا نصيفه", "خلافة النبوة ثلاثون سنة ثم تصير ملكا", "عليكم بسنتي وسنة الخلفاء الراشدين المهديين من بعدي تمسكوا بها وعضوا عليها بالنواجذ وإياكم ومحدثات الأمور فإن كل بدعة ضلالة", "خير القرون قرني الذي بعثت فيهم؛ ثم الذين يلونهم"], "q": ["محمد رسول الله والذين معه أشداء على الكفار رحماء بينهم تراهم ركعا سجدا يبتغون فضلا من الله ورضوانا سيماهم في وجوههم من أثر السجود ذلك مثلهم في التوراة ومثلهم في الإنجيل كزرع أخرج شطأه فآزره فاستغلظ فاستوى على سوقه يعجب الزراع ليغيظ بهم الكفار وعد الله الذين آمنوا وعملوا الصالحات منهم مغفرة وأجرا عظيما", "لقد رضي الله عن المؤمنين إذ يبايعونك تحت الشجرة فعلم ما في قلوبهم فأنزل السكينة عليهم وأثابهم فتحا قريبا"]}, "mk": {"t": "وإنما كان المعروفون بالزندقة والنفاق بني عبيد القداح الذين كانوا بمصر والمغرب وكانوا يدعون أنهم علويون وإنما كانوا من ذرية الكفار فهؤلاء قد اتفق أهل العلم على رميهم بالزندقة والنفاق وكذلك رمي بالزندقة والنفاق قوم من ملوك النواحي الخلفاء من بني بويه وغير بني بويه؛ فأما خليفة عام الولاية في الإسلام فقد طهر الله المسلمين أن يكون ولي أمرهم زنديقا منافقا فهذا مما ينبغي أن يعلم ويعرف فإنه نافع في هذا الباب. واتفق العلماء على أن معاوية أفضل ملوك هذه الأمة فإن الأربعة قبله كانوا خلفاء نبوة وهو أول الملوك؛ كان ملكه ملكا ورحمة كما جاء في الحديث: \" {يكون الملك نبوة ورحمة ثم تكون خلافة ورحمة ثم يكون ملك ورحمة ثم ملك وجبرية ثم ملك عضوض} \" وكان في ملكه من الرحمة والحلم ونفع المسلمين ما يعلم أنه كان خيرا من ملك غيره. وأما من قبله فكانوا خلفاء نبوة فإنه قد ثبت عنه النبي صلى الله عليه وسلم أنه قال: \" {تكون خلافة النبوة ثلاثين سنة ثم تصير ملكا} \" وكان أبو بكر وعمر وعثمان وعلي رضي الله عنهم هم الخلفاء الراشدون والأئمة المهديون الذين قال فيهم النبي صلى الله عليه وسلم \" {عليكم بسنتي وسنة الخلفاء الراشدين من بعدي تمسكوا بها وعضوا عليها بالنواجذ وإياكم ومحدثات الأمور فإن كل محدثة بدعة} \". وقد تنازع كثير من الناس في خلافة علي؛ وقالوا: زمانه زمان فتنة لم يكن في زمانه جماعة وقالت طائفة: يصح أن يولى خليفتان فهو خليفة ومعاوية خليفة؛ لأن الأمة لم تتفق عليه ولم تنتظم في خلافته. والصحيح الذي عليه الأئمة: أن عليا رضي الله عنه من الخلفاء الراشدين بهذا الحديث فزمان علي كان يسمي نفسه أمير المؤمنين والصحابة تسميه بذلك. قال الإمام أحمد بن حنبل: \" من لم يربع بعلي رضي الله عنه في الخلافة فهو أضل من حمار أهله \" ومع هذا فلكل خليفة مرتبة. فأبو بكر وعمر لا يوازنهما أحد كما قال النبي صلى الله عليه وسلم \" {اقتدوا باللذين من بعدي: أبي بكر وعمر} \" ولم يكن نزاع بين شيعة علي الذين صحبوه في تقديم أبي بكر وعمر وثبت عن علي من وجوه كثيرة أنه قال: لا أوتى برجل يفضلني على أبي بكر وعمر إلا جلدته حد المفتري. وإنما كانوا يتنازعون في عثمان وعلي رضي الله عنهما لكن ثبت تقديم عثمان على علي باتفاق السابقين على مبايعة (عثمان طوعا بلا كره؛ بعد أن جعل عمر الشورى في ستة: عثمان وعلي وطلحة والزبير وسعد وعبد الرحمن بن عوف. وتركها \" ثلاثة \" وهم: طلحة والزبير وسعد. فبقيت في \" ثلاثة \" عثمان وعلي وعبد الرحمن. فولي أحدهما فبقي عبد الرحمن يشاور المهاجرين والأنصار والتابعين لهم بإحسان ثلاثة أيام ثم أخبر أنهم لم يعدلوا بعثمان. ونقل وفاته وولايته: حديث طويل فمن أراده فعليه بأحاديث الثقات. والله أعلم. وصلى الله على نبينا محمد وسلم.", "v": 4, "p1": 478, "p2": 480, "g": ["يكون الملك نبوة ورحمة ثم تكون خلافة ورحمة ثم يكون ملك ورحمة ثم ملك وجبرية ثم ملك عضوض", "تكون خلافة النبوة ثلاثين سنة ثم تصير ملكا", "عليكم بسنتي وسنة الخلفاء الراشدين من بعدي تمسكوا بها وعضوا عليها بالنواجذ وإياكم ومحدثات الأمور فإن كل محدثة بدعة", "اقتدوا باللذين من بعدي: أبي بكر وعمر"], "q": []}, "haq": {"t": "ومن أصول أهل السنة والجماعة: سلامة قلوبهم وألسنتهم لأصحاب رسول الله صلى الله عليه وسلم \" كما وصفهم الله به في قوله تعالى {والذين جاءوا من بعدهم يقولون ربنا اغفر لنا ولإخواننا الذين سبقونا بالإيمان ولا تجعل في قلوبنا غلا للذين آمنوا ربنا إنك رءوف رحيم} وطاعة النبي في قوله: \" {لا تسبوا أصحابي. فوالذي نفسي بيده لو أن أحدكم أنفق مثل أحد ذهبا ما بلغ مد أحدهم ولا نصيفه} . ويقبلون ما جاء به الكتاب والسنة والإجماع: من فضائلهم ومراتبهم. فيفضلون من أنفق من قبل الفتح - وهو صلح الحديبية - وقاتل على من أنفق من بعده وقاتل ويقدمون المهاجرين على الأنصار ويؤمنون بأن {الله قال لأهل بدر - وكانوا ثلاثمائة وبضعة عشر -: اعملوا ما شئتم فقد غفرت لكم} وبأنه لا يدخل النار أحد بايع تحت الشجرة كما أخبر به النبي صلى الله عليه وسلم بل قد رضي الله عنهم ورضوا عنه وكانوا أكثر من ألف وأربعمائة. ويشهدون بالجنة لمن شهد له رسول الله صلى الله عليه وسلم بالجنة كالعشرة وكثابت بن قيس بن شماس وغيرهم من الصحابة. ويقرون بما تواتر به النقل عن أمير المؤمنين علي بن أبي طالب - رضي الله عنه - وعن غيره من أن خير هذه الأمة بعد نبيها أبو بكر ثم عمر ويثلثون بعثمان ويربعون بعلي رضي الله عنهم كما دلت عليه الآثار وكما أجمع الصحابة رضي الله عنهم على تقديم عثمان في البيعة مع أن بعض أهل السنة كانوا قد اختلفوا في عثمان وعلي - رضي الله عنهما بعد اتفاقهم على تقديم أبي بكر وعمر - أيهما أفضل فقدم قوم عثمان وسكتوا أو ربعوا بعلي وقدم قوم عليا وقوم توقفوا؛ لكن استقر أمر أهل السنة على تقديم عثمان وإن كانت هذه المسألة - مسألة عثمان وعلي - ليست من الأصول التي يضلل المخالف فيها عند جمهور أهل السنة لكن المسألة التي يضلل المخالف فيها هي \" مسألة الخلافة \" وذلك أنهم يؤمنون بأن الخليفة بعد رسول الله صلى الله عليه وسلم أبو بكر ثم عمر ثم عثمان ثم علي ومن طعن في خلافة أحد من هؤلاء الأئمة فهو أضل من حمار أهله.", "v": 3, "p1": 152, "p2": 153, "g": ["لا تسبوا أصحابي. فوالذي نفسي بيده لو أن أحدكم أنفق مثل أحد ذهبا ما بلغ مد أحدهم ولا نصيفه", "اعملوا ما شئتم فقد غفرت لكم"], "q": ["والذين جاءوا من بعدهم يقولون ربنا اغفر لنا ولإخواننا الذين سبقونا بالإيمان ولا تجعل في قلوبنا غلا للذين آمنوا ربنا إنك رءوف رحيم"]}, "wfa": {"t": "قال النبي صلى الله عليه وسلم {خلافة النبوة ثلاثون سنة؛ ثم يؤتي الله ملكه - أو الملك - من يشاء} لفظ أبي داود من رواية عبد الوارث والعوام {تكون الخلافة ثلاثين عاما ثم يكون الملك} {تكون الخلافة ثلاثين سنة ثم تصير ملكا} وهو حديث مشهور من رواية حماد بن سلمة وعبد الوارث بن سعيد والعوام بن حوشب وغيره عن سعيد بن جمهان عن سفينة مولى رسول الله صلى الله عليه وسلم رواه أهل السنن: كأبي داود وغيره واعتمد عليه الإمام أحمد وغيره في تقرير خلافة الخلفاء الراشدين الأربعة وثبته أحمد؛ واستدل به على من توقف في خلافة علي؛ من أجل افتراق الناس عليه؛ حتى قال أحمد: من لم يربع بعلي في الخلافة فهو أضل من حمار أهله؛ ونهى عن مناكحته وهو متفق عليه بين الفقهاء وعلماء السنة وأهل المعرفة والتصوف وهو مذهب العامة. وإنما يخالفهم في ذلك بعض أهل الأهواء من أهل الكلام ونحوهم: كالرافضة الطاعنين في خلافة الثلاثة أو الخوارج الطاعنين في خلافة الصهرين المنافيين: عثمان وعلي أو بعض الناصبة النافين لخلافة علي أو بعض الجهال من المتسننة الواقفين في خلافته ووفاة النبي صلى الله عليه وسلم كانت في شهر ربيع الأول سنة إحدى عشرة من هجرته وإلى عام ثلاثين سنة كان إصلاح ابن رسول الله صلى الله عليه وسلم الحسن بن علي السيد بين فئتين من المؤمنين بنزوله عن الأمر عام إحدى وأربعين في شهر جمادى الأولى وسمي \" عام الجماعة \" لاجتماع الناس على \" معاوية \" وهو أول الملوك. وفي الحديث الذي رواه مسلم: {ستكون خلافة نبوة ورحمة ثم يكون ملك ورحمة ثم يكون ملك وجبرية ثم يكون ملك عضوض} وقال صلى الله عليه وسلم في الحديث المشهور في السنن وهو صحيح: {إنه من يعش منكم بعدي فسيرى اختلافا كثيرا عليكم بسنتي وسنة الخلفاء الراشدين المهديين من بعدي تمسكوا بها وعضوا عليها بالنواجذ وإياكم ومحدثات الأمور؛ فإن كل بدعة ضلالة} .", "v": 35, "p1": 18, "p2": 19, "g": ["خلافة النبوة ثلاثون سنة؛ ثم يؤتي الله ملكه - أو الملك - من يشاء", "تكون الخلافة ثلاثين عاما ثم يكون الملك", "تكون الخلافة ثلاثين سنة ثم تصير ملكا", "ستكون خلافة نبوة ورحمة ثم يكون ملك ورحمة ثم يكون ملك وجبرية ثم يكون ملك عضوض", "إنه من يعش منكم بعدي فسيرى اختلافا كثيرا عليكم بسنتي وسنة الخلفاء الراشدين المهديين من بعدي تمسكوا بها وعضوا عليها بالنواجذ وإياكم ومحدثات الأمور؛ فإن كل بدعة ضلالة"], "q": []}, "ahl1": {"t": "ويحبون أهل بيت رسول الله صلى الله عليه وسلم ويتولونهم ويحفظون فيهم وصية رسول الله صلى الله عليه وسلم حيث قال يوم غدير خم: {أذكركم الله في أهل بيتي أذكركم الله في أهل بيتي} وقال أيضا للعباس عمه - وقد اشتكى إليه أن بعض قريش يجفو بني هاشم - فقال: {والذي نفسي بيده لا يؤمنون حتى يحبوكم لله ولقرابتي} وقال: {إن الله اصطفى بني إسماعيل واصطفى من بني إسماعيل كنانة واصطفى من كنانة قريشا واصطفى من قريش بني هاشم واصطفاني من بني هاشم} .", "v": 3, "p1": 154, "p2": 154, "g": ["أذكركم الله في أهل بيتي أذكركم الله في أهل بيتي", "والذي نفسي بيده لا يؤمنون حتى يحبوكم لله ولقرابتي", "إن الله اصطفى بني إسماعيل واصطفى من بني إسماعيل كنانة واصطفى من كنانة قريشا واصطفى من قريش بني هاشم واصطفاني من بني هاشم"], "q": []}, "ahl2": {"t": "ويتولون أزواج رسول الله صلى الله عليه وسلم أمهات المؤمنين ويؤمنون بأنهن أزواجه في الآخرة خصوصا خديجة رضي الله عنها أم أكثر أولاده وأول من آمن به وعاضده على أمره وكان لها منه المنزلة العالية والصديقة بنت الصديق رضي الله عنهما التي قال فيها النبي صلى الله عليه وسلم \" {فضل عائشة على النساء كفضل الثريد على سائر الطعام} .", "v": 3, "p1": 154, "p2": 154, "g": ["فضل عائشة على النساء كفضل الثريد على سائر الطعام"], "q": []}, "tm1": {"t": "ويتبرءون من طريقة الروافض الذين يبغضون الصحابة ويسبونهم. ومن طريقة النواصب الذين يؤذون أهل البيت بقول أو عمل ويمسكون عما شجر بين الصحابة.", "v": 3, "p1": 154, "p2": 154, "g": [], "q": []}, "tm2": {"t": "ويقولون: إن هذه الآثار المروية في مساويهم منها ما هو كذب ومنها ما قد زيد فيه ونقص وغير عن وجهه والصحيح منه: هم فيه معذورون إما مجتهدون مصيبون وإما مجتهدون مخطئون وهم مع ذلك لا يعتقدون أن كل واحد من الصحابة معصوم عن كبائر الإثم وصغائره؛ بل تجوز عليهم الذنوب في الجملة ولهم من السوابق والفضائل ما يوجب مغفرة ما يصدر منهم إن صدر حتى إنه يغفر لهم من السيئات ما لا يغفر لمن بعدهم لأن لهم من الحسنات التي تمحو السيئات ما ليس لمن بعدهم وقد ثبت بقول رسول الله صلى الله عليه وسلم \" إنهم خير القرون \" \" وإن المد من أحدهم إذا تصدق به كان أفضل من جبل أحد ذهبا ممن بعدهم \" ثم إذا كان قد صدر من أحدهم ذنب فيكون قد تاب منه أو أتى بحسنات تمحوه أو غفر له بفضل سابقته أو بشفاعة محمد صلى الله عليه وسلم الذي هم أحق الناس بشفاعته أو ابتلي ببلاء في الدنيا كفر به عنه. فإذا كان هذا في الذنوب المحققة فكيف بالأمور التي كانوا فيها مجتهدين: إن أصابوا فلهم أجران وإن أخطئوا فلهم أجر واحد والخطأ مغفور لهم؟ ثم القدر الذي ينكر من فعل بعضهم قليل نزر مغمور في جنب فضائل القوم ومحاسنهم من الإيمان بالله ورسوله والجهاد في سبيله والهجرة والنصرة والعلم النافع والعمل الصالح ومن نظر في سيرة القوم بعلم وبصيرة وما من الله به عليهم من الفضائل علم يقينا أنهم خير الخلق بعد الأنبياء لا كان ولا يكون مثلهم وأنهم هم الصفوة من قرون هذه الأمة التي هي خير الأمم وأكرمها على الله تعالى.", "v": 3, "p1": 155, "p2": 156, "g": ["إنهم خير القرون", "وإن المد من أحدهم إذا تصدق به كان أفضل من جبل أحد ذهبا ممن بعدهم"], "q": []}};
+function ibtEl(k){const o=IBT[k],b=el('blockquote','ibt');const R=[];o.g.forEach(w=>{const i=o.t.indexOf(w);if(i>=0)R.push([i,i+w.length,'hd-m'])});o.q.forEach(w=>{const i=o.t.indexOf(w);if(i>=0)R.push([i,i+w.length,'hd-v'])});R.sort((a,c)=>a[0]-c[0]);let p=0;R.forEach(([a,c,cl])=>{if(a<p)return;if(a>p)b.append(document.createTextNode(o.t.slice(p,a)));b.append(el('span',cl,o.t.slice(a,c)));p=c});if(p<o.t.length)b.append(document.createTextNode(o.t.slice(p)));return[b,el('p','kh-src','مجموع الفتاوى ج'+ar(o.v)+' ص '+ar(o.p1)+(o.p2!==o.p1?'–'+ar(o.p2):'')+'، بلفظ المكتبة الشاملة')]}
 /* الخلافة الراشدة: في صفحة كتاب «الخلفاء الراشدون» */
 let KHSEC=null,KHSELC=null;
 function khSection(){if(KHSEC)return KHSEC;const s=el('section','yr kh');s.id='sxKhul';
   s.innerHTML='<h2>الخلافة الراشدة سنةً سنة</h2><div class="kh-tabs"><button type="button" id="khTl">في الخط الزمني</button><button type="button" id="khNb">نسب الخلفاء الراشدين</button><button type="button" id="khNs">قائمة الخلفاء</button></div><p class="sx-lead">كل مربع سنة هجرية من هذا الكتاب، ولون كل خليفة على سنيه. اضغط سنةً لترى ما ذكره ابن كثير فيها، أو اسم خليفة لترى سنيه وعمره ومدة خلافته.</p><div class="kh-saf" id="khSaf"></div><div class="kh-grid" id="khGrid" role="group" aria-label="سنوات الخلافة الراشدة"></div><div class="kh-key" id="khKey"></div>';
-  {const Q=el('div','kh-q');Q.append(el('p','sub','قال شيخ الإسلام ابن تيمية في «العقيدة الواسطية» يذكر أهل السنة والجماعة:'),el('blockquote',null,'«يؤمنون بأن الخليفة بعد رسول الله صلى الله عليه وسلم أبو بكر، ثم عمر، ثم عثمان، ثم علي؛ ومن طعن في خلافة أحد من هؤلاء الأئمة فهو أضل من حمار أهله»'),el('p','kh-src','مجموع الفتاوى ٣/١٥٣'),
-    el('p','sub','وقال:'),el('blockquote',null,'«وكان أبو بكر، وعمر، وعثمان، وعلي، رضي الله عنهم: هم الخلفاء الراشدون، والأئمة المهديون»'),el('p','kh-src','مجموع الفتاوى ٤/٤٧٨'));s.querySelector('.sx-lead').before(Q)}
+  {const Q=el('div','kh-q');Q.append(el('p','sub','قال شيخ الإسلام ابن تيمية في «العقيدة الواسطية»:'),...ibtEl('haq'),
+    el('p','sub','وقال:'),...ibtEl('mk'));s.querySelector('.sx-lead').before(Q)}
   s.querySelector('#khTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};
   s.querySelector('#khNb').onclick=async()=>{const B=evShell('نسب الخلفاء الراشدين');const N=await getJSON('data/sx_khn.json');if(N)khNasab(B,N)};
   s.querySelector('#khNs').onclick=async()=>{const B=evShell('قائمة الخلفاء');let D;try{D=await sirax()}catch(_){B.append(el('p','note','تعذّر التحميل. تأكد من الاتصال بالإنترنت.'));return}khCal(B,D)};
@@ -4114,8 +4128,28 @@ function fxMethod(){const P=fxOpen('منهج الموقع');const I=P.inn;
   const mb=el('div','sx-mkbooks');mb.id='sxMkBooks';mb.addEventListener('click',()=>P.close(),true);I.append(mb);renderMkBooks()}
 $('#sxMethod').onclick=fxMethod;$('#sxShare').onclick=fxShare;$('#sxFb').onclick=()=>openFb('notes');
 
+
+/* the timeline and the sources of the trees: the whole paragraph of the Mukhtasar, the words of the event marked in it */
+sxSrc=function(o,wrap){const d=el('div','sxd');const qq=el('p','sxq');markFill(qq,o.q,o.ws);d.append(qq);const b=el('button',null,'ص '+ar(o.p)+(o.p2?'–'+ar(o.p2):'')+' ←');b.type='button';b.onclick=()=>sxGo(o.p);d.append(b);wrap.append(d);return d};
+sxTimeline=function(V,D){
+  V.append(el('p','sxnote','كل حدث هنا من الكتاب بترتيبه، ومعه الفقرة التي فيها من الكتاب كاملةً، والمقصود منها معلَّم فيها، ورقم صفحته. وفواصل السنين هي عناوين الكتاب نفسه.'));
+  const E=el('div','eras');D.tl.eras.forEach((n,i)=>{const b=el('button',null,n);b.type='button';b.onclick=()=>{const t=$('#era'+i);t&&t.scrollIntoView({behavior:'smooth',block:'start'})};E.append(b)});V.append(E);
+  const sw=el('label','sxsw');const cb=document.createElement('input');cb.type='checkbox';cb.checked=SXALL;cb.onchange=()=>{SXALL=cb.checked;openSX()};sw.append(cb,'اعرض كل الأحداث مفتوحة (لا الكبرى وحدها)');V.append(sw);
+  const L=el('div','tline');V.append(L);let era=-1,pend=[];
+  const card=(x)=>{const c=el('div','tev'+(x.l?'':' mn'));c.append(el('b',null,x.t));
+    const body=()=>{const q=el('p','tq');markFill(q,x.q,x.ws);c.append(q);
+      const pb=el('div','tp'),b=el('button',null,'اقرأه في الكتاب · ص '+ar(x.p)+(x.p2?'–'+ar(x.p2):'')+' ←');b.type='button';b.onclick=e=>{e.stopPropagation();sxGo(x.p)};pb.append(b);c.append(pb)};
+    if(x.l||SXALL)body();else{c.onclick=()=>{if(!c.dataset.o){c.dataset.o=1;body()}}}return c};
+  const yr=x=>el('div','tyear','السنة '+ar(x.y)+' من الهجرة');
+  const flush=()=>{if(!pend.length)return;if(SXALL){pend.forEach(x=>L.append(x.m?yr(x):card(x)))}else{const items=pend;const n=items.filter(x=>!x.m).length;
+    const b=el('button','tmore','وبينها '+ar(n)+' '+(n>2&&n<11?'أحداث':'حدثاً')+' ▾');b.type='button';b.onclick=()=>{const f=document.createDocumentFragment();items.forEach(x=>f.append(x.m?yr(x):card(x)));b.replaceWith(f)};
+    if(n)L.append(b);else items.forEach(x=>L.append(yr(x)))}pend=[]};
+  for(const x of D.tl.it){if(x.e!==era){flush();era=x.e;const h=el('div','tera',D.tl.eras[era]);h.id='era'+era;L.append(h)}
+    if(x.m){if(SXALL)L.append(yr(x));else{flush();L.append(yr(x))}continue}
+    if(x.l||SXALL){flush();L.append(card(x))}else pend.push(x)}
+  flush()};
 /* ---------- شجرة النسب وآل عبد المطلب: رسم شجري بخيوط ---------- */
-function sxQ(o,after){const nx=after.nextElementSibling;if(nx&&nx.classList.contains('sxd')){nx.remove();return}const d=el('div','sxd');d.append('«'+o.q+'» ');const b=el('button',null,'ص '+ar(o.p)+' ←');b.type='button';b.onclick=()=>sxGo(o.p);d.append(b);after.after(d)}
+function sxQ(o,after){const nx=after.nextElementSibling;if(nx&&nx.classList.contains('sxd')){nx.remove();return}const d=el('div','sxd');const qq=el('p','sxq');markFill(qq,o.q,o.ws);d.append(qq);const b=el('button',null,'ص '+ar(o.p)+' ←');b.type='button';b.onclick=()=>sxGo(o.p);d.append(b);after.after(d)}
 sxNasab=function(V,D){
   V.append(el('p','sxnote','النسب الشريف كما ساقه الكتاب في ص ٥١. اضغط على أي اسم لترى نص الكتاب.'));
   const W=el('div','nb'),N=D.nasab.chain.length;
@@ -4128,7 +4162,7 @@ sxNasab=function(V,D){
     if(n==='عبد المطلب'){const f=el('button','nb-fam','آل عبد المطلب ←');f.type='button';f.onclick=()=>{$('#sxOverlay').scrollTop=0;openSX('fam')};li.append(f)}
     ol.append(li)});
   W.append(ol);
-  const e=el('div','nb-end');e.append(el('span',null,'«'+D.nasab.notes[0].q+'»'));const eb=el('button',null,'ص '+ar(D.nasab.notes[0].p));eb.type='button';eb.onclick=()=>sxGo(D.nasab.notes[0].p);e.append(eb);W.append(e);
+  const e=el('div','nb-end');{const sp=el('span');markFill(sp,D.nasab.notes[0].q,D.nasab.notes[0].ws);e.append(sp)}const eb=el('button',null,'ص '+ar(D.nasab.notes[0].p));eb.type='button';eb.onclick=()=>sxGo(D.nasab.notes[0].p);e.append(eb);W.append(e);
   V.append(W);D.nasab.notes.slice(1).forEach(o=>sxSrc(o,V))};
 sxFam=function(V,D){
   V.append(el('p','sxnote','آل عبد المطلب كما ذكرهم الكتاب في ص ٥٦–٦٢، ولا يذكر الكتاب كل أولاده بأسمائهم. الخيط الذهبي طريق النسب الشريف. اضغط على أي اسم لترى نص الكتاب وصفحته.'));
@@ -4162,7 +4196,7 @@ async function renderDaily(){const F=await sxFeat();const sec=$('#sxDaily'),C=$(
     const bell=el('button','btn btn-link dy-bell');bell.type='button';act.append(bell);pushBtn(bell);sec.hidden=false;return}
   const {h,ch}=X;
   C.innerHTML='';C.append(el('p','dy-ch',ch));
-  const t=h.x.filter(x=>typeof x==='string').join(' ').replace(/\s+([)\]»])/g,'$1');const q=el('p','dy-t');shFill(q,t,h.gs);C.append(q);
+  const t=h.x.filter(x=>typeof x==='string').join(' ');const q=el('p','dy-t');shFill(q,t,h.gs);C.append(q);
   const meta=el('div','dy-meta');meta.append(el('span','gr',gtxt(h.g)),el('span','dy-src','مختصر الشمائل، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p)));C.append(meta);
   const act=el('div','dy-act');
   if(t.length>320){q.classList.add('clip');const m=el('button','btn btn-link','أكمل الحديث');m.type='button';m.onclick=()=>{q.classList.remove('clip');m.remove()};act.append(m)}
@@ -4177,7 +4211,7 @@ function mgStart(){let d=LS.get('mgStart',null);if(!Number.isInteger(d)){d=mgDay
 const mgIdx=N=>{const x=LS.get('mgIx',null);return Number.isInteger(x)?x%N:Math.max(0,mgDay()-mgStart())%N};   // with the notification on: the one waiting to be read   // before the first day: the first hadith
 function mgText(h,short){return short&&h.s?h.s:h.x}   // the hadith with its full chain as printed; the short form only on request
 function mgMeta(h,full){return 'صحيح البخاري، كتاب المغازي'+(h.no?'، رقم '+String(h.no).replace(/\d+/g,d=>ar(+d)):'')+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'')}
-const mgCh=(M,h)=>(h.ch==='باب'||h.ch==='باب:')?'باب بلا ترجمة، تابع لما قبله':h.ch;
+const mgCh=(M,h)=>h.ch;
 // one hadith: the text from the Companion on, with the whole chain a tap away
 const HDN=/((?:[وفبلك]{0,2})رسول الله صلى الله عليه وسلم|(?:[وفبك]{0,2})للنبي صلى الله عليه وسلم|(?:[وفبك]{0,2})النبي صلى الله عليه وسلم|(?:[وفبلك]{0,2})نبي الله صلى الله عليه وسلم|(?:[وفبلك]{0,2})رسول الله ﷺ|(?:[وفبك]{0,2})النبي ﷺ)/;
 let QV=null;getJSON('data/qv.json').then(x=>{QV=x||{}}).catch(()=>{QV={}});
@@ -4442,26 +4476,17 @@ async function fxTlEv(k){
   const X=await getJSON('data/sira_x.json'),L=X.tl.it,it=L[k];if(!it||!it.q)return;
   const B=evShell(it.t);
   B.append(sawEl('p','ev-era',(X.tl.eras[it.e]||'')),sawEl('h3','ev-t',it.t));
-  const gph=goldFor(it.q);let qv=quoteW(it.q,it.w,gph);qv.classList.add('ev-q');B.append(qv);
-  const ft=el('div','ev-ft');ft.append(el('small',null,'مختصر سيرة الرسول ﷺ، للإمام محمد بن عبد الوهاب، ص '+ar(it.p)));
-  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(17,it.p,it.w?[it.w]:null,false,'txt')};
-  ft.append(go);B.append(ft);
-  // the whole passage, up to the book's next heading
-  try{let t=await evFull(it);
-    // stop where the timeline's next event begins, so the reader gets this event only
-    const nx=L.slice(k+1).find(y=>y.q&&y.p<=it.p+6);
-    if(t&&nx){const nz=x=>{let o='';const m=[];for(let i=0;i<x.length;i++)if(/[\u0621-\u064A]/.test(x[i])){o+=x[i];m.push(i)}return [o,m]};
-      const [o,m]=nz(t),key=nz(nx.q.replace(/…$/,''))[0].slice(0,18),i=key.length>=8?o.indexOf(key,nz(it.q)[0].length>10?10:0):-1;
-      if(i>0)t=t.slice(0,m[i]).replace(/[\s«"(]+$/,'').trim()
-      if(/[:،]$/.test(t)){const j=Math.max(t.lastIndexOf('. '),t.lastIndexOf('». '));if(j>t.length/3)t=t.slice(0,t.indexOf(' ',j)).trim()}}
-    if(t&&t.length>it.q.replace(/…$/,'').length+20){const nq=quoteW(t,it.w,gph);nq.classList.add('ev-q');qv.replaceWith(nq);qv=nq}}catch(e){}}
+  const qv=el('p','ev-q');markFill(qv,it.q,it.ws);B.append(qv);
+  const ft=el('div','ev-ft');ft.append(el('small',null,'مختصر سيرة الرسول ﷺ، للإمام محمد بن عبد الوهاب، ص '+ar(it.p)+(it.p2?'–'+ar(it.p2):'')));
+  const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(17,it.p,null,false,'txt')};
+  ft.append(go);B.append(ft)}
 // the day's hadith of «من شمائله», in the same order as the home card and the notification
 async function fxHadith(i){const F=await sxFeat();const L=await shList(F);
   const x=L[i];if(!x)return;const B=evShell('من شمائله صلى الله عليه وسلم');B.append(sawEl('p','ev-era','من شمائله ﷺ'),sawEl('h3','ev-t',x.ch));
   if(x.sh){const q=el('p','ev-q');hdFill(q,x.sh.x,x.sh.pm||[]);B.append(q);const ft=el('div','ev-ft');ft.append(el('small',null,shSrc(x)));
     const go=el('button','btn btn-quiet','صفته ﷺ في الموقع');go.type='button';go.onclick=()=>{evClose();fxSifa()};ft.append(go);B.append(ft);return}
   const {h,ch}=x;
-  const t=h.x.filter(y=>typeof y==='string').join(' ').replace(/\s+([)\]»])/g,'$1');const q=el('p','ev-q');q.textContent=t;B.append(q);
+  const t=h.x.filter(y=>typeof y==='string').join(' ');const q=el('p','ev-q');q.textContent=t;B.append(q);
   const ft=el('div','ev-ft');const m=el('small');m.append(el('span','gr',gtxt(h.g)),document.createTextNode(' مختصر الشمائل، رقم '+(ar(+h.no)||h.no)+'، ص '+ar(h.p)));ft.append(m);
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(25,h.p,[hdLead(t)],false,'txt')};ft.append(go);B.append(ft)}
 // a hadith of Kitab al-Maghazi, in full with its chain
@@ -4484,7 +4509,7 @@ async function fxMgTL(open){const M=await getJSON('data/sx_mg.json');const GZ=ne
       if(GZ.has(k)){const g=el('button','gz-pg mg-gz','في «الغزوات في سطور»');g.type='button';g.onclick=()=>{P.close();fxGz(k)};card.append(g)}}
     const body=el('div','mg-body');body.hidden=true;card.append(body);
     const fill=()=>{if(body.childElementCount)return;if(nb&&nm)body.append(el('p','mg-bk','من صحيح البخاري'));ev.ch.forEach(c=>{const cb=el('div','mg-ch');
-        cb.append(el('h4',null,(c.t==='باب'||c.t==='باب:')?'باب بلا ترجمة':c.t));if(c.tr)cb.append(el('p','mg-tr',c.tr));
+        cb.append(el('h4',null,c.t));if(c.tr)cb.append(el('p','mg-tr',c.tr));
         c.hs.forEach(i=>cb.append(mgItem(M,i,{clip:260,before:P.close}).w));body.append(cb)});if(nm)msCh(mc,body)};
     hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};
     list.append(card);if(open===k){fill();body.hidden=false;hd.setAttribute('aria-expanded','true');setTimeout(()=>card.scrollIntoView({block:'start'}),50)}});
@@ -4573,10 +4598,10 @@ async function fxFad(k){k=k||'';const C=FADC[k];const M=await getJSON('data/'+C.
     w.append(row);P.inn.append(w)}
   P.inn.append(list);
   M.ch.forEach(c=>{if(c.bk)list.append(el('h3','dl-bk',c.bk));if(c.bs)list.append(el('p','dl-bsm',c.bs));if(c.bkt){const bp=el('p','dl-bkt');hdFill(bp,c.bkt,[]);list.append(bp)}const n=c.hs.length;const card=el('section','mg-ev');const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
-    const tt=el('span','mg-tt');tt.append(ttlEl('b',null,c.t==='باب'?'باب بلا ترجمة':c.t===''?'(أحاديث في أول الكتاب قبل أول باب)':c.t),el('small',null,n===0?'ترجمة بلا حديث':n===1?'حديث واحد':n===2?'حديثان':ar(n)+(n<=10?' أحاديث':' حديثاً')));hd.append(tt);card.append(hd);
+    const tt=el('span','mg-tt');tt.append(ttlEl('b',null,c.t===''?'(أحاديث في أول الكتاب قبل أول باب)':c.t),el('small',null,n===0?'ترجمة بلا حديث':n===1?'حديث واحد':n===2?'حديثان':ar(n)+(n<=10?' أحاديث':' حديثاً')));hd.append(tt);card.append(hd);
     if(c.t==='باب')card.append(el('p','mg-note','باب لم يترجم له البخاري، وهو تابع للباب الذي قبله على عادته.'));if(c.t==='')card.append(el('p','mg-note','أحاديث في أول الكتاب قبل أول عنوان باب فيه، كما هي في النسخة الرقمية.'));
     const body=el('div','mg-body');body.hidden=true;card.append(body);
-    const fill=()=>{if(body.childElementCount)return;if(c.tr){const w=el('div','mg-trw');w.append(el('span','mg-trl','من ترجمة البخاري للباب: ما ذكره تحت عنوانه قبل أحاديثه'));const t=el('p','mg-tr');hdFill(t,c.tr.replace(/\d+/g,d=>ar(+d)),[]);w.append(t);body.append(w)}c.hs.forEach(i=>body.append(mgItem(M,i,{clip:260,meta,noBook:1}).w))};
+    const fill=()=>{if(body.childElementCount)return;if(c.tr){const w=el('div','mg-trw');w.append(el('span','mg-trl','من ترجمة البخاري للباب: ما ذكره تحت عنوانه قبل أحاديثه'));const t=el('p','mg-tr');hdFill(t,c.tr,[]);w.append(t);body.append(w)}c.hs.forEach(i=>body.append(mgItem(M,i,{clip:260,meta,noBook:1}).w))};
     hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};OPEN.push({card,open:()=>{if(body.hidden)hd.onclick()}});list.append(card)});
   P.inn.append(el('p','fx-note',C.note||'النص بلفظ النسخة الرقمية من «صحيح البخاري» في المكتبة الشاملة (طبعة دار طوق النجاة المصوّرة عن الطبعة السلطانية) حرفاً بحرف، بأبوابه وترتيبه، لم يُحذف منه شيء ولم يُزد فيه ولم يُغيَّر، وأرقام الصفحات أرقام الطبعة السلطانية. والحديث بإسناده كاملاً، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'))}
 async function fxHady(){const G=await getJSON('data/sx_hady.json');const P=fxOpen('هديه صلى الله عليه وسلم');
@@ -4601,12 +4626,12 @@ async function fxShu(k){const S=await getJSON('data/sx_shu.json');const Q=await 
       cd.z.forEach(z=>{const g=el('div','sf-grp');g.append(el('h4',null,'من «زاد المعاد» لابن القيم'));g.append(el('p','shu-zt',z.t.replace(/ﷺ/g,'صلى الله عليه وسلم')));
         z.x.forEach(([pg,t,pm])=>{const p=el('p','shu-p');hdFill(p,t.replace(/ﷺ/g,'صلى الله عليه وسلم'),pm);g.append(p)});
         const r=el('div','gz-a');[...new Set(z.x.map(x=>x[0]))].forEach(pg=>{const b=el('button','gz-pg','زاد المعاد، ج١، ص '+ar(pg));b.type='button';b.onclick=()=>{P.close();openPart(18,pg,null,false,'txt')};r.append(b)});g.append(r);body.append(g)});
-      (cd.zl||[]).forEach(z=>{const b=el('button','btn btn-link hd-b',z.t.replace(/صلى الله عليه وسلم/g,'ﷺ')+': اقرأه في زاد المعاد، ص '+ar(z.p));b.type='button';b.onclick=()=>{P.close();openPart(18,z.p,null,false,'txt')};body.append(b)})};
+      (cd.zl||[]).forEach(z=>{const b=el('button','btn btn-link hd-b',z.t+': اقرأه في زاد المعاد، ص '+ar(z.p));b.type='button';b.onclick=()=>{P.close();openPart(18,z.p,null,false,'txt')};body.append(b)})};
     hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;card.classList.toggle('open',o);hd.setAttribute('aria-expanded',o)};
     if(ci===0&&c.c.length===1){fill();body.hidden=false;card.classList.add('open');hd.setAttribute('aria-expanded','true')}
     P.inn.append(card)})}
 async function fxKh(open){const G=await getJSON('data/sx_kh.json');const P=fxOpen('أحداث الخلافة الراشدة');
-  P.inn.append(el('p','fx-lead','أبرز الأحداث من بيعة أبي بكر رضي الله عنه إلى عام الجماعة: لكل حدث أول كلام «مختصر السيرة» فيه، وما ذكره هو وابن كثير في «البداية والنهاية» من تاريخه ومكانه وأسماء أمرائه وأعداده بلفظهما. وما ورد فيه في الصحيحين يأتي أولاً تحت «التفصيل». وعلى طريقة أهل السنة في الإمساك عما شجر بين الصحابة رضي الله عنهم، اقتصرنا في الجمل وصفين على التاريخ والمكان والنتيجة.'));
+  P.inn.append(el('p','fx-lead','أبرز الأحداث من بيعة أبي بكر رضي الله عنه إلى عام الجماعة: لكل حدث أول كلام «مختصر السيرة» فيه، وما ذكره هو وابن كثير في «البداية والنهاية» من تاريخه ومكانه وأسماء أمرائه وأعداده في فقراتهما كاملة، والمقصود منها معلَّم فيها. وما ورد فيه في الصحيحين يأتي أولاً تحت «التفصيل»، ثم أبواب الكتاب التي فيها الحدث كاملة.'));
   const VOL={28:9,29:10,30:11},BK={17:'مختصر السيرة',28:'البداية والنهاية',29:'البداية والنهاية',30:'البداية والنهاية'};
   const refB=(n,p)=>BK[n]+(VOL[n]?'، ج'+ar(VOL[n]):'')+'، ص '+ar(p);
   const go=(n,p,q)=>{const b=el('button','gz-pg',refB(n,p));b.type='button';b.onclick=()=>{P.close();openPart(n,p,q?[q.split(' ').slice(0,3).join(' ')]:null,false,'txt')};return b};
@@ -4616,10 +4641,11 @@ async function fxKh(open){const G=await getJSON('data/sx_kh.json');const P=fxOpe
     const c=el('section','gz-c khe');c.id='kh'+g.k;if(open!==undefined&&g.k===open)setTimeout(()=>c.scrollIntoView({block:'start'}),60);
     c.append(sawEl('h3','gz-t',g.t));const q=el('p','gz-q gz-qq');hdFill(q,g.q,g.qp||[]);c.append(q);
     if(g.f.length){[['g','عن الحدث'],['m',g.gl.m||'المسلمون'],['k',g.gl.k||'']].forEach(([gk,gt])=>{const F=g.f.filter(f=>f.g===gk);if(!F.length)return;
-      const dl=el('dl','gz-f gz-'+gk);dl.append(el('dt','gz-gh',gt));
-      F.forEach(f=>{const r=el('div','gz-r');const v=el('span','gz-v');if(f.ay){hdFill(v,f.v,[])}else v.textContent=nums(f.v);r.append(el('span','gz-k',f.k),v);
-        const s=el('button','kh-fp',f.n===17?'المختصر ص '+ar(f.p):'البداية ج'+ar(VOL[f.n])+' ص '+ar(f.p));s.type='button';s.onclick=()=>{P.close();openPart(f.n,f.p,[f.v.replace(/[{}]/g,'').split(' ').slice(0,3).join(' ')],false,'txt')};r.append(s);dl.append(r);if(f.nt){const w=el('div','gz-ns');w.append(el('span',null,'ما آل إليه أمره: «'+f.nt.q+'»'));const b=el('button','gz-pg',refB(f.nt.n,f.nt.p));b.type='button';b.onclick=()=>{P.close();openPart(f.nt.n,f.nt.p,[f.nt.q.split(' ').slice(0,3).join(' ')],false,'txt')};w.append(b);dl.append(w)}});c.append(dl)})}
-    if(g.tm){const w=el('div','kh-q');const b=el('blockquote');b.textContent='«'+g.tm.q+'»';w.append(el('p','sub',g.tm.t),b,el('p','kh-src',g.tm.s));c.append(w)}
+      const dl=el('div','gz-f gz-'+gk);if(gt)dl.append(el('p','gz-gh',gt));
+      factParas(F,refB,(n,p,q)=>{P.close();openPart(n,p,[q.split(' ').slice(0,3).join(' ')],false,'txt')}).forEach(x=>{if(x instanceof Node){dl.append(x);return}
+        const w=el('div','gz-ns');w.append(el('span',null,'ما آل إليه أمره: «'+x.q+'»'));const b=el('button','gz-pg',refB(x.n,x.p));b.type='button';b.onclick=()=>{P.close();openPart(x.n,x.p,[x.q.split(' ').slice(0,3).join(' ')],false,'txt')};w.append(b);dl.append(w)});c.append(dl)})}
+    if(g.tm){const w=el('div','kh-q');w.append(el('p','sub','قال شيخ الإسلام ابن تيمية في «العقيدة الواسطية»:'),ibtEl('tm1')[0],...ibtEl('tm2'));c.append(w)}
+    if(g.ch&&g.ch.length){const w=el('div','kh-chs');w.append(el('p','gz-ih','الباب كاملاً في الكتاب'));g.ch.forEach(h=>{const b=el('button','kh-h');b.type='button';b.append(el('span',null,h.t),el('small',null,refB(h.n,h.p)));b.onclick=()=>khRead(h.n,h.p,h.t);w.append(b)});c.append(w)}
     const nd=g.sh.length+g.d.length;
     if(nd){const box=el('div','gz-more');box.hidden=true;const lab='التفصيل'+(g.sh.length?' من الصحيحين وكتب السيرة':' من كتب السيرة')+' ('+ar(nd)+')';
       const tg=el('button','btn btn-link hd-b gz-tg',lab);tg.type='button';tg.setAttribute('aria-expanded','false');
@@ -4632,9 +4658,9 @@ async function fxKh(open){const G=await getJSON('data/sx_kh.json');const P=fxOpe
     const act=el('div','gz-a');act.append(go(g.n,g.p,g.q));c.append(act);L.append(c)});
   P.inn.append(L)}
 async function fxGz(open){const G=await getJSON('data/sx_gz.json');const P=fxOpen('الغزوات في سطور');
-  P.inn.append(el('p','fx-lead','لكل غزوة وحدث: الفقرة التي يبدأ بها كلام «مختصر سيرة الرسول ﷺ» فيه كاملةً، وما ذكره من الأعداد والأسماء بلفظه. ومن أراد التفصيل ضغط «التفصيل» فيرى ما في الصحيحين أولاً، ثم سيرة ابن هشام والبداية والنهاية وزاد المعاد، كلها بلفظها وفقراتها كاملة ومع كل نص مصدره.'));
+  P.inn.append(el('p','fx-lead','لكل غزوة وحدث: الفقرة التي يبدأ بها كلام «مختصر سيرة الرسول ﷺ» فيه كاملةً، وما ذكره من الأعداد والأسماء في فقراته كاملة، والمقصود منها معلَّم فيها. ومن أراد التفصيل ضغط «التفصيل» فيرى ما في الصحيحين أولاً، ثم سيرة ابن هشام والبداية والنهاية وزاد المعاد، كلها بلفظها وفقراتها كاملة ومع كل نص مصدره.'));
   const L=el('div','gz');G.forEach(g=>{const c=el('section','gz-c');if(open!==undefined&&g.k===open)setTimeout(()=>c.scrollIntoView({block:'start'}),60);c.append(sawEl('h3','gz-t',g.t));
-    const q=el('p','gz-q');q.textContent='«'+g.q+'»';c.append(q);
+    const q=el('p','gz-q');markFill(q,g.q,[]);c.append(q);
     if(g.dq&&!g.q.includes(g.dq))c.append(el('p','gz-d','وفي المختصر (ص '+ar(g.dp)+'): «'+g.dq+'»'));
     const SRC={bk:'صحيح البخاري',ms:'صحيح مسلم',ih:'سيرة ابن هشام',ik:'البداية والنهاية',zad:'زاد المعاد',mk:'مختصر السيرة'};
     const VOL={23:1,24:2,18:1,19:2,20:3,21:4,22:5,31:3,32:4,33:5,34:6,35:7,36:8,37:9};
@@ -4647,11 +4673,10 @@ async function fxGz(open){const G=await getJSON('data/sx_gz.json');const P=fxOpe
         r.append(b);dl.append(r);if(x.ns)dl.append(nsEl(x.ns))});c.append(dl)};
     const nsEl=ns=>{const w=el('div','gz-ns');w.append(el('span',null,(ns.t||'أبو سفيان بن حرب أسلم بعدُ عام الفتح رضي الله عنه')+': «'+ns.q+'»'));const b=el('button','gz-pg','سيرة ابن هشام، ج٢، ص '+ar(ns.p));b.type='button';b.onclick=()=>{P.close();openPart(ns.n,ns.p,[ns.q.split(' ').slice(0,3).join(' ')],false,'txt')};w.append(b);return w};
     if(g.f.length){[['g','عن الغزوة'],['m','جيش المسلمين'],['k','جيش المشركين']].forEach(([gk,gt])=>{const L=g.f.filter(f=>f.g===gk);if(!L.length)return;
-      const dl=el('dl','gz-f gz-'+gk);dl.append(el('dt','gz-gh',gt));let last=null;
-      L.forEach(f=>{if(f.it!==last&&f.it!==g.t){last=f.it;dl.append(sawEl('dt','gz-it',f.it))}else last=f.it;
-        const r=el('div','gz-r');r.append(el('span','gz-k',f.k),el('span','gz-v',f.v.replace(/\d+/g,d=>ar(+d))));dl.append(r);if(f.ns)dl.append(nsEl(f.ns))});c.append(dl)})}
+      const dl=el('div','gz-f gz-'+gk);dl.append(el('p','gz-gh',gt));
+      factParas(L,(n,p)=>SRC.mk+'، ص '+ar(p),(n,p,q)=>{P.close();openPart(n,p,[q.split(' ').slice(0,3).join(' ')],false,'txt')}).forEach(x=>{if(x instanceof Node){dl.append(x);return}dl.append(nsEl(x))});c.append(dl)})}
     if(g.th){const w=el('div','gz-th');w.hidden=true;{const tg=el('button','btn btn-link hd-b gz-tg',g.th.t+' ('+ar(g.th.h.length+1)+')');tg.type='button';tg.setAttribute('aria-expanded','false');tg.onclick=()=>{w.hidden=!w.hidden;tg.setAttribute('aria-expanded',!w.hidden)};c.append(tg)}const ay=el('p','fx-q ev-ayah gz-ay');w.append(ay);const ac=el('small','gz-ayc','سورة آل عمران، الآية ١٥٥');w.append(ac);
-      getJSON('data/quran.json').then(Q=>{ay.textContent='﴿'+Q.a[g.th.ay[0]-1][g.th.ay[1]-1]+'﴾'});w.append(el('p','gz-thn',g.th.n));
+      getJSON('data/quran.json').then(Q=>{ay.textContent='﴿'+Q.a[g.th.ay[0]-1][g.th.ay[1]-1]+'﴾'});
       const dl=el('div','gz-f');g.th.h.forEach(x=>{const r=el('div','gz-d');r.append(sawEl('span','gz-k',x.k));r.append(...shBox(x,'gz-dq'));
         if(x.src==='ms'){r.append(el('span','kh-sr','صحيح مسلم، كتاب الجهاد والسير، رقم '+ar(+x.no)+' بترقيم عبد الباقي، طبعة عبد الباقي ج'+ar(x.v)+' ص '+ar(+x.p)))}else{const b=el('button','gz-pg','صحيح البخاري، رقم '+ar(+x.no));b.type='button';b.onclick=()=>{P.close();openPart(26,x.p,null,false,'txt')};r.append(b)}dl.append(r)});w.append(dl);c.append(w)}
     const nd=(g.d||[]).length;
@@ -4698,11 +4723,7 @@ async function fxQa(){const Q=await getJSON('data/sx_qa.json');const P=fxOpen('�
 async function fxAhl(){const A=await getJSON('data/sx_ahl.json');const P=fxOpen('أهل بيته صلى الله عليه وسلم');
   const pg=(p,w)=>{const g=el('button','btn btn-quiet hj-g','البداية والنهاية، ج٨، ص '+ar(p));g.type='button';g.onclick=()=>{P.close();openPart(36,p,[w.split(' ').slice(0,3).join(' ')],false,'txt')};return g};
   P.inn.append(el('p','fx-lead','أزواجه أمهات المؤمنين وأولاده صلى الله عليه وسلم، بلفظ ما أورده ابن كثير في «باب ذكر زوجاته وأولاده» من «البداية والنهاية».'));
-  {const Q=el('div','kh-q');const bq=t=>{const b=el('blockquote','ah-bq');hdFill(b,t,[0]);return b};
-    Q.append(el('p','sub','قال شيخ الإسلام ابن تيمية في «العقيدة الواسطية» يذكر أهل السنة والجماعة:'),
-      bq('ويحبون أهل بيت رسول الله صلى الله عليه وسلم، ويتولونهم، ويحفظون فيهم وصية رسول الله صلى الله عليه وسلم، حيث قال يوم غدير خم: «أذكركم الله في أهل بيتي، أذكركم الله في أهل بيتي»'),
-      bq('ويتولون أزواج رسول الله صلى الله عليه وسلم أمهات المؤمنين، ويؤمنون بأنهن أزواجه في الآخرة، خصوصا خديجة رضي الله عنها أم أكثر أولاده، وأول من آمن به وعاضده على أمره، وكان لها منه المنزلة العالية. والصديقة بنت الصديق رضي الله عنهما، التي قال فيها النبي صلى الله عليه وسلم: «فضل عائشة على النساء كفضل الثريد على سائر الطعام»'),
-      el('p','kh-src','مجموع الفتاوى ٣/١٥٤'));P.inn.append(Q)}
+  {const Q=el('div','kh-q');Q.append(el('p','sub','قال شيخ الإسلام ابن تيمية في «العقيدة الواسطية»:'),ibtEl('ahl1')[0],...ibtEl('ahl2'));P.inn.append(Q)}
   P.inn.append(el('h3','dl-bk','أزواجه أمهات المؤمنين رضي الله عنهن'),el('p','dl-bs','على ترتيب زواجه بهن كما رواه يونس بن بكير عن ابن إسحاق، وقال ابن كثير بعده: «'+A.wn.q+'».'));
   A.w.forEach((w,j)=>P.inn.append(accCard(ar(j+1)+'. '+w.n+' رضي الله عنها','',b=>{b.append(qPanel(w.q));const a=el('div','qp-act');a.append(pg(w.p||219,w.q));b.append(a)},j===0)));
   P.inn.append(el('h3','dl-bk','أولاده صلى الله عليه وسلم'),el('p','dl-bs','قال ابن كثير: «'+A.cn[0].q+'». وهم على ترتيب الزبير بن بكار في ولادتهم:'));
@@ -4716,7 +4737,7 @@ async function fxHajj(){const S=await getJSON('data/sx_hajj.json');const P=fxOpe
       const lab=x.src==='ms'?'صحيح مسلم، رقم '+ar(+x.no)+' بترقيم عبد الباقي، طبعة عبد الباقي ج'+ar(x.v)+' ص '+String(x.p).replace(/\d+/g,d=>ar(+d)):'صحيح البخاري، رقم '+ar(+x.no)+(x.n?'':'، الطبعة السلطانية ج'+ar(x.v)+' ص '+x.p.replace(/\d+/g,d=>ar(+d)));
       if(x.n){const b=el('button','btn btn-quiet hj-g',lab);b.type='button';b.onclick=()=>{P.close();openPart(26,x.p,null,false,'txt')};it.append(b)}else it.append(el('span','hj-g hj-gs',lab));li.append(it)});
       li.append(el('p','hj-src','من البداية والنهاية'))}
-    s.q.forEach(q=>{const bq=el('blockquote','hj-q');hdFill(bq,'«'+q.x.replace(/\d+/g,d=>ar(+d))+'»',[],goldFor(q.x));li.append(bq);
+    s.q.forEach(q=>{const bq=el('blockquote','hj-q');hdFill(bq,'«'+q.x+'»',[],goldFor(q.x));li.append(bq);
       const g=el('button','btn btn-quiet hj-g','البداية والنهاية، ج٧، ص '+ar(q.p));g.type='button';g.onclick=()=>{P.close();openPart(35,q.p,[q.x.split(' ').slice(0,4).join(' ')],false,'txt')};li.append(g)})},si===0,'hj-card'))});
   P.inn.append(ol);
   P.inn.append(el('p','fx-note','الأيام والتواريخ بلفظ ابن كثير حيث ذكرها، ومنها ما رجّحه بعد بحثه في «باب تاريخ خروجه» (ص ٤١٠–٤١٥). والنص بلفظ النسخة الرقمية.'))}
@@ -4727,7 +4748,7 @@ const msNo=h=>h.no?'، رقم '+ar(+h.no)+' بترقيم عبد الباقي':''
 const msMeta=(h,full)=>'صحيح مسلم، '+(h.k||'كتاب الفضائل')+msNo(h)+'، طبعة عبد الباقي ج'+ar(h.v||7)+' ص '+ar(h.p)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'');
 function dalChapters(P,M,meta,note){const list=el('div','mg-list');P.inn.append(list);
   M.ch.forEach(c=>{if(c.bk)list.append(el('h3','dl-bk',c.bk));if(c.bs)list.append(el('p','dl-bsm',c.bs));if(c.bkt){const bp=el('p','dl-bkt');hdFill(bp,c.bkt,[]);list.append(bp)}const n=c.hs.length;const card=el('section','mg-ev');const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
-    const bt=el('b');(c.t==='باب'?'باب بلا ترجمة':c.t).replace(/\d+/g,d=>ar(+d)).replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').split(/(﴿[^﴾]*﴾)/).forEach(x=>{if(!x)return;if(x[0]==='﴿')bt.append(hdV(x));else bt.append(sawEl('span',null,x))});
+    const bt=el('b');c.t.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').split(/(﴿[^﴾]*﴾)/).forEach(x=>{if(!x)return;if(x[0]==='﴿')bt.append(hdV(x));else bt.append(sawEl('span',null,x))});
     const tt=el('span','mg-tt');tt.append(bt,el('small',null,(n===1?'حديث واحد':n===2?'حديثان':ar(n)+(n<=10?' أحاديث':' حديثاً'))));hd.append(tt);card.append(hd);
     if(c.t==='باب')card.append(el('p','mg-note',note));
     const body=el('div','mg-body');body.hidden=true;card.append(body);
@@ -4755,7 +4776,7 @@ async function fxDal(){const [A,G]=await Promise.all([getJSON('data/sx_alam.json
       const fill=()=>{if(body.childElementCount)return;g.it.forEach(it=>{const w=el('div','dl-it');const b=el('button','dl-t');b.type='button';b.setAttribute('aria-expanded','false');b.append(el('span',null,it.t),el('small',null,'ج'+ar(it.n===36?8:9)+'، ص '+ar(it.p)));w.append(b);
           const d=el('div','dl-x');d.hidden=true;const tx=el('div');d.append(tx);let got=false;
           const go=el('button','btn btn-quiet','اقرأه كاملاً في الكتاب');go.type='button';go.onclick=()=>{P.close();openPart(it.n,it.p,[it.t.split(' ').slice(0,4).join(' ')],false,'txt')};d.append(go);w.append(d);
-          b.onclick=async()=>{d.hidden=!d.hidden;b.setAttribute('aria-expanded',d.hidden?'false':'true');if(!d.hidden&&!got){got=true;const L=await secFull(it.n,it.p,it.t);if(L.length)L.forEach(t=>{const pp=el('p','mg-t');hdFill(pp,t,[]);tx.append(pp)});else if(it.x){const pp=el('p','mg-t');hdFill(pp,it.x,[]);tx.append(pp)}}};body.append(w)})};
+          b.onclick=async()=>{d.hidden=!d.hidden;b.setAttribute('aria-expanded',d.hidden?'false':'true');if(!d.hidden&&!got){got=true;const L=await secFull(it.n,it.p,it.t);if(L.length)L.forEach(o=>{const pp=el('p','mg-t');const f=z=>z.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾');const ph=[].concat(...o.parts.map(z=>goldFor(z)||[]),goldFor(o.t)||[]).map(f);hdFill(pp,f(o.t),[],ph.length?ph:undefined);tx.append(pp)});else if(it.x){const pp=el('p','mg-t');hdFill(pp,it.x,[]);tx.append(pp)}}};body.append(w)})};
       hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};list.append(card)});
     ikBox.append(el('p','fx-note','العناوين عناوين ابن كثير كما في النسخة الرقمية (طبعة دار هجر بتحقيق التركي)، وأسماء المجموعات من كلامه في أول كل قسم. والنص بلفظ النسخة الرقمية.'))};
   if(on)ikFill();cb.onchange=()=>{try{localStorage.setItem('dalIK',cb.checked?'1':'0')}catch(e){}if(cb.checked)ikFill();ikBox.hidden=!cb.checked;if(cb.checked)setTimeout(()=>sw.scrollIntoView({block:'start',behavior:'smooth'}),50)}}
