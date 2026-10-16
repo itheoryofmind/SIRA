@@ -210,6 +210,7 @@ h2{font-family:var(--display);font-size:27px;line-height:1.3;margin:0}
 .daily::before{content:"";position:absolute;inset-inline-end:-40px;top:-40px;width:140px;height:140px;border-radius:50%;background:radial-gradient(var(--brass-soft),transparent 70%)}
 .daily .src{font-size:13px;color:var(--brass);font-weight:600;position:relative}
 .daily p{font-family:var(--text);font-size:18px;line-height:2.05;margin:8px 0 12px;position:relative}
+.daily p.dh{font-weight:700}
 
 .results{display:flex;flex-direction:column;gap:8px}
 .rgroup{font-family:var(--display);font-size:20px;margin:10px 0 2px;display:flex;justify-content:space-between;align-items:baseline}
@@ -1840,7 +1841,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
     <section id="dailySec" hidden>
       <div class="card daily">
         <div class="src" id="dailySrc"></div>
-        <p id="dailyTxt"></p>
+        <div id="dailyTxt"></div>
         <button class="btn btn-quiet" id="dailyGo" type="button">اقرأ الصفحة كاملة</button>
       </div>
     </section>
@@ -1877,10 +1878,10 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
       <div class="stats" id="stats"></div>
       <div class="trust">
         <div class="card"><b>الصورة هي الأصل</b><span>صور الصفحات من المسح الأصلي بلا أي تعديل، واللون البيج طبقة عرض فقط. أرقام الصفحات تطابق المطبوع، فيصح العزو إليها.</span></div>
-        <div class="card"><b>نص مطابَق صفحةً صفحة</b><span>النص من المكتبة الشاملة (الطبعة السادسة ١٤١٧هـ). قُرئ أول كل صفحة وآخرها من صورتها قراءة جديدة وطوبق من الجهتين، وما لم تكتمل مطابقة حدوده عُلِّم «≈ حدود تقريبية».</span></div>
+        <div class="card"><b>نص مطابَق صفحةً صفحة</b><span>النص من المكتبة الشاملة (الطبعة السادسة ١٤١٧هـ) بلفظ نسختها الرقمية حرفاً بحرف، لم يُغيَّر فيه حرف ولم يُحذف منه شيء، ولم يُصحَّح على المطبوع. قُرئ أول كل صفحة وآخرها من صورتها وطوبق من الجهتين، وما لم تكتمل مطابقة حدوده عُلِّم «≈ حدود تقريبية».</span></div>
         <div class="card"><b>حواشي المطبوع</b><span>حواشي الجامع في أسفل الصفحات ليست في النص الرقمي، فتُعرض كما طُبعت: صورةً مقتطعة من الصفحة نفسها، بزر «حاشية المطبوع» تحت نص الصفحة.</span></div>
         <div class="card"><b>مقابلة وسط الصفحة</b><span>قُرئت كل صفحة من صورتها كاملة وقوبلت بالنص، فما ظهر فيه نقص عن المطبوع أو مخالفة له، وأكّده فحص مستقل بالنظر في الصورة، عُلِّم في موضعه بـ«في المطبوع زيادة» أو «يخالف المطبوع». والنص نفسه لم يُغيَّر.</span></div>
-        <div class="card"><b>الآيات بالرسم العثماني</b><span>تُعرض الآية المستشهد بها بلفظ الكتاب كما في نسخته الرقمية، وبالضغط عليها يظهر نصها بخط مصحف المدينة (مجمع الملك فهد لطباعة المصحف الشريف) متى تعيّنت آيتها.</span></div>
+        <div class="card"><b>الآيات بلفظ الكتاب</b><span>تُعرض الآية المستشهد بها بلفظ الكتاب كما في نسخته الرقمية، وبالضغط عليها يظهر نصها بخط مصحف المدينة (مجمع الملك فهد لطباعة المصحف الشريف) متى تعيّنت آيتها.</span></div>
         <div class="card"><b>فهارس تعمل باللمس</b><span>أرقام الصفحات في فهارس الأجزاء قُرئت وروجعت، فاضغط على أي موضوع في الفهرس المطبوع لتنتقل إلى صفحته.</span></div>
       </div>
       <p class="note">النص الرقمي قد يخالف المطبوع في الرسم والهمزات وعلامات الترقيم، ولا تدخل فيه الحواشي، وما بين معقوفين [ ] من عناوين وعزو للآيات هو بصيغة النسخة الرقمية وقد لا يكون في المطبوع بلفظه (يظهر بلون باهت). فالمعتمد في النقل والعزو صورة الصفحة، وهي بجانب النص دائماً.</p>
@@ -2100,7 +2101,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-16-1129';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-16-1206';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2506,10 +2507,9 @@ async function daily(){
     const days=Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);
     const [n,p]=m.daily[(days*7919)%m.daily.length];const T=await textOf(n);
     const items=pageItems(T,p);if(!items)return;
-    let txt=items.filter(x=>typeof x==='string').join(' ');
-    if(txt.length>430){txt=txt.slice(0,430);txt=txt.slice(0,txt.lastIndexOf(' '))+' …'}
     $('#dailySrc').textContent='صفحة اليوم · '+partName(n)+' · ص '+ar(p);
-    const P=$('#dailyTxt');P.innerHTML='';P.append(richInline(txt));
+    const P=$('#dailyTxt');P.innerHTML='';let inQ=false;
+    items.forEach(x=>{const e=el('p',typeof x==='string'?null:'dh');const f=richInline(typeof x==='string'?x:(x.h||x.e),null,inQ);inQ=f.inQ;e.append(f);P.append(e)});
     $('#dailyGo').onclick=()=>openPart(n,p,null,false,'txt');$('#dailySec').hidden=false;
   }catch(e){}
 }
@@ -2562,7 +2562,7 @@ async function renderIdx(){
       const bk=el('button','btn btn-link back','→ كل العلماء');bk.type='button';bk.onclick=()=>{IX.sub=null;renderIdx()};frag.append(bk,el('h5',null,IX.sub));
       const bio=D.b&&D.b[IX.sub];
       if(bio){const b=el('div','bio');b.append(el('span',null,'ترجمته في «كتاب تراجم أصحاب الرسائل والأجوبة»'));const g=el('button','btn btn-primary','الجزء السادس عشر · ص '+ar(bio[0])+(bio[1]?' تقريباً':''));g.type='button';g.onclick=()=>goFromIdx(16,bio[0]);b.append(g);frag.append(b)}
-      N.textContent='يظهر صدر كل موضع كما في النص، مع الجزء والصفحة.';
+      N.textContent='يظهر كل موضع بفقرته كاملة كما في النص، مع الجزء والصفحة.';
       for(const [v,p,k,t,ap] of occ){if(!has(t))continue;if(shown>=MAX)break;frag.append(iitem(v,p,t,k,null,ap));shown++}
     }
   }else{
@@ -2707,7 +2707,7 @@ function pageItemsDom(x,body){
     else if(it.hd){const e=el('p','hdn');e.append(el('span','hn',ar(it.hd)));if(it.g)e.append(gbadge(it.g));body.append(e)}
     else if(it.gx){const e=el('p','hdn hgx');e.append(gbadge(it.gx,1));body.append(e)}
     else if(it.gd){const e=el('p','hdn hgx');const b=gbadge(it.gd.replace(/^\(|\)$/g,''),0);b.textContent=it.gd;e.append(b);body.append(e)}
-    else if(it.e){const e=el('p','edt');e.title='عنوان من النسخة الرقمية، ليس في المطبوع';e.append(richInline(it.e,HL));body.append(e)}
+    else if(it.e){const e=el('p','edt');e.title='عنوان من النسخة الرقمية، وقد لا يكون في المطبوع بلفظه أو في موضعه';e.append(richInline(it.e,HL));body.append(e)}
     else{const h=el('h3');h.append(richInline(it.h,HL));body.append(h)}
   });
   if(hasVerse)body.prepend(el('p','vnote','الشعر قد يختل ترتيبه في النسخة الرقمية، فراجع الصورة عند النقل.'));
@@ -4856,7 +4856,7 @@ new MutationObserver(()=>{$('#navBtn').hidden=$('#home').hidden}).observe($('#ho
 async function renderAbout(){
   const L=$('#aboutLinks');L.innerHTML='';
   [['تقريظات الكتاب',1,5],['تمهيد الجامع',1,11],['تنبيهات الجامع',1,24],['بيان الأجزاء',16,494],['تراجم أصحاب الرسائل',16,314]].forEach(([t,n,p])=>{const b=el('button','btn btn-quiet',t);b.type='button';b.onclick=()=>openPart(n,p,null,false,'txt');L.append(b)});
-  try{const T=await textOf(1);const x=T.p[22];if(x&&!(x[0]&2)){const t=x.slice(1).filter(i=>typeof i==='string')[0];$('#aboutQ').textContent='«'+t.replace(/^[^.]{0,20}\.\s*/,'')+'»';$('#aboutSrc').textContent=''}}catch(e){}
+  try{const m=await meta();const a=m.about;if(a){$('#aboutQ').textContent='«'+a[2]+'»';$('#aboutSrc').textContent=''+ar(a[1])+'–'+ar(a[1]+1)}}catch(e){}
 }
 
 /* ---------- backup of the reader's own data ---------- */
@@ -4952,7 +4952,7 @@ function showScholar(id){
   const rel=(title,list)=>{if(!list.length)return;P.append(el('h4',null,title));const c=el('div','chips');list.forEach(([o,p])=>{const b=el('button','chip',shortName(TR.byId[o].name));b.type='button';b.title='مذكور في ص '+ar(p);b.onclick=()=>showScholar(o);c.append(b)});P.append(c)};
   rel('أخذ عن (ممن لهم ترجمة في الكتاب)',D.edges.filter(e=>e[1]===id).map(e=>[e[0],e[2]]));
   rel('أخذ عنه (ممن لهم ترجمة في الكتاب)',D.edges.filter(e=>e[0]===id).map(e=>[e[1],e[2]]));
-  const quote=(title,qs)=>{if(!qs.length)return;P.append(el('h4',null,title));qs.slice(0,6).forEach(([p,ap,t])=>{const q=el('p','qt');q.append('«'+t+'»');const b=el('button',null,pg(p,ap));b.type='button';b.onclick=go(p);q.append(b);P.append(q)})};
+  const quote=(title,qs)=>{if(!qs.length)return;P.append(el('h4',null,title));qs.forEach(([p,ap,t])=>{const q=el('p','qt');q.append('«'+t+'»');const b=el('button',null,pg(p,ap));b.type='button';b.onclick=go(p);q.append(b);P.append(q)})};
   quote('من ترجمته: شيوخه',n.t);quote('من ترجمته: تلاميذه',n.s);
   const acts=el('div','acts');const bio=el('button','btn btn-primary','اقرأ ترجمته كاملة');bio.type='button';bio.onclick=go(n.page);acts.append(bio);
   if(n.idx){const a=el('button','btn btn-quiet','أجوبته وأقواله في الكتاب');a.type='button';a.onclick=()=>{$('#treeOverlay').hidden=true;IX.tab='s';IX.sub=n.idx;$('#idxq').value='';$('#idxOverlay').hidden=false;renderIdx()};acts.append(a)}
