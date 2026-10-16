@@ -1577,6 +1577,8 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .themes button{padding:6px 4px}
 .themes button[aria-pressed=true]{box-shadow:inset 0 0 0 1.5px var(--brass)}
 
+.dl-bsm{text-align:center;color:var(--brass);margin:18px 0 2px;font-size:1.05em}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -1878,7 +1880,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
         <div class="card"><b>نص مطابَق صفحةً صفحة</b><span>النص من المكتبة الشاملة (الطبعة السادسة ١٤١٧هـ). قُرئ أول كل صفحة وآخرها من صورتها قراءة جديدة وطوبق من الجهتين، وما لم تكتمل مطابقة حدوده عُلِّم «≈ حدود تقريبية».</span></div>
         <div class="card"><b>حواشي المطبوع</b><span>حواشي الجامع في أسفل الصفحات ليست في النص الرقمي، فتُعرض كما طُبعت: صورةً مقتطعة من الصفحة نفسها، بزر «حاشية المطبوع» تحت نص الصفحة.</span></div>
         <div class="card"><b>مقابلة وسط الصفحة</b><span>قُرئت كل صفحة من صورتها كاملة وقوبلت بالنص، فما ظهر فيه نقص عن المطبوع أو مخالفة له، وأكّده فحص مستقل بالنظر في الصورة، عُلِّم في موضعه بـ«في المطبوع زيادة» أو «يخالف المطبوع». والنص نفسه لم يُغيَّر.</span></div>
-        <div class="card"><b>الآيات بالرسم العثماني</b><span>تُعرض الآية المستشهد بها بخط مصحف المدينة (مجمع الملك فهد لطباعة المصحف الشريف)، متى طابقت كلماتها نص الآية المعزوّ إليها كلمة كلمة، وإلا بقيت كما في النص.</span></div>
+        <div class="card"><b>الآيات بالرسم العثماني</b><span>تُعرض الآية المستشهد بها بلفظ الكتاب كما في نسخته الرقمية، وبالضغط عليها يظهر نصها بخط مصحف المدينة (مجمع الملك فهد لطباعة المصحف الشريف) متى تعيّنت آيتها.</span></div>
         <div class="card"><b>فهارس تعمل باللمس</b><span>أرقام الصفحات في فهارس الأجزاء قُرئت وروجعت، فاضغط على أي موضوع في الفهرس المطبوع لتنتقل إلى صفحته.</span></div>
       </div>
       <p class="note">النص الرقمي قد يخالف المطبوع في الرسم والهمزات وعلامات الترقيم، ولا تدخل فيه الحواشي، وما بين معقوفين [ ] من عناوين وعزو للآيات هو بصيغة النسخة الرقمية وقد لا يكون في المطبوع بلفظه (يظهر بلون باهت). فالمعتمد في النقل والعزو صورة الصفحة، وهي بجانب النص دائماً.</p>
@@ -2067,7 +2069,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
     <h4>أبواب الكتاب</h4>
     <div class="bktoc" id="bkToc"></div>
     <h4>عن هذه النسخة</h4>
-    <p class="note">النص من نشرة وزارة الشؤون الإسلامية (المكتبة الشاملة)، وهو نص هذه الطبعة نفسها، رُبط بصفحات المطبوع صفحةً صفحة، وقوبل بصورها، وطُبّق عليه جدول التصويبات المطبوع في آخر الكتاب. والآيات بنص مجمع الملك فهد وخطه، ولا تُعرض حواشي المطبوع. والعناوين الباهتة من النسخة الرقمية وليست في المطبوع. والمعتمد عند النقل صورة الصفحة: زر «قارن بالصورة».</p>
+    <p class="note">نص كل كتاب من نسخته الرقمية في المكتبة الشاملة حرفاً بحرف، رُبط بصفحات طبعته صفحةً صفحة، ولم يُصحَّح على المطبوع، وما عُرف أن المطبوع يخالفه فيه معلَّمٌ في صفحته. والآيات بلفظ الكتاب، ولا تُعرض حواشي المطبوع. والعناوين الباهتة من النسخة الرقمية وليست في المطبوع. والمعتمد عند النقل صورة الصفحة: زر «قارن بالصورة».</p>
   </div>
 </div>
 <div class="overlay bkpage" id="zadPage" hidden role="dialog" aria-label="كتاب">
@@ -2098,7 +2100,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-16-0623';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-16-0929';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2228,7 +2230,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "7b60653830", "data/sira_x.json": "ec410296f9", "data/sx_ahl.json": "95a1a003c1", "data/sx_alam.json": "0dc7ef0974", "data/sx_badab.json": "f75594f567", "data/sx_bans.json": "ba06a323d3", "data/sx_bdaw.json": "afd0f80bae", "data/sx_bfad.json": "76aa8c0f40", "data/sx_bilm.json": "163eef7150", "data/sx_bmnq.json": "e4717eeb59", "data/sx_bsal.json": "78b8df2862", "data/sx_bsaw.json": "673526178b", "data/sx_bsif.json": "557a8e6c0a", "data/sx_bsir.json": "3055b2230c", "data/sx_dal.json": "13246b9bcc", "data/sx_feat.json": "f1ef8d6775", "data/sx_gold.json": "7f061ad411", "data/sx_gz.json": "3a440a08f6", "data/sx_hady.json": "1e0b1e4e67", "data/sx_hajj.json": "802b9fe508", "data/sx_hjr.json": "0adc5883c5", "data/sx_hjrb.json": "9316a1ca50", "data/sx_kh.json": "d52d224597", "data/sx_khn.json": "7bc6713cbf", "data/sx_khutab.json": "29c3ac95a2", "data/sx_mfad.json": "d73fc18402", "data/sx_mg.json": "d53d9b2db9", "data/sx_msal.json": "5d81bc9b4d", "data/sx_msaw.json": "c49b60ec91", "data/sx_msh.json": "df93c51abc", "data/sx_msif.json": "eb3d0a5c93", "data/sx_nuzul.json": "75315c731c", "data/sx_qa.json": "752452e3c7", "data/sx_shs.json": "d3614c40f6", "data/sx_shu.json": "5fab028ede", "data/sx_wafat.json": "82f6cdc82a", "data/sx_wasaya.json": "6f6dd3ecb0", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "2b9f8b0fe0", "data/quran.json": "3b7af2ab79", "data/qv.json": "7b60653830", "data/sira_x.json": "ec410296f9", "data/sx_ahl.json": "d79f3b8a50", "data/sx_alam.json": "ca08eb1602", "data/sx_badab.json": "eddcd84ec9", "data/sx_bans.json": "cecd319e7a", "data/sx_bdaw.json": "2a1b5ec65c", "data/sx_bfad.json": "bccac42523", "data/sx_bilm.json": "6c1d5ccfb9", "data/sx_bmnq.json": "d1c643ad83", "data/sx_bsal.json": "d524018e2e", "data/sx_bsaw.json": "0a351cdaa2", "data/sx_bsif.json": "35b1c4acba", "data/sx_bsir.json": "ce73f2406b", "data/sx_dal.json": "8dab7b0190", "data/sx_feat.json": "41e4d49a69", "data/sx_gold.json": "2bbba2a016", "data/sx_gz.json": "5fa5782022", "data/sx_hady.json": "30c9c7c9f0", "data/sx_hajj.json": "15c3efb0ee", "data/sx_hjr.json": "1560a6d13c", "data/sx_hjrb.json": "4d54ad1b2c", "data/sx_kh.json": "75829d62b8", "data/sx_khn.json": "8196fb815a", "data/sx_khutab.json": "9f4b90c0e9", "data/sx_mfad.json": "1900f7d7ed", "data/sx_mg.json": "a9da8977e8", "data/sx_msal.json": "06fb240c61", "data/sx_msaw.json": "6f8ad9ae97", "data/sx_msh.json": "c7ad582fea", "data/sx_msif.json": "9e04bf9e8e", "data/sx_nuzul.json": "d791220b3d", "data/sx_qa.json": "c8326dd6b9", "data/sx_shs.json": "a93997ab61", "data/sx_shu.json": "103e62fc65", "data/sx_wafat.json": "482be035e9", "data/sx_wasaya.json": "6d468cded7", "data/t17.json": "86c024b72e", "data/t18.json": "eac1d30d9f", "data/t19.json": "6de8758823", "data/t20.json": "7e5e3238ba", "data/t21.json": "3490cdd076", "data/t22.json": "dce445d532", "data/t23.json": "09ee9bc255", "data/t24.json": "769913f1a6", "data/t25.json": "0aa32a3d51", "data/t26.json": "982bb6cb57", "data/t27.json": "651931d6ea", "data/t28.json": "0538698377", "data/t29.json": "925c6db4d9", "data/t30.json": "f564991943", "data/t31.json": "b58d19f797", "data/t32.json": "b7ffea3f14", "data/t33.json": "2de7bb520e", "data/t34.json": "72445d764a", "data/t35.json": "8aaf401e30", "data/t36.json": "6d9143da69", "data/t37.json": "3373731797", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -2624,6 +2626,7 @@ $('#saveAll').onclick=async()=>{
 
 /* ---------- text rendering ---------- */
 // Quran verses are between { } in the digital text: they are shown with ornate brackets, and copying keeps the original characters.
+let VSQ=[];
 function richInline(s,hl,inQ,rep){
   // { } Quran (ornate brackets on screen, original characters when copied); [ ] wording of the digital edition (muted)
   // inQ: the text starts inside a verse that opened earlier (on the previous page or paragraph)
@@ -2636,17 +2639,17 @@ function richInline(s,hl,inQ,rep){
   // footnote numbers of the digital edition after a hadith or a verse (its takhrij notes, not carried here): small and muted
   s=s.replace(/(["}]|"،)\s?(\d{1,2})(?=[\s.،؛:؟,]|$)/g,'$1\u0001$2\u0002');
   // in some parts the digital edition lost the ligature ﷺ after the Prophet's name and left a lone "(": shown as in print
-  s=s.replace(/(رسول الله|النبي|نبيه|نبينا|نبيك|نبيهم)\s?\((?=[^()]*(?:\(|$))/g,'$1 ﷺ ');
   // the digital edition's straight quotation marks, shown as the print has them: « »  (only when they pair up)
-  {const q=s.split('"');if(q.length>1&&q.length%2===1)s=q.map((x,i)=>i%2?'«'+x.trim()+'»':x).join('')}
   for(const ch of s){
     if(ch==='\u0003'||ch==='\u0004'){flush();const d=ch==='\u0004',g=el('button',d?'gap d':'gap');g.type='button';g.setAttribute('aria-label',d?'النص هنا يخالف المطبوع':'هنا في المطبوع كلام ليس في النص');g.onclick=e=>{e.stopPropagation();midNote(0,1,d)};node.append(g);continue}
+    if(ch==='\uE000'){if(!qspan&&!ed){flush();qspan=el('span','q');const r=VSQ.shift();if(r&&r[3]){qspan.classList.add('qa');qspan.dataset.s=r[3];qspan.dataset.a=r[4];qspan.dataset.b=r[5]}f.append(qspan);node=qspan}continue}
+    if(ch==='\uE001'){if(qspan){flush();node=f;qspan=null}continue}
     if(ch==='\u0001'){flush();sup=el('sup','fn');sup.title='رقم حاشية في النسخة الرقمية، والحاشية غير منقولة هنا';node.append(sup);continue}
     if(ch==='\u0002'){if(sup){sup.textContent=buf;buf=''}sup=null;continue}
     if(sup){buf+=ch;continue}
     if(ch==='{'&&!qspan&&!ed){flush();k++;qspan=el('span','q');const b=el('span','qb','{');b.dataset.c='﴿';qspan.append(b);f.append(qspan);node=qspan;
       // the verse in the Uthmani script of the King Fahd Complex, when the quotation matches it word for word
-      if(rep&&rep[k]!=null){const r=rep[k];if(r[2]!=null){qspan.append(el('span','qu',r[2]));skip=true}
+      if(rep&&rep[k]!=null){const r=rep[k];
         // the reference was checked word for word against the verse: a tap shows it in full with its place
         if(r[3]){qspan.classList.add('qa');qspan.dataset.s=r[3];qspan.dataset.a=r[4];qspan.dataset.b=r[5]}
         if(r[6]!=null)fix=r}
@@ -2693,16 +2696,17 @@ function boldNm(root){const RX=/((?:[وفبلك]{0,2})رسول الله صلى �
   L.forEach(t=>{const f=document.createDocumentFragment();t.data.split(RX).forEach((y,i)=>{if(!y)return;if(i%2){const b=document.createElement('span');b.className='nb-n';b.textContent=y;f.append(b)}else f.append(document.createTextNode(y))});t.replaceWith(f)})}
 function pageItemsDom(x,body){
   const items=x.slice(1);let hasVerse=false,inQ=!!(x[0]&4);
-  const U={};for(const r of (x.u||[]))(U[r[0]]=U[r[0]]||{})[r[1]]=r;     // r = [item, brace ordinal, Uthmani text, sura, first aya, last aya]
+  const U={},VS={};for(const r of (x.u||[])){if(r[1]==='s'){(VS[r[0]]=VS[r[0]]||[]).push(r);continue}(U[r[0]]=U[r[0]]||{})[r[1]]=r}     // r = [item, brace ordinal, Uthmani text, sura, first aya, last aya]
   // places where the printed page has words the digital text lacks: a mark at that place (\u0003 is turned into it)
   const M={};for(const [ii,pos,w,kind] of (x.m||[]))(M[ii]=M[ii]||[]).push([pos,kind==='d'?'\u0004':'\u0003']);
-  const mark=(t,i)=>{if(typeof t!=='string'||!M[i])return t;for(const [pos,c] of M[i].sort((a,b)=>b[0]-a[0]))t=t.slice(0,pos)+c+t.slice(pos);return t};
+  const mark=(t,i)=>{if(typeof t!=='string')return t;const ins=(M[i]||[]).slice();const vs=(VS[i]||[]).slice().sort((a,b)=>a[6]-b[6]);VSQ=vs.slice();vs.forEach(r=>{ins.push([r[6],'\uE000']);ins.push([r[7],'\uE001'])});if(!ins.length)return t;for(const [pos,c] of ins.sort((a,b)=>b[0]-a[0]||(a[1]==='\uE001'?-1:1)))t=t.slice(0,pos)+c+t.slice(pos);return t};
   let cur=-1;const rich=t=>{const f=richInline(mark(t,cur),HL,inQ,U[cur]);inQ=f.inQ;return f};
   items.forEach((it,i)=>{cur=i;
     if(typeof it==='string'&&isVerse(it)){hasVerse=true;const P=el('p','verse');P.append(rich(it));body.append(P);return}
     if(typeof it==='string'){const P=el('p');if(i===0&&(x[0]&1))P.className='cont';else if(/^بسم الله الرحمن الر ?حيم\.?$/.test(it.trim()))P.className='bsm';P.append(rich(it));body.append(P)}
     else if(it.hd){const e=el('p','hdn');e.append(el('span','hn',ar(it.hd)));if(it.g)e.append(gbadge(it.g));body.append(e)}
     else if(it.gx){const e=el('p','hdn hgx');e.append(gbadge(it.gx,1));body.append(e)}
+    else if(it.gd){const e=el('p','hdn hgx');const b=gbadge(it.gd.replace(/^\(|\)$/g,''),0);b.textContent=it.gd;e.append(b);body.append(e)}
     else if(it.e){const e=el('p','edt');e.title='عنوان من النسخة الرقمية، ليس في المطبوع';e.append(richInline(it.e,HL));body.append(e)}
     else{const h=el('h3');h.append(richInline(it.h,HL));body.append(h)}
   });
@@ -3975,10 +3979,10 @@ async function fxSifa(){const F=await sxFeat();const P=fxOpen('صفته ﷺ كأ
   P.inn.append(el('p','fx-note','يُعرض ما صححه الألباني أو حسّنه، والضعيف مخفي حتى تطلبه. والأحكام منقولة من مختصر الشمائل كما طبع.'));
   const BS=await getJSON('data/sx_bsif.json');if(BS&&BS.ch){P.inn.append(el('h3','dl-bk','من صحيح البخاري'),el('p','dl-bs','«باب صفة النبي صلى الله عليه وسلم» من كتاب المناقب والباب الذي يليه، ثم «باب كيف كان عيش النبي صلى الله عليه وسلم وأصحابه» من كتاب الرقاق. اضغط الباب لترى أحاديثه.'));
     dalChapters(P,BS,bMeta,'');
-    P.inn.append(el('p','fx-note','مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء الرابع ص ١٨٧–١٩١، والجزء الثامن ص ٩٦–٩٨)، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن. والحديث بإسناده كاملاً كما في المطبوع، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'))}
+    P.inn.append(el('p','fx-note','بلفظ النسخة الرقمية من «صحيح البخاري» في المكتبة الشاملة حرفاً بحرف، والأبواب كاملة بأحاديثها. والحديث بإسناده كاملاً، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'))}
   const MS=await getJSON('data/sx_msif.json');if(MS&&MS.ch){P.inn.append(el('h3','dl-bk','من صحيح مسلم'),el('p','dl-bs','أبواب صفته وأخلاقه صلى الله عليه وسلم من «كتاب الفضائل» في صحيح مسلم، كل باب بأحاديثه كاملة وعلى ترتيبها، ثم أول «كتاب الزهد والرقائق» كاملاً إلى أول أبوابه. اضغط الباب لترى أحاديثه.'));
     dalChapters(P,MS,msMeta,'');
-    P.inn.append(el('p','fx-note','أحاديث مسلم مراجَعة كلمةً كلمةً على صور الطبعة العامرة بإسطنبول (الجزء السابع ص ٥٩–٩٦، والجزء الثامن ص ٢١٠–٢٢٠) بقراءتين مستقلتين، والحديث بإسناده كاملاً كما في المطبوع، ويمكن إخفاء الإسناد إلى الصحابي بضغطة. وعناوين الأبواب كما في حاشيتها، وهي من وضع الشرّاح لا من الإمام مسلم، والأرقام بترقيم محمد فؤاد عبد الباقي. وأبواب المعجزات من هذا الكتاب في صفحة «دلائل النبوة»، والكتاب كله بأبوابه في صفحة «كتاب الفضائل من صحيح مسلم».'));P.inn.append(el('p','fx-note','والذهبي كلامه صلى الله عليه وسلم بلفظه، عُيّن حديثاً حديثاً بقراءتين مستقلتين، ولم يُلوَّن إلا ما تعيّن أنه من قوله، وأما وصف فعله وكلام الصحابة فبلون النص. والآيات بالأخضر بلفظ مصحف المدينة النبوية من مجمع الملك فهد، إلا مواضع يسيرة لم تتعيّن آيتها فبقيت بلفظ الكتاب.'))}}
+    P.inn.append(el('p','fx-note','أحاديث مسلم بلفظ النسخة الرقمية في المكتبة الشاملة (طبعة عبد الباقي) حرفاً بحرف، والأبواب كاملة بأحاديثها، والحديث بإسناده كاملاً، ويمكن إخفاء الإسناد إلى الصحابي بضغطة. وعناوين الأبواب كما في حاشيتها، وهي من وضع الشرّاح لا من الإمام مسلم، والأرقام بترقيم محمد فؤاد عبد الباقي. وأبواب المعجزات من هذا الكتاب في صفحة «دلائل النبوة»، والكتاب كله بأبوابه في صفحة «كتاب الفضائل من صحيح مسلم».'));P.inn.append(el('p','fx-note','والذهبي كلامه صلى الله عليه وسلم بلفظه، عُيّن حديثاً حديثاً بقراءتين مستقلتين، ولم يُلوَّن إلا ما تعيّن أنه من قوله، وأما وصف فعله وكلام الصحابة فبلون النص. والآيات بالأخضر بلفظ الكتاب كما هو في النسخة الرقمية.'))}}
 
 /* ---------- طريق الهجرة ---------- */
 async function fxRoad(){const F=await sxFeat();const P=fxOpen('طريق الهجرة');
@@ -3987,9 +3991,9 @@ async function fxRoad(){const F=await sxFeat();const P=fxOpen('طريق الهج
   P.inn.append(ol);
   const d=el('div','fx-src');d.append(el('h3',null,'النص كاملاً'),el('p','by',SXBN(23)+'، ص '+ar(491)+'–'+ar(492)),el('p','road-q',F.roadq),goBtn(P,'اقرأه في سيرة ابن هشام',23,491));P.inn.append(d);
   const HB=await getJSON('data/sx_hjrb.json');if(HB&&HB.ch){P.inn.append(el('h3','dl-bk','من صحيح البخاري'),el('p','dl-bs','حديث عائشة رضي الله عنها في الهجرة، ثم خبر سراقة بن مالك بلسانه وقدومه صلى الله عليه وسلم المدينة.'));
-    dalChapters(P,HB,bMeta,'');P.inn.append(el('p','fx-note','من «كتاب مناقب الأنصار»، مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء الخامس ص ٥٨–٦١)، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن، والذهبي كلامه صلى الله عليه وسلم بلفظه.'))}
+    dalChapters(P,HB,bMeta,'');P.inn.append(el('p','fx-note','الباب كاملاً من «كتاب مناقب الأنصار» بلفظ النسخة الرقمية حرفاً بحرف، والذهبي كلامه صلى الله عليه وسلم بلفظه.'))}
   const HJ=await getJSON('data/sx_hjr.json');if(HJ&&HJ.ch){P.inn.append(el('h3','dl-bk','من صحيح مسلم'),el('p','dl-bs','حديث الهجرة من رواية البراء عن أبي بكر رضي الله عنهما، وفيه الغار وسراقة ونزوله صلى الله عليه وسلم في بني النجار.'));
-    dalChapters(P,HJ,msMeta,'');P.inn.append(el('p','fx-note','من «كتاب الزهد والرقائق»، مراجَع كلمةً كلمةً على صور الطبعة العامرة بإسطنبول (الجزء الثامن ص ٢٣٦–٢٣٧)، وعنوان الباب كما في حاشيتها، والذهبي كلامه صلى الله عليه وسلم بلفظه.'))}
+    dalChapters(P,HJ,msMeta,'');P.inn.append(el('p','fx-note','الباب كاملاً من «صحيح مسلم» بلفظ النسخة الرقمية حرفاً بحرف، وعنوان الباب كما فيها، والذهبي كلامه صلى الله عليه وسلم بلفظه.'))}
   P.inn.append(el('p','fx-note','لم نرسم الطريق على خريطة، لأن تعيين هذه المواضع اليوم اجتهادٌ يختلف فيه الباحثون، فاقتصرنا على لفظ الرواية. وما نُسب فيه إلى ابن هشام فهو من كلامه لا من كلام ابن إسحاق.'))}
 
 
@@ -4013,7 +4017,7 @@ async function khWho(c){const F=await sxFeat();KHSELC=KHSELC===c?null:c;
   if(!KHSELC){evClose();return}const W=el('div','yr-p kh-w');evShell(KHN[c]).append(W);
   const a=(F.khul.ages||[]).find(x=>x.k===c);W.append(el('h3',null,KHN[c]+(c==='has'?' رضي الله عنهما':' رضي الله عنه')));
   if(c==='has'){const q=F.khul.q[41];W.append(el('p','sub','قال ابن كثير:'),el('blockquote',null,'«'+q.q+'»'),goP(pgT(q.n,q.p),q.n,q.p));W.append(el('p','sub','والخلفاء الراشدون أربعة، قال شيخ الإسلام ابن تيمية:'),el('blockquote',null,'«وكان أمير المؤمنين علي بن أبي طالب رضي الله عنه آخر الخلفاء الراشدين المهديين»'),el('p','kh-src','مجموع الفتاوى ٣/٤٠٦'))}
-  if(c==='mk'){W.append(el('p','sub','قال ابن كثير في أول ترجمته:'),el('blockquote',null,'«هو معاوية بن أبي سفيان صخر بن حرب بن أمية بن عبد شمس بن عبد مناف بن قصي، أبو عبد الرحمن القرشي الأموي، خال المؤمنين، وكاتب وحي رب العالمين»'),goP(pgT(30,146),30,146),
+  if(c==='mk'){const K=F.khul;W.append(el('p','sub','قال ابن كثير في أول ترجمته:'),el('blockquote',null,'«'+K.mkq.q+'»'),goP(pgT(30,146),30,146),
       el('p','sub','وقال شيخ الإسلام ابن تيمية:'),el('blockquote',null,'«واتفق العلماء على أن معاوية أفضل ملوك هذه الأمة، فإن الأربعة قبله كانوا خلفاء نبوة، وهو أول الملوك؛ كان ملكه ملكا ورحمة»'),el('p','kh-src','مجموع الفتاوى ٤/٤٧٨'));return}
   const S=(F.khul.sec||{})[c]||[];if(S.length){W.append(el('p','sub','أبواب عنه في الكتاب:'));S.forEach(h=>{const b=el('button','kh-h');b.type='button';b.append(el('span',null,h.t),el('small',null,(h.n===28?'ج٩':h.n===29?'ج١٠':'ج١١')+'، ص '+ar(h.p)));b.onclick=()=>khRead(h.n,h.p,h.t);W.append(b)});if(a)W.append(el('p','sub','عمره ومدة خلافته:'))}
   if(a)a.q.forEach(q=>{W.append(el('blockquote',null,'«'+q.q+'»'));W.append(goP(pgT(q.n,q.p)+(q.p2?'–'+ar(q.p2):''),q.n,q.p))});
@@ -4096,7 +4100,7 @@ function fxMethod(){const P=fxOpen('منهج الموقع');const I=P.inn;
   I.append(el('p','fx-lead','كيف نُقلت الكتب في هذا الموقع، وكيف قوبلت بطبعاتها.'));
   const ul=el('ul','fx-method');[
    'ينقل الموقع نصوص الكتب بلفظها، ولا يضيف إليها شيئاً من عنده. وكل كتاب مقسّم على صفحات طبعته المذكورة، ورقم كل صفحة هو رقمها في المطبوع.',
-   'قوبل كل كتاب بصور صفحات طبعته، وما خالف فيه النص الرقمي المطبوعَ صُحّح على المطبوع. وتفصيل ذلك لكل كتاب أدناه.',
+   'نص كل كتاب بلفظ نسخته الرقمية في المكتبة الشاملة حرفاً بحرف، لم يُصحَّح على المطبوع ولم يُغيَّر، وما عُرف أن المطبوع يخالفه فيه معلَّمٌ في صفحته ومعه لفظ المطبوع. وتفصيل ذلك لكل كتاب أدناه.',
    'المعتمد عند النقل صورة الصفحة من المطبوع: زر «قارن بالصورة» في رأس كل صفحة.',
    'الموقع ناقل لا محقق: أحكام الأحاديث منسوبة إلى من حكم بها، ولا يحكم الموقع على حديث ولا يرجّح بين الأقوال.',
    'كل آية في الكتب تُفتح من مصحف مجمع الملك فهد لطباعة المصحف الشريف (رواية حفص). أما رسم الآيات داخل نص كل كتاب فمبيّن في التعريف بنسخته أدناه.',
@@ -4106,7 +4110,7 @@ function fxMethod(){const P=fxOpen('منهج الموقع');const I=P.inn;
   const bn=$('#bookPage .note');const B=[['مختصر سيرة الرسول صلى الله عليه وسلم، لمحمد بن عبد الوهاب',bn?bn.textContent:''],[MB.h.t,MB.h.note],[MB.z.t,MB.z.note],[MB.s.t,MB.s.note],[MB.m.t,MB.m.note],[MB.k.t,MB.k.note]];
   B.forEach(([t,x])=>{if(!x)return;const d=el('details','fx-src');d.append(el('summary',null,t),el('p',null,x));I.append(d)});
   I.append(el('h3','fx-dh','مواضع الخلاف مع المطبوع'));
-  I.append(el('p','fx-lead','كل موضع خالف فيه النصُّ الرقمي المطبوعَ وقرّرنا فيه شيئاً معلَّمٌ في صفحته. اختر كتاباً لتقرأ صفحاته ذات العلامات وحدها، وقارن كل موضع بصورة الصفحة. وتظهر العلامات في القارئ أيضاً من «المزيد».'));
+  I.append(el('p','fx-lead','كل موضع عُرف أن النصَّ الرقمي يخالف فيه المطبوعَ معلَّمٌ في صفحته: النص بلفظ النسخة الرقمية كما هو، وفي العلامة لفظ المطبوع. اختر كتاباً لتقرأ صفحاته ذات العلامات وحدها، وقارن كل موضع بصورة الصفحة. وتظهر العلامات في القارئ أيضاً من «المزيد».'));
   const mb=el('div','sx-mkbooks');mb.id='sxMkBooks';mb.addEventListener('click',()=>P.close(),true);I.append(mb);renderMkBooks()}
 $('#sxMethod').onclick=fxMethod;$('#sxShare').onclick=fxShare;$('#sxFb').onclick=()=>openFb('notes');
 
@@ -4172,14 +4176,14 @@ const mgDay=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5
 function mgStart(){let d=LS.get('mgStart',null);if(!Number.isInteger(d)){d=mgDay();LS.set('mgStart',d)}return d}
 const mgIdx=N=>{const x=LS.get('mgIx',null);return Number.isInteger(x)?x%N:Math.max(0,mgDay()-mgStart())%N};   // with the notification on: the one waiting to be read   // before the first day: the first hadith
 function mgText(h,short){return short&&h.s?h.s:h.x}   // the hadith with its full chain as printed; the short form only on request
-function mgMeta(h,full){return 'صحيح البخاري، كتاب المغازي، رقم '+ar(+h.no)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'')}
+function mgMeta(h,full){return 'صحيح البخاري، كتاب المغازي'+(h.no?'، رقم '+String(h.no).replace(/\d+/g,d=>ar(+d)):'')+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'')}
 const mgCh=(M,h)=>(h.ch==='باب'||h.ch==='باب:')?'باب بلا ترجمة، تابع لما قبله':h.ch;
 // one hadith: the text from the Companion on, with the whole chain a tap away
 const HDN=/((?:[وفبلك]{0,2})رسول الله صلى الله عليه وسلم|(?:[وفبك]{0,2})للنبي صلى الله عليه وسلم|(?:[وفبك]{0,2})النبي صلى الله عليه وسلم|(?:[وفبلك]{0,2})نبي الله صلى الله عليه وسلم|(?:[وفبلك]{0,2})رسول الله ﷺ|(?:[وفبك]{0,2})النبي ﷺ)/;
 let QV=null;getJSON('data/qv.json').then(x=>{QV=x||{}}).catch(()=>{QV={}});
 // a fragment that two verses share in different Mushaf forms: the verse is chosen by the words just before it in the text
 const QVC={};
-const hdV=(z,prev)=>{const k=z.slice(1,-1).trim();let u=QV&&QV[k];if(prev&&QVC[k]){const c=QVC[k].find(([n])=>prev.includes(n));if(c)u=c[1]}const sp=el('span',u?'hd-v hd-u':'hd-v','﴿'+(u||k)+'﴾');return sp};
+const hdV=(z,prev)=>{const k=z.slice(1,-1).trim();let u=QV&&QV[k];if(prev&&QVC[k]){const c=QVC[k].find(([n])=>prev.includes(n));if(c)u=c[1]}const sp=el('span','hd-v','﴿'+k+'﴾');if(u)sp.title=u;return sp};
 // the Prophet's own words in the Sira books' quotations: phrases two readers agreed on (data/sx_gold.json, src/gold)
 let GOLD=null;getJSON('data/sx_gold.json').then(x=>{GOLD=x||{}}).catch(()=>{GOLD={}});
 const goldFor=t=>(GOLD&&t&&(GOLD[t]||(t[0]==='«'&&GOLD[t.slice(1,-1)])))||null;
@@ -4467,11 +4471,11 @@ async function fxMaghazi(i){const M=await getJSON('data/sx_mg.json');const h=M.h
   const ft=el('div','ev-ft');ft.append(el('small',null,mgMeta(h,1)));
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(h.n,h.p,null,false,'txt')};ft.append(go);B.append(ft)}
 // Kitab al-Maghazi by event: Bukhari's own chapters, the events in the order of the Mukhtasar
-const msMgMeta=(h,full)=>'صحيح مسلم، '+(h.k||'كتاب الجهاد والسير')+msNo(h)+'، الطبعة العامرة ج'+ar(h.v||5)+' ص '+ar(h.p)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'');
+const msMgMeta=(h,full)=>'صحيح مسلم، '+(h.k||'كتاب الجهاد والسير')+msNo(h)+'، طبعة عبد الباقي ج'+ar(h.v||5)+' ص '+ar(h.p)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'');
 async function fxMgTL(open){const M=await getJSON('data/sx_mg.json');const GZ=new Set(((await getJSON('data/sx_gz.json'))||[]).map(g=>g.k));const P=fxOpen('المغازي في الصحيحين');const MS={h:M.mh||[]};
   P.inn.append(el('p','fx-lead','أحاديث كتاب المغازي من صحيح البخاري، ومعها أحاديث كتاب الجهاد والسير من صحيح مسلم، مجموعةً على الغزوات والأحداث بحسب أبواب الكتابين، والأحداث مرتبة على ترتيب وقوعها في مختصر السيرة، وما لم يذكره المختصر من أبواب كتاب المغازي في موضعه من ترتيب البخاري. اضغط الحدث لترى أحاديثه.'));
   const list=el('div','mg-list');P.inn.append(list);
-  const msCh=(cs,body)=>{const hd=el('p','mg-bk','من صحيح مسلم');body.append(hd);cs.forEach(c=>{const cb=el('div','mg-ch');cb.append(el('h4',null,c.t));c.hs.forEach(i=>cb.append(mgItem(MS,i,{clip:260,meta:msMgMeta,noBook:1}).w));body.append(cb)})};
+  const msCh=(cs,body)=>{const hd=el('p','mg-bk','من صحيح مسلم');body.append(hd);cs.forEach(c=>{const cb=el('div','mg-ch');if(c.bk)cb.append(el('p','mg-bk',c.bk));cb.append(el('h4',null,c.t||'(أحاديث في أول الكتاب قبل أول باب)'));if(c.tr){const tp=el('p','mg-tr');hdFill(tp,c.tr,[]);cb.append(tp)}c.hs.forEach(i=>cb.append(mgItem(MS,i,{clip:260,meta:msMgMeta,noBook:1}).w));body.append(cb)})};
   M.ev.forEach((ev,k)=>{const mc=(M.mev||{})[k]||[];const nb=ev.ch.reduce((a,c)=>a+c.hs.length,0),nm=mc.reduce((a,c)=>a+c.hs.length,0),n=nb+nm;if(!n)return;
     const card=el('section','mg-ev'+(ev.rest?' rest':''));const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
     const tt=el('span','mg-tt');tt.append(sawEl('b',null,ev.t),el('small',null,(n===1?'حديث واحد':n===2?'حديثان':ar(n)+(n<=10?' أحاديث':' حديثاً'))+(nm?' (منها '+(nm===1?'حديث واحد':nm===2?'حديثان':ar(nm))+' من مسلم)':'')));hd.append(tt);card.append(hd);
@@ -4488,11 +4492,11 @@ async function fxMgTL(open){const M=await getJSON('data/sx_mg.json');const GZ=ne
     const tt=el('span','mg-tt');tt.append(el('b',null,title),el('small',null,ar(n)+(n<=10?' أحاديث':' حديثاً')+' من صحيح مسلم'));hd.append(tt);card.append(hd);
     card.append(el('p','mg-note',note));
     const body=el('div','mg-body');body.hidden=true;card.append(body);
-    hd.onclick=()=>{const o=body.hidden;if(o&&!body.childElementCount)R.forEach(c=>{const cb=el('div','mg-ch');cb.append(el('h4',null,c.t));c.hs.forEach(i=>cb.append(mgItem(MS,i,{clip:260,meta:msMgMeta,noBook:1}).w));body.append(cb)});body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};list.append(card)};
+    hd.onclick=()=>{const o=body.hidden;if(o&&!body.childElementCount)R.forEach(c=>{const cb=el('div','mg-ch');if(c.bk)cb.append(el('p','mg-bk',c.bk));cb.append(el('h4',null,c.t||'(أحاديث في أول الكتاب قبل أول باب)'));if(c.tr){const tp=el('p','mg-tr');hdFill(tp,c.tr,[]);cb.append(tp)}c.hs.forEach(i=>cb.append(mgItem(MS,i,{clip:260,meta:msMgMeta,noBook:1}).w));body.append(cb)});body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};list.append(card)};
   restCard(M.mrest,'أبواب أخرى من كتاب الجهاد والسير','أبواب لم يسمِّ عنوانُها غزوةً من الغزوات، فبقيت هنا على ترتيب مسلم، وفيها أحكام الجهاد والغنائم، وأخبار من السيرة.');
-  restCard(M.mrest2,'من صحيح مسلم في غير كتاب الجهاد','أحاديث من السيرة في كتابين آخرين من صحيح مسلم: «كتاب صفات المنافقين وأحكامهم» كاملاً (الطبعة العامرة ج٨ ص ١١٩–١٢٥)، وفيه خبر عبد الله بن أبي، ومن رجع يوم أحد، وأصحاب العقبة، وثنية المرار؛ وباب المرور بديار ثمود من «كتاب الزهد والرقائق». ولم تُوضع تحت غزوة لأن عناوينها لم تسمِّها.');
-  P.inn.append(el('p','fx-note','الحديث تحت الحدث الذي بوّب عليه البخاري، والباب الذي بلا ترجمة تابع للباب الذي قبله على عادته. وما ذُكر من تاريخ فهو بلفظ مختصر السيرة وصفحته، وكلام البخاري في أول الباب منقول كما هو، وقد يذكر فيه قولاً آخر في التاريخ. والحديث بإسناده كاملاً كما في المطبوع، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'));
-  P.inn.append(el('p','fx-note','وأحاديث مسلم من «كتاب الجهاد والسير»، ومن «كتاب صفات المنافقين» و«كتاب الزهد»، مراجَعة كلمةً كلمةً على صور الطبعة العامرة بإسطنبول (الجزء الخامس ص ١٣٩–٢٠١، والجزء الثامن ص ١١٩–١٢٤ و٢٢٠–٢٢١)، والحديث بإسناده كاملاً كما في المطبوع، ويمكن إخفاء الإسناد إلى الصحابي بضغطة. وعناوين الأبواب كما في حاشية تلك الطبعة، وهي من وضع الشرّاح لا من الإمام مسلم، ولم يوضع الحديث تحت غزوة إلا إذا سمّاها عنوان بابه، و«باب قتل أبي جهل» تحت بدر كبابه في البخاري. والأرقام بترقيم محمد فؤاد عبد الباقي.'));P.inn.append(el('p','fx-note','والذهبي كلامه صلى الله عليه وسلم بلفظه، عُيّن حديثاً حديثاً بقراءتين مستقلتين، ولم يُلوَّن إلا ما تعيّن أنه من قوله، وأما وصف فعله وكلام الصحابة فبلون النص. والآيات بالأخضر بلفظ مصحف المدينة النبوية من مجمع الملك فهد، إلا مواضع يسيرة لم تتعيّن آيتها فبقيت بلفظ الكتاب.'))}
+  restCard(M.mrest2,'من صحيح مسلم في غير كتاب الجهاد','أحاديث من السيرة في كتابين آخرين من صحيح مسلم: «كتاب صفات المنافقين وأحكامهم» كاملاً، وفيه خبر عبد الله بن أبي، ومن رجع يوم أحد، وأصحاب العقبة، وثنية المرار؛ وباب المرور بديار ثمود من «كتاب الزهد والرقائق». ولم تُوضع تحت غزوة لأن عناوينها لم تسمِّها.');
+  P.inn.append(el('p','fx-note','الحديث تحت الحدث الذي بوّب عليه البخاري، والباب الذي بلا ترجمة تابع للباب الذي قبله على عادته. وما ذُكر من تاريخ فهو بلفظ مختصر السيرة وصفحته، وكلام البخاري في أول الباب منقول كما هو، وقد يذكر فيه قولاً آخر في التاريخ. وأحاديث البخاري بلفظ النسخة الرقمية في المكتبة الشاملة حرفاً بحرف، وأبواب كتاب المغازي كلها فيها كاملة بأحاديثها. والحديث بإسناده كاملاً، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'));
+  P.inn.append(el('p','fx-note','وأحاديث مسلم من «كتاب الجهاد والسير»، ومن «كتاب صفات المنافقين» و«كتاب الزهد»، بلفظ النسخة الرقمية (طبعة عبد الباقي) حرفاً بحرف، والأبواب كاملة بأحاديثها، والحديث بإسناده كاملاً، ويمكن إخفاء الإسناد إلى الصحابي بضغطة. وعناوين الأبواب كما فيها، وهي من وضع الشرّاح لا من الإمام مسلم، ولم يوضع الحديث تحت غزوة إلا إذا سمّاها عنوان بابه، و«باب قتل أبي جهل» تحت بدر كبابه في البخاري. والأرقام بترقيم محمد فؤاد عبد الباقي.'));P.inn.append(el('p','fx-note','والذهبي كلامه صلى الله عليه وسلم بلفظه، عُيّن حديثاً حديثاً بقراءتين مستقلتين، ولم يُلوَّن إلا ما تعيّن أنه من قوله، وأما وصف فعله وكلام الصحابة فبلون النص. والآيات بالأخضر بلفظ الكتاب كما هو في النسخة الرقمية.'))}
 // Friday: al-Ahzab 56, in the Mushaf's script
 async function fxFriday(){const Q=await getJSON('data/quran.json');const v=Q.a[32][55];const B=evShell('يوم الجمعة');
   B.append(el('p','ev-era','يوم الجمعة'),sawEl('h3','ev-t','الصلاة على النبي ﷺ'));
@@ -4537,25 +4541,25 @@ function evRoute(){const h=location.hash;let m;
 addEventListener('hashchange',evRoute);evRoute();
 
 /* ---------- الغزوات في سطور: the Mukhtasar's words and figures, and the hadiths of the two Sahihs ---------- */
-/* ---------- من شؤونه ﷺ: صحيح البخاري أولاً، ثم فصول «زاد المعاد» بلفظ المطبوع ---------- */
+/* ---------- من شؤونه ﷺ: صحيح البخاري أولاً، ثم فصول «زاد المعاد» بلفظها ---------- */
 /* ---------- فضائل الصحابة: كتاب فضائل أصحاب النبي ﷺ من صحيح البخاري بأبوابه وترتيبه ---------- */
 const FADC={
   '':{f:'sx_bfad',t:'فضائل أصحاب النبي صلى الله عليه وسلم',l:'«كتاب فضائل أصحاب النبي ﷺ» من صحيح البخاري كاملاً، بأبوابه وترتيبه: يبدأ بفضل الصحابة عامة، ثم أبي بكر، ثم عمر، ثم عثمان، ثم علي رضي الله عنهم، ثم بقية الصحابة. اضغط الباب لترى أحاديثه.',n:'الخامس ص ٢–٣٠',g:1},
   ans:{f:'sx_bans',t:'مناقب الأنصار',l:'أبواب «كتاب مناقب الأنصار» من صحيح البخاري في فضائل الأنصار وأعيانهم رضي الله عنهم، بأبوابه وترتيبه، ومعها أبواب خديجة وجرير وحذيفة وهند بنت عتبة التي تليها. اضغط الباب لترى أحاديثه.',n:'الخامس ص ٣٠–٤٠',g:1},
   sir:{f:'sx_bsir',t:'السيرة في صحيح البخاري',l:'أبواب السيرة في صحيح البخاري بأبوابها وترتيبها: يبدأ بـ«كتاب بدء الوحي» الذي افتتح به البخاري صحيحه، ثم أبواب السيرة من «كتاب مناقب الأنصار»: من خبر زيد بن عمرو بن نفيل وبنيان الكعبة وأيام الجاهلية، إلى المبعث وما لقي النبي ﷺ وأصحابه بمكة، وإسلام السابقين، والهجرة إلى الحبشة، والإسراء والمعراج، وبيعة العقبة، والهجرة إلى المدينة ومقدمه ﷺ إليها، ثم حديث صلح الحديبية الطويل من «كتاب الشروط». وكتاب المغازي في «المغازي في الصحيحين». اضغط الباب لترى أحاديثه.',n:'الأول ص ٦–١٠، والخامس ص ٤٠–٧١، والثالث ص ١٩٣–١٩٧',g:1,mg:1},
   daw:{f:'sx_bdaw',ix:[['النوم والاستيقاظ',[4,5,6,7,8,9,10,11,12]],['الصباح',[14]],['الوضوء والصلاة',[47,15,16,60,58]],['دخول الخلاء',[13]],['الاستغفار والتوبة',[1,2,3,57]],['الكرب والمرض',[25,26,41]],['التعوذ',[33,34,35,36,37,38,39,40,42,43,44,53]],['السفر',[48,49]],['الأهل والأولاد',[50,51,29]],['الاستخارة',[46]],['الذكر والتسبيح',[61,62,63,64,65]],['الصلاة على النبي صلى الله عليه وسلم',[30,31]],['آداب الدعاء',[18,19,20,21,22,23,54]]],t:'أدعيته وأذكاره صلى الله عليه وسلم',l:'«كتاب الدعوات» من صحيح البخاري كاملاً بأبوابه وترتيبه: ما كان النبي ﷺ يقوله ويدعو به ويعلّمه أصحابه، في الاستغفار والنوم والصباح والصلاة والكرب والسفر والتعوذ، وفضل الذكر والصلاة عليه ﷺ. اضغط الباب لترى أحاديثه.',n:'الثامن ص ٦٧–٨٨'},
-  adb:{f:'sx_badab',t:'كتاب الأدب من صحيح البخاري',l:'«كتاب الأدب» من صحيح البخاري كاملاً بأبوابه وترتيبه، من أوله «باب قول الله تعالى: ﴿ووصينا الإنسان بوالديه﴾» إلى آخره «باب إذا تثاءب فليضع يده على فيه». اضغط الباب لترى أحاديثه.',note:'النص مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء الثامن ص ٢–٥٠) بقراءتين مستقلتين لصورة كل صفحة، وما خالف فيه المطبوعُ النصَّ الرقمي أُثبت على المطبوع، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن. والحديث بإسناده كاملاً كما في المطبوع، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'},
-  mfad:{f:'sx_mfad',t:'كتاب الفضائل من صحيح مسلم',ms:1,l:'«كتاب الفضائل» من صحيح مسلم كاملاً بأبوابه وترتيبه: فضل نسب النبي صلى الله عليه وسلم، ومعجزاته، وحوضه، وشجاعته وجوده وخلقه، وصفته، وأسماؤه، ثم فضائل الأنبياء عليهم السلام إلى آخر الكتاب. اضغط الباب لترى أحاديثه.',note:'النص مراجَع كلمةً كلمةً على صور الطبعة العامرة بإسطنبول (الجزء السابع ص ٥٨–١٠٨) بقراءتين مستقلتين لصورة كل صفحة، وما خالف فيه المطبوعُ النصَّ الرقمي أُثبت على المطبوع. وعناوين الأبواب كما في حاشيتها، وهي من وضع الشرّاح لا من الإمام مسلم، والأرقام بترقيم محمد فؤاد عبد الباقي. والحديث بإسناده كاملاً كما في المطبوع، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'},
-  mnq:{f:'sx_bmnq',t:'كتاب المناقب من صحيح البخاري',l:'«كتاب المناقب» من صحيح البخاري كاملاً بأبوابه وترتيبه: مناقب قريش والعرب، ثم أسماء النبي صلى الله عليه وسلم وكنيته، وخاتم النبيين، وصفته صلى الله عليه وسلم، وعلامات النبوة، إلى آخر الكتاب. اضغط الباب لترى أحاديثه.',note:'النص مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء الرابع ص ١٧٦–٢٠٨) بقراءتين مستقلتين لصورة كل صفحة، وما خالف فيه المطبوعُ النصَّ الرقمي أُثبت على المطبوع، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن. وما ضمّه المطبوع حديثاً واحداً وفرّقه الترقيم ذُكرت أرقامه معاً.'},
-  sal:{f:'sx_bsal',pair:['msal','من صحيح مسلم'],t:'صفة صلاة النبي صلى الله عليه وسلم',l:'«أبواب صفة الصلاة» من كتاب الأذان في صحيح البخاري كاملةً بأبوابها وترتيبها، من أولها «باب إيجاب التكبير وافتتاح الصلاة» إلى آخر كتاب الأذان: تكبيرة الإحرام ورفع اليدين، والقراءة، والركوع والسجود، والتشهد، والتسليم، والذكر بعد الصلاة، وما بعدها من الأبواب. اضغط الباب لترى أحاديثه.',n:'الأول ص ١٤٧–١٧٣'},
+  adb:{f:'sx_badab',t:'كتاب الأدب من صحيح البخاري',l:'«كتاب الأدب» من صحيح البخاري كاملاً بأبوابه وترتيبه، من أوله «باب قول الله تعالى: ﴿ووصينا الإنسان بوالديه﴾» إلى آخره «باب إذا تثاءب فليضع يده على فيه». اضغط الباب لترى أحاديثه.',note:'النص بلفظ النسخة الرقمية من «صحيح البخاري» في المكتبة الشاملة (طبعة دار طوق النجاة المصوّرة عن الطبعة السلطانية) حرفاً بحرف، بأبوابه وترتيبه، لم يُحذف منه شيء ولم يُزد فيه ولم يُغيَّر، وأرقام الصفحات أرقام الطبعة السلطانية. والحديث بإسناده كاملاً، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'},
+  mfad:{f:'sx_mfad',t:'كتاب الفضائل من صحيح مسلم',ms:1,l:'«كتاب الفضائل» من صحيح مسلم كاملاً بأبوابه وترتيبه: فضل نسب النبي صلى الله عليه وسلم، ومعجزاته، وحوضه، وشجاعته وجوده وخلقه، وصفته، وأسماؤه، ثم فضائل الأنبياء عليهم السلام إلى آخر الكتاب. اضغط الباب لترى أحاديثه.',note:'النص بلفظ النسخة الرقمية من «صحيح مسلم» في المكتبة الشاملة (طبعة دار إحياء التراث العربي بتحقيق محمد فؤاد عبد الباقي) حرفاً بحرف، بأبوابه وترتيبه، لم يُحذف منه شيء ولم يُزد فيه ولم يُغيَّر. وعناوين الأبواب كما فيها، وهي من وضع الشرّاح لا من الإمام مسلم، والأرقام والصفحات بترقيم محمد فؤاد عبد الباقي وطبعته، وما لم يكن له رقم في النسخة الرقمية ذُكر برقم ما قبله. والحديث بإسناده كاملاً، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'},
+  mnq:{f:'sx_bmnq',t:'كتاب المناقب من صحيح البخاري',l:'«كتاب المناقب» من صحيح البخاري كاملاً بأبوابه وترتيبه: مناقب قريش والعرب، ثم أسماء النبي صلى الله عليه وسلم وكنيته، وخاتم النبيين، وصفته صلى الله عليه وسلم، وعلامات النبوة، إلى آخر الكتاب. اضغط الباب لترى أحاديثه.',note:'النص بلفظ النسخة الرقمية من «صحيح البخاري» في المكتبة الشاملة (طبعة دار طوق النجاة المصوّرة عن الطبعة السلطانية) حرفاً بحرف، بأبوابه وترتيبه، لم يُحذف منه شيء ولم يُزد فيه ولم يُغيَّر، وأرقام الصفحات أرقام الطبعة السلطانية. والحديث بإسناده كاملاً، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'},
+  sal:{f:'sx_bsal',pair:['msal','من صحيح مسلم'],t:'صفة صلاة النبي صلى الله عليه وسلم',l:'«كتاب الأذان» من صحيح البخاري كاملاً بأبوابه وترتيبه، وفيه صفة صلاته صلى الله عليه وسلم: الأذان والإقامة، والجماعة والإمامة، ثم تكبيرة الإحرام ورفع اليدين، والقراءة، والركوع والسجود، والتشهد، والتسليم، والذكر بعد الصلاة، وما بعدها من الأبواب. اضغط الباب لترى أحاديثه.',n:'الأول ص ١٤٧–١٧٣'},
   saw:{f:'sx_bsaw',pair:['msaw','من صحيح مسلم'],t:'صيامه وقيامه واعتكافه صلى الله عليه وسلم',l:'«كتاب الصوم» من صحيح البخاري كاملاً بأبوابه وترتيبه، ثم كتاب صلاة التراويح، وكتاب فضل ليلة القدر، وكتاب الاعتكاف. اضغط الباب لترى أحاديثه.',n:'الثالث ص ٢٤–٥٣'},
-  msal:{f:'sx_msal',t:'كتاب الصلاة من صحيح مسلم',ms:1,pair:['sal','من صحيح البخاري'],l:'«كتاب الصلاة» من صحيح مسلم كاملاً بأبوابه وترتيبه، من أوله: بدء الأذان وصفته، ثم رفع اليدين والتكبير، والقراءة، والتشهد، والركوع والسجود، وما يقال فيهما، إلى سترة المصلي. اضغط الباب لترى أحاديثه.',note:'النص مراجَع كلمةً كلمةً على صور الطبعة العامرة بإسطنبول (الجزء الثاني ص ٢–٦٣) بقراءتين مستقلتين، وما خالف فيه المطبوعُ النصَّ الرقمي أُثبت على المطبوع. وحديث العباس «إذا سجد العبد سجد معه سبعة أطراف» (رقم ٤٩١) ليس في متن هذه الطبعة فلم يُذكر، وباب «إدبار الشيطان إذا سمع النداء» الذي في النسخة الرقمية ليس في هذه الطبعة فأحاديثه في الباب الذي قبله كما طُبعت. وعناوين الأبواب كما في حاشيتها، وهي من وضع الشرّاح لا من الإمام مسلم، والأرقام بترقيم محمد فؤاد عبد الباقي. والحديث بإسناده كاملاً كما في المطبوع، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'},
-  msaw:{f:'sx_msaw',t:'صيامه واعتكافه صلى الله عليه وسلم',ms:1,pair:['saw','من صحيح البخاري'],l:'«كتاب الصيام» و«كتاب الاعتكاف» من صحيح مسلم كاملين بأبوابهما وترتيبهما في الطبعة العامرة: رؤية الهلال، والسحور والفطر، والوصال، والصوم في السفر، وعاشوراء، وصيامه صلى الله عليه وسلم في غير رمضان، وليلة القدر، واعتكافه. اضغط الباب لترى أحاديثه.',note:'النص مراجَع كلمةً كلمةً على صور الطبعة العامرة بإسطنبول (الجزء الثالث ص ١٢١–١٧٦، والصفحتان ١٣٤ و١٣٥ من نسخة مصورة أخرى من الطبعة نفسها لنقصهما من الأولى)، وما خالف فيه المطبوعُ النصَّ الرقمي أُثبت على المطبوع، والأبواب على ترتيبها فيه. وعناوين الأبواب كما في حاشيتها، وهي من وضع الشرّاح لا من الإمام مسلم، والأرقام بترقيم محمد فؤاد عبد الباقي. والحديث بإسناده كاملاً كما في المطبوع، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'},
-  lbs:{f:'sx_shs',pair:['mlbs','من صحيح مسلم'],t:'الأطعمة والأشربة والطب واللباس في صحيح البخاري',l:'أربعة كتب من صحيح البخاري كاملة بأبوابها وترتيبها: «كتاب الأطعمة»، و«كتاب الأشربة»، و«كتاب الطب»، و«كتاب اللباس». اضغط الباب لترى أحاديثه.',note:'النص مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء السابع ص ٦٦–٨٣، و١٠٣–١١٤، و١٢١–١٧٠) بقراءتين مستقلتين لصورة كل صفحة، وما خالف فيه المطبوعُ النصَّ الرقمي أُثبت على المطبوع، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن.'},
-  mlbs:{f:'sx_msh',t:'كتاب الأشربة وكتاب اللباس والزينة من صحيح مسلم',ms:1,pair:['lbs','من صحيح البخاري'],l:'«كتاب الأشربة» و«كتاب اللباس والزينة» من صحيح مسلم كاملين بأبوابهما وترتيبهما. اضغط الباب لترى أحاديثه.',note:'النص مراجَع كلمةً كلمةً على صور الطبعة العامرة بإسطنبول (الجزء السادس ص ٨٥–١٦٩) بقراءتين مستقلتين، وما خالف فيه المطبوعُ النصَّ الرقمي أُثبت على المطبوع. وعناوين الأبواب كما في حاشيتها، وهي من وضع الشرّاح لا من الإمام مسلم، والأرقام بترقيم محمد فؤاد عبد الباقي، وما لم يكن له رقم في النسخة الرقمية ذُكر بلا رقم. والحديث بإسناده كاملاً كما في المطبوع، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'},
-  khutab:{f:'sx_khutab',mix:1,t:'خطبه صلى الله عليه وسلم',l:'من خطبه صلى الله عليه وسلم في الصحيحين بلفظها: بعرفة ويوم النحر في حجة الوداع، ويوم فتح مكة، وفي شأن المرأة المخزومية التي سرقت، وفي الكسوف، وفي الشروط التي ليست في كتاب الله، وفي مرضه الذي توفي فيه، وصفة خطبته. اضغط الباب لترى أحاديثه.',note:'كل نص هنا منقول بلفظه ومراجَع كلمةً كلمةً على صور المطبوع بقراءتين مستقلتين لصورة الصفحة: البخاري على الطبعة السلطانية، ومسلم على الطبعة العامرة بإسطنبول، وما خالف فيه المطبوعُ النصَّ الرقمي أُخذ بلفظ المطبوع. والنص المختصر يبدأ من الصحابي بلفظ الكتاب، والحديث بإسناده بضغطة.'},
-  wasaya:{f:'sx_wasaya',mix:1,t:'وصاياه لأصحابه صلى الله عليه وسلم',l:'من وصايا النبي صلى الله عليه وسلم لأصحابه في حياته، من الصحيحين بلفظها: «لا تغضب»، ووصيته لأبي هريرة، ولمعاذ وأبي موسى حين بعثهما إلى اليمن، ولابن عمر، ولأمراء الجيوش. ووصاياه في مرضه في باب «مرضه ووفاته ووصاياه». اضغط الباب لترى أحاديثه.',note:'كل نص هنا منقول بلفظه ومراجَع كلمةً كلمةً على صور المطبوع بقراءتين مستقلتين لصورة الصفحة: البخاري على الطبعة السلطانية، ومسلم على الطبعة العامرة بإسطنبول، وما خالف فيه المطبوعُ النصَّ الرقمي أُخذ بلفظ المطبوع. والنص المختصر يبدأ من الصحابي بلفظ الكتاب، والحديث بإسناده بضغطة.'},
-  wafat:{f:'sx_wafat',mix:1,t:'مرضه ووفاته ووصاياه صلى الله عليه وسلم',l:'أحاديث مرضه ووفاته صلى الله عليه وسلم ووصاياه من الصحيحين، على ترتيب الأيام: بدء المرض، ووصاياه، وهل أوصى بشيء، وأمره أبا بكر أن يصلي بالناس، ثم آخر ساعاته، وما كان بعد وفاته. وفيها بابا مرضه ووفاته من كتاب المغازي في البخاري كاملين، ومعها ما في صحيح مسلم من ذلك. اضغط الباب لترى أحاديثه.',note:'كل نص هنا منقول بلفظه ومراجَع كلمةً كلمةً على صور المطبوع: البخاري على الطبعة السلطانية (الجزء السادس ص ٩–١٦)، ومسلم على الطبعة العامرة بإسطنبول (الجزء الثاني ص ٢٠–٢٥، والخامس ص ٧٤–٧٦، والثامن ص ١٦٥)، كل موضع منها بقراءتين مستقلتين لصورة الصفحة. والنص المختصر يبدأ من الصحابي بلفظ الكتاب، والحديث بإسناده بضغطة.'},
+  msal:{f:'sx_msal',t:'كتاب الصلاة من صحيح مسلم',ms:1,pair:['sal','من صحيح البخاري'],l:'«كتاب الصلاة» من صحيح مسلم كاملاً بأبوابه وترتيبه، من أوله: بدء الأذان وصفته، ثم رفع اليدين والتكبير، والقراءة، والتشهد، والركوع والسجود، وما يقال فيهما، إلى سترة المصلي. اضغط الباب لترى أحاديثه.',note:'النص بلفظ النسخة الرقمية من «صحيح مسلم» في المكتبة الشاملة (طبعة دار إحياء التراث العربي بتحقيق محمد فؤاد عبد الباقي) حرفاً بحرف، بأبوابه وترتيبه، لم يُحذف منه شيء ولم يُزد فيه ولم يُغيَّر. وعناوين الأبواب كما فيها، وهي من وضع الشرّاح لا من الإمام مسلم، والأرقام والصفحات بترقيم محمد فؤاد عبد الباقي وطبعته، وما لم يكن له رقم في النسخة الرقمية ذُكر برقم ما قبله. والحديث بإسناده كاملاً، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'},
+  msaw:{f:'sx_msaw',t:'صيامه واعتكافه صلى الله عليه وسلم',ms:1,pair:['saw','من صحيح البخاري'],l:'«كتاب الصيام» و«كتاب الاعتكاف» من صحيح مسلم كاملين بأبوابهما وترتيبهما: رؤية الهلال، والسحور والفطر، والوصال، والصوم في السفر، وعاشوراء، وصيامه صلى الله عليه وسلم في غير رمضان، وليلة القدر، واعتكافه. اضغط الباب لترى أحاديثه.',note:'النص بلفظ النسخة الرقمية من «صحيح مسلم» في المكتبة الشاملة (طبعة دار إحياء التراث العربي بتحقيق محمد فؤاد عبد الباقي) حرفاً بحرف، بأبوابه وترتيبه، لم يُحذف منه شيء ولم يُزد فيه ولم يُغيَّر. وعناوين الأبواب كما فيها، وهي من وضع الشرّاح لا من الإمام مسلم، والأرقام والصفحات بترقيم محمد فؤاد عبد الباقي وطبعته، وما لم يكن له رقم في النسخة الرقمية ذُكر برقم ما قبله. والحديث بإسناده كاملاً، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'},
+  lbs:{f:'sx_shs',pair:['mlbs','من صحيح مسلم'],t:'الأطعمة والأشربة والطب واللباس في صحيح البخاري',l:'أربعة كتب من صحيح البخاري كاملة بأبوابها وترتيبها: «كتاب الأطعمة»، و«كتاب الأشربة»، و«كتاب الطب»، و«كتاب اللباس». اضغط الباب لترى أحاديثه.',note:'النص بلفظ النسخة الرقمية من «صحيح البخاري» في المكتبة الشاملة (طبعة دار طوق النجاة المصوّرة عن الطبعة السلطانية) حرفاً بحرف، بأبوابه وترتيبه، لم يُحذف منه شيء ولم يُزد فيه ولم يُغيَّر، وأرقام الصفحات أرقام الطبعة السلطانية. والحديث بإسناده كاملاً، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'},
+  mlbs:{f:'sx_msh',t:'كتاب الأشربة وكتاب اللباس والزينة من صحيح مسلم',ms:1,pair:['lbs','من صحيح البخاري'],l:'«كتاب الأشربة» و«كتاب اللباس والزينة» من صحيح مسلم كاملين بأبوابهما وترتيبهما. اضغط الباب لترى أحاديثه.',note:'النص بلفظ النسخة الرقمية من «صحيح مسلم» في المكتبة الشاملة (طبعة دار إحياء التراث العربي بتحقيق محمد فؤاد عبد الباقي) حرفاً بحرف، بأبوابه وترتيبه، لم يُحذف منه شيء ولم يُزد فيه ولم يُغيَّر. وعناوين الأبواب كما فيها، وهي من وضع الشرّاح لا من الإمام مسلم، والأرقام والصفحات بترقيم محمد فؤاد عبد الباقي وطبعته، وما لم يكن له رقم في النسخة الرقمية ذُكر برقم ما قبله. والحديث بإسناده كاملاً، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'},
+  khutab:{f:'sx_khutab',mix:1,t:'خطبه صلى الله عليه وسلم',l:'من خطبه صلى الله عليه وسلم في الصحيحين بلفظها: بعرفة ويوم النحر في حجة الوداع، ويوم فتح مكة، وفي شأن المرأة المخزومية التي سرقت، وفي الكسوف، وفي الشروط التي ليست في كتاب الله، وفي مرضه الذي توفي فيه، وصفة خطبته. اضغط الباب لترى أحاديثه.',note:'كل نص هنا بلفظ النسخة الرقمية في المكتبة الشاملة حرفاً بحرف: البخاري من طبعة دار طوق النجاة المصوّرة عن الطبعة السلطانية، ومسلم من طبعة محمد فؤاد عبد الباقي، والحديث كاملاً لم يُحذف منه شيء. والنص المختصر يبدأ من الصحابي بلفظ الكتاب، والحديث بإسناده بضغطة.'},
+  wasaya:{f:'sx_wasaya',mix:1,t:'وصاياه لأصحابه صلى الله عليه وسلم',l:'من وصايا النبي صلى الله عليه وسلم لأصحابه في حياته، من الصحيحين بلفظها: «لا تغضب»، ووصيته لأبي هريرة، ولمعاذ وأبي موسى حين بعثهما إلى اليمن، ولابن عمر، ولأمراء الجيوش. ووصاياه في مرضه في باب «مرضه ووفاته ووصاياه». اضغط الباب لترى أحاديثه.',note:'كل نص هنا بلفظ النسخة الرقمية في المكتبة الشاملة حرفاً بحرف: البخاري من طبعة دار طوق النجاة المصوّرة عن الطبعة السلطانية، ومسلم من طبعة محمد فؤاد عبد الباقي، والحديث كاملاً لم يُحذف منه شيء. والنص المختصر يبدأ من الصحابي بلفظ الكتاب، والحديث بإسناده بضغطة.'},
+  wafat:{f:'sx_wafat',mix:1,t:'مرضه ووفاته ووصاياه صلى الله عليه وسلم',l:'أحاديث مرضه ووفاته صلى الله عليه وسلم ووصاياه من الصحيحين، على ترتيب الأيام: بدء المرض، ووصاياه، وهل أوصى بشيء، وأمره أبا بكر أن يصلي بالناس، ثم آخر ساعاته، وما كان بعد وفاته. وفيها بابا مرضه ووفاته من كتاب المغازي في البخاري كاملين، ومعها ما في صحيح مسلم من ذلك. اضغط الباب لترى أحاديثه.',note:'كل نص هنا بلفظ النسخة الرقمية في المكتبة الشاملة حرفاً بحرف: البخاري من طبعة دار طوق النجاة المصوّرة عن الطبعة السلطانية، ومسلم من طبعة محمد فؤاد عبد الباقي، والحديث كاملاً لم يُحذف منه شيء. والنص المختصر يبدأ من الصحابي بلفظ الكتاب، والحديث بإسناده بضغطة.'},
   ilm:{f:'sx_bilm',t:'تعليمه صلى الله عليه وسلم أصحابه',l:'«كتاب العلم» من صحيح البخاري كاملاً بأبوابه وترتيبه، وفيه كيف كان النبي ﷺ يعلّم أصحابه: يتخوّلهم بالموعظة، ويعيد الكلمة ثلاثاً لتُفهم عنه، ويطرح المسألة على أصحابه، ويجيب السائل بأكثر مما سأل. اضغط الباب لترى أحاديثه.',n:'الأول ص ٢١–٣٨'}};
 async function fxFad(k){k=k||'';const C=FADC[k];const M=await getJSON('data/'+C.f+'.json');const P=fxOpen(C.t);
   P.inn.append(el('p','fx-lead',C.l));
@@ -4568,15 +4572,15 @@ async function fxFad(k){k=k||'';const C=FADC[k];const M=await getJSON('data/'+C.
       ids.forEach(i=>{const o=OPEN[i];if(o){o.open();o.card.classList.add('ix-on')}});const f=Math.min(...ids);OPEN[f]&&OPEN[f].card.scrollIntoView({behavior:'smooth',block:'start'})};row.append(b)});
     w.append(row);P.inn.append(w)}
   P.inn.append(list);
-  M.ch.forEach(c=>{if(c.bk)list.append(el('h3','dl-bk',c.bk));const n=c.hs.length;const card=el('section','mg-ev');const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
-    const tt=el('span','mg-tt');tt.append(ttlEl('b',null,c.t==='باب'?'باب بلا ترجمة':c.t),el('small',null,n===0?'ترجمة بلا حديث':n===1?'حديث واحد':n===2?'حديثان':ar(n)+(n<=10?' أحاديث':' حديثاً')));hd.append(tt);card.append(hd);
-    if(c.t==='باب')card.append(el('p','mg-note','باب لم يترجم له البخاري، وهو تابع للباب الذي قبله على عادته.'));
+  M.ch.forEach(c=>{if(c.bk)list.append(el('h3','dl-bk',c.bk));if(c.bs)list.append(el('p','dl-bsm',c.bs));if(c.bkt){const bp=el('p','dl-bkt');hdFill(bp,c.bkt,[]);list.append(bp)}const n=c.hs.length;const card=el('section','mg-ev');const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
+    const tt=el('span','mg-tt');tt.append(ttlEl('b',null,c.t==='باب'?'باب بلا ترجمة':c.t===''?'(أحاديث في أول الكتاب قبل أول باب)':c.t),el('small',null,n===0?'ترجمة بلا حديث':n===1?'حديث واحد':n===2?'حديثان':ar(n)+(n<=10?' أحاديث':' حديثاً')));hd.append(tt);card.append(hd);
+    if(c.t==='باب')card.append(el('p','mg-note','باب لم يترجم له البخاري، وهو تابع للباب الذي قبله على عادته.'));if(c.t==='')card.append(el('p','mg-note','أحاديث في أول الكتاب قبل أول عنوان باب فيه، كما هي في النسخة الرقمية.'));
     const body=el('div','mg-body');body.hidden=true;card.append(body);
     const fill=()=>{if(body.childElementCount)return;if(c.tr){const w=el('div','mg-trw');w.append(el('span','mg-trl','من ترجمة البخاري للباب: ما ذكره تحت عنوانه قبل أحاديثه'));const t=el('p','mg-tr');hdFill(t,c.tr.replace(/\d+/g,d=>ar(+d)),[]);w.append(t);body.append(w)}c.hs.forEach(i=>body.append(mgItem(M,i,{clip:260,meta,noBook:1}).w))};
     hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};OPEN.push({card,open:()=>{if(body.hidden)hd.onclick()}});list.append(card)});
-  P.inn.append(el('p','fx-note',C.note||'النص مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء '+C.n+')، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن. والحديث بإسناده كاملاً كما في المطبوع، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'))}
+  P.inn.append(el('p','fx-note',C.note||'النص بلفظ النسخة الرقمية من «صحيح البخاري» في المكتبة الشاملة (طبعة دار طوق النجاة المصوّرة عن الطبعة السلطانية) حرفاً بحرف، بأبوابه وترتيبه، لم يُحذف منه شيء ولم يُزد فيه ولم يُغيَّر، وأرقام الصفحات أرقام الطبعة السلطانية. والحديث بإسناده كاملاً، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'))}
 async function fxHady(){const G=await getJSON('data/sx_hady.json');const P=fxOpen('هديه صلى الله عليه وسلم');
-  P.inn.append(el('p','fx-lead','«زاد المعاد في هدي خير العباد» لابن القيم: فهرس فصوله كاملاً في أجزائه الخمسة بترتيبه. اضغط الفصل لتقرأه بلفظ المطبوع في صفحته.'));
+  P.inn.append(el('p','fx-lead','«زاد المعاد في هدي خير العباد» لابن القيم: فهرس فصوله كاملاً في أجزائه الخمسة بترتيبه. اضغط الفصل لتقرأه بلفظه في صفحته.'));
   G.forEach((g,gi)=>{const card=el('section','sf-ch');const hd=el('button','sf-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
     const tt=el('span','sf-tt');tt.append(el('b',null,g.t.replace('ﷺ','صلى الله عليه وسلم')),el('small',null,ar(g.it.length)+' عنوانًا'));hd.append(tt);card.append(hd);
     const body=el('div','sf-body');body.hidden=true;card.append(body);
@@ -4585,7 +4589,7 @@ async function fxHady(){const G=await getJSON('data/sx_hady.json');const P=fxOpe
 async function fxShu(k){const S=await getJSON('data/sx_shu.json');const Q=await getJSON('data/quran.json');const c=S.find(x=>x.s===k)||S[0];const P=fxOpen(c.t.replace(/ ﷺ/,' صلى الله عليه وسلم'));
   const SN=['الفاتحة','البقرة','آل عمران','النساء','المائدة','الأنعام','الأعراف','الأنفال','التوبة','يونس','هود','يوسف','الرعد','إبراهيم','الحجر','النحل','الإسراء','الكهف','مريم','طه','الأنبياء','الحج','المؤمنون','النور','الفرقان','الشعراء','النمل','القصص','العنكبوت','الروم','لقمان','السجدة','الأحزاب','سبأ','فاطر','يس','الصافات','ص','الزمر','غافر','فصلت','الشورى','الزخرف','الدخان','الجاثية','الأحقاف','محمد','الفتح','الحجرات'];
   const sname=n=>n===59?'الحشر':n===108?'الكوثر':SN[n-1];
-  P.inn.append(el('p','fx-lead','في كل باب: ما في القرآن الكريم، ثم ما في الصحيحين بلفظه وموضعه في المطبوع، ثم ما ذكره ابن القيم في «زاد المعاد» بلفظ المطبوع. اضغط الباب لتقرأه.'));
+  P.inn.append(el('p','fx-lead','في كل باب: ما في القرآن الكريم، ثم ما في الصحيحين بلفظه وموضعه، ثم ما ذكره ابن القيم في «زاد المعاد» بلفظه. اضغط الباب لتقرأه.'));
   const cnt=cd=>[cd.q.length?(cd.q.length===1?'آية':cd.q.length===2?'آيتان':ar(cd.q.length)+' آيات'):'',cd.h.length?(cd.h.length===1?'حديث':cd.h.length===2?'حديثان':ar(cd.h.length)+' أحاديث')+' من الصحيحين':'',cd.z.length?'فصل من زاد المعاد':''].filter(Boolean).join('، و');
   c.c.forEach((cd,ci)=>{const card=el('section','sf-ch');const hd=el('button','sf-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
     const tt=el('span','sf-tt');tt.append(sawEl('b',null,cd.t),el('small',null,cnt(cd)));hd.append(tt);card.append(hd);
@@ -4593,7 +4597,7 @@ async function fxShu(k){const S=await getJSON('data/sx_shu.json');const Q=await 
     const fill=()=>{if(body.childElementCount)return;
       if(cd.q.length){const g=el('div','sf-grp');g.append(el('h4',null,'من القرآن الكريم'));cd.q.forEach(([s,a])=>{const p=el('p','fx-q ev-ayah shu-ay');p.textContent='﴿'+Q.a[s-1][a-1]+'﴾';g.append(p,el('small','gz-ayc','سورة '+sname(s)+'، الآية '+ar(a)))});body.append(g)}
       if(cd.h.length){const g=el('div','sf-grp sah');g.append(el('h4',null,'من الصحيحين'));
-        cd.h.forEach(h=>{const d=el('div','fx-had');if(h.t)d.append(sawEl('span','gz-k',h.t));d.append(...shBox(h,''),el('span','kh-sr',h.src==='bk'?'صحيح البخاري، '+h.k+'، رقم '+ar(+h.no)+'، الطبعة السلطانية ج'+ar(h.v)+' ص '+h.p.replace(/\d+/g,d=>ar(+d)):'صحيح مسلم، '+h.k+msNo(h)+'، الطبعة العامرة ج'+ar(h.v)+' ص '+h.p.replace(/\d+/g,d=>ar(+d))));g.append(d)});body.append(g)}
+        cd.h.forEach(h=>{const d=el('div','fx-had');if(h.t)d.append(sawEl('span','gz-k',h.t));d.append(...shBox(h,''),el('span','kh-sr',h.src==='bk'?'صحيح البخاري، '+h.k+'، رقم '+ar(+h.no)+'، الطبعة السلطانية ج'+ar(h.v)+' ص '+h.p.replace(/\d+/g,d=>ar(+d)):'صحيح مسلم، '+h.k+msNo(h)+'، طبعة عبد الباقي ج'+ar(h.v)+' ص '+h.p.replace(/\d+/g,d=>ar(+d))));g.append(d)});body.append(g)}
       cd.z.forEach(z=>{const g=el('div','sf-grp');g.append(el('h4',null,'من «زاد المعاد» لابن القيم'));g.append(el('p','shu-zt',z.t.replace(/ﷺ/g,'صلى الله عليه وسلم')));
         z.x.forEach(([pg,t,pm])=>{const p=el('p','shu-p');hdFill(p,t.replace(/ﷺ/g,'صلى الله عليه وسلم'),pm);g.append(p)});
         const r=el('div','gz-a');[...new Set(z.x.map(x=>x[0]))].forEach(pg=>{const b=el('button','gz-pg','زاد المعاد، ج١، ص '+ar(pg));b.type='button';b.onclick=()=>{P.close();openPart(18,pg,null,false,'txt')};r.append(b)});g.append(r);body.append(g)});
@@ -4636,7 +4640,7 @@ async function fxGz(open){const G=await getJSON('data/sx_gz.json');const P=fxOpe
     const VOL={23:1,24:2,18:1,19:2,20:3,21:4,22:5,31:3,32:4,33:5,34:6,35:7,36:8,37:9};
     const sahih=(g.d||[]).filter(x=>x.src==='bk'||x.src==='ms'),other=(g.d||[]).filter(x=>x.src!=='bk'&&x.src!=='ms');
     const block=(title,L)=>{if(!L.length)return;c.append(el('p','gz-ih',title));const dl=el('div','gz-f');
-      L.forEach(x=>{const r=el('div','gz-d');r.append(sawEl('span','gz-k',x.k));const t=el('p','gz-dq');hdFill(t,x.q.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾'),x.pm);if(!/^«/.test(x.q)||!/»$/.test(x.q))t.classList.add('gz-qq');r.append(t);
+      L.forEach(x=>{const r=el('div','gz-d');r.append(sawEl('span','gz-k',x.k));const t=el('p','gz-dq');if(x.x&&x.hl){const tx=x.x.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾'),w=x.hl.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾');hdFill(t,tx,[],tx.includes(w)?[w]:undefined);t.classList.add('gz-full');if(t.textContent.length>420){t.classList.add('clip');const m=el('button','btn btn-link hd-b','أكمل الحديث');m.type='button';m.onclick=()=>{t.classList.remove('clip');m.remove()};r.append(t,m)}else r.append(t)}else{hdFill(t,x.q.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾'),x.pm);if(!/^«/.test(x.q)||!/»$/.test(x.q))t.classList.add('gz-qq');r.append(t)}
         const ref=(x.src==='bk'||x.src==='ms')?SRC[x.src]+'، رقم '+String(x.no).replace(/\d+/g,d=>ar(+d)):SRC[x.src]+(VOL[x.n]?'، ج'+ar(VOL[x.n]):'')+'، ص '+ar(x.p);
         const b=el('button','gz-pg',ref);b.type='button';
         if(x.src==='bk'||x.src==='ms'){b.onclick=()=>{P.close();fxMgTL(g.k)}}else{b.onclick=()=>{P.close();openPart(x.n,x.p,[x.q.split(' ').slice(0,3).join(' ')],false,'txt')}}
@@ -4649,7 +4653,7 @@ async function fxGz(open){const G=await getJSON('data/sx_gz.json');const P=fxOpe
     if(g.th){const w=el('div','gz-th');w.hidden=true;{const tg=el('button','btn btn-link hd-b gz-tg',g.th.t+' ('+ar(g.th.h.length+1)+')');tg.type='button';tg.setAttribute('aria-expanded','false');tg.onclick=()=>{w.hidden=!w.hidden;tg.setAttribute('aria-expanded',!w.hidden)};c.append(tg)}const ay=el('p','fx-q ev-ayah gz-ay');w.append(ay);const ac=el('small','gz-ayc','سورة آل عمران، الآية ١٥٥');w.append(ac);
       getJSON('data/quran.json').then(Q=>{ay.textContent='﴿'+Q.a[g.th.ay[0]-1][g.th.ay[1]-1]+'﴾'});w.append(el('p','gz-thn',g.th.n));
       const dl=el('div','gz-f');g.th.h.forEach(x=>{const r=el('div','gz-d');r.append(sawEl('span','gz-k',x.k));r.append(...shBox(x,'gz-dq'));
-        if(x.src==='ms'){r.append(el('span','kh-sr','صحيح مسلم، كتاب الجهاد والسير، رقم '+ar(+x.no)+' بترقيم عبد الباقي، الطبعة العامرة ج'+ar(x.v)+' ص '+ar(+x.p)))}else{const b=el('button','gz-pg','صحيح البخاري، رقم '+ar(+x.no));b.type='button';b.onclick=()=>{P.close();openPart(26,x.p,null,false,'txt')};r.append(b)}dl.append(r)});w.append(dl);c.append(w)}
+        if(x.src==='ms'){r.append(el('span','kh-sr','صحيح مسلم، كتاب الجهاد والسير، رقم '+ar(+x.no)+' بترقيم عبد الباقي، طبعة عبد الباقي ج'+ar(x.v)+' ص '+ar(+x.p)))}else{const b=el('button','gz-pg','صحيح البخاري، رقم '+ar(+x.no));b.type='button';b.onclick=()=>{P.close();openPart(26,x.p,null,false,'txt')};r.append(b)}dl.append(r)});w.append(dl);c.append(w)}
     const nd=(g.d||[]).length;
     if(nd){const box=el('div','gz-more');box.hidden=true;const tg=el('button','btn btn-link hd-b gz-tg','التفصيل من الصحيحين وكتب السيرة ('+ar(nd)+')');tg.type='button';tg.setAttribute('aria-expanded','false');
       const real=c.append.bind(c);c.append=(...a)=>box.append(...a);block('من الصحيحين',sahih);block('من كتب السيرة',other);c.append=real;
@@ -4657,7 +4661,7 @@ async function fxGz(open){const G=await getJSON('data/sx_gz.json');const P=fxOpe
     const act=el('div','gz-a');const n=g.nb+g.nm;
     if(n){const b=el('button','btn btn-link hd-b',(n===1?'حديث واحد':n===2?'حديثان':ar(n)+(n<=10?' أحاديث':' حديثاً'))+' في الصحيحين');b.type='button';b.onclick=()=>{P.close();fxMgTL(g.k)};act.append(b)}
     const r=el('button','btn btn-link hd-b','مختصر السيرة، ص '+ar(g.p));r.type='button';r.onclick=()=>{P.close();openPart(17,g.p,null,false,'txt')};act.append(r);c.append(act);L.append(c)});
-  P.inn.append(L,el('p','fx-note','البطاقات على ترتيب صفحة «المغازي في الصحيحين». وكل نص فيها منقول بلفظه من كتاب في الموقع ومراجَع على صوره، وموجود في موضعه منه، وبجانبه مصدره، وما في الصحيحين مقدَّم. وإذا اختلفت الروايات في عدد أو تفصيل ذُكرت كلها منسوبة إلى قائليها. والعنوان الصغير قبل كل نص من وضعنا للتوضيح، والنص بعده لفظ الكتاب.'))}
+  P.inn.append(L,el('p','fx-note','البطاقات على ترتيب صفحة «المغازي في الصحيحين». وكل نص فيها منقول بلفظ نسخته الرقمية من كتاب في الموقع، وموجود في موضعه منه، وبجانبه مصدره، وما في الصحيحين مقدَّم، والحديث منه معروض كاملاً والعبارة المقصودة معلَّمة فيه. وإذا اختلفت الروايات في عدد أو تفصيل ذُكرت كلها منسوبة إلى قائليها. والعنوان الصغير قبل كل نص من وضعنا للتوضيح، والنص بعده لفظ الكتاب.'))}
 /* بياناتك: the backup section, shown in a sheet from the menu and put back in its place when the sheet closes */
 function fxData(){const s=$('#dataSec');if(!s)return;const home=s.parentNode,next=s.nextSibling;const P=fxOpen('بياناتك');s.hidden=false;P.inn.append(s);
   const mo=new MutationObserver(()=>{if(!P.ov.isConnected){mo.disconnect();s.hidden=true;home.insertBefore(s,next)}});mo.observe(document.body,{childList:true})}
@@ -4689,7 +4693,7 @@ async function fxQa(){const Q=await getJSON('data/sx_qa.json');const P=fxOpen('�
         const b=el('button','gz-pg',ref);b.type='button';
         b.onclick=sh?()=>{P.close();OPEN[x.src]()}:()=>{P.close();openPart(x.n,x.p,[x.x.split(' ').slice(0,3).join(' ')],false,'txt')};
         r.append(b);box.append(r)});d.append(box);L.append(d)});P.inn.append(L)});
-  P.inn.append(el('p','fx-note','الأسئلة من وضعنا للتوضيح، والأجوبة لفظ الكتب كما هي، وكل نص منها موجود في موضعه من كتابه ومراجَع عليه، وزر المصدر تحته يفتح موضعه. وما كان من الحديث فلفظ النبي صلى الله عليه وسلم فيه بالذهبي.'))}
+  P.inn.append(el('p','fx-note','الأسئلة من وضعنا للتوضيح، والأجوبة لفظ الكتب كما هي، وكل نص منها موجود في موضعه من كتابه بلفظه، وزر المصدر تحته يفتح موضعه. وما كان من الحديث فلفظ النبي صلى الله عليه وسلم فيه بالذهبي.'))}
 /* ---------- أهل بيته ﷺ: his wives and children in the words of al-Bidaya ---------- */
 async function fxAhl(){const A=await getJSON('data/sx_ahl.json');const P=fxOpen('أهل بيته صلى الله عليه وسلم');
   const pg=(p,w)=>{const g=el('button','btn btn-quiet hj-g','البداية والنهاية، ج٨، ص '+ar(p));g.type='button';g.onclick=()=>{P.close();openPart(36,p,[w.split(' ').slice(0,3).join(' ')],false,'txt')};return g};
@@ -4703,26 +4707,26 @@ async function fxAhl(){const A=await getJSON('data/sx_ahl.json');const P=fxOpen(
   A.w.forEach((w,j)=>P.inn.append(accCard(ar(j+1)+'. '+w.n+' رضي الله عنها','',b=>{b.append(qPanel(w.q));const a=el('div','qp-act');a.append(pg(w.p||219,w.q));b.append(a)},j===0)));
   P.inn.append(el('h3','dl-bk','أولاده صلى الله عليه وسلم'),el('p','dl-bs','قال ابن كثير: «'+A.cn[0].q+'». وهم على ترتيب الزبير بن بكار في ولادتهم:'));
   A.c.forEach((c,j)=>P.inn.append(accCard(ar(j+1)+'. '+c.n+(['زينب','أم كلثوم','فاطمة','رقية'].includes(c.n)?' رضي الله عنها':''),'',b=>{b.append(qPanel(c.q));const a=el('div','qp-act');a.append(pg(c.p||240,c.q));b.append(a)},j===0)));
-  P.inn.append(el('p','fx-note','الترتيبان من الروايتين كما ساقهما ابن كثير (ج٨ ص ٢١٩–٢٢٠ و٢٤٠)، وفي الكتاب خلاف في ترتيب الأزواج والأولاد ذكره ابن كثير في موضعه. والنص مراجَع على صور المطبوع.'))}
+  P.inn.append(el('p','fx-note','الترتيبان من الروايتين كما ساقهما ابن كثير (ج٨ ص ٢١٩–٢٢٠ و٢٤٠)، وفي الكتاب خلاف في ترتيب الأزواج والأولاد ذكره ابن كثير في موضعه. والنص بلفظ النسخة الرقمية.'))}
 /* ---------- حجة الوداع يوماً بيوم: Ibn Kathir's words, stop by stop ---------- */
 async function fxHajj(){const S=await getJSON('data/sx_hajj.json');const P=fxOpen('حجة الوداع يوماً بيوم');
   P.inn.append(el('p','fx-lead','حجته صلى الله عليه وسلم من خروجه من المدينة إلى رجوعه، محطةً محطة: ما في الصحيحين أولاً، ومنه حديث جابر الطويل في صحيح مسلم مقسّماً على المحطات، ثم لفظ ابن كثير في «كتاب حجة الوداع» من «البداية والنهاية» وما نقله فيه، ومع كل نص موضعه.'));
   const ol=el('div','hj-list');S.forEach((s,si)=>{ol.append(accCard(s.t,s.d,li=>{
     if(s.sh&&s.sh.length){li.append(el('p','hj-src',s.sh.some(x=>x.src==='ms')?'من الصحيحين':'من صحيح البخاري'));s.sh.forEach(x=>{const it=el('div','hj-it');if(x.k)it.append(sawEl('span','hj-k',x.k==='كتاب الحج'?'':x.k));const t=el('p','hj-h');hdFill(t,x.x,x.pm);it.append(t);if(x.s){const ib=el('button','btn btn-link hd-b','بلا إسناد');ib.type='button';let full=true;ib.onclick=()=>{full=!full;t.innerHTML='';if(full)hdFill(t,x.x,x.pm);else hdFill(t,x.s,x.ps||[]);ib.textContent=full?'بلا إسناد':'بإسناده'};it.append(ib)}if(x.x.length>420){t.classList.add('clip');const m=el('button','btn btn-link hd-b','أكمل');m.type='button';m.onclick=()=>{t.classList.remove('clip');m.remove()};it.append(m)}
-      const lab=x.src==='ms'?'صحيح مسلم، رقم '+ar(+x.no)+' بترقيم عبد الباقي، الطبعة العامرة ج'+ar(x.v)+' ص '+String(x.p).replace(/\d+/g,d=>ar(+d)):'صحيح البخاري، رقم '+ar(+x.no)+(x.n?'':'، الطبعة السلطانية ج'+ar(x.v)+' ص '+x.p.replace(/\d+/g,d=>ar(+d)));
+      const lab=x.src==='ms'?'صحيح مسلم، رقم '+ar(+x.no)+' بترقيم عبد الباقي، طبعة عبد الباقي ج'+ar(x.v)+' ص '+String(x.p).replace(/\d+/g,d=>ar(+d)):'صحيح البخاري، رقم '+ar(+x.no)+(x.n?'':'، الطبعة السلطانية ج'+ar(x.v)+' ص '+x.p.replace(/\d+/g,d=>ar(+d)));
       if(x.n){const b=el('button','btn btn-quiet hj-g',lab);b.type='button';b.onclick=()=>{P.close();openPart(26,x.p,null,false,'txt')};it.append(b)}else it.append(el('span','hj-g hj-gs',lab));li.append(it)});
       li.append(el('p','hj-src','من البداية والنهاية'))}
     s.q.forEach(q=>{const bq=el('blockquote','hj-q');hdFill(bq,'«'+q.x.replace(/\d+/g,d=>ar(+d))+'»',[],goldFor(q.x));li.append(bq);
       const g=el('button','btn btn-quiet hj-g','البداية والنهاية، ج٧، ص '+ar(q.p));g.type='button';g.onclick=()=>{P.close();openPart(35,q.p,[q.x.split(' ').slice(0,4).join(' ')],false,'txt')};li.append(g)})},si===0,'hj-card'))});
   P.inn.append(ol);
-  P.inn.append(el('p','fx-note','الأيام والتواريخ بلفظ ابن كثير حيث ذكرها، ومنها ما رجّحه بعد بحثه في «باب تاريخ خروجه» (ص ٤١٠–٤١٥). والنص مراجَع على صور المطبوع.'))}
+  P.inn.append(el('p','fx-note','الأيام والتواريخ بلفظ ابن كثير حيث ذكرها، ومنها ما رجّحه بعد بحثه في «باب تاريخ خروجه» (ص ٤١٠–٤١٥). والنص بلفظ النسخة الرقمية.'))}
 /* ---------- دلائل النبوة: Ibn Kathir's chapters, in his order and his words ---------- */
-const bMeta=(h,full)=>'صحيح البخاري، '+(h.k||'كتاب المناقب')+'، رقم '+ar(h.no)+'، الطبعة السلطانية ج'+ar(h.v||4)+' ص '+ar(h.p)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'');
+const bMeta=(h,full)=>'صحيح البخاري، '+(h.k||'كتاب المناقب')+(h.no?'، رقم '+ar(h.no):'')+'، الطبعة السلطانية ج'+ar(h.v||4)+' ص '+ar(h.p)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'');
 const alMeta=(h,full)=>'صحيح البخاري، كتاب المناقب، رقم '+ar(h.no)+'، الطبعة السلطانية ج٤ ص '+ar(h.p)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'');
 const msNo=h=>h.no?'، رقم '+ar(+h.no)+' بترقيم عبد الباقي':'';
-const msMeta=(h,full)=>'صحيح مسلم، '+(h.k||'كتاب الفضائل')+msNo(h)+'، الطبعة العامرة ج'+ar(h.v||7)+' ص '+ar(h.p)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'');
+const msMeta=(h,full)=>'صحيح مسلم، '+(h.k||'كتاب الفضائل')+msNo(h)+'، طبعة عبد الباقي ج'+ar(h.v||7)+' ص '+ar(h.p)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'');
 function dalChapters(P,M,meta,note){const list=el('div','mg-list');P.inn.append(list);
-  M.ch.forEach(c=>{if(c.bk)list.append(el('h3','dl-bk',c.bk));const n=c.hs.length;const card=el('section','mg-ev');const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
+  M.ch.forEach(c=>{if(c.bk)list.append(el('h3','dl-bk',c.bk));if(c.bs)list.append(el('p','dl-bsm',c.bs));if(c.bkt){const bp=el('p','dl-bkt');hdFill(bp,c.bkt,[]);list.append(bp)}const n=c.hs.length;const card=el('section','mg-ev');const hd=el('button','mg-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
     const bt=el('b');(c.t==='باب'?'باب بلا ترجمة':c.t).replace(/\d+/g,d=>ar(+d)).replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').split(/(﴿[^﴾]*﴾)/).forEach(x=>{if(!x)return;if(x[0]==='﴿')bt.append(hdV(x));else bt.append(sawEl('span',null,x))});
     const tt=el('span','mg-tt');tt.append(bt,el('small',null,(n===1?'حديث واحد':n===2?'حديثان':ar(n)+(n<=10?' أحاديث':' حديثاً'))));hd.append(tt);card.append(hd);
     if(c.t==='باب')card.append(el('p','mg-note',note));
@@ -4733,10 +4737,10 @@ async function fxDal(){const [A,G]=await Promise.all([getJSON('data/sx_alam.json
   P.inn.append(el('p','fx-lead','أحاديث دلائل نبوته صلى الله عليه وسلم من الصحيحين، بأبوابها وترتيبها في كل كتاب. اضغط الباب لترى أحاديثه.'));
   P.inn.append(el('h3','dl-bk','من صحيح البخاري'),el('p','dl-bs','«باب علامات النبوة في الإسلام» من كتاب المناقب، والأبواب الثلاثة التي تليه.'));
   dalChapters(P,A,alMeta,'باب لم يترجم له البخاري، وهو تابع للباب الذي قبله على عادته.');
-  P.inn.append(el('p','fx-note','النص مراجَع كلمةً كلمةً على صور الطبعة السلطانية (الجزء الرابع ص ١٩١–٢٠٨)، وما في حاشيتها من فروق النسخ لم يُدخَل في المتن، إلا أن في ص ٢٠٨ خطأً مطبعياً ظاهراً «من أبي صالح» فأُثبت «عن أبي صالح». والحديث بإسناده كاملاً كما في المطبوع، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'));
+  P.inn.append(el('p','fx-note','النص بلفظ النسخة الرقمية من «صحيح البخاري» في المكتبة الشاملة حرفاً بحرف، والأبواب كاملة بأحاديثها. والحديث بإسناده كاملاً، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'));
   if(A.m){P.inn.append(el('h3','dl-bk','من صحيح مسلم'),el('p','dl-bs','أبواب المعجزات من كتاب الفضائل: الحجر الذي كان يسلّم عليه، ومعجزاته، وعصمة الله له من الناس، وقتال جبريل وميكائيل عنه يوم أحد؛ ثم «باب انشقاق القمر» من كتاب صفة القيامة والجنة والنار، و«حديث جابر الطويل» من كتاب الزهد، وفيه انقياد الشجرتين له وفيض الماء.'));
     dalChapters(P,A.m,msMeta,'');
-    P.inn.append(el('p','fx-note','النص مراجَع كلمةً كلمةً على صور الطبعة العامرة بإسطنبول (الجزء السابع ص ٥٨–٦٢ و٧٢، والجزء الثامن ص ١٣٢–١٣٣ و٢٣١–٢٣٦). وعناوين الأبواب كما في حاشيتها، وهي من وضع الشرّاح لا من الإمام مسلم، والأرقام بترقيم محمد فؤاد عبد الباقي، ويتكرر الرقم إذا ساق مسلم للحديث إسناداً آخر. والحديث بإسناده كاملاً كما في المطبوع، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'));P.inn.append(el('p','fx-note','والذهبي كلامه صلى الله عليه وسلم بلفظه، عُيّن حديثاً حديثاً بقراءتين مستقلتين، ولم يُلوَّن إلا ما تعيّن أنه من قوله، وأما وصف فعله وكلام الصحابة فبلون النص. والآيات بالأخضر بلفظ مصحف المدينة النبوية من مجمع الملك فهد، إلا مواضع يسيرة لم تتعيّن آيتها فبقيت بلفظ الكتاب.'))}
+    P.inn.append(el('p','fx-note','النص بلفظ النسخة الرقمية من «صحيح مسلم» في المكتبة الشاملة (طبعة عبد الباقي) حرفاً بحرف، والأبواب كاملة بأحاديثها. وعناوين الأبواب كما فيها، وهي من وضع الشرّاح لا من الإمام مسلم، والأرقام بترقيم محمد فؤاد عبد الباقي، ويتكرر الرقم إذا ساق مسلم للحديث إسناداً آخر. والحديث بإسناده كاملاً، ويمكن إخفاء الإسناد إلى الصحابي بضغطة.'));P.inn.append(el('p','fx-note','والذهبي كلامه صلى الله عليه وسلم بلفظه، عُيّن حديثاً حديثاً بقراءتين مستقلتين، ولم يُلوَّن إلا ما تعيّن أنه من قوله، وأما وصف فعله وكلام الصحابة فبلون النص. والآيات بالأخضر بلفظ الكتاب كما هو في النسخة الرقمية.'))}
   // Ibn Kathir: shown only when the reader asks for it
   const sw=el('label','dl-sw');const cb=el('input');cb.type='checkbox';let on=false;try{on=localStorage.getItem('dalIK')==='1'}catch(e){}cb.checked=on;
   const st=el('span');st.append(el('b',null,'أبواب ابن كثير في «دلائل النبوة»'),el('small',null,'من «البداية والنهاية»، وفيها الصحيح والضعيف بأسانيدها.'));sw.append(st,cb);P.inn.append(sw);
@@ -4753,13 +4757,13 @@ async function fxDal(){const [A,G]=await Promise.all([getJSON('data/sx_alam.json
           const go=el('button','btn btn-quiet','اقرأه كاملاً في الكتاب');go.type='button';go.onclick=()=>{P.close();openPart(it.n,it.p,[it.t.split(' ').slice(0,4).join(' ')],false,'txt')};d.append(go);w.append(d);
           b.onclick=async()=>{d.hidden=!d.hidden;b.setAttribute('aria-expanded',d.hidden?'false':'true');if(!d.hidden&&!got){got=true;const L=await secFull(it.n,it.p,it.t);if(L.length)L.forEach(t=>{const pp=el('p','mg-t');hdFill(pp,t,[]);tx.append(pp)});else if(it.x){const pp=el('p','mg-t');hdFill(pp,it.x,[]);tx.append(pp)}}};body.append(w)})};
       hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};list.append(card)});
-    ikBox.append(el('p','fx-note','العناوين عناوين ابن كثير في المطبوع (طبعة دار هجر بتحقيق التركي)، وأسماء المجموعات من كلامه في أول كل قسم. والنص مراجَع على صور المطبوع.'))};
+    ikBox.append(el('p','fx-note','العناوين عناوين ابن كثير كما في النسخة الرقمية (طبعة دار هجر بتحقيق التركي)، وأسماء المجموعات من كلامه في أول كل قسم. والنص بلفظ النسخة الرقمية.'))};
   if(on)ikFill();cb.onchange=()=>{try{localStorage.setItem('dalIK',cb.checked?'1':'0')}catch(e){}if(cb.checked)ikFill();ikBox.hidden=!cb.checked;if(cb.checked)setTimeout(()=>sw.scrollIntoView({block:'start',behavior:'smooth'}),50)}}
 
 /* ---------- مواضع الخلاف مع المطبوع: علامات حمراء، وقراءة الصفحات المعلَّمة وحدها ---------- */
 let MK={};getJSON('data/marks.json').then(d=>{MK=d||{};renderMkBooks()}).catch(()=>{});
 const MKGROUPS=[{t:'مختصر سيرة الرسول ﷺ',ns:[17]},{t:'السيرة النبوية لابن هشام',ns:[23,24]},{t:'زاد المعاد',ns:[18,19,20,21,22]},{t:'مختصر الشمائل المحمدية',ns:[25]},{t:'كتاب المغازي من صحيح البخاري',ns:[26,27]},{t:'الخلفاء الراشدون من البداية والنهاية',ns:[28,29,30]}];
-const MKKIND={fix:'صُحّح',mis:'خطأ طباعي',unc:'غير قاطع',q:'آية'};
+const MKKIND={pr:'في المطبوع',fix:'صُحّح',mis:'خطأ طباعي',unc:'غير قاطع',q:'آية'};
 function mkPages(ns){const L=[];ns.forEach(n=>Object.keys(MK).filter(k=>+k.split(':')[0]===n).map(k=>+k.split(':')[1]).sort((a,b)=>a-b).forEach(p=>L.push([n,p])));return L}
 function renderMkBooks(){
   const B=$('#sxMkBooks');if(!B)return;B.innerHTML='';
