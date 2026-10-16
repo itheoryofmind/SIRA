@@ -1,62 +1,132 @@
-// The site keeper's content page (لوحة المحتوى): he finds a text of the site, corrects it, and the correction is published.
-// The page is at push.seeratuh.com/c and does nothing without his key (the same key as the notice page /o).
-// A correction is kept here as waiting (cms:<time>); a GitHub workflow in the site's repository (.github/workflows/cms.yml)
-// collects the waiting ones every few minutes with the deploy key, writes them into the site's files, publishes, and marks each done.
+// The keeper's control of his two sites (سيرته: seeratuh.com, الدرر السنية: dorarnajdiah.com), from inside each site (edit mode)
+// and from push.seeratuh.com/c. Nothing works without his key (the same key as the notice page /o; only its SHA-256 is kept).
+//
+// Two kinds of change:
+//  - text corrections (a text of the site's data, or the site's own wording): kept here as waiting (cms:<time>), then written
+//    into the site's repository by its workflow (.github/workflows/cms.yml) within minutes, checked, and published;
+//  - the site's settings, applied at once without publishing: pausing the site with a message, hiding any part of it,
+//    adding text after any place, and whole new sections (cfg:<site>). Every reader's page asks /st?s=<site> on opening.
+// The workflows prove which repository they run in with GitHub's own signed token (OIDC), so no password is kept anywhere.
 import { isOwner } from './owner.js';
 import PAGE from './cms_page.js';
 
+const SITES = { sira: { origin: 'https://seeratuh.com', repo: 'itheoryofmind/sira' }, durar: { origin: 'https://dorarnajdiah.com', repo: 'itheoryofmind/durar' } };
 const P = 'cms:';
-// the edit mode runs inside the site itself (seeratuh.com), so its answers are open to that page
-const H = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex', 'Access-Control-Allow-Origin': 'https://seeratuh.com' };
-const out = (o, st) => new Response(JSON.stringify(o), { status: st || 200, headers: H });
+const okSite = (s) => Object.prototype.hasOwnProperty.call(SITES, s);
+function H(req) {
+  const o = req.headers.get('Origin') || '';
+  const allow = Object.values(SITES).some((x) => x.origin === o) ? o : 'https://seeratuh.com';
+  return { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex', 'Access-Control-Allow-Origin': allow, 'Vary': 'Origin' };
+}
 const okFile = (f) => f === 'ui' || (typeof f === 'string' && /^[a-z0-9_]{1,40}\.json$/.test(f));   // ui: the site's own wording
 const okPath = (p) => Array.isArray(p) && p.length > 0 && p.length <= 24 && p.every((x) => (typeof x === 'string' && x.length <= 4000) || (Number.isInteger(x) && x >= 0));
 const okText = (s) => typeof s === 'string' && s.length <= 300000;
+const str = (x, n) => String(x == null ? '' : x).slice(0, n);
+const rid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 
 async function all(env) {
   const L = []; let cursor;
   do { const l = await env.PUSH.list({ prefix: P, cursor }); for (const x of l.keys) L.push(x); cursor = l.list_complete ? null : l.cursor; } while (cursor);
   return L;
 }
+const siteOf = (x) => (x.metadata && x.metadata.s) || 'sira';
+
+/* ---------- the settings of a site ---------- */
+const EMPTY = () => ({ pause: { on: false }, hide: [], add: [], pages: [] });
+async function getCfg(env, s) {
+  let c = await env.PUSH.get('cfg:' + s, 'json');
+  if (!c && s === 'sira') { const p = await env.PUSH.get('pause', 'json'); c = EMPTY(); if (p) c.pause = p; }   // the first pause, kept before the settings existed
+  return Object.assign(EMPTY(), c || {});
+}
+async function putCfg(env, s, c) {
+  c.v = Date.now();
+  await env.PUSH.put('cfg:' + s, JSON.stringify(c));
+  try { await caches.default.delete(new Request('https://push.seeratuh.com/st?s=' + s)); } catch (e) {}
+}
+// what a reader's page receives: the pause, the hidden parts, the added texts and sections (nothing else)
+function pub(c) {
+  return { on: !!c.pause.on, msg: c.pause.on ? c.pause.msg : '', np: !!(c.pause.on && c.pause.np), hide: c.hide.map((h) => ({ id: h.id, sel: h.sel, fp: h.fp, sec: h.sec })),
+    add: c.add.map((a) => ({ id: a.id, sel: a.sel, fp: a.fp, sec: a.sec, k: a.k, t: a.t })),
+    pages: c.pages.filter((p) => !p.off).map((p) => ({ id: p.id, sel: p.sel, fp: p.fp, sec: p.sec, title: p.title, sub: p.sub, blocks: p.blocks })), v: c.v || 0 };
+}
+const okRule = (r) => r && typeof r.sel === 'string' && /^[a-z][a-z0-9]{0,11}(\.[A-Za-z_][A-Za-z0-9_-]{0,39})?$/.test(r.sel) && typeof r.fp === 'string' && /^[0-9a-z]{4,40}$/.test(r.fp) && typeof r.sec === 'string' && r.sec.length <= 200;
+const okBlocks = (b) => Array.isArray(b) && b.length <= 400 && b.every((x) => x && ['h', 'p', 'q'].includes(x.k) && typeof x.t === 'string' && x.t.length <= 20000);
+
+/* ---------- GitHub's signed token: which repository's workflow is asking ---------- */
+let JWKS = null, JWKS_T = 0;
+const b64u = (s) => { s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; return Uint8Array.from(atob(s), (c) => c.charCodeAt(0)); };
+async function oidcSite(tok) {
+  try {
+    const [h, p, sg] = String(tok || '').split('.'); if (!sg) return null;
+    const hd = JSON.parse(new TextDecoder().decode(b64u(h))), cl = JSON.parse(new TextDecoder().decode(b64u(p)));
+    if (hd.alg !== 'RS256') return null;
+    const keys = async () => { JWKS = (await (await fetch('https://token.actions.githubusercontent.com/.well-known/jwks')).json()).keys; JWKS_T = Date.now(); };
+    if (!JWKS || Date.now() - JWKS_T > 3600e3) await keys();
+    let jwk = JWKS.find((k) => k.kid === hd.kid);
+    if (!jwk && Date.now() - JWKS_T > 60e3) { await keys(); jwk = JWKS.find((k) => k.kid === hd.kid); }
+    if (!jwk || jwk.kty !== 'RSA') return null;
+    const key = await crypto.subtle.importKey('jwk', { kty: jwk.kty, n: jwk.n, e: jwk.e, alg: 'RS256', ext: true }, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['verify']);
+    const ok = await crypto.subtle.verify('RSASSA-PKCS1-v1_5', key, b64u(sg), new TextEncoder().encode(h + '.' + p));
+    const now = Date.now() / 1000;
+    if (!ok || cl.iss !== 'https://token.actions.githubusercontent.com' || cl.aud !== 'seeratuh-cms' || !(cl.exp > now) || !(cl.nbf == null || cl.nbf <= now + 60)) return null;
+    const repo = String(cl.repository || '').toLowerCase();
+    for (const [s, x] of Object.entries(SITES)) if (x.repo === repo) return s;
+  } catch (e) {}
+  return null;
+}
+
+/* ---------- the reader's question, on opening any page of either site ---------- */
+export async function pauseFetch(req, env, u) {
+  if (u.pathname !== '/st') return null;
+  const s = okSite(u.searchParams.get('s')) ? u.searchParams.get('s') : 'sira';
+  const ck = new Request('https://push.seeratuh.com/st?s=' + s);
+  let r = null; try { r = await caches.default.match(ck); } catch (e) {}
+  if (!r) {
+    r = new Response(JSON.stringify(pub(await getCfg(env, s))), { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=20' } });
+    try { await caches.default.put(ck, r.clone()); } catch (e) {}
+  }
+  const o = req.headers.get('Origin') || '';
+  const h = new Headers(r.headers); h.set('Access-Control-Allow-Origin', Object.values(SITES).some((x) => x.origin === o) ? o : SITES[s].origin); h.set('Vary', 'Origin'); h.set('Cache-Control', 'no-store');
+  return new Response(r.body, { headers: h });
+}
+// while a site is paused with «and the notifications» chosen, its scheduled notifications are not sent
+export async function pushPaused(env, s) { const c = await getCfg(env, s || 'sira'); return !!(c.pause && c.pause.on && c.pause.np); }
 
 export async function cmsFetch(req, env, u) {
   if (u.pathname !== '/c' && !u.pathname.startsWith('/c/')) return null;
+  const out = (o, st) => new Response(JSON.stringify(o), { status: st || 200, headers: H(req) });
   if (u.pathname === '/c' && req.method === 'GET')
     return new Response(PAGE, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow', 'Referrer-Policy': 'no-referrer', 'X-Frame-Options': 'DENY' } });
   if (req.method !== 'POST') return null;
 
-  // the workflow: the waiting corrections, and the result of each
+  // the workflows: the waiting corrections of their own site, and the result of each
   if (u.pathname === '/c/pending' || u.pathname === '/c/done') {
-    const k = await env.PUSH.get('admin');
-    if (!k || req.headers.get('X-Admin') !== k) return out({ ok: false }, 403);
+    let s = await oidcSite(req.headers.get('X-OIDC'));
+    if (!s) { const k = await env.PUSH.get('admin'); if (k && req.headers.get('X-Admin') === k) s = 'sira'; }
+    if (!s) return out({ ok: false }, 403);
     if (u.pathname === '/c/pending') {
-      const L = (await all(env)).filter((x) => x.metadata && x.metadata.st === 'p');
+      const now = Date.now();
+      const L = (await all(env)).filter((x) => x.metadata && siteOf(x) === s && (x.metadata.st === 'p' || (x.metadata.st === 't' && now - (x.metadata.tk || 0) > 20 * 60e3)));
       const edits = [];
-      for (const x of L) { const v = await env.PUSH.get(x.name, 'json'); if (v) edits.push({ id: x.name, ...v }); }
-      return out({ ok: true, edits });
+      for (const x of L) { const v = await env.PUSH.get(x.name, 'json'); if (!v) continue; edits.push({ id: x.name, ...v }); await env.PUSH.put(x.name, JSON.stringify({ ...v, st: 't' }), { metadata: { ...x.metadata, st: 't', tk: now } }); }
+      return out({ ok: true, site: s, edits });
     }
     let b; try { b = await req.json(); } catch (e) { return out({ ok: false }, 400); }
-    const v = await env.PUSH.getWithMetadata(String(b.id || ''), 'json');
-    if (!v || !v.value) return out({ ok: false }, 404);
+    const id = str(b.id, 80);
+    const v = id.startsWith(P) ? await env.PUSH.getWithMetadata(id, 'json') : null;
+    if (!v || !v.value || (v.value.s || 'sira') !== s) return out({ ok: false }, 404);
     const st = b.st === 'ok' ? 'ok' : 'err';
-    const val = { ...v.value, st, msg: String(b.msg || '').slice(0, 400), sha: String(b.sha || '').slice(0, 40), at2: Date.now() };
-    await env.PUSH.put(String(b.id), JSON.stringify(val), { metadata: { ...v.metadata, st } });
+    await env.PUSH.put(id, JSON.stringify({ ...v.value, st, msg: str(b.msg, 400), sha: str(b.sha, 40), at2: Date.now() }), { metadata: { ...v.metadata, st } });
     return out({ ok: true });
   }
 
   let b; try { b = JSON.parse(await req.text()); } catch (e) { return out({ ok: false }, 400); }
   if (!(await isOwner(b && b.k))) return out({ ok: false }, 403);
+  const s = okSite(b.s) ? b.s : 'sira';
 
-  if (u.pathname === '/c/hi') return out({ ok: true, pause: (await env.PUSH.get('pause', 'json')) || { on: false } });
-  if (u.pathname === '/c/pause') {
-    const on = !!b.on, msg = String(b.msg || '').trim().slice(0, 1000);
-    if (on && !msg) return out({ ok: false, bad: 1 }, 400);
-    const v = { on, msg, np: on && !!b.np, t: Date.now() };
-    await env.PUSH.put('pause', JSON.stringify(v));
-    return out({ ok: true, pause: v });
-  }
+  if (u.pathname === '/c/hi') { const c = await getCfg(env, s); return out({ ok: true, site: s, pause: c.pause, cfg: c }); }
   if (u.pathname === '/c/list') {
-    const L = (await all(env)).slice(-60).reverse();
+    const L = (await all(env)).filter((x) => siteOf(x) === s).slice(-80).reverse();
     const r = [];
     for (const x of L) { const v = await env.PUSH.get(x.name, 'json'); if (v) r.push({ id: x.name, ...v }); }
     return out({ ok: true, edits: r });
@@ -64,29 +134,55 @@ export async function cmsFetch(req, env, u) {
   if (u.pathname === '/c/save') {
     const { f, path, old, nw } = b;
     if (!okFile(f) || !okPath(path) || !okText(old) || !okText(nw) || old === nw || !nw.trim()) return out({ ok: false, bad: 1 }, 400);
-    // one waiting correction per place: a second one waits for the first
-    const same = (await all(env)).filter((x) => x.metadata && x.metadata.st === 'p' && x.metadata.f === f);
+    const AL = await all(env);
+    const same = AL.filter((x) => x.metadata && (x.metadata.st === 'p' || x.metadata.st === 't') && x.metadata.f === f && siteOf(x) === s);
     for (const x of same) { const v = await env.PUSH.get(x.name, 'json'); if (v && JSON.stringify(v.path) === JSON.stringify(path)) return out({ ok: false, busy: 1 }); }
     const id = P + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
-    const v = { f, path, old, nw, note: String(b.note || '').slice(0, 300), lb: String(b.lb || '').slice(0, 200), sec: String(b.sec || '').slice(0, 80), rv: b.rv ? String(b.rv).slice(0, 60) : '', st: 'p', at: Date.now() };
-    await env.PUSH.put(id, JSON.stringify(v), { metadata: { st: 'p', f } });
+    const v = { s, f, path, old, nw, note: str(b.note, 300), lb: str(b.lb, 200), sec: str(b.sec, 120), rv: b.rv ? str(b.rv, 60) : '', st: 'p', at: Date.now() };
+    await env.PUSH.put(id, JSON.stringify(v), { metadata: { st: 'p', f, s } });
+    const fin = AL.filter((x) => x.metadata && (x.metadata.st === 'ok' || x.metadata.st === 'err'));
+    for (const x of fin.slice(0, Math.max(0, AL.length - 300))) await env.PUSH.delete(x.name);
     return out({ ok: true, id });
   }
   if (u.pathname === '/c/cancel') {
-    const id = String(b.id || '');
+    const id = str(b.id, 80);
     const v = await env.PUSH.getWithMetadata(id);
-    if (!id.startsWith(P) || !v || !v.metadata || v.metadata.st !== 'p') return out({ ok: false });
+    if (!id.startsWith(P) || !v || !v.metadata || v.metadata.st !== 'p' || siteOf({ metadata: v.metadata }) !== s) return out({ ok: false });
     await env.PUSH.delete(id);
     return out({ ok: true });
   }
+  // the settings: one action at a time, applied at once
+  if (u.pathname === '/c/cfg') {
+    const c = await getCfg(env, s), a = b.a, at = Date.now();
+    if (a === 'pause') {
+      const on = !!b.on, msg = str(b.msg, 1000).trim();
+      if (on && !msg) return out({ ok: false, bad: 1 }, 400);
+      c.pause = { on, msg: on ? msg : c.pause.msg || '', np: on && !!b.np, t: at };
+    } else if (a === 'hide') {
+      if (!okRule(b.r)) return out({ ok: false, bad: 1 }, 400);
+      if (!c.hide.some((h) => h.sel === b.r.sel && h.fp === b.r.fp && h.sec === b.r.sec)) c.hide.push({ id: rid(), sel: b.r.sel, fp: b.r.fp, sec: b.r.sec, lb: str(b.lb, 300), at });
+      if (c.hide.length > 2000) return out({ ok: false, full: 1 }, 400);
+    } else if (a === 'unhide') {
+      c.hide = c.hide.filter((h) => h.id !== b.id);
+    } else if (a === 'add') {
+      if (!['h', 'p', 'q'].includes(b.kind) || !okText(b.t) || !String(b.t).trim()) return out({ ok: false, bad: 1 }, 400);
+      if (b.id) { const x = c.add.find((x) => x.id === b.id); if (!x) return out({ ok: false }, 404); x.k = b.kind; x.t = String(b.t); x.at2 = at; }
+      else { if (!okRule(b.r)) return out({ ok: false, bad: 1 }, 400); c.add.push({ id: rid(), sel: b.r.sel, fp: b.r.fp, sec: b.r.sec, k: b.kind, t: String(b.t), lb: str(b.lb, 300), at }); }
+      if (c.add.length > 2000) return out({ ok: false, full: 1 }, 400);
+    } else if (a === 'unadd') {
+      c.add = c.add.filter((x) => x.id !== b.id);
+    } else if (a === 'page') {
+      const p = b.p || {};
+      if (!str(p.title, 200).trim() || !okBlocks(p.blocks)) return out({ ok: false, bad: 1 }, 400);
+      if (p.id) { const x = c.pages.find((x) => x.id === p.id); if (!x) return out({ ok: false }, 404); Object.assign(x, { title: str(p.title, 200), sub: str(p.sub, 300), blocks: p.blocks, off: !!p.off, at2: at }); }
+      else { if (!okRule(b.r)) return out({ ok: false, bad: 1 }, 400); c.pages.push({ id: rid(), sel: b.r.sel, fp: b.r.fp, sec: b.r.sec, title: str(p.title, 200), sub: str(p.sub, 300), blocks: p.blocks, lb: str(b.lb, 300), at }); }
+      if (c.pages.length > 200) return out({ ok: false, full: 1 }, 400);
+    } else if (a === 'unpage') {
+      c.pages = c.pages.filter((x) => x.id !== b.id);
+    } else return out({ ok: false }, 400);
+    if (new TextEncoder().encode(JSON.stringify(c)).length > 1.5e6) return out({ ok: false, full: 1 }, 400);
+    await putCfg(env, s, c);
+    return out({ ok: true, cfg: c, pause: c.pause });
+  }
   return out({ ok: false }, 404);
 }
-
-// the site and the app ask this when they open: is the site paused, and what to tell the reader
-export async function pauseFetch(req, env, u, site) {
-  if (u.pathname !== '/st') return null;
-  const v = (await env.PUSH.get('pause', 'json')) || { on: false };
-  return new Response(JSON.stringify({ on: !!v.on, msg: v.on ? v.msg : '' }), { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'Access-Control-Allow-Origin': site } });
-}
-// while paused with «and the notifications» chosen, the scheduled notifications are not sent
-export async function pushPaused(env) { const v = await env.PUSH.get('pause', 'json'); return !!(v && v.on && v.np); }

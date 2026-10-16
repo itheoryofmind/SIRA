@@ -1,12 +1,13 @@
 name: لوحة المحتوى
-# every few minutes: the corrections the keeper saved on push.seeratuh.com/c are written into the site and published
+# every few minutes: the corrections the keeper saved in the site's edit mode are written into the site, checked, and published
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/10 * * * *'
   workflow_dispatch: {}
 permissions:
   contents: write
   pages: write
+  id-token: write   # GitHub's signed token: proves to push.seeratuh.com which repository is asking
 concurrency:
   group: cms
   cancel-in-progress: false
@@ -20,7 +21,7 @@ jobs:
       - id: a
         name: Apply the waiting corrections
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          PYTHONDONTWRITEBYTECODE: '1'
         run: python3 .github/cms/apply.py
       - name: Publish the site
         if: steps.a.outputs.pushed == '1'

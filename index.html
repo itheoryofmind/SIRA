@@ -1725,11 +1725,12 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 .q-mus{display:block;margin:6px 0 8px;padding:8px 12px;border-radius:8px;background:color-mix(in srgb,var(--verse,var(--palm)) 10%,var(--surface));border-inline-start:3px solid var(--verse,var(--palm))}
 .q-mus .q-mt{display:block;font-family:"UthmanicHafs","Amiri",serif;font-size:1.15em;line-height:2.1;color:var(--verse,var(--palm))}
 .q-mus small{display:block;font-family:var(--ui);font-size:12px;color:var(--muted);margin-top:2px}
+
 /* the site paused by its keeper */
 html.pz-on,html.pz-on body{overflow:hidden}
 .pz{position:fixed;inset:0;z-index:2147483000;background:var(--ground);display:grid;place-items:center;padding:24px 16px calc(24px + env(safe-area-inset-bottom))}
 .pz-c{max-width:460px;width:100%;text-align:center;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:20px;padding:28px 20px 22px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
-.pz-n{font-family:"Amiri",serif;font-weight:700;font-size:38px;line-height:1.3;color:var(--ink)}.pz-n small{display:block;font-size:15px;font-weight:400;color:var(--brass)}
+.pz-n{font-family:"Amiri",var(--text),serif;font-weight:700;font-size:34px;line-height:1.4;color:var(--ink)}
 .pz-m{margin:18px 0 22px;font-family:var(--text);font-size:21px;line-height:2;color:var(--ink);white-space:pre-wrap}
 .pz-b{font:inherit;font-size:16px;font-weight:700;border:1px solid var(--line);background:var(--brass-soft);color:var(--brass);border-radius:14px;padding:10px 20px;cursor:pointer}.pz-b:disabled{opacity:.6}
 /* the keeper's edit mode */
@@ -1758,6 +1759,30 @@ html.own-pick *{cursor:crosshair!important}html.own-pick p:hover,html.own-pick b
 .own-good{color:#7fb48a}.own-badt{color:#d9826b}.own-acts{display:flex;gap:8px;margin-top:6px}
 .own-pv{white-space:pre-wrap;background:#1d1b16;border-radius:12px;padding:10px 12px;font-family:var(--text);font-size:19px;line-height:2}
 .own-ck{display:flex;align-items:center;gap:10px;margin:10px 0}.own-ck input{width:22px;height:22px;accent-color:#c9a24a}
+
+/* what the keeper hid, added, and the sections he added */
+.own-hid{display:none!important}
+.own-hid-o{opacity:.38!important;outline:2px dashed #d9826b!important;outline-offset:2px;position:relative}
+.own-add-p{font-family:var(--text);font-size:1.12em;line-height:2;color:var(--ink);margin:10px 0;white-space:pre-wrap}
+.own-add-h{font-family:var(--text);font-weight:700;font-size:1.25em;color:var(--brass);margin:16px 0 6px;white-space:pre-wrap}
+.own-add-q{font-family:var(--text);font-size:1.12em;line-height:2;color:var(--ink);margin:10px 0;padding:4px 14px;border-inline-start:3px solid var(--gold);white-space:pre-wrap}
+html.own-on .own-add:not(.own-tile){outline:1px dashed #7fb48a;outline-offset:3px}
+html.own-pg-on,html.own-pg-on body{overflow:hidden}
+.own-pg{position:fixed;inset:0;z-index:2147482000;background:var(--ground);color:var(--ink);overflow:auto;-webkit-overflow-scrolling:touch}
+.own-pg-h{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:var(--surface);border-bottom:1px solid var(--line);border-top:3px solid var(--gold)}
+.own-pg-h h2{margin:0;font-family:var(--text);font-size:22px;line-height:1.5;color:var(--ink)}
+.own-pg-x{font:inherit;font-size:18px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;flex:none}
+.own-pg-in{max-width:760px;margin:0 auto;padding:14px 16px calc(40px + env(safe-area-inset-bottom))}
+.own-pg-sub{color:var(--muted);font-family:var(--ui);margin:0 0 10px}
+.own-pb-p{font-family:var(--text);font-size:20px;line-height:2.1;margin:0 0 14px;white-space:pre-wrap}
+.own-pg-in h3{font-family:var(--text);font-size:21px;color:var(--brass);margin:20px 0 6px}
+.own-pb-q{font-family:var(--text);font-size:20px;line-height:2.1;margin:0 0 14px;padding:6px 16px;border-inline-start:3px solid var(--gold);background:var(--brass-soft);border-radius:0 12px 12px 0;white-space:pre-wrap}
+.own-act{display:block;width:100%;text-align:start;font:inherit;font-family:var(--ui);color:#f1ece0;background:#1d1b16;border:1px solid #3a352a;border-radius:14px;padding:11px 14px;margin:0 0 8px;cursor:pointer}
+.own-act b{display:block;font-size:16.5px}.own-act small{display:block;color:#a59d8b;font-size:13px;margin-top:2px}.own-act-g{border-color:#7fb48a}
+.own-kinds{display:flex;gap:6px;margin:6px 0}.own-kinds .own-b{flex:1;font-size:13.5px;padding:8px 6px}.own-kinds .own-on2{background:#c9a24a;color:#1a1209;border-color:#c9a24a}
+.own-row{border:1px solid #3a352a;border-radius:14px;padding:8px;margin:0 0 10px}.own-row .own-ta{margin:4px 0}
+.own-grey{background:#3a352a!important;color:#f1ece0!important}
+.own-bar .own-b{flex:none}.own-bar .own-pk{flex:1}
 
 </style>
 
@@ -2286,7 +2311,7 @@ html.own-pick *{cursor:crosshair!important}html.own-pick p:hover,html.own-pick b
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-16-2007';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-16-2045';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3751,7 +3776,7 @@ function openNav(){
   it('الإشعارات',()=>{closeNav();fxNotif()});
   if(typeof NTDOT!=='undefined'&&NTDOT)G.lastChild.append(el('span','nt-dot'));
   // the site's sections, in the same groups, order and colours as the home page tiles; each opens exactly what its tile opens
-  document.querySelectorAll('.ex>*').forEach(e=>{if(e.classList.contains('exg')){grp(e.textContent.trim(),e.dataset.g)}else if(e.tagName==='BUTTON'){const b=e.querySelector('b');it(b?b.textContent.trim():e.textContent.trim(),()=>{closeNav();CURG=e.dataset.g;CURGT=Date.now();e.click()})}});
+  document.querySelectorAll('.ex>*').forEach(e=>{if(e.classList.contains('exg')){grp(e.textContent.trim(),e.dataset.g)}else if(e.tagName==='BUTTON'&&!e.classList.contains('own-hid')){const b=e.querySelector('b');it(b?b.textContent.trim():e.textContent.trim(),()=>{closeNav();CURG=e.dataset.g;CURGT=Date.now();e.click()})}});
   grp('الكتب','bk');
   SXBOOKS.filter(b=>b.open).forEach(b=>it(b.t,()=>{closeNav();b.open()}));
   grp('عن الموقع','ab');
@@ -5058,20 +5083,6 @@ document.addEventListener('click',async e=>{const v=e.target.closest&&e.target.c
     setTimeout(()=>body.prepend(box),0);return}
   if(nx&&nx.nodeType===3){if(nx.data.length>m[0].length)nx.splitText(m[0].length);nx.after(box)}else v.after(box)});
 
-/* the keeper can pause the site from his content page: while paused, the site and the app show only his message,
-   checked on opening and whenever the app comes back to the front; the last answer is kept for opening without a connection */
-(function(){const U='https://push.seeratuh.com/st';let ov=null;
-  function show(msg){if(LS.get('ownk',''))return;   // the keeper sees the site as it is, with the state in his edit bar
-    if(!ov){ov=el('div','pz');ov.setAttribute('role','alertdialog');ov.setAttribute('aria-modal','true');document.body.append(ov);document.documentElement.classList.add('pz-on')}
-    ov.textContent='';const c=el('div','pz-c');const nm=el('div','pz-n','سِيرَتُه');nm.append(el('small',null,'صلى الله عليه وسلم'));
-    const b=el('button','pz-b','تحقّق مرة أخرى');b.type='button';b.onclick=()=>{b.disabled=true;chk().then(()=>{b.disabled=false})};
-    c.append(nm,el('p','pz-m',msg),b);ov.append(c)}
-  function hide(){if(ov){ov.remove();ov=null;document.documentElement.classList.remove('pz-on')}}
-  async function chk(){try{const r=await fetch(U,{cache:'no-store'});if(!r.ok)return;const j=await r.json();LS.set('pz',j.on?String(j.msg||''):'');if(j.on)show(String(j.msg||''));else hide()}catch(e){}}
-  const last=LS.get('pz','');if(last)show(last);chk();
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk()});
-})();
-
 /* ---------- مواضع الخلاف مع المطبوع: علامات حمراء، وقراءة الصفحات المعلَّمة وحدها ---------- */
 let MK={};getJSON('data/marks.json').then(d=>{MK=d||{};renderMkBooks()}).catch(()=>{});
 const MKGROUPS=[{t:'مختصر سيرة الرسول ﷺ',ns:[17]},{t:'السيرة النبوية لابن هشام',ns:[23,24]},{t:'زاد المعاد',ns:[18,19,20,21,22]},{t:'مختصر الشمائل المحمدية',ns:[25]},{t:'كتاب المغازي من صحيح البخاري',ns:[26,27]},{t:'الخلفاء الراشدون من البداية والنهاية',ns:[28,29,30]}];
@@ -5140,27 +5151,90 @@ function mkShow(on){document.body.classList.toggle('mk-on',!!on);LS.set('mkOn',o
   w.append(s,el('p','note','علامات حمراء على الكلمات التي خالف فيها النص الرقمي المطبوع، ومعها ما قرّرناه فيها.'));t.after(w);mkShow(+LS.get('mkOn',0))})();
 {const _ms=mkStart;mkStart=function(){mkShow(1);return _ms.apply(this,arguments)}}
 
-/* ---------- the keeper's edit mode (وضع التعديل): the site itself, where he taps any text and corrects it ----------
-   It turns on only with his key (opened once from his notice page: seeratuh.com/#own=<key>), checked by push.seeratuh.com.
-   A tapped text is found in the site's own data files (the ones this page has loaded), by its letters alone, so the
-   way it is shown (gold, verse marks, page marks, numerals) does not matter; text not in the data is the site's own wording.
-   Saved corrections wait at push.seeratuh.com and are published by the repository's workflow within minutes. */
+/* ---------- the keeper's control of the site (used by both of his sites) ----------
+   For every reader: on opening, the page asks push.seeratuh.com/st for the site's settings (kept for opening without a connection):
+   a pause with the keeper's message, the parts he hid, the texts he added after any place, and the sections he added.
+   For the keeper only (his key, opened once from his notice page: <site>/#own=<key>): the edit mode, a bar at the foot of the page.
+   He taps any text and corrects, hides, or adds after it; adds whole sections; pauses the site; and sees and undoes all of it.
+   A part of the page is known by its kind (tag and class), its letters (a fingerprint), and the section it is in, so a rule
+   finds the same part again however and whenever it is drawn. Everything is drawn as plain text, never as markup. */
 (function(){
-const W='https://push.seeratuh.com';
+const SITE='sira',W='https://push.seeratuh.com',HOME='سِيرَتُه';
 {const h=new URLSearchParams(location.hash.slice(1)).get('own');if(h){LS.set('ownk',h);history.replaceState(null,'',location.pathname+location.search)}}
-const KEY=LS.get('ownk','');if(!KEY)return;
-const call=(p,o)=>fetch(W+p,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:KEY,...(o||{})})}).then(r=>r.json()).catch(()=>({ok:false,net:1}));
-const when=t=>new Date(t).toLocaleString('ar-SA-u-nu-arab-ca-gregory',{day:'numeric',month:'long',hour:'numeric',minute:'2-digit'});
-const SKIP=new Set(['data/quran.json','data/sx_gold.json','data/qv.json','data/coast.json','data/marks.json']);
-let PAUSE={on:false},PICK=false,bar,pzB,pkB;
+let KEY=LS.get('ownk','');const OWN=()=>!!KEY;
+let CFG=LS.get('own_cfg',null)||{on:false,msg:'',hide:[],add:[],pages:[]};
 
-/* letters only: no tashkeel, punctuation, marks or spaces; the alif forms, ya and ta marbuta as one; numerals as digits */
+/* ---------- letters and fingerprints ---------- */
 const SAW='صلىاللهعليهوسلم';
 function letters(s){let o='',ix=[];for(let i=0;i<s.length;i++){let c=s[i];
   if(c==='ﷺ'){o+=SAW;for(let k=0;k<SAW.length;k++)ix.push(i);continue}
   const d='٠١٢٣٤٥٦٧٨٩'.indexOf(c);if(d>=0)c=String(d);
   else if('أإآٱ'.includes(c))c='ا';else if(c==='ى')c='ي';else if(c==='ة')c='ه';
   if(/[ء-ي0-9A-Za-z]/.test(c)){o+=c;ix.push(i)}}return [o,ix]}
+// the text of a part as the site drew it: without what the keeper added and without the edit mode's own marks
+function ownText(n){let t='';const w=document.createTreeWalker(n,NodeFilter.SHOW_TEXT|NodeFilter.SHOW_ELEMENT,{acceptNode:x=>x.nodeType===1&&x.classList&&(x.classList.contains('own-add')||x.classList.contains('own-tag'))?NodeFilter.FILTER_REJECT:x.nodeType===3?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP});while(w.nextNode())t+=w.currentNode.nodeValue;return t}
+function hash(s){let a=0x811c9dc5,b=0x01000193^0x5bd1e995;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);a=Math.imul(a^c,16777619)>>>0;b=Math.imul(b^c,0x5bd1e995)>>>0;b=(b^(b>>>15))>>>0}return a.toString(36)+b.toString(36)+s.length.toString(36)}
+function fpOf(n){return hash(letters(ownText(n))[0])}
+function selOf(n){const c=[...n.classList].find(x=>!x.startsWith('own-')&&/^[A-Za-z_][A-Za-z0-9_-]{0,39}$/.test(x));return n.tagName.toLowerCase()+(c?'.'+c:'')}
+function secOf(n){const d=n.closest('[role=dialog][aria-label],[aria-modal=true][aria-label]');return d?d.getAttribute('aria-label').slice(0,200):'home'}
+const ruleOf=n=>({sel:selOf(n),fp:fpOf(n),sec:secOf(n)});
+
+/* ---------- applying the settings to whatever is drawn ---------- */
+const FPC=new WeakMap();
+function fpCached(n){const x=n.textContent,t=x.length+'|'+x.slice(0,60)+'|'+x.slice(-60),c=FPC.get(n);if(c&&c[0]===t)return c[1];const f=fpOf(n);FPC.set(n,[t,f]);return f}
+function matches(root,r,cb){const L=[];if(root.nodeType!==1)return;if(root.matches&&root.matches(r.sel))L.push(root);const up=root.parentElement&&root.parentElement.closest(r.sel);if(up)L.push(up);root.querySelectorAll(r.sel).forEach(x=>L.push(x));
+  for(const n of L){if(n.closest('.own-bar,.own-sh,.own-pg-in'))continue;if(fpCached(n)===r.fp&&secOf(n)===r.sec)cb(n)}}
+function addEl(a){const tag=a.k==='h'?'h3':a.k==='q'?'blockquote':'p';const e=el(tag,'own-add own-add-'+a.k,a.t);e.dataset.own=a.id;return e}
+function tileEl(p,anchor){const t=document.createElement(anchor.tagName);t.className=anchor.className+' own-add own-tile';if(anchor.tagName==='BUTTON')t.type='button';t.dataset.own=p.id;
+  const bt=anchor.querySelector('b,strong,h3,h4'),st=anchor.querySelector('span:not(.saw),small,p');
+  if(bt){t.append(el(bt.tagName.toLowerCase(),bt.className,p.title));if(p.sub)t.append(el(st?st.tagName.toLowerCase():'span',st?st.className:'',p.sub))}else t.textContent=p.title;
+  t.addEventListener('click',e=>{if(PICK)return;e.preventDefault();e.stopPropagation();openPage(p)});return t}
+function after(n,id,mk){let x=n.nextElementSibling;while(x&&x.classList.contains('own-add')){if(x.dataset.own===id)return;x=x.nextElementSibling}
+  let at=n;while(at.nextElementSibling&&at.nextElementSibling.classList.contains('own-add'))at=at.nextElementSibling;at.after(mk())}
+const ruleById=id=>(CFG.hide||[]).find(r=>r.id===id)||(CFG.add||[]).find(r=>r.id===id)||(CFG.pages||[]).find(r=>r.id===id);
+function still(n,r){try{return !!r&&n.matches(r.sel)&&fpCached(n)===r.fp&&secOf(n)===r.sec}catch(e){return false}}
+function recheck(root){if(root.nodeType!==1)return;const L=[root,...root.querySelectorAll('[data-own-hid]')];
+  for(const n of L)if(n.dataset&&n.dataset.ownHid&&!still(n,ruleById(n.dataset.ownHid))){n.classList.remove('own-hid','own-hid-o');delete n.dataset.ownHid}
+  for(const a of root.querySelectorAll('.own-add')){let x=a.previousElementSibling;while(x&&x.classList.contains('own-add'))x=x.previousElementSibling;const r=ruleById(a.dataset.own);if(!x||!still(x,r))a.remove()}}
+function applyTo(root){recheck(root);
+  for(const r of CFG.hide||[])try{matches(root,r,n=>{n.classList.add(OWN()?'own-hid-o':'own-hid');n.dataset.ownHid=r.id})}catch(e){}
+  for(const a of CFG.add||[])try{matches(root,a,n=>after(n,a.id,()=>addEl(a)))}catch(e){}
+  for(const p of CFG.pages||[])try{matches(root,p,n=>after(n,p.id,()=>tileEl(p,n)))}catch(e){}}
+function reapply(){document.querySelectorAll('.own-add').forEach(x=>x.remove());document.querySelectorAll('.own-hid,.own-hid-o').forEach(x=>{x.classList.remove('own-hid','own-hid-o');delete x.dataset.ownHid});applyTo(document.body)}
+let pend=new Set(),tmr=0;
+new MutationObserver(ms=>{if(!(CFG.hide||[]).length&&!(CFG.add||[]).length&&!(CFG.pages||[]).length)return;
+  const OWNP='.own-add,.own-bar,.own-sh,.own-toast,.own-pg,.pz';
+  for(const m of ms){if(m.target.nodeType===1&&!m.target.closest(OWNP))pend.add(m.target);m.addedNodes.forEach(x=>{if(x.nodeType===1&&!x.matches(OWNP))pend.add(x)})}
+  clearTimeout(tmr);tmr=setTimeout(()=>{const P=[...pend].filter(x=>x.isConnected);pend=new Set();for(const r of P)applyTo(r)},90)}).observe(document.documentElement,{childList:true,subtree:true});
+
+/* ---------- a section the keeper added: its own reading page ---------- */
+function openPage(p){const ov=el('div','own-pg');ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label',p.title);ov.dataset.own=p.id;
+  const hd=el('div','own-pg-h');const x=el('button','own-pg-x','✕');x.type='button';x.setAttribute('aria-label','إغلاق');const close=()=>{ov.remove();document.documentElement.classList.remove('own-pg-on')};x.onclick=close;
+  hd.append(el('h2',null,p.title),x);const inn=el('div','own-pg-in');if(p.sub)inn.append(el('p','own-pg-sub',p.sub));
+  for(const b of p.blocks||[])inn.append(el(b.k==='h'?'h3':b.k==='q'?'blockquote':'p','own-pb-'+b.k,b.t));
+  ov.append(hd,inn);document.body.append(ov);document.documentElement.classList.add('own-pg-on');ov.tabIndex=-1;ov.focus();
+  ov.addEventListener('keydown',e=>{if(e.key==='Escape')close()});return ov}
+
+/* ---------- the pause ---------- */
+let pzv=null;
+function pause(){if(CFG.on&&!OWN()){if(!pzv){pzv=el('div','pz');pzv.setAttribute('role','alertdialog');pzv.setAttribute('aria-modal','true');document.body.append(pzv);document.documentElement.classList.add('pz-on')}
+    pzv.textContent='';const c=el('div','pz-c');c.append(el('div','pz-n',HOME));const b=el('button','pz-b','تحقّق مرة أخرى');b.type='button';b.onclick=()=>{b.disabled=true;load().then(()=>{b.disabled=false})};c.append(el('p','pz-m',CFG.msg||''),b);pzv.append(c)}
+  else if(pzv){pzv.remove();pzv=null;document.documentElement.classList.remove('pz-on')}}
+
+async function load(){try{const r=await fetch(W+'/st?s='+SITE,{cache:'no-store'});if(!r.ok)return;const j=await r.json();
+  const ch=JSON.stringify([j.hide,j.add,j.pages])!==JSON.stringify([CFG.hide,CFG.add,CFG.pages]);CFG=j;LS.set('own_cfg',j);pause();if(ch)reapply();drawPz()}catch(e){}}
+load();try{pause()}catch(e){}if((CFG.hide||[]).length||(CFG.add||[]).length||(CFG.pages||[]).length)try{applyTo(document.body)}catch(e){}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
+
+/* =================== the keeper's edit mode =================== */
+let FULL=null,PICK=false,bar=null,pzB=null,pkB=null;
+function drawPz(){if(!pzB)return;pzB.textContent=CFG.on?'الموقع متوقف':'إيقاف';pzB.title=CFG.on?'الموقع متوقف الآن':'إيقاف الموقع مؤقتاً';pzB.classList.toggle('own-red',!!CFG.on)}
+if(!KEY)return;
+const call=(p,o)=>fetch(W+p,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:KEY,s:SITE,...(o||{})})}).then(r=>r.json()).catch(()=>({ok:false,net:1}));
+const cfg=async o=>{const r=await call('/c/cfg',o);if(r.ok){FULL=r.cfg;await load()}return r};
+const when=t=>new Date(t).toLocaleString('ar-SA-u-nu-arab-ca-gregory',{day:'numeric',month:'long',hour:'numeric',minute:'2-digit'});
+const SKIP=new Set(['data/quran.json','data/sx_gold.json','data/qv.json','data/coast.json','data/marks.json','data/idx.json','data/mid.json','data/fn.json']);
+
 let LV=[],LVN=-1;
 function* walk(o,p){if(typeof o==='string'){yield [p,o];return}if(o&&typeof o==='object'){if(Array.isArray(o))for(let i=0;i<o.length;i++)yield* walk(o[i],p.concat(i));else for(const k of Object.keys(o))yield* walk(o[k],p.concat(k))}}
 function leavesAll(){const ks=Object.keys(MEM);if(ks.length===LVN)return LV;LV=[];LVN=ks.length;
@@ -5169,47 +5243,67 @@ function find(T){const L=leavesAll(),R=[];if(T.length<2)return R;
   for(const x of L){let sc=0;if(x.n.includes(T))sc=T.length/x.n.length;else if(x.n.length>=8&&x.n.length>=.35*T.length&&T.includes(x.n))sc=x.n.length/T.length;if(sc)R.push([sc,x])}
   R.sort((a,b)=>b[0]-a[0]);return R}
 
-/* the bar, at the foot of the screen, only for him */
-function o_mkBar(){bar=el('div','own-bar');bar.setAttribute('role','toolbar');
-  pkB=el('button','own-b own-pk','✏️ عدّل نصاً');pkB.type='button';pkB.onclick=()=>setPick(!PICK);
-  const lg=el('button','own-b','السجل');lg.type='button';lg.onclick=()=>{setPick(false);logSheet()};
-  pzB=el('button','own-b','⏸ إيقاف');pzB.type='button';pzB.onclick=()=>{setPick(false);pauseSheet()};
-  const x=el('button','own-b own-x','✕');x.type='button';x.title='خروج من وضع التعديل';x.onclick=()=>{if(!confirm('الخروج من وضع التعديل في هذا الجهاز؟ تعود إليه بفتح «وضع التعديل» من صفحة التنبيه.'))return;LS.set('ownk','');location.reload()};
-  bar.append(pkB,lg,pzB,x);document.body.append(bar);document.documentElement.classList.add('own-on');drawPz()}
-function drawPz(){pzB.textContent=PAUSE.on?'⏸ الموقع متوقف':'⏸ إيقاف';pzB.classList.toggle('own-red',!!PAUSE.on)}
-function setPick(v){PICK=v;document.documentElement.classList.toggle('own-pick',v);pkB.textContent=v?'اضغط على النص… (إلغاء)':'✏️ عدّل نصاً';pkB.classList.toggle('own-on2',v)}
-function o_toast(t,bad){const d=el('div','own-toast'+(bad?' own-bad':''),t);document.body.append(d);setTimeout(()=>d.remove(),4200)}
+function oBar(){bar=el('div','own-bar');bar.setAttribute('role','toolbar');bar.setAttribute('aria-label','وضع التعديل');
+  pkB=el('button','own-b own-pk','✏️ اضغط على أي شيء');pkB.type='button';pkB.onclick=()=>setPick(!PICK);
+  const mn=el('button','own-b','☰ المزيد');mn.type='button';mn.onclick=()=>{setPick(false);menuSheet()};
+  pzB=el('button','own-b','');pzB.type='button';pzB.onclick=()=>{setPick(false);pauseSheet()};
+  bar.append(pkB,mn,pzB);document.body.append(bar);document.documentElement.classList.add('own-on');drawPz()}
+function setPick(v){PICK=v;document.documentElement.classList.toggle('own-pick',v);pkB.textContent=v?'اضغط على النص أو القسم… (إلغاء)':'✏️ اضغط على أي شيء';pkB.classList.toggle('own-on2',v)}
+function oToast(t,bad){const d=el('div','own-toast'+(bad?' own-bad':''),t);document.body.append(d);setTimeout(()=>d.remove(),4200)}
 
-/* a tap while choosing: the block it is in, then where that text lives */
+/* a tap while choosing: everything that can be done with that place */
 const INL=new Set(['SPAN','B','I','EM','STRONG','MARK','SMALL','Q','SUP','SUB','A','ABBR','CITE','DEL','INS','U','S','BDI','BDO','LABEL']);
 document.addEventListener('click',e=>{if(!PICK)return;if(e.target.closest('.own-bar,.own-sh'))return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
   let t=e.target;if(t.nodeType!==1)t=t.parentElement;
   let blk=t;while(blk&&blk!==document.body&&INL.has(blk.tagName)&&blk.parentElement)blk=blk.parentElement;
-  const leaf=(()=>{let x=t;while(x.children.length===1&&x.textContent.trim()===x.children[0].textContent.trim())x=x.children[0];return x})();
-  // the very words under the finger (one text node): the unit of the site's own wording
   let tn='';try{const r=document.caretRangeFromPoint?document.caretRangeFromPoint(e.clientX,e.clientY):null;if(r&&r.startContainer.nodeType===3&&t.contains(r.startContainer))tn=r.startContainer.nodeValue.trim()}catch(_){}
-  setPick(false);flash(blk);pickText(blk,leaf,tn)},true);
+  setPick(false);flash(blk);actions(t,blk,tn)},true);
 function flash(n){n.classList.add('own-hl');setTimeout(()=>n.classList.remove('own-hl'),1600)}
-function secName(){const o=[...document.querySelectorAll('.fx[aria-label],[role=dialog][aria-label]')].filter(x=>!x.hidden&&x.getClientRects().length&&!x.closest('[hidden]')).pop();return o?o.getAttribute('aria-label'):'الصفحة الرئيسية'}
-function pickText(blk,leaf,tn){const txt=(blk.textContent||'').trim();const [T]=letters(txt.slice(0,30000));const R=find(T);
+function sheet(title){const ov=el('div','own-sh');const c=el('div','own-shc');const hd=el('div','own-shh');hd.append(el('b',null,title));const x=el('button','own-b own-x','✕');x.type='button';x.onclick=()=>ov.remove();hd.append(x);c.append(hd);ov.append(c);ov.onclick=e=>{if(e.target===ov)ov.remove()};document.body.append(ov);return [ov,c]}
+const short=(s,n)=>{s=(s||'').replace(/\s+/g,' ').trim();return s.length>(n||70)?s.slice(0,n||70)+'…':s};
+function act(c,label,sub,fn,cls){const b=el('button','own-act'+(cls?' '+cls:''));b.type='button';b.append(el('b',null,label));if(sub)b.append(el('small',null,sub));b.onclick=fn;c.append(b);return b}
+// the parts around the tapped place, from the smallest: each can be hidden, or have text added after it
+function parts(blk){const L=[blk];let x=blk.parentElement;
+  while(x&&x!==document.body&&L.length<4){if(x.matches('[role=dialog],[aria-modal=true],main,html'))break;
+    const tl=ownText(x).trim().length,pl=ownText(L[L.length-1]).trim().length;if(tl>pl+2&&tl<400000&&x.classList.length)L.push(x);x=x.parentElement}
+  return L}
+function kindName(n,i){const home=secOf(n)==='home';if(n.tagName==='BUTTON'&&home)return 'هذا المربع (القسم كاملاً)';if(/^H[1-4]$/.test(n.tagName))return 'هذا العنوان';if(i===0)return 'هذه الفقرة';
+  if(home)return i===1?'هذه المجموعة كلها':'هذا الجزء من الصفحة كله';return ['','الباب أو البطاقة','الباب الأكبر','ما فوقه كله'][i]||'ما فوقه كله'}
+function actions(t,blk,tn){
+  const added=t.closest('.own-add');
+  if(added&&!added.classList.contains('own-tile')){const a=(CFG.add||[]).find(x=>x.id===added.dataset.own);if(a)return addSheet(null,a)}
+  const tile=t.closest('.own-tile');if(tile){const p=((FULL&&FULL.pages)||CFG.pages||[]).find(x=>x.id===tile.dataset.own);if(p)return pageSheet(null,p)}
+  const pg=t.closest('.own-pg');if(pg){const p=((FULL&&FULL.pages)||CFG.pages||[]).find(x=>x.id===pg.dataset.own);pg.remove();document.documentElement.classList.remove('own-pg-on');if(p)return pageSheet(null,p)}
+  const hid=t.closest('.own-hid-o');
+  const [ov,c]=sheet('ماذا تريد؟');c.append(el('p','own-n','«'+short(ownText(blk),90)+'»'));
+  if(hid)act(c,'👁 إظهار ما أخفيته هنا','يعود ظاهراً للجميع',async()=>{ov.remove();const r=await cfg({a:'unhide',id:hid.dataset.ownHid});oToast(r.ok?'ظهر من جديد.':'تعذّر؛ حاول مرة أخرى.',!r.ok)},'own-act-g');
+  act(c,'✏️ تعديل النص','يُنشر خلال دقائق، ويمكن التراجع عنه',()=>{ov.remove();pickText(blk,t,tn)});
+  const P=parts(blk);
+  P.forEach((n,i)=>{if(n.classList.contains('own-hid-o'))return;const k=kindName(n,i);act(c,'🙈 إخفاء '+k,short(ownText(n),60),()=>{ov.remove();hideOne(n,k)})});
+  act(c,'➕ إضافة نص بعد '+kindName(blk,0).replace(' (القسم كاملاً)',''),'فقرة أو عنوان أو اقتباس، يظهر فوراً',()=>{ov.remove();addSheet(blk,null)});
+  if(P.length>1)act(c,'➕ إضافة نص بعد '+kindName(P[1],1),'',()=>{ov.remove();addSheet(P[1],null)});
+  const tb=blk.closest('button,a,[role=button]');if(tb&&secOf(tb)==='home')act(c,'🆕 إضافة قسم جديد بعد هذا المربع','بعنوانه ونصوصه، ويُفتح كسائر الأقسام',()=>{ov.remove();pageSheet(tb,null)})}
+function countSame(r){let k=0;try{document.querySelectorAll(r.sel).forEach(x=>{if(!x.closest('.own-bar,.own-sh')&&fpCached(x)===r.fp&&secOf(x)===r.sec)k++})}catch(e){}return k}
+async function hideOne(n,kind){const r0=ruleOf(n),k=countSame(r0);if(!confirm('إخفاء '+kind+' عن الجميع؟'+(k>1?' وهو بنصه نفسه في '+ar(k)+' مواضع ظاهرة الآن في هذا القسم، فتُخفى كلها.':'')+' يمكنك إظهاره متى شئت.'))return;const r=await cfg({a:'hide',r:r0,lb:kind+': '+short(ownText(n),120)});oToast(r.ok?'أُخفي. تراه أنت باهتاً لتُظهره متى شئت.':'تعذّر؛ حاول مرة أخرى.',!r.ok)}
+
+/* ---------- correcting a text ---------- */
+function pickText(blk,t,tn){const txt=ownText(blk).trim();const [T]=letters(txt.slice(0,30000));const R=find(T);
   if(R.length){const best=R[0][0];const top=R.filter(r=>r[0]>=best-1e-9).map(r=>r[1]);
     const groups=[];for(const x of top){const g=groups.find(g=>g.s===x.s);if(g)g.at.push(x);else groups.push({s:x.s,at:[x]})}
-    if(groups.length===1)return o_dataSheet(groups[0],txt);
-    return chooser(groups.slice(0,12),txt)}
-  // not in the data: the site's own wording (a tile, a heading, a button)
+    if(groups.length===1)return oData(groups[0],txt);return chooser(groups.slice(0,12),txt)}
+  const leaf=(()=>{let x=t;while(x.children.length===1&&x.textContent.trim()===x.children[0].textContent.trim())x=x.children[0];return x})();
   const w=tn||(leaf.children.length?blk:leaf).textContent.trim();
-  if(!w||w.length>400)return o_toast('لم أجد هذا النص في نصوص الموقع؛ اضغط على جزء أصغر منه.',1);
+  if(!w||w.length>400)return oToast('لم أجد هذا النص في نصوص الموقع؛ اضغط على جزء أصغر منه.',1);
   uiSheet(w)}
-
-/* the sheet */
-function sheet(title){const ov=el('div','own-sh');const c=el('div','own-shc');const hd=el('div','own-shh');hd.append(el('b',null,title));const x=el('button','own-b own-x','✕');x.type='button';x.onclick=()=>ov.remove();hd.append(x);c.append(hd);ov.append(c);ov.onclick=e=>{if(e.target===ov)ov.remove()};document.body.append(ov);return [ov,c]}
-function o_snip(s,T){const [n,ix]=letters(s);const a=n.indexOf(T);if(a<0)return s.slice(0,160)+(s.length>160?'…':'');const st=ix[a],en=ix[Math.min(a+T.length,ix.length)-1]+1;const L=Math.max(0,st-60),R=Math.min(s.length,en+80);
+function oSnip(s,T){const [n,ix]=letters(s);const a=n.indexOf(T);if(a<0)return short(s,160);const st=ix[a],en=ix[Math.min(a+T.length,ix.length)-1]+1;const L=Math.max(0,st-60),R=Math.min(s.length,en+80);
   const d=el('span');d.append((L?'… ':'')+s.slice(L,st));d.append(el('mark',null,s.slice(st,en)),s.slice(en,R)+(R<s.length?' …':''));return d}
+function secName(){const o=[...document.querySelectorAll('[role=dialog][aria-label]')].filter(x=>!x.hidden&&x.getClientRects().length&&!x.closest('[hidden]')&&!x.classList.contains('own-sh')).pop();return o?o.getAttribute('aria-label'):'الصفحة الرئيسية'}
+function fileName(f){const m={'sx_feat.json':'سنوات عمره والأحداث','sira_x.json':'الخط الزمني','sx_ghun.json':'شرح الغنيمان','saadi.json':'تفسير السعدي','fihris.json':'الفهرس','heads.json':'العناوين','meta.json':'بيانات الكتب','fawaid.json':'الفوائد'};if(m[f])return m[f];
+  if(/^t\d+\.json$/.test(f)){try{if(typeof SXBN==='function')return SXBN(+f.slice(1,-5));if(typeof partName==='function')return partName(+f.slice(1,-5))}catch(e){}}
+  if(/^sx_jhc_/.test(f))return 'كتاب الجهاد: الشروح';if(/^sx_jhi_/.test(f))return 'كتاب الجهاد';return secName()}
 function chooser(groups,txt){const [ov,c]=sheet('أي موضع تقصد؟');const [T]=letters(txt);
   c.append(el('p','own-n','هذا النص في أكثر من موضع من نصوص الموقع؛ اختر الذي تريد تعديله.'));
-  for(const g of groups){const b=el('button','own-hit');b.type='button';b.append(el('small',null,fileName(g.at[0].f)+(g.at.length>1?' (و'+ar(g.at.length-1)+' موضع آخر بالنص نفسه)':'')),o_snip(g.s,T));b.onclick=()=>{ov.remove();o_dataSheet(g,txt)};c.append(b)}}
-function fileName(f){const m={'sx_feat.json':'سنوات عمره والأحداث','sira_x.json':'الخط الزمني','sx_ghun.json':'شرح الغنيمان'};if(m[f])return m[f];if(/^t\d+\.json$/.test(f))return SXBN(+f.slice(1,-5));if(/^sx_jhc_/.test(f))return 'كتاب الجهاد: الشروح';if(/^sx_jhi_/.test(f))return 'كتاب الجهاد';return secName()}
-
+  for(const g of groups){const b=el('button','own-hit');b.type='button';b.append(el('small',null,fileName(g.at[0].f)+(g.at.length>1?' (و'+ar(g.at.length-1)+' موضع آخر بالنص نفسه)':'')),oSnip(g.s,T));b.onclick=()=>{ov.remove();oData(g,txt)};c.append(b)}}
 const MARKS=[['«','»'],['﴿','﴾'],['{','}'],['[',']'],['(',')']];
 const cnt=(s,ch)=>s.split(ch).length-1;
 function toks(s){return s.match(/\s+|[ء-ٰٟ-ۓە-ۭ\w]+|[^\s]/g)||[]}
@@ -5223,56 +5317,101 @@ function diffView(a,b,ctx){const A=toks(a),B=toks(b);let i=0;while(i<A.length&&i
   const f=el('span');const head=A.slice(0,i).join(''),tail=A.slice(A.length-j).join('');ctx=ctx||120;
   f.append(head.length>ctx?'… ':'',head.slice(-ctx));for(const [k,t] of ops)f.append(k===0?document.createTextNode(t):el(k<0?'del':'ins',null,t));
   f.append(tail.slice(0,ctx),tail.length>ctx?' …':'');return f}
-
-// the editor: the whole text of that place, the tapped part selected; the change shown word by word before saving
 function editor(c,old,tapped,onSave){const ta=el('textarea','own-ta');ta.value=old;ta.dir='rtl';c.append(ta);
   const nt=el('input','own-in');nt.type='text';nt.maxLength=300;nt.placeholder='سبب التعديل (اختياري، يبقى في السجل)';c.append(nt);
   const dv=el('div','own-diff'),wn=el('div');c.append(el('div','own-lb','التغيير'),dv,wn);
   const sv=el('button','own-save','احفظ التعديل');sv.type='button';c.append(sv);
   const upd=()=>{dv.textContent='';wn.textContent='';const v=ta.value;if(v===old){dv.append(el('span','own-n','لم يتغير شيء بعد.'));sv.disabled=true;return}sv.disabled=!v.trim();dv.append(diffView(old,v));
     const bad=MARKS.filter(([o,x])=>cnt(old,o)!==cnt(v,o)||cnt(old,x)!==cnt(v,x)).map(x=>x[0]+x[1]);
-    if(bad.length)wn.append(el('div','own-warn','تغيّر عدد العلامات '+bad.join(' ')+' — بها يُعرف كلامه صلى الله عليه وسلم (الذهبي) والآيات (الأخضر) وإحالاتها؛ فإن لم تقصد تغييرها فأعدها كما كانت.'))};
+    if(bad.length)wn.append(el('div','own-warn','تغيّر عدد العلامات '+bad.join(' ')+' — بها يُعرف كلامه صلى الله عليه وسلم والآيات وإحالاتها؛ فإن لم تقصد تغييرها فأعدها كما كانت.'))};
   let tm;ta.oninput=()=>{clearTimeout(tm);tm=setTimeout(upd,250)};upd();
   if(tapped){const [T]=letters(tapped);const [n,ix]=letters(old);const a=n.indexOf(T.slice(0,Math.min(T.length,60)));
-    if(a>=0)setTimeout(()=>{const st=ix[a],en=ix[Math.min(a+T.length,ix.length)-1]+1;try{ta.focus({preventScroll:true});ta.setSelectionRange(st,en);const lh=parseFloat(getComputedStyle(ta).lineHeight)||34;ta.scrollTop=Math.max(0,ta.value.slice(0,st).length/Math.max(20,ta.clientWidth/11)*lh-lh*2)}catch(e){}},60)}
+    if(a>=0)setTimeout(()=>{const st=ix[a],en=ix[Math.min(a+T.length,ix.length)-1]+1;try{ta.focus({preventScroll:true});ta.setSelectionRange(st,en);const lh=parseFloat(getComputedStyle(ta).lineHeight)||34;ta.scrollTop=Math.max(0,st/Math.max(20,ta.clientWidth/11)*lh-lh*2)}catch(e){}},60)}
   sv.onclick=async()=>{if(!confirm('سيُنشر هذا التعديل في الموقع خلال دقائق. هل راجعت التغيير؟'))return;sv.disabled=true;sv.textContent='يُحفظ…';
     const r=await onSave(ta.value,nt.value.trim());if(!r){sv.disabled=false;sv.textContent='احفظ التعديل'}}}
-
-function o_dataSheet(g,txt){const x=g.at[0];const [ov,c]=sheet('تعديل النص');
+function oData(g,txt){const x=g.at[0];const [ov,c]=sheet('تعديل النص');
   c.append(el('p','own-n',fileName(x.f)+(g.at.length>1?' — والنص نفسه في '+ar(g.at.length)+' مواضع، يُعدَّل فيها كلها':'')));
   editor(c,g.s,txt,async(nw,note)=>{const sec=secName();let ok=0,busy=0;
     for(const a of g.at){const r=await call('/c/save',{f:a.f,path:a.p,old:a.s,nw,note,lb:fileName(a.f),sec});if(r.ok)ok++;else if(r.busy)busy++}
-    if(ok){ov.remove();o_toast('حُفظ، ويظهر للجميع خلال دقائق.');return true}
-    o_toast(busy?'على هذا الموضع تعديل ينتظر النشر؛ انتظر حتى يُنشر أو ألغه من السجل.':'تعذّر الحفظ؛ حاول مرة أخرى.',1);return false})}
+    if(ok){ov.remove();oToast('حُفظ، ويظهر للجميع خلال دقائق.');return true}
+    oToast(busy?'على هذا الموضع تعديل ينتظر النشر؛ انتظر حتى يُنشر أو ألغه من السجل.':'تعذّر الحفظ؛ حاول مرة أخرى.',1);return false})}
 function uiSheet(w){const [ov,c]=sheet('تعديل لفظ من الموقع');
   c.append(el('p','own-n','هذا من ألفاظ الموقع نفسه (عنوان أو زر أو اسم قسم)، ويُعدَّل حيث ورد بلفظه هذا كاملاً.'));
-  editor(c,w,'',async(nw,note)=>{const r=await call('/c/save',{f:'ui',path:['ui',w.slice(0,300)],old:w,nw,note,lb:'«'+w.slice(0,80)+'»',sec:'ألفاظ الموقع'});
-    if(r.ok){ov.remove();o_toast('حُفظ، ويظهر للجميع خلال دقائق.');return true}o_toast(r.busy?'على هذا اللفظ تعديل ينتظر النشر.':'تعذّر الحفظ؛ حاول مرة أخرى.',1);return false})}
+  editor(c,w,'',async(nw,note)=>{if(/["'`\\<>]|\$\{/.test(nw)){oToast('لا تُستعمل في ألفاظ الموقع علامات التنصيص ولا < > ولا \\',1);return false}const r=await call('/c/save',{f:'ui',path:['ui',w.slice(0,300)],old:w,nw,note,lb:'«'+w.slice(0,80)+'»',sec:'ألفاظ الموقع'});
+    if(r.ok){ov.remove();oToast('حُفظ، ويظهر للجميع خلال دقائق.');return true}oToast(r.busy?'على هذا اللفظ تعديل ينتظر النشر.':'تعذّر الحفظ؛ حاول مرة أخرى.',1);return false})}
 
-async function logSheet(){const [ov,c]=sheet('سجل التعديلات');c.append(el('p','own-n','…'));const j=await call('/c/list');c.lastChild.remove();
+/* ---------- adding a text after a place ---------- */
+const KINDS=[['p','فقرة'],['h','عنوان'],['q','اقتباس (نص منقول)']];
+function kindPick(c,k){const w=el('div','own-kinds');let cur=k||'p';const bs=KINDS.map(([v,l])=>{const b=el('button','own-b'+(v===cur?' own-on2':''),l);b.type='button';b.onclick=()=>{cur=v;bs.forEach(x=>x.classList.toggle('own-on2',x===b))};w.append(b);return b});c.append(w);return ()=>cur}
+function addSheet(anchor,a){const [ov,c]=sheet(a?'نص أضفته':'إضافة نص');
+  if(anchor)c.append(el('p','own-n','يُضاف بعد: «'+short(ownText(anchor),80)+'»، ويظهر للجميع فوراً.'));
+  const k=kindPick(c,a&&a.k);const ta=el('textarea','own-ta');ta.style.minHeight='30vh';ta.value=a?a.t:'';ta.placeholder='اكتب النص هنا';c.append(ta);
+  const sv=el('button','own-save',a?'احفظ':'أضف');sv.type='button';c.append(sv);
+  sv.onclick=async()=>{const t=ta.value.trim();if(!t){ta.focus();return}sv.disabled=true;
+    const r=await cfg(a?{a:'add',id:a.id,kind:k(),t}:{a:'add',r:ruleOf(anchor),kind:k(),t,lb:'بعد: '+short(ownText(anchor),120)});
+    if(r.ok){ov.remove();oToast(a?'حُفظ.':'أُضيف.')}else{sv.disabled=false;oToast('تعذّر؛ حاول مرة أخرى.',1)}};
+  if(a){const d=el('button','own-save own-redb','حذف هذا النص');d.type='button';d.onclick=async()=>{if(!confirm('حذف هذا النص الذي أضفته؟'))return;const r=await cfg({a:'unadd',id:a.id});if(r.ok){ov.remove();oToast('حُذف.')}else oToast('تعذّر.',1)};c.append(d)}}
+
+/* ---------- a new section ---------- */
+function pageSheet(anchor,p){const [ov,c]=sheet(p?'قسم أضفته':'قسم جديد');
+  if(anchor)c.append(el('p','own-n','يظهر مربعه بعد مربع «'+short(ownText(anchor),50)+'»، ويُفتح كسائر الأقسام.'));
+  const ti=el('input','own-in');ti.placeholder='عنوان القسم';ti.maxLength=200;ti.value=p?p.title:'';
+  const su=el('input','own-in');su.placeholder='سطر تحت العنوان (اختياري)';su.maxLength=300;su.value=p?p.sub||'':'';
+  c.append(el('div','own-lb','العنوان'),ti,su,el('div','own-lb','محتوى القسم'));
+  const box=el('div');c.append(box);const rows=[];
+  function row(b){const r=el('div','own-row');const k=kindPick(r,b&&b.k);const ta=el('textarea','own-ta');ta.style.minHeight='16vh';ta.value=b?b.t:'';
+    const o={k,ta};const del=el('button','own-b own-x','حذف');del.type='button';del.onclick=()=>{r.remove();rows.splice(rows.indexOf(o),1)};r.append(ta,del);box.append(r);rows.push(o)}
+  (p&&p.blocks&&p.blocks.length?p.blocks:[{k:'p',t:''}]).forEach(row);
+  const more=el('button','own-b','➕ فقرة أخرى');more.type='button';more.onclick=()=>row(null);c.append(more);
+  const sv=el('button','own-save',p?'احفظ':'أضف القسم');sv.type='button';c.append(sv);
+  sv.onclick=async()=>{const title=ti.value.trim();const blocks=rows.map(o=>({k:o.k(),t:o.ta.value.trim()})).filter(b=>b.t);if(!title){ti.focus();return}if(!blocks.length){oToast('اكتب شيئاً في محتوى القسم.',1);return}sv.disabled=true;
+    const P2={title,sub:su.value.trim(),blocks};if(p){P2.id=p.id;P2.off=!!p.off}
+    const r=await cfg(p?{a:'page',p:P2}:{a:'page',p:P2,r:ruleOf(anchor),lb:'بعد مربع: '+short(ownText(anchor),80)});
+    if(r.ok){ov.remove();oToast(p?'حُفظ.':'أُضيف القسم.')}else{sv.disabled=false;oToast('تعذّر؛ حاول مرة أخرى.',1)}};
+  if(p){const v=el('button','own-save own-grey',p.off?'👁 إظهار القسم':'🙈 إخفاء القسم (يبقى محفوظاً)');v.type='button';
+      v.onclick=async()=>{const r=await cfg({a:'page',p:{id:p.id,title:p.title,sub:p.sub,blocks:p.blocks,off:!p.off}});if(r.ok){ov.remove();oToast(p.off?'ظهر القسم.':'أُخفي القسم.')}else oToast('تعذّر.',1)};c.append(v);
+    const d=el('button','own-save own-redb','حذف القسم نهائياً');d.type='button';d.onclick=async()=>{if(!confirm('حذف هذا القسم بكل ما فيه؟ لا يمكن التراجع.'))return;const r=await cfg({a:'unpage',id:p.id});if(r.ok){ov.remove();oToast('حُذف القسم.')}else oToast('تعذّر.',1)};c.append(d)}}
+
+/* ---------- the menu: all that was hidden, added and corrected ---------- */
+function menuSheet(){const [ov,c]=sheet('وضع التعديل');
+  act(c,'📝 سجل تصحيح النصوص','ما صحّحته، وحال نشره، والتراجع عنه',()=>{ov.remove();logSheet()});
+  act(c,'🙈 ما أخفيته','وإظهاره',()=>{ov.remove();listSheet('hide')});
+  act(c,'➕ ما أضفته من نصوص','وتعديله وحذفه',()=>{ov.remove();listSheet('add')});
+  act(c,'🆕 الأقسام التي أضفتها','وتعديلها وإخفاؤها وحذفها',()=>{ov.remove();listSheet('pages')});
+  act(c,'🚪 الخروج من وضع التعديل','في هذا الجهاز',()=>{if(!confirm('الخروج من وضع التعديل في هذا الجهاز؟ تعود إليه من صفحة التنبيه.'))return;LS.set('ownk','');location.reload()});
+  c.append(el('p','own-n','للتعديل: اضغط «✏️ اضغط على أي شيء» ثم اضغط على النص أو المربع في الموقع.'))}
+async function listSheet(kind){const t={hide:'ما أخفيته',add:'ما أضفته من نصوص',pages:'الأقسام التي أضفتها'}[kind];const [ov,c]=sheet(t);
+  const r=await call('/c/hi');if(!r.ok){c.append(el('p','own-n','تعذّر الاتصال.'));return}FULL=r.cfg;const L=(FULL[kind]||[]).slice().reverse();
+  if(!L.length){c.append(el('p','own-n','لا شيء.'));return}
+  for(const x of L){const d=el('div','own-ed');d.append(el('b',null,kind==='pages'?x.title+(x.off?' (مخفي)':''):kind==='add'?short(x.t,120):x.lb||''),el('small',null,(x.sec&&x.sec!=='home'?x.sec+' — ':'')+when(x.at)+(kind==='add'?' — '+(x.lb||''):'')));
+    const acts=el('div','own-acts');const b=el('button','own-b',kind==='hide'?'إظهار':kind==='add'?'تعديل أو حذف':'تعديل');b.type='button';
+    b.onclick=async()=>{if(kind==='hide'){const q=await cfg({a:'unhide',id:x.id});oToast(q.ok?'ظهر من جديد.':'تعذّر.',!q.ok);ov.remove();listSheet(kind)}else{ov.remove();kind==='add'?addSheet(null,x):pageSheet(null,x)}};
+    acts.append(b);d.append(acts);c.append(d)}}
+async function logSheet(){const [ov,c]=sheet('سجل تصحيح النصوص');c.append(el('p','own-n','…'));const j=await call('/c/list');c.lastChild.remove();
   if(!j.ok){c.append(el('p','own-n','تعذّر الاتصال.'));return}if(!j.edits.length){c.append(el('p','own-n','لا تعديلات بعد.'));return}
-  if(j.edits.some(e=>e.st==='p'&&Date.now()-e.at>45*60e3))c.append(el('div','own-warn','تعديل ينتظر منذ أكثر من ٤٥ دقيقة. إن طال الأمر: افتح مستودع الموقع في GitHub ← Actions ← «لوحة المحتوى» ← Run workflow.'));
+  if(j.edits.some(e=>(e.st==='p'||e.st==='t')&&Date.now()-e.at>45*60e3))c.append(el('div','own-warn','تعديل ينتظر منذ أكثر من ٤٥ دقيقة. إن طال الأمر: افتح مستودع الموقع في GitHub ← Actions ← «لوحة المحتوى» ← Run workflow.'));
   for(const e of j.edits){const d=el('div','own-ed');d.append(el('b',null,(e.rv?'تراجع: ':'')+(e.sec||'')),el('small',null,e.lb||''));
-    const st=e.st==='p'?['بانتظار النشر (يُنشر خلال دقائق)','']:e.st==='ok'?['نُشر في الموقع','own-good']:['لم يُنشر: '+(e.msg||''),'own-badt'];
+    const st=e.st==='p'?['بانتظار النشر (يُنشر خلال دقائق)','']:e.st==='t'?['يُنشر الآن','']:e.st==='ok'?['نُشر في الموقع','own-good']:['لم يُنشر: '+(e.msg||''),'own-badt'];
     d.append(el('div','own-st '+st[1],st[0]),el('small',null,when(e.at)+(e.note?' — '+e.note:'')));const df=el('div','own-diff');df.append(diffView(e.old,e.nw,40));d.append(df);
     const acts=el('div','own-acts');
-    if(e.st==='p'){const b=el('button','own-b','إلغاء');b.type='button';b.onclick=async()=>{if(!confirm('إلغاء هذا التعديل قبل نشره؟'))return;const r=await call('/c/cancel',{id:e.id});if(!r.ok)o_toast('تعذّر الإلغاء؛ لعله نُشر للتو.',1);ov.remove();logSheet()};acts.append(b)}
+    if(e.st==='p'){const b=el('button','own-b','إلغاء');b.type='button';b.onclick=async()=>{if(!confirm('إلغاء هذا التعديل قبل نشره؟'))return;const r=await call('/c/cancel',{id:e.id});if(!r.ok)oToast('تعذّر الإلغاء؛ لعله نُشر للتو.',1);ov.remove();logSheet()};acts.append(b)}
     if(e.st==='ok'&&!e.rv){const b=el('button','own-b','تراجع عن هذا التعديل');b.type='button';b.onclick=async()=>{if(!confirm('يعود النص كما كان قبل هذا التعديل. هل أنت متأكد؟'))return;
-      const r=await call('/c/save',{f:e.f,path:e.path,old:e.nw,nw:e.old,lb:e.lb,sec:e.sec,note:'تراجع عن تعديل '+when(e.at),rv:e.id});o_toast(r.ok?'حُفظ التراجع، ويظهر خلال دقائق.':r.busy?'على هذا الموضع تعديل ينتظر النشر.':'تعذّر الحفظ.',!r.ok);ov.remove();logSheet()};acts.append(b)}
+      const r=await call('/c/save',{f:e.f,path:e.path,old:e.nw,nw:e.old,lb:e.lb,sec:e.sec,note:'تراجع عن تعديل '+when(e.at),rv:e.id});oToast(r.ok?'حُفظ التراجع، ويظهر خلال دقائق.':r.busy?'على هذا الموضع تعديل ينتظر النشر.':'تعذّر الحفظ.',!r.ok);ov.remove();logSheet()};acts.append(b)}
     if(acts.childNodes.length)d.append(acts);c.append(d)}}
 
-function pauseSheet(){const [ov,c]=sheet('إيقاف الموقع مؤقتاً');
-  if(PAUSE.on){c.append(el('p','own-badt','الموقع متوقف الآن'+(PAUSE.t?' منذ '+when(PAUSE.t):'')+'، ومن يفتحه أو يفتح التطبيق لا يرى إلا هذه الرسالة:'),el('div','own-pv',PAUSE.msg),el('p','own-n',PAUSE.np?'والإشعارات اليومية موقوفة معه.':'والإشعارات اليومية مستمرة.'));
-    const b=el('button','own-save','أعد تشغيل الموقع');b.type='button';b.onclick=async()=>{if(!confirm('يعود الموقع والتطبيق للعمل كالمعتاد. هل أنت متأكد؟'))return;b.disabled=true;const r=await call('/c/pause',{on:false});if(r.ok){PAUSE=r.pause;drawPz();ov.remove();o_toast('عاد الموقع للعمل.')}else{b.disabled=false;o_toast('تعذّر؛ حاول مرة أخرى.',1)}};c.append(b);return}
-  c.append(el('p','own-n','يتوقف الموقع والتطبيق فوراً، ولا يرى من يفتحهما إلا رسالتك، حتى تعيد تشغيله من هنا. لا يُحذف شيء، وتبقى ملاحظات القرّاء ومفضلاتهم في أجهزتهم. وأنت ترى الموقع كما هو لتعمل عليه.'));
-  const ta=el('textarea','own-ta');ta.style.minHeight='120px';ta.maxLength=1000;ta.value=PAUSE.msg||'الموقع متوقف مؤقتاً، ويعود قريباً بإذن الله.';
+/* ---------- the pause ---------- */
+function pauseSheet(){const [ov,c]=sheet('إيقاف الموقع مؤقتاً');const P=(FULL&&FULL.pause)||{};
+  if(CFG.on){c.append(el('p','own-badt','الموقع متوقف الآن'+(P.t?' منذ '+when(P.t):'')+'، ومن يفتحه أو يفتح التطبيق لا يرى إلا هذه الرسالة:'),el('div','own-pv',CFG.msg),el('p','own-n',P.np?'والإشعارات اليومية موقوفة معه.':'والإشعارات اليومية مستمرة.'));
+    const b=el('button','own-save','أعد تشغيل الموقع');b.type='button';b.onclick=async()=>{if(!confirm('يعود الموقع والتطبيق للعمل كالمعتاد. هل أنت متأكد؟'))return;b.disabled=true;const r=await cfg({a:'pause',on:false});if(r.ok){drawPz();ov.remove();oToast('عاد الموقع للعمل.')}else{b.disabled=false;oToast('تعذّر؛ حاول مرة أخرى.',1)}};c.append(b);return}
+  c.append(el('p','own-n','يتوقف الموقع والتطبيق خلال ثوانٍ، ولا يرى من يفتحهما إلا رسالتك، حتى تعيد تشغيله من هنا. لا يُحذف شيء، وتبقى ملاحظات القرّاء ومفضلاتهم في أجهزتهم. وأنت ترى الموقع كما هو لتعمل عليه.'));
+  const ta=el('textarea','own-ta');ta.style.minHeight='120px';ta.maxLength=1000;ta.value=P.msg||'الموقع متوقف مؤقتاً، ويعود قريباً بإذن الله.';
   const l=el('label','own-ck');const cb=el('input');cb.type='checkbox';cb.checked=true;l.append(cb,el('span',null,'وأوقف الإشعارات اليومية معه'));
   const b=el('button','own-save own-redb','أوقف الموقع الآن');b.type='button';
-  b.onclick=async()=>{const msg=ta.value.trim();if(!msg){ta.focus();return}if(!confirm('سيتوقف الموقع والتطبيق الآن لكل من يفتحهما، ولا يظهر إلا رسالتك. هل أنت متأكد؟'))return;b.disabled=true;
-    const r=await call('/c/pause',{on:true,msg,np:cb.checked});if(r.ok){PAUSE=r.pause;drawPz();ov.remove();o_toast('توقف الموقع.')}else{b.disabled=false;o_toast('تعذّر؛ حاول مرة أخرى.',1)}};
+  b.onclick=async()=>{const msg=ta.value.trim();if(!msg){ta.focus();return}if(!confirm('سيتوقف الموقع والتطبيق لكل من يفتحهما، ولا يظهر إلا رسالتك. هل أنت متأكد؟'))return;b.disabled=true;
+    const r=await cfg({a:'pause',on:true,msg,np:cb.checked});if(r.ok){drawPz();ov.remove();oToast('توقف الموقع.')}else{b.disabled=false;oToast('تعذّر؛ حاول مرة أخرى.',1)}};
   c.append(el('div','own-lb','الرسالة التي تظهر لمن يفتح الموقع'),ta,l,b)}
 
-call('/c/hi').then(r=>{if(r.ok){PAUSE=r.pause||{on:false};o_mkBar()}else if(!r.net){LS.set('ownk','');o_toast('مفتاح وضع التعديل غير صحيح.',1)}});
+call('/c/hi').then(r=>{if(r.ok){FULL=r.cfg;oBar();reapply()}else if(!r.net){LS.set('ownk','');KEY='';reapply();oToast('مفتاح وضع التعديل غير صحيح.',1)}});
 })();
 
 $('#navBtn').onclick=openNav;$('#navClose').onclick=closeNav;$('#navBack').onclick=closeNav;

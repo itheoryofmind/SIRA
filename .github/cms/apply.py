@@ -1,15 +1,27 @@
-# لوحة المحتوى: writes the keeper's waiting corrections into the site's files. Run by .github/workflows/cms.yml.
-# Each correction names a data file, the place of one text in it, the text as he saw it, and the corrected text.
-# It is applied only if the text there is still the one he saw; then the page's file list (index.html) gets the file's new
-# fingerprint so readers' saved copies are renewed, and the same text in the search-engine pages is corrected too.
+# لوحة المحتوى: writes the keeper's waiting corrections into the site's files. Run by .github/workflows/cms.yml (in each site's repository).
+# Each correction names a data file and the place of one text in it (or the site's own wording, f = 'ui'), the text as he saw it,
+# and the corrected text. It is applied only if the text there is still the one he saw. Then the page's file list (index.html)
+# gets the file's new fingerprint so readers' saved copies are renewed, and the same text in the search-engine pages is corrected.
+# Before anything is published every script of the page must still parse and every data file must still be valid JSON;
+# otherwise nothing is published and each correction is reported back as refused, with the reason.
 import json, os, sys, re, html, glob, hashlib, time, subprocess, urllib.request
 
 W = os.environ.get('CMS_W', 'https://push.seeratuh.com')
-ADMIN = hashlib.sha256(os.environ['CLOUDFLARE_API_TOKEN'].encode()).hexdigest()[:40]
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ui as UIM
+
+def auth():
+    # GitHub's signed token says which repository this is; the deploy key is the older way, kept for the Sira repository
+    u, t = os.environ.get('ACTIONS_ID_TOKEN_REQUEST_URL'), os.environ.get('ACTIONS_ID_TOKEN_REQUEST_TOKEN')
+    if u and t:
+        r = urllib.request.Request(u + '&audience=seeratuh-cms', headers={'Authorization': 'bearer ' + t})
+        return {'X-OIDC': json.load(urllib.request.urlopen(r, timeout=30))['value']}
+    return {'X-Admin': hashlib.sha256(os.environ['CLOUDFLARE_API_TOKEN'].encode()).hexdigest()[:40]}
+HDR = auth()
 
 def post(p, o=None):
     r = urllib.request.Request(W + p, data=json.dumps(o or {}).encode(), method='POST',
-                               headers={'X-Admin': ADMIN, 'Content-Type': 'application/json', 'User-Agent': 'sira-cms'})
+                               headers={**HDR, 'Content-Type': 'application/json', 'User-Agent': 'site-cms'})
     return json.load(urllib.request.urlopen(r, timeout=60))
 
 def git(*a):
@@ -23,21 +35,21 @@ def verse(t):
 
 r = post('/c/pending')
 E = sorted(r.get('edits') or [], key=lambda e: e['id'])
+print('site:', r.get('site'), 'waiting:', len(E))
 if not E:
-    print('nothing waiting'); sys.exit(0)
+    sys.exit(0)
 
 OPEN = {}      # file -> [data, original text]
 done = []      # (edit, ok, message)
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import ui as UIM
-UIX = None; UIL = UIM.load()
+IX0 = open('index.html', encoding='utf-8').read(); UIX = IX0; UIL = UIM.load()
 for e in E:
     f = e['f']
-    if f == 'ui':      # the site's own wording, in the page itself
-        if UIX is None: UIX = open('index.html', encoding='utf-8').read()
-        UIX, n = UIM.apply(UIX, e['old'], e['nw'])
-        if not n: done.append((e, False, 'لم يوجد هذا النص بعينه في الموقع')); continue
-        UIL.append({'old': e['old'], 'nw': e['nw']}); done.append((e, True, '')); continue
+    if f == 'ui':      # the site's own wording, in the page itself: one at a time, each checked
+        t2, n = UIM.apply(UIX, e['old'], e['nw'])
+        if UIM.BAD.search(e['nw']): done.append((e, False, 'لا تُستعمل في ألفاظ الموقع علامات التنصيص ولا < > ولا \\')); continue
+        if not n: done.append((e, False, 'لم يوجد هذا اللفظ بعينه في الموقع')); continue
+        if not UIM.js_ok(t2): done.append((e, False, 'هذا التعديل يُخلّ بعمل الموقع، فلم يُنشر')); continue
+        UIX = t2; UIL.append({'old': e['old'], 'nw': e['nw']}); done.append((e, True, 'عُدِّل في %d موضع' % n)); continue
     if not re.fullmatch(r'[a-z0-9_]{1,40}\.json', f) or not os.path.exists('data/' + f):
         done.append((e, False, 'الملف غير موجود')); continue
     if f not in OPEN:
@@ -52,38 +64,41 @@ for e in E:
         cur = o[last]
     except Exception:
         done.append((e, False, 'الموضع لم يعد موجوداً')); continue
+    if not isinstance(cur, str):
+        done.append((e, False, 'الموضع ليس نصاً')); continue
     if cur != e['old']:
         done.append((e, False, 'تغيّر النص في هذا الموضع منذ فتحته؛ افتحه من جديد')); continue
     o[last] = e['nw']
     done.append((e, True, ''))
 
 ok = [x for x in done if x[1]]
-changed = set()
-for f, (d, s) in OPEN.items():
-    t = dump(d) + ('\n' if s.endswith('\n') else '')
-    if t != s:
-        open('data/' + f, 'w', encoding='utf-8').write(t); changed.add(f)
-
-if UIX is not None and any(e['f'] == 'ui' for e, g, _ in done if g):
-    open('index.html', 'w', encoding='utf-8').write(UIX)
-    json.dump(UIL, open(UIM.UI, 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
 okd = [x for x in ok if x[0]['f'] != 'ui']
+sha = ''
 if ok:
+    changed = set()
+    for f, (d, s) in OPEN.items():
+        t = dump(d) + ('\n' if s.endswith('\n') else '')
+        if t != s:
+            json.loads(t); open('data/' + f, 'w', encoding='utf-8').write(t); changed.add(f)
+    if UIX != IX0:
+        open('index.html', 'w', encoding='utf-8').write(UIX)
+        json.dump(UIL, open(UIM.UI, 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
     # the Prophet's words marked in a quotation are kept by the quotation's text: follow the corrected text
     gp = 'data/sx_gold.json'
-    gs = open(gp, encoding='utf-8').read(); G = json.loads(gs); gch = False
-    for e, _, _ in okd:
-        if e['old'] in G and e['nw'] not in G:
-            G = {(e['nw'] if k == e['old'] else k): v for k, v in G.items()}; gch = True
-    if gch:
-        open(gp, 'w', encoding='utf-8').write(dump(G) + ('\n' if gs.endswith('\n') else '')); changed.add('sx_gold.json')
+    if os.path.exists(gp):
+        gs = open(gp, encoding='utf-8').read(); G = json.loads(gs); gch = False
+        for e, _, _ in okd:
+            if e['old'] in G and e['nw'] not in G:
+                G = {(e['nw'] if k == e['old'] else k): v for k, v in G.items()}; gch = True
+        if gch:
+            open(gp, 'w', encoding='utf-8').write(dump(G) + ('\n' if gs.endswith('\n') else '')); changed.add('sx_gold.json')
     # the search-engine pages: the same text, where it appears whole
     for p in glob.glob('*/index.html'):
         h = open(p, encoding='utf-8').read(); h0 = h
         for e, _, _ in okd:
             for a, b in {(html.escape(e['old']), html.escape(e['nw'])), (html.escape(verse(e['old'])), html.escape(verse(e['nw'])))}:
-                if len(e['old']) >= 8 and a in h:
-                    h = h.replace(a, b)
+                if len(e['old']) >= 8 and '>' + a + '<' in h:
+                    h = h.replace('>' + a + '<', '>' + b + '<')
         if h != h0:
             open(p, 'w', encoding='utf-8').write(h)
     # new fingerprints and a new version, so open copies of the site fetch the corrected files
@@ -91,29 +106,36 @@ if ok:
     for f in sorted(changed):
         hsh = hashlib.md5(open('data/' + f, encoding='utf-8').read().encode()).hexdigest()[:10]
         ix, n = re.subn(r'("data/' + re.escape(f) + r'": ")[0-9a-f]+(")', lambda m: m.group(1) + hsh + m.group(2), ix)
+        if not n:
+            ix, n = re.subn(r'const DH=\{', lambda m: 'const DH={"data/' + f + '": "' + hsh + '", ', ix, count=1)
         if not n: print('no fingerprint for', f)
     V = time.strftime('%Y-%m-%d-%H%M', time.gmtime(time.time() + 3 * 3600))   # Riyadh time, as the deploy writes it
     ix = re.sub(r"const APP_VER='[^']*'", "const APP_VER='" + V + "'", ix, count=1)
-    open('index.html', 'w', encoding='utf-8').write(ix)
-    open('version.json', 'w').write('{"v":"%s"}\n' % V)
-
-    secs = sorted({e.get('sec') or ('ألفاظ الموقع' if e['f'] == 'ui' else e['f']) for e, _, _ in ok})
-    notes = [e.get('note') for e, _, _ in ok if e.get('note')]
-    msg = 'لوحة المحتوى: ' + '، '.join(secs) + ('\n\n' + '\n'.join(notes) if notes else '')
-    git('add', '-A')
-    git('-c', 'user.name=لوحة المحتوى', '-c', 'user.email=cms@seeratuh.com', 'commit', '-qm', msg)
-    for i in range(4):
-        try:
-            git('push', '-q', 'origin', 'HEAD'); break
-        except subprocess.CalledProcessError:
-            git('pull', '-q', '--rebase', 'origin', 'main')
+    if not UIM.js_ok(ix):
+        git('checkout', '--', '.')
+        done = [(e, False, 'تعذّر النشر: الموقع لم يجتز الفحص بعد التعديل') if g else (e, g, m) for e, g, m in done]
+        ok = []
     else:
-        print('push failed'); sys.exit(1)
-    sha = git('rev-parse', 'HEAD')
-else:
-    sha = ''
+        open('index.html', 'w', encoding='utf-8').write(ix)
+        open('version.json', 'w').write('{"v":"%s"}\n' % V)
+        secs = sorted({e.get('sec') or ('ألفاظ الموقع' if e['f'] == 'ui' else e['f']) for e, _, _ in ok})
+        notes = [e.get('note') for e, _, _ in ok if e.get('note')]
+        msg = 'لوحة المحتوى: ' + '، '.join(secs) + ('\n\n' + '\n'.join(notes) if notes else '')
+        git('add', '-A')
+        git('-c', 'user.name=لوحة المحتوى', '-c', 'user.email=cms@seeratuh.com', 'commit', '-qm', msg)
+        for i in range(4):
+            try:
+                git('push', '-q', 'origin', 'HEAD'); break
+            except subprocess.CalledProcessError:
+                git('pull', '-q', '--rebase', 'origin', git('rev-parse', '--abbrev-ref', 'HEAD'))
+        else:
+            print('push failed'); sys.exit(1)
+        sha = git('rev-parse', 'HEAD')
 
-for e, good, m in done:
-    post('/c/done', {'id': e['id'], 'st': 'ok' if good else 'err', 'msg': m, 'sha': sha if good else ''})
-    print(e['id'], 'ok' if good else 'refused: ' + m)
 open(os.environ.get('GITHUB_OUTPUT', '/dev/null'), 'a').write('pushed=%s\n' % ('1' if ok else ''))
+for e, good, m in done:
+    try:
+        post('/c/done', {'id': e['id'], 'st': 'ok' if good else 'err', 'msg': m, 'sha': sha if good else ''})
+    except Exception as x:
+        print('report failed', e['id'], x)
+    print(e['id'], 'ok' if good else 'refused: ' + m)
