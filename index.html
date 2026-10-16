@@ -1693,6 +1693,33 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .yc-card .kh-rd .kh-rh{font-family:var(--display);font-size:19px;color:var(--brass);margin:14px 0 6px}
 .yc-card .yr-ev .yr-ft .go,.yc-card .kh-ac .yr-ft .go{background:none;border:0;color:var(--brass);font:600 15px var(--ui);padding:6px 0}
 
+/* the jihad section */
+.jh-bks{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px}
+.jh-bks .hd-b.on{background:var(--brass);color:var(--surface)!important;border-color:var(--brass)!important}
+.jh-ed{font-size:13.5px;color:var(--muted);margin:-4px 0 12px}
+.jh-h{border-top:1px solid var(--line);padding:14px 0 6px}
+.jh-h:first-child{border-top:0}
+.jh-x,.jh-tr{font-family:var(--text);font-size:19.5px;line-height:1.95;color:var(--read);white-space:pre-line;margin:0}
+.jh-tr{font-size:18px;color:var(--muted)}
+.jh-trw{padding:8px 0}
+.jh-lbl{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+.jh-lbl span{font-size:12.5px;line-height:1.5;padding:3px 9px;border-radius:999px;background:color-mix(in srgb,var(--brass) 12%,transparent);color:var(--brass)}
+.jh-src{font-size:13px;color:var(--muted);margin:6px 0 0}
+.jh-nt{font-size:13.5px;color:var(--muted);margin:6px 0 0;padding-inline-start:10px;border-inline-start:2px solid var(--line)}
+.jh-cms{margin:10px 0 4px;display:flex;flex-direction:column;gap:8px}
+.jh-cm{border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
+.jh-aq{background:color-mix(in srgb,var(--clay) 12%,var(--surface));border-bottom:1px solid color-mix(in srgb,var(--clay) 35%,transparent);padding:10px 14px}
+.jh-aq b{display:block;color:var(--clay);font-size:15px;margin-bottom:4px}
+.jh-aq p{margin:4px 0 0;font-family:var(--text);font-size:16.5px;line-height:1.85;color:var(--ink)}
+.jh-open{display:flex;width:100%;align-items:center;justify-content:space-between;gap:10px;border:0;background:none;color:var(--brass);font:600 15.5px var(--ui);padding:12px 14px;text-align:start;min-height:48px}
+.jh-open small{color:var(--muted);font-weight:400;font-size:12.5px}
+.jh-cm.open .jh-open{border-bottom:1px solid var(--line)}
+.jh-cmb{padding:8px 14px 12px}
+.jh-cmb .cm-p{font-family:var(--text);font-size:17.5px;line-height:1.9;color:var(--read);margin:0 0 .7em}
+.jh-cmb .jh-mk{background:color-mix(in srgb,var(--clay) 10%,transparent);border-inline-start:3px solid var(--clay);padding:4px 8px;border-radius:4px}
+.jh-sh{font-size:13px;color:var(--muted)}
+.jh-ld{color:var(--muted)}
+
 </style>
 
 <!-- ============ HOME ============ -->
@@ -1837,6 +1864,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
         <button type="button" id="fx-ilm"><b>تعليمه أصحابه <span class="saw">ﷺ</span></b><span>كتاب العلم من صحيح البخاري</span></button>
         <button type="button" id="shu-huquq"><b>من حقوقه <span class="saw">ﷺ</span></b><span>محبته وطاعته وتوقيره والصلاة عليه</span></button>
         <button type="button" id="fx-aq"><b>التوحيد والعقيدة</b><span>من صحيحي البخاري ومسلم، مع شرح الغنيمان</span></button>
+        <button type="button" class="wide" id="fxJh"><b>الجهاد والشهادة</b><span>كتب الجهاد من الصحيحين والسنن الأربع ورياض الصالحين وبلوغ المرام كاملة، مع شروحها</span></button>
         <button type="button" id="fx-lbs"><b>الأطعمة والأشربة والطب واللباس</b><span>من صحيح البخاري كاملة بأبوابها</span></button>
         <p class="exg" data-g="sg">من شؤونه <span class="saw">ﷺ</span></p>
         <button type="button" id="shu-asma"><b>أسماؤه <span class="saw">ﷺ</span></b><span>من البخاري وزاد المعاد</span></button>
@@ -2219,7 +2247,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-16-1705';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-16-1741';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2349,7 +2377,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "f4db3e9583", "data/marks.json": "2b9f8b0fe0", "data/quran.json": "3b7af2ab79", "data/qv.json": "7b60653830", "data/sira_x.json": "2bda9ece69", "data/sx_ahl.json": "d79f3b8a50", "data/sx_alam.json": "ca08eb1602", "data/sx_badab.json": "eddcd84ec9", "data/sx_bans.json": "cecd319e7a", "data/sx_baq.json": "955d08cff0", "data/sx_bdaw.json": "2a1b5ec65c", "data/sx_bfad.json": "bccac42523", "data/sx_bilm.json": "6c1d5ccfb9", "data/sx_bmnq.json": "d1c643ad83", "data/sx_bsal.json": "d524018e2e", "data/sx_bsaw.json": "d5862171d4", "data/sx_bsif.json": "35b1c4acba", "data/sx_bsir.json": "ce73f2406b", "data/sx_dal.json": "8dab7b0190", "data/sx_feat.json": "cc3269edd9", "data/sx_ghun.json": "ac7e4f7142", "data/sx_gold.json": "61758c5baf", "data/sx_gz.json": "516dc3dae7", "data/sx_hady.json": "30c9c7c9f0", "data/sx_hajj.json": "1df6b18dee", "data/sx_hjr.json": "1560a6d13c", "data/sx_hjrb.json": "4d54ad1b2c", "data/sx_kh.json": "6ab5ebbfb8", "data/sx_khn.json": "8196fb815a", "data/sx_khutab.json": "9f4b90c0e9", "data/sx_maq.json": "053e542171", "data/sx_mfad.json": "1900f7d7ed", "data/sx_mg.json": "48135c67ef", "data/sx_msal.json": "06fb240c61", "data/sx_msaw.json": "6f8ad9ae97", "data/sx_msh.json": "c7ad582fea", "data/sx_msif.json": "9e04bf9e8e", "data/sx_nuzul.json": "681cd1c8a5", "data/sx_qa.json": "e493e42738", "data/sx_shs.json": "a93997ab61", "data/sx_shu.json": "103e62fc65", "data/sx_wafat.json": "482be035e9", "data/sx_wasaya.json": "6d468cded7", "data/t17.json": "86c024b72e", "data/t18.json": "eac1d30d9f", "data/t19.json": "6de8758823", "data/t20.json": "7e5e3238ba", "data/t21.json": "3490cdd076", "data/t22.json": "dce445d532", "data/t23.json": "09ee9bc255", "data/t24.json": "769913f1a6", "data/t25.json": "0aa32a3d51", "data/t26.json": "982bb6cb57", "data/t27.json": "651931d6ea", "data/t28.json": "0538698377", "data/t29.json": "925c6db4d9", "data/t30.json": "f564991943", "data/t31.json": "b58d19f797", "data/t32.json": "b7ffea3f14", "data/t33.json": "2de7bb520e", "data/t34.json": "72445d764a", "data/t35.json": "8aaf401e30", "data/t36.json": "6d9143da69", "data/t37.json": "3373731797", "data/saadi.json": "a890c7ed56"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "f4db3e9583", "data/marks.json": "2b9f8b0fe0", "data/quran.json": "3b7af2ab79", "data/qv.json": "7b60653830", "data/sira_x.json": "2bda9ece69", "data/sx_ahl.json": "d79f3b8a50", "data/sx_alam.json": "ca08eb1602", "data/sx_badab.json": "eddcd84ec9", "data/sx_bans.json": "cecd319e7a", "data/sx_baq.json": "955d08cff0", "data/sx_bdaw.json": "2a1b5ec65c", "data/sx_bfad.json": "bccac42523", "data/sx_bilm.json": "6c1d5ccfb9", "data/sx_bmnq.json": "d1c643ad83", "data/sx_bsal.json": "d524018e2e", "data/sx_bsaw.json": "d5862171d4", "data/sx_bsif.json": "35b1c4acba", "data/sx_bsir.json": "ce73f2406b", "data/sx_dal.json": "8dab7b0190", "data/sx_feat.json": "cc3269edd9", "data/sx_ghun.json": "ac7e4f7142", "data/sx_gold.json": "61758c5baf", "data/sx_gz.json": "516dc3dae7", "data/sx_hady.json": "30c9c7c9f0", "data/sx_hajj.json": "1df6b18dee", "data/sx_hjr.json": "1560a6d13c", "data/sx_hjrb.json": "4d54ad1b2c", "data/sx_jh.json": "eeb2ba832f", "data/sx_jhc_abudawud.json": "14bed02748", "data/sx_jhc_bukhari.json": "77e1571af8", "data/sx_jhc_bulugh.json": "ad50ac69dc", "data/sx_jhc_ibnmajah.json": "cb9f5ce224", "data/sx_jhc_muslim.json": "faaea71e4e", "data/sx_jhc_nasai.json": "b1819a4354", "data/sx_jhc_riyad.json": "99914b932b", "data/sx_jhc_tirmidhi.json": "b34d45b076", "data/sx_jhi_abudawud.json": "d8d7749e23", "data/sx_jhi_bukhari.json": "8db99588c2", "data/sx_jhi_bulugh.json": "77da0014e7", "data/sx_jhi_ibnmajah.json": "26630e0a27", "data/sx_jhi_muslim.json": "f1eaf99c78", "data/sx_jhi_nasai.json": "b38333cea1", "data/sx_jhi_riyad.json": "8f576ae974", "data/sx_jhi_tirmidhi.json": "acbf142e88", "data/sx_kh.json": "6ab5ebbfb8", "data/sx_khn.json": "8196fb815a", "data/sx_khutab.json": "9f4b90c0e9", "data/sx_maq.json": "053e542171", "data/sx_mfad.json": "1900f7d7ed", "data/sx_mg.json": "48135c67ef", "data/sx_msal.json": "06fb240c61", "data/sx_msaw.json": "6f8ad9ae97", "data/sx_msh.json": "c7ad582fea", "data/sx_msif.json": "9e04bf9e8e", "data/sx_nuzul.json": "681cd1c8a5", "data/sx_qa.json": "e493e42738", "data/sx_shs.json": "a93997ab61", "data/sx_shu.json": "103e62fc65", "data/sx_wafat.json": "482be035e9", "data/sx_wasaya.json": "6d468cded7", "data/t17.json": "86c024b72e", "data/t18.json": "eac1d30d9f", "data/t19.json": "6de8758823", "data/t20.json": "7e5e3238ba", "data/t21.json": "3490cdd076", "data/t22.json": "dce445d532", "data/t23.json": "09ee9bc255", "data/t24.json": "769913f1a6", "data/t25.json": "0aa32a3d51", "data/t26.json": "982bb6cb57", "data/t27.json": "651931d6ea", "data/t28.json": "0538698377", "data/t29.json": "925c6db4d9", "data/t30.json": "f564991943", "data/t31.json": "b58d19f797", "data/t32.json": "b7ffea3f14", "data/t33.json": "2de7bb520e", "data/t34.json": "72445d764a", "data/t35.json": "8aaf401e30", "data/t36.json": "6d9143da69", "data/t37.json": "3373731797", "data/saadi.json": "a890c7ed56"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3892,7 +3920,7 @@ function readCells(){if(!SXF)return new Set();const R=SXRD.get(),by={};for(const
   const out=new Set();for(const c in by)if(by[c].every(p=>R.has(p)))out.add(+c);return out}
 /* site sections: each has a colour, shared by its home tiles, its menu group and the panel it opens */
 let CURG=null,CURGT=0;
-const GRX=[['kh',/الخلاف|الخلفاء/],['ns',/النسب|أهل بيته/],['sb',/أصحاب النبي|الأنصار/],['sg',/أسماؤه|مواليه|سلاحه|كتبه إلى|خاتمه|خصائصه|دلائل|المناقب|الفضائل من/],['sr',/الخط الزمني|محطة|الحدث|السيرة في صحيح|الهجرة|المغازي|الغزوات|حجة|خطبه|وصاياه|مرضه|الأطلس|ما نزل|مسائل/],['sh',/صفته|يومه|هديه|صلاة|صيام|الأدب|أدعيته|تعليمه|حقوقه|التوحيد|الأطعمة/]];
+const GRX=[['kh',/الخلاف|الخلفاء/],['ns',/النسب|أهل بيته/],['sb',/أصحاب النبي|الأنصار/],['sg',/أسماؤه|مواليه|سلاحه|كتبه إلى|خاتمه|خصائصه|دلائل|المناقب|الفضائل من/],['sr',/الخط الزمني|محطة|الحدث|السيرة في صحيح|الهجرة|المغازي|الغزوات|حجة|خطبه|وصاياه|مرضه|الأطلس|ما نزل|مسائل/],['sh',/الجهاد والشهادة|صفته|يومه|هديه|صلاة|صيام|الأدب|أدعيته|تعليمه|حقوقه|التوحيد|الأطعمة/]];
 function grpOf(t){if(CURG&&Date.now()-CURGT<4000)return CURG;for(const [g,r] of GRX)if(r.test(t||''))return g;return ''}
 function tagTiles(){let g='';document.querySelectorAll('.ex>*').forEach(e=>{if(e.classList.contains('exg'))g=e.dataset.g||'';else if(e.tagName==='BUTTON'){e.dataset.g=g;e.addEventListener('click',()=>{CURG=e.dataset.g;CURGT=Date.now()},true)}})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tagTiles);else tagTiles();
@@ -4325,7 +4353,7 @@ sxFam=function(V,D){
   [['أبناؤه',sons],['بناته',dau]].forEach(([h,L])=>{if(!L.length)return;const g=el('div','ft-g');g.append(el('h4',null,h));const ul=el('ul');L.forEach(c=>{const li=node(c);if(c.t)li.querySelector('.fn-t').querySelectorAll('i').forEach(i=>{if(i.textContent==='بنت')i.remove()});ul.append(li)});g.append(ul);T.append(g)});
   V.append(T)};
 /* wiring */
-$('#fxEvent').onclick=fxEvent;$('#fxMg').onclick=()=>fxMgTL();$('#fxDal').onclick=()=>fxDal();$('#fxHajj').onclick=()=>fxHajj();$('#fxAhl').onclick=()=>fxAhl();$('#fxGz').onclick=()=>fxGz();$('#fxKh').onclick=()=>fxKh();$('#fxFad').onclick=()=>fxFad();$('#fxAns').onclick=()=>fxFad('ans');$('#fxSir').onclick=()=>fxFad('sir');$('#fxDaw').onclick=()=>fxFad('daw');$('#fxAdb').onclick=()=>fxFad('adb');$('#fxHady').onclick=()=>fxHady();['sal','saw','ilm','aq','lbs','mnq','mfad'].forEach(k=>{const b=$('#fx-'+k);if(b)b.onclick=()=>fxFad(k)});{const q=$('#fxQa');if(q)q.onclick=()=>fxQa()}['asma','khadam','silah','kutub','khasais','huquq'].forEach(k=>{const b=$('#shu-'+k);if(b)b.onclick=()=>fxShu(k)});['wafat','khutab','wasaya'].forEach(k=>{const w=$('#shu-'+k);if(w)w.onclick=()=>fxFad(k)});$('#khHome').onclick=async()=>{await openZad(MB.k);setTimeout(()=>{const k=$('#sxKhul');k&&k.scrollIntoView({block:'start'})},120)};$('#khHomeTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
+$('#fxEvent').onclick=fxEvent;$('#fxMg').onclick=()=>fxMgTL();$('#fxDal').onclick=()=>fxDal();$('#fxHajj').onclick=()=>fxHajj();$('#fxAhl').onclick=()=>fxAhl();$('#fxGz').onclick=()=>fxGz();$('#fxKh').onclick=()=>fxKh();$('#fxFad').onclick=()=>fxFad();$('#fxAns').onclick=()=>fxFad('ans');$('#fxSir').onclick=()=>fxFad('sir');$('#fxDaw').onclick=()=>fxFad('daw');$('#fxAdb').onclick=()=>fxFad('adb');$('#fxHady').onclick=()=>fxHady();['sal','saw','ilm','aq','lbs','mnq','mfad'].forEach(k=>{const b=$('#fx-'+k);if(b)b.onclick=()=>fxFad(k)});{const q=$('#fxQa');if(q)q.onclick=()=>fxQa()}{const j=$('#fxJh');if(j)j.onclick=()=>fxJihad()}['asma','khadam','silah','kutub','khasais','huquq'].forEach(k=>{const b=$('#shu-'+k);if(b)b.onclick=()=>fxShu(k)});['wafat','khutab','wasaya'].forEach(k=>{const w=$('#shu-'+k);if(w)w.onclick=()=>fxFad(k)});$('#khHome').onclick=async()=>{await openZad(MB.k);setTimeout(()=>{const k=$('#sxKhul');k&&k.scrollIntoView({block:'start'})},120)};$('#khHomeTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
 $('#sxSearchBtn').onclick=()=>{const q=$('#q');q.scrollIntoView({block:'center',behavior:'smooth'});q.focus({preventScroll:true})};
 $('#sxMenuBtn').onclick=()=>openNav();
 
@@ -4705,7 +4733,7 @@ function evRoute(){const h=location.hash;let m;
   else if((m=/^#hd=(\d+)$/.exec(h)))go(()=>fxHadith(+m[1]));
   else if((m=/^#mg=(\d+)(?:;r=[a-z]+\.\d+)?$/.exec(h)))go(()=>fxMaghazi(+m[1]));
   else if(h==='#fr')go(fxFriday)
-  else if((m=/^#fx=(qa|sifa|hajj|ahl|road|dal|gz|mg|kh|fad|ans|sir|daw|adb|hady|sal|saw|ilm|msal|msaw|lbs|mlbs|mfad|wafat|khutab|wasaya|mnq|aq|maq)$/.exec(h)))go(()=>({qa:fxQa,sifa:fxSifa,hajj:fxHajj,ahl:fxAhl,road:fxRoad,dal:fxDal,gz:()=>fxGz(),mg:()=>fxMgTL(),kh:()=>fxKh(),fad:()=>fxFad(),ans:()=>fxFad('ans'),sir:()=>fxFad('sir'),daw:()=>fxFad('daw'),adb:()=>fxFad('adb'),hady:()=>fxHady(),sal:()=>fxFad('sal'),saw:()=>fxFad('saw'),ilm:()=>fxFad('ilm'),msal:()=>fxFad('msal'),msaw:()=>fxFad('msaw'),lbs:()=>fxFad('lbs'),mnq:()=>fxFad('mnq'),mlbs:()=>fxFad('mlbs'),mfad:()=>fxFad('mfad'),wafat:()=>fxFad('wafat'),khutab:()=>fxFad('khutab'),wasaya:()=>fxFad('wasaya'),aq:()=>fxFad('aq'),maq:()=>fxFad('maq')})[m[1]]())
+  else if((m=/^#fx=(qa|sifa|hajj|ahl|road|dal|gz|mg|kh|fad|ans|sir|daw|adb|hady|sal|saw|ilm|msal|msaw|lbs|mlbs|mfad|wafat|khutab|wasaya|mnq|aq|maq|jh)$/.exec(h)))go(()=>({qa:fxQa,sifa:fxSifa,hajj:fxHajj,ahl:fxAhl,road:fxRoad,dal:fxDal,gz:()=>fxGz(),mg:()=>fxMgTL(),kh:()=>fxKh(),fad:()=>fxFad(),ans:()=>fxFad('ans'),sir:()=>fxFad('sir'),daw:()=>fxFad('daw'),adb:()=>fxFad('adb'),hady:()=>fxHady(),sal:()=>fxFad('sal'),saw:()=>fxFad('saw'),ilm:()=>fxFad('ilm'),msal:()=>fxFad('msal'),msaw:()=>fxFad('msaw'),lbs:()=>fxFad('lbs'),mnq:()=>fxFad('mnq'),mlbs:()=>fxFad('mlbs'),mfad:()=>fxFad('mfad'),wafat:()=>fxFad('wafat'),khutab:()=>fxFad('khutab'),wasaya:()=>fxFad('wasaya'),aq:()=>fxFad('aq'),maq:()=>fxFad('maq'),jh:()=>fxJihad()})[m[1]]())
   else if((m=/^#gz=(\d+)$/.exec(h)))go(()=>fxGz(+m[1]))
   else if((m=/^#kh=(\d+)$/.exec(h)))go(()=>fxKh(+m[1]))
   else if((m=/^#shu=(asma|khadam|silah|kutub|khasais|huquq)$/.exec(h)))go(()=>fxShu(m[1]))
@@ -4933,6 +4961,45 @@ async function fxDal(){const [A,G]=await Promise.all([getJSON('data/sx_alam.json
       hd.onclick=()=>{const o=body.hidden;if(o)fill();body.hidden=!o;hd.setAttribute('aria-expanded',o?'true':'false')};list.append(card)});
     ikBox.append(el('p','fx-note','العناوين عناوين ابن كثير كما في النسخة الرقمية (طبعة دار هجر بتحقيق التركي)، وأسماء المجموعات من كلامه في أول كل قسم. والنص بلفظ النسخة الرقمية.'))};
   if(on)ikFill();cb.onchange=()=>{try{localStorage.setItem('dalIK',cb.checked?'1':'0')}catch(e){}if(cb.checked)ikFill();ikBox.hidden=!cb.checked;if(cb.checked)setTimeout(()=>sw.scrollIntoView({block:'start',behavior:'smooth'}),50)}}
+
+/* ---------- الجهاد والشهادة: كتب الجهاد من ثمانية كتب كاملة، وشرح كل باب يُفتح عند الحاجة ---------- */
+const JHC={};
+async function jhCm(key){return JHC[key]||(JHC[key]=await getJSON('data/sx_jhc_'+key+'.json'))}
+// a commentary: its creed notes shown before it, the commentary itself only when asked for
+function jhCmW(key,it){const w=el('div','jh-cms');
+  (it.cm||[]).forEach((m,ci)=>{const box=el('div','jh-cm');
+    if(m.aq&&m.aq.length){const n=el('div','jh-aq');n.append(el('b',null,'تنبيه عقدي قبل قراءة هذا الشرح'));m.aq.forEach(t=>n.append(el('p',null,t)));box.append(n)}
+    const lab=(m.src.startsWith('حاشية ابن القيم')?'حاشية ابن القيم':'شرح '+(it.k==='h'?'الباب':'الحديث'))+': '+m.src.replace(/^حاشية ابن القيم \(تهذيب السنن\) في طبعة /,'');
+    const b=el('button','jh-open');b.type='button';b.setAttribute('aria-expanded','false');b.append(el('span',null,lab),el('small',null,m.pg?String(m.pg).replace(/\d+/g,d=>ar(+d)):''));box.append(b);
+    const body=el('div','jh-cmb');body.hidden=true;box.append(body);let done=false;
+    b.onclick=async()=>{const o=body.hidden;if(o&&!done){done=true;body.append(el('p','jh-ld','…'));try{const C=await jhCm(key);const c=(C[it.id]||[])[ci];body.innerHTML='';if(m.sh)body.append(el('p','jh-sh',m.sh));
+        const marks=new Set();(c&&c.aq||[]).forEach(a=>{if(a.li)for(let k=a.li[0];k<=a.li[1];k++)marks.add(k)});
+        (c?c.t:[]).forEach((t,k)=>{const p=el('p','cm-p'+(marks.has(k)?' jh-mk':''));hdFill(p,t,[],[]);body.append(p)});
+        body.append(el('p','cm-pg',m.src+(m.pg?'، '+String(m.pg).replace(/\d+/g,d=>ar(+d)):'')))}catch(e){body.innerHTML='';body.append(el('p','jh-ld','تعذّر تحميل الشرح، تحقق من الاتصال.'));done=false}}
+      body.hidden=!o;b.setAttribute('aria-expanded',o?'true':'false');box.classList.toggle('open',o)};
+    w.append(box)});
+  return w}
+function jhItem(B,it){
+  if(it.k==='tr'){const p=el('p','jh-tr');if(it.gr)shFill(p,it.t.join('\n'),it.gr);else hdFill(p,it.t.join('\n'),[],[]);const w=el('div','jh-trw');w.append(p);if(it.nt)w.append(el('p','jh-nt',it.nt));if(it.cm)w.append(jhCmW(B.key,it));return w}
+  const c=el('div','jh-h');const p=el('p','jh-x');shFill(p,it.t.join('\n'),it.gr||[]);c.append(p);
+  if(it.lbl&&it.lbl.length){const l=el('div','jh-lbl');it.lbl.forEach(t=>l.append(el('span',null,t)));c.append(l)}
+  c.append(el('p','jh-src',B.name+(it.n?'، رقم '+String(it.n).replace(/\d+/g,d=>ar(+d)):'')+(it.pg?'، '+String(it.pg).replace(/\d+/g,d=>ar(+d)):'')));
+  if(it.cr)c.append(el('p','jh-nt',it.cr));
+  if(it.cm)c.append(jhCmW(B.key,it));
+  return c}
+async function fxJihad(key){const M=await getJSON('data/sx_jh.json');const P=fxOpen('الجهاد والشهادة');
+  P.inn.append(el('p','fx-lead','أحاديث الجهاد والشهادة كاملةً بأبوابها وترتيبها من ثمانية كتب، بلفظ نسختها الرقمية في المكتبة الشاملة. ومع كل باب أو حديث شرحه من شروح أهل الحديث، يُفتح عند الحاجة، وما في الشرح مما يخالف عقيدة السلف نُبّه عليه قبل فتحه.'));
+  const sw=el('div','jh-bks');P.inn.append(sw);const host=el('div');P.inn.append(host);
+  const show=async k=>{[...sw.children].forEach(b=>b.classList.toggle('on',b.dataset.k===k));host.innerHTML='';host.append(el('p','jh-ld','…'));
+    const B=await getJSON('data/sx_jhi_'+k+'.json');host.innerHTML='';
+    host.append(el('h3','dl-bk',B.name+': '+B.part),el('p','jh-ed',B.ed));
+    const L=el('div','mg-list');host.append(L);let cur=null,pre=[];
+    const flush=()=>{if(!cur)return;const h=cur,its=pre;const n=its.filter(x=>x.k==='hd').length;
+      const title=el('span');hdFill(title,h.t.join(' '),[],[]);
+      L.append(accCard(title,n?(n===1?'حديث واحد':ar(n)+(n<=10?' أحاديث':' حديثاً')):'',body=>{its.forEach(x=>body.append(jhItem(B,x)));if(h.cm)body.append(jhCmW(B.key,h))},false,'jh-ch'))};
+    B.items.forEach(x=>{if(x.k==='h'){flush();cur=x;pre=[]}else if(cur)pre.push(x);else{const d=jhItem(B,x);L.append(d)}});flush()};
+  M.books.forEach(b=>{const o=el('button','btn btn-link hd-b',b.name);o.type='button';o.dataset.k=b.key;o.onclick=()=>show(b.key);sw.append(o)});
+  show(key&&M.books.some(b=>b.key===key)?key:'bukhari')}
 
 /* ---------- مواضع الخلاف مع المطبوع: علامات حمراء، وقراءة الصفحات المعلَّمة وحدها ---------- */
 let MK={};getJSON('data/marks.json').then(d=>{MK=d||{};renderMkBooks()}).catch(()=>{});
