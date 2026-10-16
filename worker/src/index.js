@@ -7,7 +7,7 @@
 // - each reader picks which of these, and the hour of each (where the reader is)
 // Web Push: RFC 8291 (aes128gcm) and RFC 8292 (VAPID), with WebCrypto only.
 import { ownerFetch, installSeen, hourTxt, topOf } from './owner.js';
-import { cmsFetch } from './cms.js';
+import { cmsFetch, pauseFetch, pushPaused } from './cms.js';
 import H, { DAY0 } from './hadith.js';
 import { SI, KH } from './tl.js';
 import MG from './mg.js';
@@ -236,6 +236,7 @@ export default {
   async fetch(req, env) {
     const u = new URL(req.url);
     if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
+    { const c = await pauseFetch(req, env, u, SITE); if (c) return c; }
     { const c = await cmsFetch(req, env, u); if (c) return c; }
     { const o = await ownerFetch(req, env, u, { site: SITE, name: 'سِيرَتُه', page: 1, fanOut, job: (id, msg) => [id, 'bc', msg], stats: siraStats }); if (o) return o; }
     if (req.method === 'POST' && u.pathname === '/i') return installSeen(req, env, cors);
@@ -329,6 +330,7 @@ export default {
     return json({ ok: false }, 404);
   },
   async scheduled(ev, env, ctx) {
+    if (await pushPaused(env)) { console.log('paused'); return; }
     const r = await fanOut(env, await due(env));
     // the old owner's-notice feature was removed: its stored records (keys beginning w:) are deleted once
     if (!(await env.PUSH.get('wgone'))) { let c; do { const l = await env.PUSH.list({ prefix: 'w:', cursor: c }); for (const k of l.keys) await env.PUSH.delete(k.name); c = l.list_complete ? null : l.cursor; } while (c); await env.PUSH.put('wgone', '1'); }

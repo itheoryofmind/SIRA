@@ -28,8 +28,16 @@ if not E:
 
 OPEN = {}      # file -> [data, original text]
 done = []      # (edit, ok, message)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ui as UIM
+UIX = None; UIL = UIM.load()
 for e in E:
     f = e['f']
+    if f == 'ui':      # the site's own wording, in the page itself
+        if UIX is None: UIX = open('index.html', encoding='utf-8').read()
+        UIX, n = UIM.apply(UIX, e['old'], e['nw'])
+        if not n: done.append((e, False, 'لم يوجد هذا النص بعينه في الموقع')); continue
+        UIL.append({'old': e['old'], 'nw': e['nw']}); done.append((e, True, '')); continue
     if not re.fullmatch(r'[a-z0-9_]{1,40}\.json', f) or not os.path.exists('data/' + f):
         done.append((e, False, 'الملف غير موجود')); continue
     if f not in OPEN:
@@ -56,11 +64,15 @@ for f, (d, s) in OPEN.items():
     if t != s:
         open('data/' + f, 'w', encoding='utf-8').write(t); changed.add(f)
 
+if UIX is not None and any(e['f'] == 'ui' for e, g, _ in done if g):
+    open('index.html', 'w', encoding='utf-8').write(UIX)
+    json.dump(UIL, open(UIM.UI, 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
+okd = [x for x in ok if x[0]['f'] != 'ui']
 if ok:
     # the Prophet's words marked in a quotation are kept by the quotation's text: follow the corrected text
     gp = 'data/sx_gold.json'
     gs = open(gp, encoding='utf-8').read(); G = json.loads(gs); gch = False
-    for e, _, _ in ok:
+    for e, _, _ in okd:
         if e['old'] in G and e['nw'] not in G:
             G = {(e['nw'] if k == e['old'] else k): v for k, v in G.items()}; gch = True
     if gch:
@@ -68,7 +80,7 @@ if ok:
     # the search-engine pages: the same text, where it appears whole
     for p in glob.glob('*/index.html'):
         h = open(p, encoding='utf-8').read(); h0 = h
-        for e, _, _ in ok:
+        for e, _, _ in okd:
             for a, b in {(html.escape(e['old']), html.escape(e['nw'])), (html.escape(verse(e['old'])), html.escape(verse(e['nw'])))}:
                 if len(e['old']) >= 8 and a in h:
                     h = h.replace(a, b)
@@ -85,7 +97,7 @@ if ok:
     open('index.html', 'w', encoding='utf-8').write(ix)
     open('version.json', 'w').write('{"v":"%s"}\n' % V)
 
-    secs = sorted({e.get('sec') or e['f'] for e, _, _ in ok})
+    secs = sorted({e.get('sec') or ('ألفاظ الموقع' if e['f'] == 'ui' else e['f']) for e, _, _ in ok})
     notes = [e.get('note') for e, _, _ in ok if e.get('note')]
     msg = 'لوحة المحتوى: ' + '، '.join(secs) + ('\n\n' + '\n'.join(notes) if notes else '')
     git('add', '-A')

@@ -6,9 +6,10 @@ import { isOwner } from './owner.js';
 import PAGE from './cms_page.js';
 
 const P = 'cms:';
-const H = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' };
+// the edit mode runs inside the site itself (seeratuh.com), so its answers are open to that page
+const H = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex', 'Access-Control-Allow-Origin': 'https://seeratuh.com' };
 const out = (o, st) => new Response(JSON.stringify(o), { status: st || 200, headers: H });
-const okFile = (f) => typeof f === 'string' && /^[a-z0-9_]{1,40}\.json$/.test(f);
+const okFile = (f) => f === 'ui' || (typeof f === 'string' && /^[a-z0-9_]{1,40}\.json$/.test(f));   // ui: the site's own wording
 const okPath = (p) => Array.isArray(p) && p.length > 0 && p.length <= 24 && p.every((x) => (typeof x === 'string' && x.length <= 4000) || (Number.isInteger(x) && x >= 0));
 const okText = (s) => typeof s === 'string' && s.length <= 300000;
 
@@ -46,7 +47,14 @@ export async function cmsFetch(req, env, u) {
   let b; try { b = JSON.parse(await req.text()); } catch (e) { return out({ ok: false }, 400); }
   if (!(await isOwner(b && b.k))) return out({ ok: false }, 403);
 
-  if (u.pathname === '/c/hi') return out({ ok: true });
+  if (u.pathname === '/c/hi') return out({ ok: true, pause: (await env.PUSH.get('pause', 'json')) || { on: false } });
+  if (u.pathname === '/c/pause') {
+    const on = !!b.on, msg = String(b.msg || '').trim().slice(0, 1000);
+    if (on && !msg) return out({ ok: false, bad: 1 }, 400);
+    const v = { on, msg, np: on && !!b.np, t: Date.now() };
+    await env.PUSH.put('pause', JSON.stringify(v));
+    return out({ ok: true, pause: v });
+  }
   if (u.pathname === '/c/list') {
     const L = (await all(env)).slice(-60).reverse();
     const r = [];
@@ -73,3 +81,12 @@ export async function cmsFetch(req, env, u) {
   }
   return out({ ok: false }, 404);
 }
+
+// the site and the app ask this when they open: is the site paused, and what to tell the reader
+export async function pauseFetch(req, env, u, site) {
+  if (u.pathname !== '/st') return null;
+  const v = (await env.PUSH.get('pause', 'json')) || { on: false };
+  return new Response(JSON.stringify({ on: !!v.on, msg: v.on ? v.msg : '' }), { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'Access-Control-Allow-Origin': site } });
+}
+// while paused with «and the notifications» chosen, the scheduled notifications are not sent
+export async function pushPaused(env) { const v = await env.PUSH.get('pause', 'json'); return !!(v && v.on && v.np); }
