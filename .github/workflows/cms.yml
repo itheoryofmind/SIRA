@@ -26,7 +26,8 @@ jobs:
         if: steps.a.outputs.pushed == '1'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: curl -sS -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/${{ github.repository }}/pages/builds" || true
+        run: |
+          curl -sS -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/${{ github.repository }}/pages/builds" || true
       # GitHub stops a schedule after sixty days with no change in the repository; a quiet line here keeps it running
       - name: Keep the schedule alive
         if: steps.a.outputs.pushed != '1'
