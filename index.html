@@ -2101,7 +2101,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-16-1206';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-16-1222';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2637,7 +2637,7 @@ function richInline(s,hl,inQ,rep){
   const flush=()=>{if(buf){appendHL(node,buf,hl);buf=''}};
   let k=-1,skip=false,sup=null,fix=null;
   // footnote numbers of the digital edition after a hadith or a verse (its takhrij notes, not carried here): small and muted
-  s=s.replace(/(["}]|"،)\s?(\d{1,2})(?=[\s.،؛:؟,]|$)/g,'$1\u0001$2\u0002');
+  s=s.replace(/(["}]|"،)(\s?)(\d{1,2})(?=[\s.،؛:؟,]|$)/g,'$1$2\u0001$3\u0002');
   // in some parts the digital edition lost the ligature ﷺ after the Prophet's name and left a lone "(": shown as in print
   // the digital edition's straight quotation marks, shown as the print has them: « »  (only when they pair up)
   for(const ch of s){
@@ -2735,7 +2735,7 @@ function pageBlock(T,n,p){
   else{
     // a page with no digital text (title pages, pictures, the printed index): one quiet line, its image on request
     b.classList.add('notext');ib.textContent='اعرض الصورة';
-    hd.insertBefore(el('span','ntx',isIdx?'من الفهرس المطبوع':(p<=4?'من صفحات العنوان':'صفحة بلا نص')),hd.querySelector('.pgline'));
+    hd.insertBefore(el('span','ntx',isIdx?'من الفهرس المطبوع':(p<=4?'من صفحات العنوان':'نص هذه الصفحة ليس في النسخة الرقمية')),hd.querySelector('.pgline'));
     ib.onclick=()=>{if(wide()){openCompare(p);return}
       st.hidden=!st.hidden;ib.textContent=st.hidden?'اعرض الصورة':'إخفاء الصورة';if(!st.hidden)inlineImage(st,n,p)};
   }
