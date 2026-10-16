@@ -2093,7 +2093,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-16-0505';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-16-0511';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -2223,7 +2223,7 @@ async function removeVol(n){if(hasCaches)await (await volCache()).delete(volKey(
 
 /* ---------- data files (text per part, index hotspots, headings) ---------- */
 const MEM={};
-const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "7b60653830", "data/sira_x.json": "ec410296f9", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "7917af7dca", "data/sx_badab.json": "f75594f567", "data/sx_bans.json": "ba06a323d3", "data/sx_bdaw.json": "afd0f80bae", "data/sx_bfad.json": "76aa8c0f40", "data/sx_bilm.json": "163eef7150", "data/sx_bmnq.json": "e4717eeb59", "data/sx_bsal.json": "78b8df2862", "data/sx_bsaw.json": "673526178b", "data/sx_bsif.json": "557a8e6c0a", "data/sx_bsir.json": "3055b2230c", "data/sx_dal.json": "13246b9bcc", "data/sx_feat.json": "ce3665fa73", "data/sx_gold.json": "0555132375", "data/sx_gz.json": "ec0a590c6a", "data/sx_hady.json": "1e0b1e4e67", "data/sx_hajj.json": "f0f799172c", "data/sx_hjr.json": "0adc5883c5", "data/sx_hjrb.json": "9316a1ca50", "data/sx_kh.json": "b98d1213bb", "data/sx_khn.json": "e46fb5df7f", "data/sx_khutab.json": "0f620bd1f3", "data/sx_mfad.json": "d73fc18402", "data/sx_mg.json": "d53d9b2db9", "data/sx_msal.json": "5d81bc9b4d", "data/sx_msaw.json": "c49b60ec91", "data/sx_msh.json": "df93c51abc", "data/sx_msif.json": "eb3d0a5c93", "data/sx_nuzul.json": "8c593e4af8", "data/sx_qa.json": "465bae7050", "data/sx_shs.json": "d3614c40f6", "data/sx_shu.json": "e59092c65c", "data/sx_wafat.json": "82f6cdc82a", "data/sx_wasaya.json": "6f6dd3ecb0", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
+const DH={"data/coast.json": "92ae5310f3", "data/heads.json": "b382867813", "data/marks.json": "00b14fb7ce", "data/quran.json": "3b7af2ab79", "data/qv.json": "7b60653830", "data/sira_x.json": "ec410296f9", "data/sx_ahl.json": "173e2f94d0", "data/sx_alam.json": "7917af7dca", "data/sx_badab.json": "f75594f567", "data/sx_bans.json": "ba06a323d3", "data/sx_bdaw.json": "afd0f80bae", "data/sx_bfad.json": "76aa8c0f40", "data/sx_bilm.json": "163eef7150", "data/sx_bmnq.json": "e4717eeb59", "data/sx_bsal.json": "78b8df2862", "data/sx_bsaw.json": "673526178b", "data/sx_bsif.json": "557a8e6c0a", "data/sx_bsir.json": "3055b2230c", "data/sx_dal.json": "13246b9bcc", "data/sx_feat.json": "ce3665fa73", "data/sx_gold.json": "0555132375", "data/sx_gz.json": "30b81dab03", "data/sx_hady.json": "1e0b1e4e67", "data/sx_hajj.json": "04b4a0ffcf", "data/sx_hjr.json": "0adc5883c5", "data/sx_hjrb.json": "9316a1ca50", "data/sx_kh.json": "b9cb2f3577", "data/sx_khn.json": "e46fb5df7f", "data/sx_khutab.json": "0f620bd1f3", "data/sx_mfad.json": "d73fc18402", "data/sx_mg.json": "d53d9b2db9", "data/sx_msal.json": "5d81bc9b4d", "data/sx_msaw.json": "c49b60ec91", "data/sx_msh.json": "df93c51abc", "data/sx_msif.json": "eb3d0a5c93", "data/sx_nuzul.json": "8c593e4af8", "data/sx_qa.json": "465bae7050", "data/sx_shs.json": "d3614c40f6", "data/sx_shu.json": "e59092c65c", "data/sx_wafat.json": "82f6cdc82a", "data/sx_wasaya.json": "6f6dd3ecb0", "data/t17.json": "77226e2276", "data/t18.json": "594df6fa63", "data/t19.json": "3c29cb4608", "data/t20.json": "512d6300cf", "data/t21.json": "0140275ece", "data/t22.json": "565253ad2f", "data/t23.json": "839cafed41", "data/t24.json": "2ba786769e", "data/t25.json": "53ccc4fa07", "data/t26.json": "48ccd72793", "data/t27.json": "e3c7f9e54d", "data/t28.json": "c354417471", "data/t29.json": "52a3484276", "data/t30.json": "e5bd0bc714", "data/t31.json": "00065b3f38", "data/t32.json": "16c5223dc3", "data/t33.json": "44b3996088", "data/t34.json": "4c19cc3eaa", "data/t35.json": "b0caf75784", "data/t36.json": "9a2a334877", "data/t37.json": "06aae28e2c", "data/saadi.json": "bf53b5261e"};
 async function getJSON(path){
   if(MEM[path])return MEM[path];
   {const e=document.getElementById('D_'+path);if(e){MEM[path]=JSON.parse(e.textContent);e.remove();return MEM[path]}}
@@ -3807,16 +3807,18 @@ function qPanel(t,pm){const q=el('blockquote','qp');hdFill(q,t,pm||[]);return q}
 /* a quote with the dating words marked */
 // an event's passage from its first words to the book's next heading (at most about 1600 letters, ending at a full stop)
 async function evFull(it){const n=it.n||17,T=await getJSON('data/t'+n+'.json');const P=T.p;
-  // found by its letters only, so a dash or a comma in the excerpt does not hide it
-  const nz=t=>{let o='';const m=[];for(let i=0;i<t.length;i++)if(/[\u0621-\u064A]/.test(t[i])){o+=t[i];m.push(i)}return [o,m]};
-  const key=nz(it.q.replace(/…$/,''))[0].slice(0,22);if(key.length<8)return '';let out='',on=false;
-  for(let p=it.p;p<Math.min(P.length,it.p+6);p++){const x=P[p];if(!x)continue;
-    for(const y of x.slice(1)){
-      if(typeof y==='string'){if(!on){const [o,m]=nz(y),i=o.indexOf(key);if(i<0)continue;on=true;out=y.slice(m[i])}else out+=' '+y}
-      else if(on&&y&&(y.h||y.e))return trimFull(out)}
-    if(out.length>1600)break}
-  return trimFull(out)}
-function trimFull(t){t=t.replace(/\s*\((?:\d+|[٠-٩]+)\)/g,'').replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').replace(/\s+/g,' ').trim();if(t.length<=1600)return t;const c=t.slice(0,1600),j=c.lastIndexOf('.');return (j>800?c.slice(0,j+1):c.slice(0,c.lastIndexOf(' ')))+' …'}
+  // the passage from the quoted words to the book's next heading, unshortened
+  const nz=t=>{let o='';for(let i=0;i<t.length;i++)if(/[\u0621-\u064A]/.test(t[i]))o+=t[i];return o};
+  const key=nz(it.q.replace(/…$/,'')).slice(0,22);if(key.length<8)return '';
+  const S=[];for(let p=Math.max(1,it.p-30);p<Math.min(P.length,it.p+200);p++){const x=P[p];if(!x)continue;for(const y of x.slice(1))S.push([p,y])}
+  const hd=y=>y&&typeof y==='object'&&(y.h||y.e);
+  let k=S.findIndex(([p,y])=>p>=it.p&&typeof y==='string'&&nz(y).includes(key));if(k<0)return '';
+  const a=k;
+  const out=[];let prevP=-1;for(let q=a;q<S.length;q++){const [p,y0]=S[q];if(hd(y0))break;if(typeof y0!=='string')continue;const y=q===a?y0.slice(Math.max(0,idxOf(y0,key))):y0;
+    if(out.length&&p!==prevP&&!/[.!؟?»"]\s*$/.test(out[out.length-1]))out[out.length-1]+=' '+y;else out.push(y);prevP=p}
+  return out.map(trimFull).join(' ')}
+function idxOf(y,key){let o='',m=[];for(let i=0;i<y.length;i++)if(/[\u0621-\u064A]/.test(y[i])){o+=y[i];m.push(i)}const i=o.indexOf(key);return i<0?0:m[i]}
+function trimFull(t){return t.replace(/\s*\((?:\d+|[٠-٩]+)\)/g,'').replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').replace(/\s+/g,' ').trim()}
 function quoteW(q,w,ph){const e=el('q');if(ph&&ph.length){hdFill(e,q,[],ph);if(e.querySelector('.hd-m'))return e}const i=w?q.indexOf(w):-1;if(i<0){e.textContent=q;return e}
   e.append(document.createTextNode(q.slice(0,i)),el('mark',null,w),document.createTextNode(q.slice(i+w.length)));return e}
 
@@ -4024,18 +4026,20 @@ async function showKhul(y){const F=await sxFeat();const K=F.khul,Y=K.years.find(
   Y.h.slice(1).forEach(h=>{const b=el('button','kh-h');b.type='button';b.append(el('span',null,h.t),el('small',null,'ص '+ar(h.p)));b.onclick=()=>khRead(h.n,h.p,h.t);P.append(b)});
   P.append(el('p','yr-note','عُدّت الثلاثون كما قال ابن كثير: من وفاته صلى الله عليه وسلم في ربيع الأول سنة ١١ إلى نزول الحسن رضي الله عنه عن الخلافة في ربيع الأول سنة ٤١، فهي تمتد على إحدى وثلاثين سنة هجرية أولاها وآخرتها ناقصتان. والمربع ذو اللونين سنةٌ انتقلت فيها الخلافة.'))}
 // a chapter of «الخلفاء الراشدون» read in place: from its heading to the next one
+/* a hadith shown from its Companion, with its chain one press away */
+function shBox(x,cls){const t=el('p',cls);hdFill(t,x.s||x.x,x.s?(x.ps||[]):(x.pm||[]));if(!x.s)return[t];const b=el('button','btn btn-link hd-b','بإسناده');b.type='button';b.onclick=()=>{t.innerHTML='';hdFill(t,x.x,x.pm||[]);b.remove()};return[t,b]}
 async function khRead(n,p,t){const lt=x=>x.replace(/[^\u0621-\u064A]/g,'');const S_=document.getElementById('evSheet'),prev=S_&&!S_.hidden?[...document.getElementById('evBody').childNodes]:null,y0=S_?S_.scrollTop:0;const B=evShell(t);
   if(prev){const bk=el('button','btn btn-link kh-back','رجوع');bk.type='button';bk.onclick=()=>{document.getElementById('evBody').replaceChildren(...prev);S_.scrollTop=y0};B.append(bk)}const jz=n===28?9:n===29?10:11;
   B.append(el('p','ev-era','البداية والنهاية، ج'+ar(jz)),sawEl('h3','ev-t',t));const box=el('div','kh-rd');B.append(box);
   const ft=el('div','ev-ft');ft.append(el('small',null,'البداية والنهاية لابن كثير، تحقيق التركي، ج'+ar(jz)+'، ص '+ar(p)));
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(n,p,null,false,'txt')};ft.append(go);B.append(ft);
   try{const P=(await getJSON('data/t'+n+'.json')).p;let on=false,txt=0,cut=false;const fix=x=>x.replace(/\s*\((?:\d+|[٠-٩]+)\)/g,'').replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾').replace(/\s+/g,' ').trim();
-    out:for(let q=p;q<P.length&&q<p+40;q++){const x=P[q];if(!x)continue;
+    out:for(let q=p;q<P.length&&q<p+400;q++){const x=P[q];if(!x)continue;
       for(const y of x.slice(1)){
         if(y&&typeof y==='object'&&(y.h||y.e)){const h=y.h||y.e;
           if(!on){if(q===p&&lt(h)===lt(t))on=true;continue}
           if(txt)break out;box.append(sawEl('h4','kh-rh',h));continue}
-        if(on&&typeof y==='string'){const f=fix(y);if(!f)continue;const lp=box.lastElementChild;if(lp&&lp.classList.contains('kh-rp')&&lp.dataset.q!=q&&!/[.!؟?»]$/.test(lp.textContent))lp.textContent+=' '+f;else{const e=el('p','kh-rp',f);e.dataset.q=q;box.append(e)}txt+=f.length;if(txt>9000){cut=true;break out}}}}
+        if(on&&typeof y==='string'){const f=fix(y);if(!f)continue;const lp=box.lastElementChild;if(lp&&lp.classList.contains('kh-rp')&&lp.dataset.q!=q&&!/[.!؟?»]$/.test(lp.textContent))lp.textContent+=' '+f;else{const e=el('p','kh-rp',f);e.dataset.q=q;box.append(e)}txt+=f.length}}}
     if(!box.childElementCount)box.append(el('p','kh-rp','تعذّر عرض هذا الباب هنا، فاقرأه في الكتاب.'));
     if(cut)box.append(el('p','kh-rc','وللباب بقية في الكتاب.'))}catch(e){box.append(el('p','kh-rp','تعذّر عرض هذا الباب هنا، فاقرأه في الكتاب.'))}}
 const goP=(t,n,p)=>{const b=el('button','btn btn-quiet',t);b.type='button';b.style.margin='4px 0 8px';b.onclick=()=>{evClose();openPart(n,p,null,false,'txt')};return b};
@@ -4604,8 +4608,8 @@ async function fxKh(open){const G=await getJSON('data/sx_kh.json');const P=fxOpe
     if(nd){const box=el('div','gz-more');box.hidden=true;const lab='التفصيل'+(g.sh.length?' من الصحيحين وكتب السيرة':' من كتب السيرة')+' ('+ar(nd)+')';
       const tg=el('button','btn btn-link hd-b gz-tg',lab);tg.type='button';tg.setAttribute('aria-expanded','false');
       if(g.sh.length){box.append(el('p','gz-ih','من الصحيحين'));const dl=el('div','gz-f');
-        g.sh.forEach(x=>{const r=el('div','gz-d');r.append(sawEl('span','gz-k',x.k));const t=el('p','gz-dq');hdFill(t,x.x,x.pm);r.append(t);
-          r.append(el('span','kh-sr',(x.src==='bk'?'صحيح البخاري':'صحيح مسلم')+'، رقم '+nums(x.no)+(x.cut?'، مختصراً':'')));dl.append(r)});box.append(dl)}
+        g.sh.forEach(x=>{const r=el('div','gz-d');r.append(sawEl('span','gz-k',x.k));r.append(...shBox(x,'gz-dq'));
+          r.append(el('span','kh-sr',(x.src==='bk'?'صحيح البخاري':'صحيح مسلم')+'، رقم '+nums(x.no)));dl.append(r)});box.append(dl)}
       if(g.d.length){box.append(el('p','gz-ih','من كتب السيرة'));const dl=el('div','gz-f');
         g.d.forEach(x=>{const r=el('div','gz-d');r.append(sawEl('span','gz-k',x.k));const t=el('p','gz-dq gz-qq');hdFill(t,x.q,[]);r.append(t,go(x.n,x.p,x.q));dl.append(r)});box.append(dl)}
       tg.onclick=()=>{box.hidden=!box.hidden;tg.setAttribute('aria-expanded',!box.hidden);tg.textContent=box.hidden?lab:'إخفاء التفصيل'};c.append(tg,box)}
@@ -4632,7 +4636,7 @@ async function fxGz(open){const G=await getJSON('data/sx_gz.json');const P=fxOpe
         const r=el('div','gz-r');r.append(el('span','gz-k',f.k),el('span','gz-v',f.v.replace(/\d+/g,d=>ar(+d))));dl.append(r);if(f.ns)dl.append(nsEl(f.ns))});c.append(dl)})}
     if(g.th){const w=el('div','gz-th');w.hidden=true;{const tg=el('button','btn btn-link hd-b gz-tg',g.th.t+' ('+ar(g.th.h.length+1)+')');tg.type='button';tg.setAttribute('aria-expanded','false');tg.onclick=()=>{w.hidden=!w.hidden;tg.setAttribute('aria-expanded',!w.hidden)};c.append(tg)}const ay=el('p','fx-q ev-ayah gz-ay');w.append(ay);const ac=el('small','gz-ayc','سورة آل عمران، الآية ١٥٥');w.append(ac);
       getJSON('data/quran.json').then(Q=>{ay.textContent='﴿'+Q.a[g.th.ay[0]-1][g.th.ay[1]-1]+'﴾'});w.append(el('p','gz-thn',g.th.n));
-      const dl=el('div','gz-f');g.th.h.forEach(x=>{const r=el('div','gz-d');r.append(sawEl('span','gz-k',x.k));const t=el('p','gz-dq');hdFill(t,x.x,x.pm);r.append(t);
+      const dl=el('div','gz-f');g.th.h.forEach(x=>{const r=el('div','gz-d');r.append(sawEl('span','gz-k',x.k));r.append(...shBox(x,'gz-dq'));
         if(x.src==='ms'){r.append(el('span','kh-sr','صحيح مسلم، كتاب الجهاد والسير، رقم '+ar(+x.no)+' بترقيم عبد الباقي، الطبعة العامرة ج'+ar(x.v)+' ص '+ar(+x.p)))}else{const b=el('button','gz-pg','صحيح البخاري، رقم '+ar(+x.no));b.type='button';b.onclick=()=>{P.close();openPart(26,x.p,null,false,'txt')};r.append(b)}dl.append(r)});w.append(dl);c.append(w)}
     const nd=(g.d||[]).length;
     if(nd){const box=el('div','gz-more');box.hidden=true;const tg=el('button','btn btn-link hd-b gz-tg','التفصيل من الصحيحين وكتب السيرة ('+ar(nd)+')');tg.type='button';tg.setAttribute('aria-expanded','false');
@@ -4689,7 +4693,7 @@ async function fxAhl(){const A=await getJSON('data/sx_ahl.json');const P=fxOpen(
 async function fxHajj(){const S=await getJSON('data/sx_hajj.json');const P=fxOpen('حجة الوداع يوماً بيوم');
   P.inn.append(el('p','fx-lead','حجته صلى الله عليه وسلم من خروجه من المدينة إلى رجوعه، محطةً محطة: ما في الصحيحين أولاً، ومنه حديث جابر الطويل في صحيح مسلم مقسّماً على المحطات، ثم لفظ ابن كثير في «كتاب حجة الوداع» من «البداية والنهاية» وما نقله فيه، ومع كل نص موضعه.'));
   const ol=el('div','hj-list');S.forEach((s,si)=>{ol.append(accCard(s.t,s.d,li=>{
-    if(s.sh&&s.sh.length){li.append(el('p','hj-src',s.sh.some(x=>x.src==='ms')?'من الصحيحين':'من صحيح البخاري'));s.sh.forEach(x=>{const it=el('div','hj-it');if(x.k)it.append(sawEl('span','hj-k',x.k==='كتاب الحج'?'':x.k));const t=el('p','hj-h');hdFill(t,x.x,x.pm);it.append(t);if(x.x.length>420){t.classList.add('clip');const m=el('button','btn btn-link hd-b','أكمل');m.type='button';m.onclick=()=>{t.classList.remove('clip');m.remove()};it.append(m)}
+    if(s.sh&&s.sh.length){li.append(el('p','hj-src',s.sh.some(x=>x.src==='ms')?'من الصحيحين':'من صحيح البخاري'));s.sh.forEach(x=>{const it=el('div','hj-it');if(x.k)it.append(sawEl('span','hj-k',x.k==='كتاب الحج'?'':x.k));const t=el('p','hj-h');hdFill(t,x.s||x.x,x.s?(x.ps||[]):x.pm);it.append(t);if(x.s){const ib=el('button','btn btn-link hd-b','بإسناده');ib.type='button';ib.onclick=()=>{t.innerHTML='';hdFill(t,x.x,x.pm);t.classList.remove('clip');ib.remove()};it.append(ib)}if(x.x.length>420){t.classList.add('clip');const m=el('button','btn btn-link hd-b','أكمل');m.type='button';m.onclick=()=>{t.classList.remove('clip');m.remove()};it.append(m)}
       const lab=x.src==='ms'?'صحيح مسلم، رقم '+ar(+x.no)+' بترقيم عبد الباقي، الطبعة العامرة ج'+ar(x.v)+' ص '+String(x.p).replace(/\d+/g,d=>ar(+d)):'صحيح البخاري، رقم '+ar(+x.no)+(x.n?'':'، الطبعة السلطانية ج'+ar(x.v)+' ص '+x.p.replace(/\d+/g,d=>ar(+d)));
       if(x.n){const b=el('button','btn btn-quiet hj-g',lab);b.type='button';b.onclick=()=>{P.close();openPart(26,x.p,null,false,'txt')};it.append(b)}else it.append(el('span','hj-g hj-gs',lab));li.append(it)});
       li.append(el('p','hj-src','من البداية والنهاية'))}
