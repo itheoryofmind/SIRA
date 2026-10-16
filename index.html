@@ -1633,9 +1633,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 .dlist .dpan button:focus-visible{outline:2px solid var(--gc);outline-offset:-2px}
 
 /* ===== one colour per section of the site: home tiles, menu groups and the panels they open ===== */
-:root{--c-rd:#8C6420;--c-bk:#2F6B55;--c-sh:#A4462E;--c-sg:#6A4C7D;--c-ns:#8C6420;--c-sr:#34405A;--c-sb:#2C6E6A;--c-kh:#5C6B24}
-@media (prefers-color-scheme:dark){:root:not([data-theme=white]):not([data-theme=brown]){--c-rd:#D7B26A;--c-bk:#7FC2A5;--c-sh:#E39478;--c-sg:#C0A6D4;--c-ns:#D7B26A;--c-sr:#97A8CC;--c-sb:#7CC6BF;--c-kh:#BCC77F}}
-:root[data-theme=night]{--c-rd:#C9A766;--c-bk:#76B79C;--c-sh:#D48A70;--c-sg:#AD95C0;--c-ns:#C9A766;--c-sr:#8797BA;--c-sb:#72B5AE;--c-kh:#AAB574}
+:root{--c-rd:var(--brass);--c-bk:var(--brass);--c-sh:var(--brass);--c-sg:var(--brass);--c-ns:var(--brass);--c-sr:var(--brass);--c-sb:var(--brass);--c-kh:var(--brass)}
 [data-g=sh]{--gc:var(--c-sh)}[data-g=sg]{--gc:var(--c-sg)}[data-g=ns]{--gc:var(--c-ns)}[data-g=sr]{--gc:var(--c-sr)}[data-g=sb]{--gc:var(--c-sb)}[data-g=kh]{--gc:var(--c-kh)}
 .dsec[data-c=rd]{--gc:var(--c-rd)}.dsec[data-c=bk]{--gc:var(--c-bk)}
 .dsec[data-c=sh]{--gc:var(--c-sh)}.dsec[data-c=sg]{--gc:var(--c-sg)}.dsec[data-c=ns]{--gc:var(--c-ns)}.dsec[data-c=sr]{--gc:var(--c-sr)}.dsec[data-c=sb]{--gc:var(--c-sb)}.dsec[data-c=kh]{--gc:var(--c-kh)}
@@ -2207,7 +2205,7 @@ button.lv-h:focus-visible{outline:2px solid var(--brass);outline-offset:3px;bord
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-16-1536';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-16-1539';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
