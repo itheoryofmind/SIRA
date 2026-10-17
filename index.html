@@ -2668,7 +2668,7 @@ html.own-noimg .pgimg,html.own-noimg .sx-pbtn,html.own-noimg .sx-pwrap,html.own-
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-0847';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-0858';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -5515,8 +5515,8 @@ async function fxJihadHub(){const G=await getJSON('data/sx_hady.json');const P=f
   const rows=(L,body)=>L.forEach(x=>{const r=el('button','hd-row');r.type='button';r.append(el('span',null,x.h),el('small',null,'ج'+ar(x.n-17)+' ص '+ar(x.p)));r.onclick=()=>{P.close();openPart(x.n,x.p,null,false,'txt')};body.append(r)});
   const L=el('div','mg-list');P.inn.append(L);
   if(a>=0&&b>a){const R1=it.slice(a,b),R2=it.slice(b,c>b?c:it.length);
-    L.append(accCard('هديه صلى الله عليه وسلم في الجهاد','زاد المعاد، ج٣ ص '+ar(R1[0].p)+'–'+ar(R2[0].p-1)+' · '+ar(R1.length)+' عنوانًا',body=>rows(R1,body)));
-    L.append(accCard('مغازيه وبعوثه وسراياه','زاد المعاد، ج٣ ص '+ar(R2[0].p)+'–'+ar((c>b?it[c].p:R2[R2.length-1].p))+' · '+ar(R2.length)+' عنوانًا',body=>rows(R2,body)))}
+    L.append(accCard('هديه صلى الله عليه وسلم في الجهاد','زاد المعاد، ج٣ ص '+ar(R1[0].p)+'–'+ar(R2[0].p-1)+'، '+ar(R1.length)+' عنوانًا',body=>rows(R1,body)));
+    L.append(accCard('مغازيه وبعوثه وسراياه','زاد المعاد، ج٣ ص '+ar(R2[0].p)+'–'+ar((c>b?it[c].p:R2[R2.length-1].p))+'، '+ar(R2.length)+' عنوانًا',body=>rows(R2,body)))}
   L.append(accCard('غزواته صلى الله عليه وسلم في الصحيحين','أحاديث كل غزوة على ترتيب وقوعها، وأعدادها في سطور',body=>{const x1=el('button','hd-row');x1.type='button';x1.append(el('span',null,'المغازي في الصحيحين'),el('small',null,'البخاري ومسلم'));x1.onclick=()=>{P.close();fxMgTL()};
     const x2=el('button','hd-row');x2.type='button';x2.append(el('span',null,'الغزوات في سطور'),el('small',null,'مختصر السيرة'));x2.onclick=()=>{P.close();const g=$('#fxGz');if(g)g.click()};body.append(x1,x2)}));
   const jb=el('button','wide-b');jb.type='button';jb.append(el('b',null,'كتاب الجهاد'),el('span',null,'كتب الجهاد من الصحيحين والسنن الأربع ورياض الصالحين وبلوغ المرام كاملة، مع شروحها'));jb.onclick=()=>{P.close();fxJihad()};L.append(jb)}
@@ -5586,14 +5586,14 @@ new MutationObserver(ms=>{let t=0;for(const m of ms)if(m.addedNodes.length){t=1;
 function ovGrid(items){const g=el('div','ov-grid');items.forEach(([t,sub,go,tag])=>{const c=el('button','ov-c');c.type='button';if(tag)c.append(el('small','ov-k',tag));c.append(el('b',null,t));if(sub)c.append(el('span',null,sub));c.onclick=go;g.append(c)});return g}
 async function fxOverview(k){
   if(k==='sifa'){const F=await sxFeat();const P=fxOpen('صفته صلى الله عليه وسلم');P.inn.append(el('p','fx-lead','موضوعات «مختصر الشمائل المحمدية» وعدد أبوابها وأحاديثها. اضغط الموضوع لتقرأ أحاديثه.'));sifaDial(P,P.inn,F);
-    P.inn.append(ovGrid(F.sifa.map((s,i)=>{const nh=s.c.reduce((a,c)=>a+c.had.length,0);return [s.t,ar(s.c.length)+' '+(s.c.length<=10?'أبواب':'بابًا')+' · '+ar(nh)+' حديثًا',()=>{P.close();fxSifa(i)}]})));return}
+    P.inn.append(ovGrid(F.sifa.map((s,i)=>{const nh=s.c.reduce((a,c)=>a+c.had.length,0);return [s.t,ar(s.c.length)+' '+(s.c.length<=10?'أبواب':'بابًا')+'، '+ar(nh)+' حديثًا',()=>{P.close();fxSifa(i)}]})));return}
   if(k==='hady'){const G=await getJSON('data/sx_hady.json');const P=fxOpen('هديه صلى الله عليه وسلم');P.inn.append(el('p','fx-lead','فصول هديه صلى الله عليه وسلم من «زاد المعاد» لابن القيم بعناوينها في كل جزء. اضغط الفصل لتقرأه بلفظه.'));{const F=await sxFeat();P.inn.append(el('h3','dl-bk','يومه صلى الله عليه وسلم'));dayDial(P,P.inn,F)}
     G.forEach(g=>{const seen=new Set(),L=[];g.it.forEach(x=>{const m=x.h.replace(/[\[\]]/g,'').match(/^(?:فصل في )?هدي(?:ه)?\s*(?:-\s*)?(?:صلى الله عليه وسلم\s*)?(?:-\s*)?(?:وسيرته\s*(?:صلى الله عليه وسلم)?\s*)?(.+)$/);if(!m)return;const t=m[1].trim();if(seen.has(t))return;seen.add(t);L.push([t,x])});
-      if(!L.length)return;P.inn.append(el('h3','dl-bk',g.t+' · '+ar(L.length)));const w=el('div','ov-chips');L.forEach(([t,x])=>{const b=el('button','ov-ch',t);b.type='button';b.title=x.h;b.onclick=()=>{P.close();openPart(x.n,x.p,null,false,'txt')};w.append(b)});P.inn.append(w)});
+      if(!L.length)return;P.inn.append(el('h3','dl-bk',g.t+'، '+ar(L.length)));const w=el('div','ov-chips');L.forEach(([t,x])=>{const b=el('button','ov-ch',t);b.type='button';b.title=x.h;b.onclick=()=>{P.close();openPart(x.n,x.p,null,false,'txt')};w.append(b)});P.inn.append(w)});
     const all=el('button','wide-b');all.type='button';all.append(el('b',null,'فهرس زاد المعاد كاملاً'),el('span',null,'كل فصوله في أجزائه الخمسة بترتيبه'));all.onclick=()=>{P.close();fxHady()};P.inn.append(all);return}
   if(k==='ahl'){const A=await getJSON('data/sx_ahl.json');const P=fxOpen('أهل بيته صلى الله عليه وسلم');P.inn.append(el('p','fx-lead','أزواجه أمهات المؤمنين وأولاده صلى الله عليه وسلم كما في «البداية والنهاية». اضغط الاسم لتقرأ ما أورده ابن كثير فيه.'));ahlTree(P,P.inn,A);return;
-    P.inn.append(el('h3','dl-bk','أزواجه أمهات المؤمنين رضي الله عنهن · '+ar(A.w.length)));P.inn.append(ovGrid(A.w.map((w,j)=>[w.n,'رضي الله عنها',()=>{P.close();fxAhl('w'+j)},ar(j+1)])));
-    P.inn.append(el('h3','dl-bk','أولاده صلى الله عليه وسلم · '+ar(A.c.length)));P.inn.append(ovGrid(A.c.map((c,j)=>[c.n,['زينب','أم كلثوم','فاطمة','رقية'].includes(c.n)?'رضي الله عنها':'',()=>{P.close();fxAhl('c'+j)},ar(j+1)])));return}
+    P.inn.append(el('h3','dl-bk','أزواجه أمهات المؤمنين رضي الله عنهن، '+ar(A.w.length)));P.inn.append(ovGrid(A.w.map((w,j)=>[w.n,'رضي الله عنها',()=>{P.close();fxAhl('w'+j)},ar(j+1)])));
+    P.inn.append(el('h3','dl-bk','أولاده صلى الله عليه وسلم، '+ar(A.c.length)));P.inn.append(ovGrid(A.c.map((c,j)=>[c.n,['زينب','أم كلثوم','فاطمة','رقية'].includes(c.n)?'رضي الله عنها':'',()=>{P.close();fxAhl('c'+j)},ar(j+1)])));return}
 }
 
 /* ---------- the drawings at the head of the overview pages (from the arches); every label is a title of the books, every tap opens their text ---------- */
@@ -5613,7 +5613,7 @@ function ringDial(host,rings,hub,onPick){const C=180,svg=vmk('svg',{viewBox:'0 0
 
 // صفته: the topics of the Shama'il, each by the number of its hadiths
 function sifaDial(P,host,F){const box=el('div');const items=F.sifa.map((s,i)=>{const n=s.c.reduce((a,c)=>a+c.had.length,0);return {t:s.t,s:s.t.length>10?s.t.split(' ')[0]:s.t,n,w:Math.max(n,24),i}});
-  const segs=ringDial(host,[{r0:84,r1:174,items,fs:11}],'شمائله',it=>{box.innerHTML='';const s=F.sifa[it.i];box.append(el('h3','fx-dh',s.t+' · '+ar(it.n)+' حديثًا'));
+  const segs=ringDial(host,[{r0:84,r1:174,items,fs:11}],'شمائله',it=>{box.innerHTML='';const s=F.sifa[it.i];box.append(el('h3','fx-dh',s.t+'، '+ar(it.n)+' حديثًا'));
     s.c.forEach(c=>{const b=el('button','hd-row');b.type='button';b.append(el('span',null,c.h),el('small',null,ar(c.had.length)));b.onclick=()=>{P.close();fxSifa(it.i)};box.append(b)})});
   host.append(box);host.append(el('p','fx-note','كلما كثرت أحاديث الموضوع في «مختصر الشمائل» اتسعت مساحته في الدائرة، وعدد أحاديثه مكتوب عند اختياره.'));segs[0].dispatchEvent(new Event('click'))}
 
@@ -5689,7 +5689,7 @@ function mkBar(){
   const pv=el('button',null,'‹ السابق'),nx=el('button',null,'التالي ›'),x=el('button','x','إنهاء');[pv,nx,x].forEach(z=>z.type='button');
   pv.disabled=MKR.i===0;nx.disabled=MKR.i===MKR.P.length-1;
   pv.onclick=()=>{MKR.i--;mkGo()};nx.onclick=()=>{MKR.i++;mkGo()};x.onclick=()=>{MKR=null;b.hidden=true};
-  b.append(pv,el('span',null,'صفحة '+ar(MKR.i+1)+' من '+ar(MKR.P.length)+' · '+(MKR.g.ns.length>1?'ج'+ar(MKR.g.ns.indexOf(n)+1)+' ':'')+'ص '+ar(p)+' · '+ar(k)+(k>2&&k<11?' مواضع':' موضع')),nx,x);
+  b.append(pv,el('span',null,'صفحة '+ar(MKR.i+1)+' من '+ar(MKR.P.length)+' · '+(MKR.g.ns.length>1?'ج'+ar(MKR.g.ns.indexOf(n)+1)+' ':'')+'ص '+ar(p)+'، '+ar(k)+(k>2&&k<11?' مواضع':' موضع')),nx,x);
 }
 {const _cr2=closeReader;closeReader=function(){_cr2.apply(this,arguments);const b=$('#sxMkBar');if(b)b.hidden=true;MKR=null;renderMkBooks()}}
 // normalized text of a page with a map back to its text nodes, the same way the marks were made
