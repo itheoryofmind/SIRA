@@ -4070,7 +4070,7 @@ audio.own-note-m{background:none;height:44px}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-1751';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-1753';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -7354,8 +7354,13 @@ function tcol(){const m=document.querySelector('meta[name=theme-color]');if(!m)r
 try{tcol()}catch(e){}
 try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{try{tcol()}catch(e){}})}catch(e){}
 function drawPick(){if(PVZ!==null||typeof OWN_DESIGNS==='undefined')return;const P=DZP();document.querySelectorAll('.dzpick-w').forEach(w=>w.remove());if(P.length<2)return;
+  const mine=(()=>{const m=LS.get('my_dz',''),o=LS.get('own_dz','');return !!(m&&P.includes(m)&&LS.get('my_dz_at',null)===o)})();
   const cur=curDz()||'base',NM=k=>k==='base'?'طيبة':OWN_DESIGNS[k].n,SW=k=>k==='base'?'linear-gradient(135deg,#14231E 50%,#C9A04A 50%)':'linear-gradient(135deg,'+OWN_DESIGNS[k].sw[1]+' 50%,'+OWN_DESIGNS[k].sw[2]+' 50%)';
-  const row=()=>{const r=el('div','themes dzpick');r.setAttribute('role','group');r.setAttribute('aria-label','التصميم');P.forEach(k=>{const b=el('button');b.type='button';b.setAttribute('aria-pressed',k===cur?'true':'false');const i=document.createElement('i');i.style.background=SW(k);b.append(i,document.createTextNode(NM(k)));
+  const row=()=>{const r=el('div','themes dzpick');r.setAttribute('role','group');r.setAttribute('aria-label','التصميم');
+    // «تلقائي»: the design the site has chosen (the keeper's), whatever it is now or later
+    {const b=el('button');b.type='button';b.setAttribute('aria-pressed',mine?'false':'true');const i=document.createElement('i');const o=LS.get('own_dz','')||'base';i.style.background=SW(o);b.append(i,document.createTextNode('تلقائي'));
+      b.onclick=()=>{LS.set('my_dz','');LS.set('my_dz_at',null);design(LS.get('own_dz',''));try{dvar();dmode()}catch(e){}drawPick()};r.append(b)}
+    P.forEach(k=>{const b=el('button');b.type='button';b.setAttribute('aria-pressed',mine&&k===cur?'true':'false');const i=document.createElement('i');i.style.background=SW(k);b.append(i,document.createTextNode(NM(k)));
     b.onclick=()=>{LS.set('my_dz',k);LS.set('my_dz_at',LS.get('own_dz',''));design(k==='base'?'':k);try{dvar();dmode()}catch(e){}drawPick()};r.append(b)});return r};
   document.querySelectorAll('.dtheme').forEach(t=>{const w=el('div','dtheme dzpick-w');w.append(el('span',null,'التصميم'),row());t.after(w)});
   document.querySelectorAll('.sheet .themes:not(.dzpick)').forEach(t=>{const w=el('div','dzpick-w');w.append(el('h4',null,'التصميم'),row());t.after(w)})}
