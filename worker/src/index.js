@@ -8,7 +8,8 @@
 // Web Push: RFC 8291 (aes128gcm) and RFC 8292 (VAPID), with WebCrypto only.
 import { ownerFetch, installSeen, hourTxt, topOf } from './owner.js';
 import { cmsFetch, pauseFetch, pushPaused } from './cms.js';
-import H, { DAY0 } from './hadith.js';
+import H, { DAY0, SKIP } from './hadith.js';
+const HR = H.map((_, i) => i).filter((i) => !SKIP.includes(i));   // the days pass over the hadiths whose digital text has a misprint (dayskip.py)
 import { SI, KH } from './tl.js';
 import MG from './mg.js';
 
@@ -97,7 +98,7 @@ function local(tz, t = Date.now()) {
 function today(tz) {
   const L = local(tz);
   const day = Date.UTC(L.y, L.m - 1, L.d) / 864e5;
-  const i = ((day - DAY0) % H.length + H.length) % H.length, h = H[i];   // DAY0 keeps the day's hadith when the list grew (2026-10-11)
+  const i = HR[((day - DAY0) % HR.length + HR.length) % HR.length], h = H[i];   // DAY0 keeps the day's hadith when the list grew (2026-10-11)
   return { t: 'من شمائله صلى الله عليه وسلم', b: h.t, u: SITE + '/#hd=' + i, tag: 'shamail' };   // the site opens the hadith itself, in place
 }
 
