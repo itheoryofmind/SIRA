@@ -2693,7 +2693,7 @@ html.own-noimg .pgimg,html.own-noimg .sx-pbtn,html.own-noimg .sx-pwrap,html.own-
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-1056';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-1058';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -5710,10 +5710,10 @@ async function fxBab(src,no){const B=await babData();const g=B.go[src+no];if(!g)
   const C=B[g[0]][g[1]],ms=g[0]==='ms';const P=fxOpen('الباب كاملاً');
   P.inn.append(el('p','fx-lead',(ms?'صحيح مسلم':'صحيح البخاري')+'، '+C.b));
   P.inn.append(ttlEl('h3','bab-t',(C.n?C.n+' - ':'')+(C.t||'(أحاديث في أول الكتاب قبل أول باب)')));
-  if(C.tr){const t=el('p','mg-tr');hdFill(t,C.tr,[]);P.inn.append(t)}
+  if(C.tr){const t=el('p','mg-tr mg-t');hdFill(t,C.tr,[]);P.inn.append(t)}
   let first=null;
   C.h.forEach(([n,x],i)=>{const w=el('div','mg-h bab-h');if(n&&n==no){w.classList.add('on');first=first||w}
-    if(n&&(!i||C.h[i-1][0]!==n))w.append(el('span','bab-no','رقم '+ar(n)));const q=el('p');hdFill(q,x,[]);w.append(q);P.inn.append(w)});
+    if(n&&(!i||C.h[i-1][0]!==n))w.append(el('span','bab-no','رقم '+ar(n)));const q=el('p','mg-t');hdFill(q,x,[]);w.append(q);P.inn.append(w)});
   P.inn.append(el('p','fx-note','الباب كاملاً بأحاديثه وترتيبه بلفظ النسخة الرقمية في المكتبة الشاملة حرفاً بحرف: '+(ms?'«صحيح مسلم» طبعة محمد فؤاد عبد الباقي، وعناوين الأبواب فيها من وضع الشرّاح لا من الإمام مسلم، والأسانيد تحت الرقم الواحد كلٌّ في فقرة.':'«صحيح البخاري» طبعة دار طوق النجاة المصوّرة عن الطبعة السلطانية.')+' والحديث المنقول في الصفحة السابقة مميَّز.'));
   if(first)setTimeout(()=>{const o=P.inn.closest('.fx');o.scrollTo({top:first.getBoundingClientRect().top-o.getBoundingClientRect().top+o.scrollTop-((o.querySelector('.fx-top')||{}).offsetHeight||0)-12})},150)}
 const nzA=t=>t.replace(/[ً-ْـٰ]/g,'').replace(/[^ء-ي]+/g,' ').trim();
@@ -5725,7 +5725,7 @@ function babBtns(root){root.querySelectorAll('.kh-sr,.gz-pg,.dy-src,.hj-gs').for
     const have=' '+[...ov.querySelectorAll('.kh-sr,.gz-pg,.dy-src,.hj-gs')].filter(x=>{const q=/صحيح مسلم[^]*?رقم ([٠-٩0-9]+)/.exec(x.textContent);return q&&+enD(q[1])===no}).map(x=>{const c=(x.closest('.mg-h,.fx-had,.gz-d,.hj-it')||x.parentElement).cloneNode(true);c.querySelectorAll('.bab-more').forEach(z=>z.remove());return nzA(c.textContent)}).join(' ')+' ';
     const given=x=>{const T=nzA(x).split(' ');if(T.length<6)return have.includes(' '+T.join(' ')+' ');let k=0,n=0;for(let i=0;i+6<=T.length;i++,n++)if(have.includes(T.slice(i,i+6).join(' ')))k++;return k/n>=.85};
     const rest=U.filter(x=>!given(x));if(!rest.length||ov.querySelector('.bab-more[data-no="'+no+'"]'))return;const c=el('button','bab-b','بقية أسانيده تحت الرقم، '+ar(rest.length));c.type='button';const box=el('div','bab-more');box.dataset.no=no;box.hidden=true;
-    rest.forEach(x=>{const q=el('p');hdFill(q,x,[]);box.append(q)});box.append(el('p','fx-note','ما تحت الرقم '+ar(no)+' في «صحيح مسلم» غير المنقول أعلاه، بلفظ النسخة الرقمية في المكتبة الشاملة.'));
+    rest.forEach(x=>{const q=el('p','mg-t');hdFill(q,x,[]);box.append(q)});box.append(el('p','fx-note','ما تحت الرقم '+ar(no)+' في «صحيح مسلم» غير المنقول أعلاه، بلفظ النسخة الرقمية في المكتبة الشاملة.'));
     c.onclick=ev=>{ev.stopPropagation();box.hidden=!box.hidden};b.after(c);card.append(box)})})}
 new MutationObserver(()=>{clearTimeout(babBtns._t);babBtns._t=setTimeout(()=>document.querySelectorAll('.fx:not([hidden])').forEach(o=>{const i=o.querySelector('.fx-in,[data-book]');if(o.querySelector('[data-book]'))return;babBtns(o)}),80)}).observe(document.body,{childList:true,subtree:true});
 
