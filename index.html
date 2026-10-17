@@ -1733,6 +1733,9 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 .ex button b{font-size:19px;line-height:1.35}
 .ex button span:not(.saw){font-size:14.5px;line-height:1.55}
 
+/* a line that leads from one section to its companion section */
+.fx-xref{display:block;width:100%;text-align:start;margin:-4px 0 14px;padding:10px 14px;border:1px solid var(--line);border-inline-start:3px solid var(--brass);border-radius:12px;background:var(--brass-soft);color:var(--brass);font:inherit;font-family:var(--text);font-size:16px;line-height:1.6;cursor:pointer}
+
 /* the site paused by its keeper */
 html.pz-on,html.pz-on body{overflow:hidden}
 .pz{position:fixed;inset:0;z-index:2147483000;background:var(--ground);display:grid;place-items:center;padding:24px 16px calc(24px + env(safe-area-inset-bottom))}
@@ -2320,7 +2323,7 @@ html.own-pg-on,html.own-pg-on body{overflow:hidden}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-0451';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-0455';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4748,8 +4751,10 @@ async function fxMaghazi(i){const M=await getJSON('data/sx_mg.json');const h=M.h
   const go=el('button','btn btn-quiet','اقرأه في الكتاب');go.type='button';go.onclick=()=>{evClose();openPart(h.n,h.p,null,false,'txt')};ft.append(go);B.append(ft)}
 // Kitab al-Maghazi by event: Bukhari's own chapters, the events in the order of the Mukhtasar
 const msMgMeta=(h,full)=>'صحيح مسلم، '+(h.k||'كتاب الجهاد والسير')+msNo(h)+'، طبعة عبد الباقي ج'+ar(h.v||5)+' ص '+ar(h.p)+((!full&&h.s)?'، بحذف الإسناد إلى الصحابي':'');
+function xref(t,tile){const b=el('button','fx-xref',t+' ←');b.type='button';b.onclick=()=>{const o=b.closest('.fx');if(o){const c=o.querySelector('.fx-x');if(c)c.click()}const x=document.querySelector(tile);if(x)x.click()};return b}   // closes this section, then opens the other as its tile does
 async function fxMgTL(open){const M=await getJSON('data/sx_mg.json');const GZ=new Set(((await getJSON('data/sx_gz.json'))||[]).map(g=>g.k));const P=fxOpen('المغازي في الصحيحين');const MS={h:M.mh||[]};
   P.inn.append(el('p','fx-lead','أحاديث كتاب المغازي من صحيح البخاري، ومعها أحاديث كتاب الجهاد والسير من صحيح مسلم، مجموعةً على الغزوات والأحداث بحسب أبواب الكتابين، والأحداث مرتبة على ترتيب وقوعها في مختصر السيرة، وما لم يذكره المختصر من أبواب كتاب المغازي في موضعه من ترتيب البخاري. اضغط الحدث لترى أحاديثه.'));
+  P.inn.append(xref('وأحاديث فضل الجهاد وأحكامه كاملةً في «كتاب الجهاد»','#fxJh'));
   const list=el('div','mg-list');P.inn.append(list);
   const msCh=(cs,body)=>{const hd=el('p','mg-bk','من صحيح مسلم');body.append(hd);cs.forEach(c=>{const cb=el('div','mg-ch');if(c.bk)cb.append(el('p','mg-bk',c.bk));cb.append(el('h4',null,c.t||'(أحاديث في أول الكتاب قبل أول باب)'));if(c.tr){const tp=el('p','mg-tr');hdFill(tp,c.tr,[]);cb.append(tp)}c.hs.forEach(i=>cb.append(mgItem(MS,i,{clip:260,meta:msMgMeta,noBook:1}).w));body.append(cb)})};
   M.ev.forEach((ev,k)=>{const mc=(M.mev||{})[k]||[];const nb=ev.ch.reduce((a,c)=>a+c.hs.length,0),nm=mc.reduce((a,c)=>a+c.hs.length,0),n=nb+nm;if(!n)return;
@@ -5065,6 +5070,7 @@ function jhItem(B,it){
   return c}
 async function fxJihad(key){const M=await getJSON('data/sx_jh.json');const P=fxOpen('كتاب الجهاد');
   P.inn.append(el('p','fx-lead','كتب الجهاد كاملةً بأبوابها وترتيبها من ثمانية كتب، بلفظ نسختها الرقمية في المكتبة الشاملة. ومع كل باب أو حديث شرحه من شروح أهل الحديث، يُفتح عند الحاجة، وما في الشرح مما يخالف عقيدة السلف نُبّه عليه قبل فتحه.'));
+  P.inn.append(xref('وغزواته صلى الله عليه وسلم على ترتيب وقوعها في «المغازي في الصحيحين»','#fxMg'));
   const sw=el('div','jh-bks');P.inn.append(sw);const host=el('div');P.inn.append(host);
   const show=async k=>{[...sw.children].forEach(b=>b.classList.toggle('on',b.dataset.k===k));host.innerHTML='';host.append(el('p','jh-ld','…'));
     const B=await getJSON('data/sx_jhi_'+k+'.json');host.innerHTML='';
