@@ -92,6 +92,31 @@ if ok:
                 G = {(e['nw'] if k == e['old'] else k): v for k, v in G.items()}; gch = True
         if gch:
             open(gp, 'w', encoding='utf-8').write(dump(G) + ('\n' if gs.endswith('\n') else '')); changed.add('sx_gold.json')
+    # the notes «مواضع الخلاف مع المطبوع» (marks.json) on a word he has now corrected go with it: a note is dropped when its words
+    # were in the text he saw and are no longer in his corrected text (read the same way the page finds them, marks.js mkNorm)
+    mp = 'data/marks.json'
+    if os.path.exists(mp) and any(re.fullmatch(r't\d+\.json', e['f']) for e, _, _ in okd):
+        def mkn(t):
+            t = t.replace('\ufdfa', ' صلي الله عليه وسلم ')
+            t = re.sub('[\u064b-\u0652\u0640\u0670\u06d6-\u08f0\u06ed-\u08ff]', '', t)
+            for x, y in (('أ', 'ا'), ('إ', 'ا'), ('آ', 'ا'), ('ٱ', 'ا'), ('ى', 'ي'), ('ة', 'ه'), ('ؤ', 'و'), ('ئ', 'ي')):
+                t = t.replace(x, y)
+            return ' ' + ' '.join(re.sub('[^\u0621-\u064a]', ' ', t).split()) + ' '
+        ms = open(mp, encoding='utf-8').read(); MK = json.loads(ms); mch = False
+        for e, _, _ in okd:
+            m = re.fullmatch(r't(\d+)\.json', e['f'])
+            if not m: continue
+            o, w = mkn(e['old']), mkn(e['nw'])
+            for k in [k for k in MK if k.split(':')[0] == m.group(1)]:
+                keep = []
+                for x in MK[k]:
+                    ph = ' ' + ((x[1] + ' ') if x[1] else '') + x[2] + ' '
+                    if x[2] and ph in o and ph not in w: mch = True; continue
+                    keep.append(x)
+                if keep: MK[k] = keep
+                else: del MK[k]
+        if mch:
+            open(mp, 'w', encoding='utf-8').write(dump(MK) + ('\n' if ms.endswith('\n') else '')); changed.add('marks.json')
     # the search-engine pages: the same text, where it appears whole
     for p in glob.glob('*/index.html'):
         h = open(p, encoding='utf-8').read(); h0 = h
