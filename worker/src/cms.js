@@ -43,11 +43,13 @@ async function putCfg(env, s, c) {
   await env.PUSH.put('cfg:' + s, JSON.stringify(c));
   try { await caches.default.delete(new Request('https://push.seeratuh.com/st?s=' + s)); } catch (e) {}
 }
+// what «تلقائي» means in each design when the reader has not chosen a mode himself: the device's (auto), always white, or always night
+const DZM_DEF = { haram: 'white' };
 // what a reader's page receives: the pause, the hidden parts, the added texts and sections (nothing else)
 function pub(c) {
   return { on: !!c.pause.on, msg: c.pause.on ? c.pause.msg : '', np: !!(c.pause.on && c.pause.np), hide: c.hide.map((h) => ({ id: h.id, sel: h.sel, fp: h.fp, sec: h.sec })),
     add: c.add.map((a) => ({ id: a.id, sel: a.sel, fp: a.fp, sec: a.sec, k: a.k, t: a.t })),
-    dz: c.dz || '', noimg: !!c.noimg, pages: c.pages.filter((p) => !p.off).map((p) => ({ id: p.id, sel: p.sel, fp: p.fp, sec: p.sec, title: p.title, sub: p.sub, blocks: p.blocks })), v: c.v || 0 };
+    dz: c.dz || '', dzm: Object.assign({}, DZM_DEF, c.dzm || {}), noimg: !!c.noimg, pages: c.pages.filter((p) => !p.off).map((p) => ({ id: p.id, sel: p.sel, fp: p.fp, sec: p.sec, title: p.title, sub: p.sub, blocks: p.blocks })), v: c.v || 0 };
 }
 const okRule = (r) => r && typeof r.sel === 'string' && /^[a-z][a-z0-9]{0,11}(\.[A-Za-z_][A-Za-z0-9_-]{0,39})?$/.test(r.sel) && typeof r.fp === 'string' && /^[0-9a-z]{4,40}$/.test(r.fp) && typeof r.sec === 'string' && r.sec.length <= 200;
 const okBlocks = (b) => Array.isArray(b) && b.length <= 400 && b.every((x) => x && ['h', 'p', 'q'].includes(x.k) && typeof x.t === 'string' && x.t.length <= 20000);
@@ -190,6 +192,10 @@ export async function cmsFetch(req, env, u) {
       const id = str(b.id, 30);
       if (id && !/^[a-z]{2,20}$/.test(id)) return out({ ok: false, bad: 1 }, 400);
       c.dz = id;
+    } else if (a === 'dzmode') {
+      const id = str(b.id, 30) || 'base', m = str(b.m, 10);
+      if (!/^[a-z]{2,20}$/.test(id) || !['auto', 'white', 'night'].includes(m)) return out({ ok: false, bad: 1 }, 400);
+      c.dzm = Object.assign({}, c.dzm || {}); c.dzm[id] = m;
     } else if (a === 'unpage') {
       c.pages = c.pages.filter((x) => x.id !== b.id);
     } else return out({ ok: false }, 400);
