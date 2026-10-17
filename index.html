@@ -2652,7 +2652,7 @@ html.own-noimg .pgimg,html.own-noimg .sx-pbtn,html.own-noimg .sx-pwrap,html.own-
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-0737';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-0739';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -5545,6 +5545,14 @@ let FXP=null;   // a section just left by a link inside it, kept for a moment to
     b.onclick=()=>{real();sxLock();q.ov.hidden=false;q.ov.scrollTop=q._sc||0};P.ov.querySelector('.fx-top').prepend(b)}
   P.close=function(){P._sc=P.ov.scrollTop;P.ov.hidden=true;const me={P,tm:setTimeout(()=>{if(FXP===me)FXP=null;all()},400)};FXP=me};
   try{bkNav(P)}catch(e){}return P}}
+
+/* a straight quotation mark of the digital text left without its pair (« باب من احتبس فرسا " في سبيل الله »): kept in the text, hidden on screen */
+function loneQ(e){const W=document.createTreeWalker(e,NodeFilter.SHOW_TEXT,{acceptNode:t=>t.parentElement.closest('.q-mus')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
+  const at=[];for(let t;(t=W.nextNode());)for(let i=0;i<t.nodeValue.length;i++)if(t.nodeValue[i]==='"')at.push([t,i]);
+  if(at.length%2===0)return;const [t,i]=at[at.length-1];const r=document.createRange();r.setStart(t,i);r.setEnd(t,i+1);const s=el('span','ed-dup');r.surroundContents(s)}
+let SHF=0;
+{const _h=hdFill;hdFill=function(e){const r=_h.apply(this,arguments);if(!SHF)try{loneQ(e)}catch(x){}return r}}
+{const _s=shFill;shFill=function(e){SHF++;let r;try{r=_s.apply(this,arguments)}finally{SHF--}if(!SHF)try{loneQ(e)}catch(x){}return r}}
 
 /* ---------- مواضع الخلاف مع المطبوع: علامات حمراء، وقراءة الصفحات المعلَّمة وحدها ---------- */
 let MK={};getJSON('data/marks.json').then(d=>{MK=d||{};renderMkBooks()}).catch(()=>{});
