@@ -1925,6 +1925,17 @@ html.own-noimg .pgimg,html.own-noimg .sx-pbtn,html.own-noimg .sx-pwrap,html.own-
 .q,.qu,.hd-v,.ayatext,.tq,.sx-hero .sx-verse .v1,.sx-hero .sx-verse .v2,.nz-q blockquote .qu{font-family:"UthmanicHafs","Amiri",serif!important}
 .q,.hd-v{font-size:1.04em}
 .dz-arc{display:none}
+/* the keeper's message on the home page */
+.own-note{position:relative;box-sizing:border-box;width:min(680px,calc(100% - 32px));margin:18px auto 4px;padding:18px 18px 16px;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:16px;box-shadow:0 8px 24px -16px rgba(0,0,0,.35)}
+.own-note-t{white-space:pre-line;font-family:var(--text,serif);font-size:18px;line-height:1.9;color:var(--ink);padding-inline-end:28px}
+.own-note-x{all:unset;position:absolute;top:8px;inset-inline-end:8px;width:32px;height:32px;display:grid;place-items:center;border-radius:50%;color:var(--muted);font-size:15px;cursor:pointer}
+.own-note-x:focus-visible{outline:2px solid var(--gold)}
+.own-note-m{display:block;width:100%;margin-top:12px;border-radius:12px;background:#000}
+audio.own-note-m{background:none;height:44px}
+.own-note-t+.own-note-m,.own-note-t+.own-note-y{margin-top:12px}
+.own-note-y{position:relative;width:100%;aspect-ratio:16/9;margin-top:12px;border-radius:12px;overflow:hidden;background:#000}
+.own-note-y iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.own-note:not(:has(.own-note-t)) .own-note-m,.own-note:not(:has(.own-note-t)) .own-note-y{margin-top:28px}
 
 :root.dz-haram{--display:"Amiri",serif;--text:"Amiri","Scheherazade New",serif;--ui:"Tajawal",-apple-system,sans-serif}
 :root.dz-haram:not([data-theme=night]){--ground:#F6F5F0;--surface:#FFFFFF;--raised:#FFFFFF;--ink:#15241E;--muted:#4F5D56;--line:#E2E0D6;--brown:#0E3F31;--brown2:#155A45;--on-brown:#F6F2E6;--brass:#8A6416;--gold:#C59A3C;--brass-soft:#F3EBD6;--clay:#A4462E;--palm:#1C6B50;--verse:#1C6B50;--mark:#F0DE9E;--here:#C59A3C;--read:#1E2C26}
@@ -3254,7 +3265,7 @@ html.own-noimg .pgimg,html.own-noimg .sx-pbtn,html.own-noimg .sx-pwrap,html.own-
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-1430';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-1437';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -6516,9 +6527,22 @@ function pause(){if(CFG.on&&!OWN()){if(!pzv){pzv=el('div','pz');pzv.setAttribute
     pzv.textContent='';const c=el('div','pz-c');c.append(el('div','pz-n',HOME));const b=el('button','pz-b','تحقّق مرة أخرى');b.type='button';b.onclick=()=>{b.disabled=true;load().then(()=>{b.disabled=false})};c.append(el('p','pz-m',CFG.msg||''),b);pzv.append(c)}
   else if(pzv){pzv.remove();pzv=null;document.documentElement.classList.remove('pz-on')}}
 
+/* ---------- the keeper's message on the home page: a card under the top (the site keeps working), with a sound or a video if he put one ---------- */
+function drawNote(){const N=CFG.note;const old=document.querySelector('.own-note');
+  const key=N?String(N.v||0):'';if(!N||(!N.t&&!N.m)||LS.get('note_x','')===key){if(old)old.remove();return}
+  if(old&&old.dataset.v===key)return;if(old)old.remove();
+  const at=document.querySelector('.sx-hero')||document.querySelector('header.masthead');if(!at)return;
+  const d=el('section','own-note');d.dataset.v=key;d.setAttribute('aria-label','رسالة');
+  const x=el('button','own-note-x','✕');x.type='button';x.setAttribute('aria-label','إخفاء الرسالة');x.onclick=()=>{LS.set('note_x',key);d.remove()};d.append(x);
+  if(N.t){const p=el('div','own-note-t',N.t);d.append(p)}
+  if(N.m){const m=N.m;let v;
+    if(m.k==='y'){v=document.createElement('div');v.className='own-note-y';const f=document.createElement('iframe');f.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(m.u)+'?rel=0&playsinline=1';f.title='مقطع';f.loading='lazy';f.allow='accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen';f.allowFullscreen=true;v.append(f)}
+    else{v=document.createElement(m.k==='a'?'audio':'video');v.controls=true;v.preload='metadata';v.setAttribute('playsinline','');v.className='own-note-m';v.src=W+'/m/'+encodeURIComponent(m.u)}
+    d.append(v)}
+  at.after(d)}
 async function load(){try{const r=await fetch(W+'/st?s='+SITE,{cache:'no-store'});if(!r.ok)return;const j=await r.json();
-  const ch=JSON.stringify([j.hide,j.add,j.pages])!==JSON.stringify([CFG.hide,CFG.add,CFG.pages]);CFG=j;LS.set('own_cfg',j);noimg();if(PVZ===null){LS.set('own_dz',j.dz||'');LS.set('own_pick',j.pick||['base','haram']);const d=curDz();if(!document.documentElement.classList.contains('dz-'+d)||!d)design(d);drawPick()}LS.set('own_dzm',j.dzm||{});try{dmode()}catch(e){}LS.set('own_dzv',j.dzv||{});try{dvar()}catch(e){}pause();if(ch)reapply();drawPz()}catch(e){}}
-load();try{pause()}catch(e){}if((CFG.hide||[]).length||(CFG.add||[]).length||(CFG.pages||[]).length)try{applyTo(document.body)}catch(e){}
+  const ch=JSON.stringify([j.hide,j.add,j.pages])!==JSON.stringify([CFG.hide,CFG.add,CFG.pages]);CFG=j;LS.set('own_cfg',j);noimg();if(PVZ===null){LS.set('own_dz',j.dz||'');LS.set('own_pick',j.pick||['base','haram']);const d=curDz();if(!document.documentElement.classList.contains('dz-'+d)||!d)design(d);drawPick()}LS.set('own_dzm',j.dzm||{});try{dmode()}catch(e){}LS.set('own_dzv',j.dzv||{});try{dvar()}catch(e){}try{drawNote()}catch(e){}pause();if(ch)reapply();drawPz()}catch(e){}}
+load();try{pause()}catch(e){}try{drawNote()}catch(e){}if((CFG.hide||[]).length||(CFG.add||[]).length||(CFG.pages||[]).length)try{applyTo(document.body)}catch(e){}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
 
 /* =================== the keeper's edit mode =================== */

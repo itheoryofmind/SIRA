@@ -31,6 +31,42 @@ async function all(env) {
 }
 const siteOf = (x) => (x.metadata && x.metadata.s) || 'sira';
 
+/* ---------- the home message's sound or video: kept here in pieces of 20 MB, served with ranges ---------- */
+const MD_CH = 20 * 1024 * 1024, MD_MAX = 10;
+async function dropMedia(env, id) {
+  const md = await env.PUSH.get('md:' + id, 'json'); if (!md) return;
+  for (let i = 0; i < md.n; i++) await env.PUSH.delete('md:' + id + ':' + i);
+  await env.PUSH.delete('md:' + id);
+}
+export async function mediaFetch(req, env, u) {
+  const mt = u.pathname.match(/^\/m\/([a-z0-9]{8,40})$/); if (!mt || (req.method !== 'GET' && req.method !== 'HEAD')) return null;
+  const md = await env.PUSH.get('md:' + mt[1], 'json');
+  if (!md || !md.done) return new Response('', { status: 404 });
+  const size = md.size, h = { 'Content-Type': md.ct, 'Accept-Ranges': 'bytes', 'Cache-Control': 'public, max-age=31536000, immutable', 'Access-Control-Allow-Origin': '*' };
+  let a = 0, e = size - 1, part = false;
+  const rg = (req.headers.get('Range') || '').match(/^bytes=(\d*)-(\d*)$/);
+  if (rg) {
+    if (rg[1] === '' && rg[2] !== '') { a = Math.max(0, size - +rg[2]); } else { a = +rg[1]; if (rg[2] !== '') e = Math.min(+rg[2], size - 1); }
+    if (a >= size || a > e) return new Response('', { status: 416, headers: { 'Content-Range': 'bytes */' + size } });
+    e = Math.min(e, a + MD_CH - 1); part = true;   // at most one piece's length per answer; the player asks for the rest
+  }
+  h['Content-Length'] = String(e - a + 1);
+  if (part) h['Content-Range'] = 'bytes ' + a + '-' + e + '/' + size;
+  if (req.method === 'HEAD') return new Response(null, { status: part ? 206 : 200, headers: h });
+  const first = Math.floor(a / MD_CH), last = Math.floor(e / MD_CH);
+  const body = new ReadableStream({
+    async start(ctl) {
+      for (let i = first; i <= last; i++) {
+        const buf = await env.PUSH.get('md:' + mt[1] + ':' + i, 'arrayBuffer'); if (!buf) break;
+        const lo = i === first ? a - i * MD_CH : 0, hi = i === last ? e - i * MD_CH + 1 : buf.byteLength;
+        ctl.enqueue(new Uint8Array(buf, lo, hi - lo));
+      }
+      ctl.close();
+    }
+  });
+  return new Response(body, { status: part ? 206 : 200, headers: h });
+}
+
 /* ---------- the settings of a site ---------- */
 const EMPTY = () => ({ pause: { on: false }, hide: [], add: [], pages: [] });
 async function getCfg(env, s) {
@@ -49,7 +85,7 @@ const DZM_DEF = { haram: 'white' };
 function pub(c) {
   return { on: !!c.pause.on, msg: c.pause.on ? c.pause.msg : '', np: !!(c.pause.on && c.pause.np), hide: c.hide.map((h) => ({ id: h.id, sel: h.sel, fp: h.fp, sec: h.sec })),
     add: c.add.map((a) => ({ id: a.id, sel: a.sel, fp: a.fp, sec: a.sec, k: a.k, t: a.t })),
-    dz: c.dz || '', dzm: Object.assign({}, DZM_DEF, c.dzm || {}), dzv: c.dzv || {}, pick: c.pick || ['base', 'haram'], noimg: !!c.noimg, pages: c.pages.filter((p) => !p.off).map((p) => ({ id: p.id, sel: p.sel, fp: p.fp, sec: p.sec, title: p.title, sub: p.sub, blocks: p.blocks })), v: c.v || 0 };
+    note: (c.note && c.note.on) ? { t: c.note.t || '', m: c.note.m || null, v: c.note.at || 0 } : null, dz: c.dz || '', dzm: Object.assign({}, DZM_DEF, c.dzm || {}), dzv: c.dzv || {}, pick: c.pick || ['base', 'haram'], noimg: !!c.noimg, pages: c.pages.filter((p) => !p.off).map((p) => ({ id: p.id, sel: p.sel, fp: p.fp, sec: p.sec, title: p.title, sub: p.sub, blocks: p.blocks })), v: c.v || 0 };
 }
 const okRule = (r) => r && typeof r.sel === 'string' && /^[a-z][a-z0-9]{0,11}(\.[A-Za-z_][A-Za-z0-9_-]{0,39})?$/.test(r.sel) && typeof r.fp === 'string' && /^[0-9a-z]{4,40}$/.test(r.fp) && typeof r.sec === 'string' && r.sec.length <= 200;
 const okBlocks = (b) => Array.isArray(b) && b.length <= 400 && b.every((x) => x && ['h', 'p', 'q'].includes(x.k) && typeof x.t === 'string' && x.t.length <= 20000);
@@ -122,6 +158,21 @@ export async function cmsFetch(req, env, u) {
     return out({ ok: true });
   }
 
+  if (u.pathname === '/c/up') {
+    let f; try { f = await req.formData(); } catch (e) { return out({ ok: false }, 400); }
+    if (!(await isOwner(f.get('k'), env))) return out({ ok: false }, 403);
+    const s = okSite(f.get('s')) ? f.get('s') : 'sira', part = f.get('f'), i = +f.get('i'), n = +f.get('n'), size = +f.get('size'), ct = str(f.get('ct'), 80);
+    if (!part || typeof part === 'string' || !Number.isInteger(i) || !Number.isInteger(n) || n < 1 || n > MD_MAX || i < 0 || i >= n || !/^(audio|video)\/[a-z0-9.+-]{1,40}$/i.test(ct) || !(size > 0 && size <= MD_CH * MD_MAX)) return out({ ok: false, bad: 1 }, 400);
+    let id = str(f.get('id'), 40);
+    if (i === 0) { id = rid() + Math.random().toString(36).slice(2, 6); await env.PUSH.put('md:' + id, JSON.stringify({ s, ct, size, n, got: 0, done: false, at: Date.now() })); }
+    const md = /^[a-z0-9]{8,40}$/.test(id) ? await env.PUSH.get('md:' + id, 'json') : null;
+    if (!md || md.n !== n || md.got !== i) return out({ ok: false, bad: 1 }, 400);
+    const buf = await part.arrayBuffer();
+    if (buf.byteLength > MD_CH || (i < n - 1 && buf.byteLength !== MD_CH)) return out({ ok: false, bad: 1 }, 400);
+    await env.PUSH.put('md:' + id + ':' + i, buf);
+    md.got = i + 1; md.done = md.got === n; await env.PUSH.put('md:' + id, JSON.stringify(md));
+    return out({ ok: true, id, done: md.done });
+  }
   let b; try { b = JSON.parse(await req.text()); } catch (e) { return out({ ok: false }, 400); }
   if (!(await isOwner(b && b.k, env))) return out({ ok: false }, 403);
   const s = okSite(b.s) ? b.s : 'sira';
@@ -186,6 +237,16 @@ export async function cmsFetch(req, env, u) {
       if (p.id) { const x = c.pages.find((x) => x.id === p.id); if (!x) return out({ ok: false }, 404); Object.assign(x, { title: str(p.title, 200), sub: str(p.sub, 300), blocks: p.blocks, off: !!p.off, at2: at }); }
       else { if (!okRule(b.r)) return out({ ok: false, bad: 1 }, 400); c.pages.push({ id: rid(), sel: b.r.sel, fp: b.r.fp, sec: b.r.sec, title: str(p.title, 200), sub: str(p.sub, 300), blocks: p.blocks, lb: str(b.lb, 300), at }); }
       if (c.pages.length > 200) return out({ ok: false, full: 1 }, 400);
+    } else if (a === 'note') {
+      const t = str(b.t, 3000).trim(), m = b.m && typeof b.m === 'object' ? b.m : null, on = !!b.on;
+      let mm = null;
+      if (m && m.k === 'y' && /^[A-Za-z0-9_-]{11}$/.test(String(m.u || ''))) mm = { k: 'y', u: m.u };
+      else if (m && (m.k === 'a' || m.k === 'v') && /^[a-z0-9]{8,40}$/.test(String(m.u || ''))) { const md = await env.PUSH.get('md:' + m.u, 'json'); if (!md || !md.done) return out({ ok: false, bad: 1 }, 400); mm = { k: m.k, u: m.u, ct: md.ct }; }
+      else if (m && m.k) return out({ ok: false, bad: 1 }, 400);
+      if (on && !t && !mm) return out({ ok: false, bad: 1 }, 400);
+      const old = c.note && c.note.m;
+      if (old && (old.k === 'a' || old.k === 'v') && (!mm || mm.u !== old.u)) await dropMedia(env, old.u);
+      c.note = { on, t, m: mm, at };
     } else if (a === 'noimg') {
       c.noimg = !!b.on;
     } else if (a === 'design') {

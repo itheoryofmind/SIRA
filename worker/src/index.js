@@ -7,7 +7,7 @@
 // - each reader picks which of these, and the hour of each (where the reader is)
 // Web Push: RFC 8291 (aes128gcm) and RFC 8292 (VAPID), with WebCrypto only.
 import { ownerFetch, installSeen, hourTxt, topOf } from './owner.js';
-import { cmsFetch, pauseFetch, pushPaused } from './cms.js';
+import { cmsFetch, pauseFetch, pushPaused, mediaFetch } from './cms.js';
 import H, { DAY0, SKIP } from './hadith.js';
 const HR = H.map((_, i) => i).filter((i) => !SKIP.includes(i));   // the days pass over the hadiths whose digital text has a misprint (dayskip.py)
 import { SI, KH } from './tl.js';
@@ -237,6 +237,7 @@ export default {
   async fetch(req, env) {
     const u = new URL(req.url);
     if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
+    { const c = await mediaFetch(req, env, u); if (c) return c; }
     { const c = await pauseFetch(req, env, u, SITE); if (c) return c; }
     { const c = await cmsFetch(req, env, u); if (c) return c; }
     { const o = await ownerFetch(req, env, u, { site: SITE, name: 'سِيرَتُه', page: 1, fanOut, job: (id, msg) => [id, 'bc', msg], stats: siraStats }); if (o) return o; }
