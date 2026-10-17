@@ -1794,6 +1794,40 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 .ov-ch{font:500 13.5px var(--ui);line-height:1.4;text-align:start;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:6px 11px;cursor:pointer}
 .ov-ch:active,.ov-c:active{border-color:var(--brass)}
 
+/* the drawings at the head of the overview pages */
+.rdial{width:100%;max-width:360px;display:block;margin:0 auto}
+.rdial .seg path{fill:var(--surface);stroke:var(--line);stroke-width:1}
+.rdial .seg.r-w path{fill:color-mix(in srgb,var(--brass-soft) 60%,var(--surface))}
+.rdial .seg.r-y path{fill:color-mix(in srgb,var(--palm) 10%,var(--surface))}
+.rdial .seg text{font:600 11px var(--ui);fill:var(--ink);text-anchor:middle;dominant-baseline:middle;pointer-events:none}
+.rdial .seg{cursor:pointer;outline:none}.rdial .seg:focus-visible path{stroke:var(--brass);stroke-width:2}
+.rdial .seg.on path{fill:var(--brown);stroke:var(--gold)}.rdial .seg.on text{fill:var(--on-brown)}
+.rdial .hub{fill:var(--brass-soft);stroke:var(--gold);stroke-width:1}.rdial .hubt{font:700 15px var(--text);fill:var(--brass);text-anchor:middle;dominant-baseline:middle}
+.rkey{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;font:500 12.5px var(--ui);color:var(--muted);margin:6px 0 10px}
+.rkey i{display:inline-block;width:11px;height:11px;border-radius:3px;border:1px solid var(--line);margin-inline-end:5px;vertical-align:-1px;background:var(--surface)}
+.rkey i.r-w{background:color-mix(in srgb,var(--brass-soft) 60%,var(--surface))}.rkey i.r-y{background:color-mix(in srgb,var(--palm) 10%,var(--surface))}
+.rpick{display:flex;flex-direction:column;gap:4px;background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--gold);border-radius:14px;padding:12px 14px;margin:0 0 12px}
+.rpick small{font:600 12px var(--ui);color:var(--brass)}.rpick b{font:700 18px var(--text)}.rpick span{font:500 13px var(--ui);color:var(--muted);line-height:1.6}.rpick .btn{align-self:flex-start;margin-top:4px}
+.kwrap{border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--palm) 5%,var(--surface));overflow:hidden;margin:4px 0 10px}
+.kmap{width:100%;display:block;direction:ltr}.kmap .cst path{fill:none;stroke:var(--muted);stroke-width:1;opacity:.75}
+.kmap .kln{fill:none;stroke:var(--gold);stroke-width:1.1;stroke-dasharray:3 3;opacity:.7}.kmap .kd{fill:var(--surface);stroke:var(--brass);stroke-width:1.6}
+.kmap .klb{font:600 10.5px var(--ui);fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:3px}.kmap .kmd{fill:var(--palm);stroke:var(--surface);stroke-width:2}.kmap .kmdt{fill:var(--palm)}
+.kmap .kpt{cursor:pointer;outline:none}.kmap .kpt.on .kd{fill:var(--brass)}.kmap .kpt.on .kln{opacity:1;stroke-width:1.6;stroke-dasharray:none}.kmap .kpt.on .klb{fill:var(--brass)}
+.jstrip{display:flex;flex-direction:column;gap:0;margin:6px 0 8px;border-inline-start:2px solid var(--gold);padding-inline-start:0}
+.jstrip .jy{font:700 13px var(--ui);color:var(--brass);margin:12px 0 4px;padding-inline-start:14px;position:relative}
+.jstrip .jy::before{content:'';position:absolute;inset-inline-start:-7px;top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%;background:var(--gold)}
+.jstrip .jd{display:flex;align-items:center;gap:10px;font:500 15px var(--text);background:none;border:0;color:var(--ink);padding:6px 0;cursor:pointer;text-align:start;position:relative;padding-inline-start:14px}
+.jstrip .jd i{position:absolute;inset-inline-start:-5px;width:8px;height:8px;border-radius:50%;background:var(--surface);border:1.5px solid var(--brass)}
+.jstrip .jd:active span{color:var(--brass)}
+.atree .aw{display:flex;flex-direction:column;border-inline-start:2px solid var(--gold);margin:6px 6px 14px}
+.atree .an{display:flex;align-items:center;gap:10px;background:none;border:0;padding:7px 0;font:600 15px var(--text);color:var(--ink);cursor:pointer;text-align:start}
+.atree .aw .an i{flex:none;display:grid;place-items:center;width:24px;height:24px;margin-inline-start:-13px;border-radius:50%;background:var(--surface);border:1.5px solid var(--brass);font:700 11px var(--ui);color:var(--brass);font-style:normal}
+.atree .ak{display:grid;grid-template-columns:2fr 1fr;gap:10px;margin:6px 0 10px}
+.atree .akc{display:flex;flex-direction:column;align-items:stretch;gap:6px}
+.atree .am{font:700 15px var(--text);background:var(--brown);color:var(--on-brown);border:0;border-radius:12px;padding:9px 10px;cursor:pointer}
+.atree .akl{display:flex;flex-direction:column;gap:6px;border-inline-start:2px solid var(--gold);margin-inline-start:14px;padding-inline-start:10px}
+.atree .akl .an{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
+
 /* the site paused by its keeper */
 html.pz-on,html.pz-on body{overflow:hidden}
 .pz{position:fixed;inset:0;z-index:2147483000;background:var(--ground);display:grid;place-items:center;padding:24px 16px calc(24px + env(safe-area-inset-bottom))}
@@ -2634,7 +2668,7 @@ html.own-noimg .pgimg,html.own-noimg .sx-pbtn,html.own-noimg .sx-pwrap,html.own-
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-0823';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-0847';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4447,7 +4481,8 @@ async function fxEvent(){const F=await sxFeat();const P=fxOpen('الحدث في 
 /* ---------- يومه صلى الله عليه وسلم ---------- */
 const DAYS=['الاستيقاظ','قيام الليل','سنة الفجر','الأذكار','الضحى','الصلاة','الطعام','خروجه','مع أهله','نومه'];
 async function fxDay(){const F=await sxFeat();const P=fxOpen('يومه صلى الله عليه وسلم');
-  P.inn.append(el('p','fx-lead','هديه ﷺ في يومه وليلته كما ذكره ابن القيم في زاد المعاد. اضغط جزءاً من الدائرة.'));
+  P.inn.append(el('p','fx-lead','هديه ﷺ في يومه وليلته كما ذكره ابن القيم في زاد المعاد. اضغط جزءاً من الدائرة.'));dayDial(P,P.inn,F)}
+function dayDial(P,host,F){
   const NS='http://www.w3.org/2000/svg',mk=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e};
   const W=360,C=180,R1=172,R0=78,N=F.day.length,svg=mk('svg',{viewBox:'0 0 360 360',role:'group','aria-label':'أوقات اليوم'});
   const pt=(r,a)=>[C+r*Math.sin(a),C-r*Math.cos(a)];
@@ -4458,11 +4493,11 @@ async function fxDay(){const F=await sxFeat();const P=fxOpen('يومه صلى ا
     const [tx,ty]=pt((R1+R0)/2,(a0+a1)/2);const t=mk('text',{x:tx,y:ty});t.textContent=DAYS[i]||D.t;g.append(t);
     const go=()=>show(i);g.addEventListener('click',go);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}});svg.append(g);segs.push(g)});
   svg.append(mk('circle',{cx:C,cy:C,r:R0-8,class:'hub'}));const ht=mk('text',{x:C,y:C,class:'hubt'});ht.textContent='يومه وليلته';svg.append(ht);
-  wrap.append(svg);P.inn.append(wrap,box);
+  wrap.append(svg);host.append(wrap,box);
   const show=i=>{segs.forEach((g,j)=>g.classList.toggle('on',j===i));box.innerHTML='';const D=F.day[i];box.append(el('h3',null,D.t));box.lastChild.className='fx-dh';
     D.s.forEach((s,j)=>box.append(accCard(s.h,pgT(s.n,s.p)+(s.pe&&s.pe!==s.p?'–'+ar(s.pe):''),b=>{s.x.split('\n').forEach(x=>b.append(qPanel(x)));const a=el('div','qp-act');a.append(goBtn(P,'اقرأه في زاد المعاد',s.n,s.p));b.append(a)},j===0)))};
   show(0);
-  P.inn.append(el('p','fx-note','ترتيب الأوقات في الدائرة للتصفح، من الليل إلى الليل، وليس ترتيباً نصّ عليه ابن القيم. والنصوص بلفظ زاد المعاد كاملةً غير مختصرة: كل فصل من عنوانه إلى العنوان الذي بعده، وما في «فصل في هديه في الذكر» من أذكار الأوقات فمن أول كلامه فيها إلى أول ما بعدها.'))}
+  host.append(el('p','fx-note','ترتيب الأوقات في الدائرة للتصفح، من الليل إلى الليل، وليس ترتيباً نصّ عليه ابن القيم. والنصوص بلفظ زاد المعاد كاملةً غير مختصرة: كل فصل من عنوانه إلى العنوان الذي بعده، وما في «فصل في هديه في الذكر» من أذكار الأوقات فمن أول كلامه فيها إلى أول ما بعدها.'))}
 
 /* ---------- آيات السيرة ---------- */
 /* ما نزل من القرآن في أحداث السيرة: only where the book itself says the verse came down in that event, in its own words */
@@ -5472,8 +5507,8 @@ async function fxSiyar(open){const IX=await getJSON('data/sx_sy_ix.json');const 
 
 /* ---------- جهاده صلى الله عليه وسلم: هديه في الجهاد، ثم مغازيه وبعوثه، من «زاد المعاد» (الجزء الثالث متصلاً بترتيبه)، ثم غزواته في الصحيحين،
    ثم «كتاب الجهاد» من الكتب الثمانية بشروحها. كل فصل من زاد المعاد يُقرأ بلفظه في صفحته، كما في «هديه صلى الله عليه وسلم» ---------- */
-async function fxJihadHub(){const G=await getJSON('data/sx_hady.json');const P=fxOpen('جهاده صلى الله عليه وسلم');
-  P.inn.append(el('p','fx-lead','هديه صلى الله عليه وسلم في الجهاد، ثم سياق مغازيه وبعوثه وسراياه، من «زاد المعاد» لابن القيم: فصول الجزء الثالث متصلة بترتيب الكتاب، اضغط الفصل لتقرأه بلفظه في صفحته. ثم غزواته في الصحيحين، ثم «كتاب الجهاد» من الصحيحين والسنن الأربع ورياض الصالحين وبلوغ المرام كاملاً بشروحه.'));
+async function fxJihadHub(){const G=await getJSON('data/sx_hady.json');const P=fxOpen('جهاده صلى الله عليه وسلم');const JS=el('div');
+  P.inn.append(el('p','fx-lead','هديه صلى الله عليه وسلم في الجهاد، ثم سياق مغازيه وبعوثه وسراياه، من «زاد المعاد» لابن القيم: فصول الجزء الثالث متصلة بترتيب الكتاب، اضغط الفصل لتقرأه بلفظه في صفحته. ثم غزواته في الصحيحين، ثم «كتاب الجهاد» من الصحيحين والسنن الأربع ورياض الصالحين وبلوغ المرام كاملاً بشروحه.'));P.inn.append(JS);jihadStrip(P,JS);
   const it=(G.find(g=>g.t==='الجزء الثالث')||{it:[]}).it;
   // the book's own two runs: from «الجهاد في أول الإسلام» to the order of his dealings with the disbelievers, then from «سياق مغازيه وبعوثه» to the end of the story of Thaqif's delegation
   const a=it.findIndex(x=>x.h.startsWith('الجهاد في أول الإسلام')),b=it.findIndex(x=>x.h.startsWith('فصل في سياق مغازيه وبعوثه')),c=it.findIndex(x=>x.h==='فصل في الوفود');
@@ -5489,6 +5524,7 @@ async function fxJihadHub(){const G=await getJSON('data/sx_hady.json');const P=f
 /* ---------- one group of the home page's sections on a page of its own (opened from the arches of the «الحرم» design): its sections as they are on the home page, each opening as its tile does ---------- */
 function fxGroupHub(name){const g=[...document.querySelectorAll('#home .exg')].find(x=>x.textContent.replace(/\s+/g,' ').trim().startsWith(name));if(!g)return;
   const T=g.textContent.replace(/\s+/g,' ').trim();const P=fxOpen(T);P.inn.append(el('p','fx-lead','أبواب «'+T+'» في الموقع، اضغط الباب ليُفتح.'));
+  if(name==='عبادته')ibadaDial(P,P.inn);if(name==='من شؤونه'){const KM=el('div');P.inn.append(KM);kingsMap(P,KM)}
   const L=el('div','ov-grid');
   for(let x=g.nextElementSibling;x&&!x.classList.contains('exg');x=x.nextElementSibling){if(x.tagName!=='BUTTON'||x.hidden||x.classList.contains('own-hid'))continue;const t=x;
     const c=el('button','ov-c');c.type='button';const b=t.querySelector(':scope>b'),s=t.querySelector(':scope>span:not(.saw)');c.append(el('b',null,b?b.textContent:t.textContent));if(s)c.append(el('span',null,s.textContent));
@@ -5549,16 +5585,85 @@ new MutationObserver(ms=>{let t=0;for(const m of ms)if(m.addedNodes.length){t=1;
 /* ---------- an overview of a subject (from the arches of the «مكة» design): cards of its parts, with the books' own titles and their counts; a card opens the part in full ---------- */
 function ovGrid(items){const g=el('div','ov-grid');items.forEach(([t,sub,go,tag])=>{const c=el('button','ov-c');c.type='button';if(tag)c.append(el('small','ov-k',tag));c.append(el('b',null,t));if(sub)c.append(el('span',null,sub));c.onclick=go;g.append(c)});return g}
 async function fxOverview(k){
-  if(k==='sifa'){const F=await sxFeat();const P=fxOpen('صفته صلى الله عليه وسلم');P.inn.append(el('p','fx-lead','موضوعات «مختصر الشمائل المحمدية» وعدد أبوابها وأحاديثها. اضغط الموضوع لتقرأ أحاديثه.'));
+  if(k==='sifa'){const F=await sxFeat();const P=fxOpen('صفته صلى الله عليه وسلم');P.inn.append(el('p','fx-lead','موضوعات «مختصر الشمائل المحمدية» وعدد أبوابها وأحاديثها. اضغط الموضوع لتقرأ أحاديثه.'));sifaDial(P,P.inn,F);
     P.inn.append(ovGrid(F.sifa.map((s,i)=>{const nh=s.c.reduce((a,c)=>a+c.had.length,0);return [s.t,ar(s.c.length)+' '+(s.c.length<=10?'أبواب':'بابًا')+' · '+ar(nh)+' حديثًا',()=>{P.close();fxSifa(i)}]})));return}
-  if(k==='hady'){const G=await getJSON('data/sx_hady.json');const P=fxOpen('هديه صلى الله عليه وسلم');P.inn.append(el('p','fx-lead','فصول هديه صلى الله عليه وسلم من «زاد المعاد» لابن القيم بعناوينها في كل جزء. اضغط الفصل لتقرأه بلفظه.'));
+  if(k==='hady'){const G=await getJSON('data/sx_hady.json');const P=fxOpen('هديه صلى الله عليه وسلم');P.inn.append(el('p','fx-lead','فصول هديه صلى الله عليه وسلم من «زاد المعاد» لابن القيم بعناوينها في كل جزء. اضغط الفصل لتقرأه بلفظه.'));{const F=await sxFeat();P.inn.append(el('h3','dl-bk','يومه صلى الله عليه وسلم'));dayDial(P,P.inn,F)}
     G.forEach(g=>{const seen=new Set(),L=[];g.it.forEach(x=>{const m=x.h.replace(/[\[\]]/g,'').match(/^(?:فصل في )?هدي(?:ه)?\s*(?:-\s*)?(?:صلى الله عليه وسلم\s*)?(?:-\s*)?(?:وسيرته\s*(?:صلى الله عليه وسلم)?\s*)?(.+)$/);if(!m)return;const t=m[1].trim();if(seen.has(t))return;seen.add(t);L.push([t,x])});
       if(!L.length)return;P.inn.append(el('h3','dl-bk',g.t+' · '+ar(L.length)));const w=el('div','ov-chips');L.forEach(([t,x])=>{const b=el('button','ov-ch',t);b.type='button';b.title=x.h;b.onclick=()=>{P.close();openPart(x.n,x.p,null,false,'txt')};w.append(b)});P.inn.append(w)});
     const all=el('button','wide-b');all.type='button';all.append(el('b',null,'فهرس زاد المعاد كاملاً'),el('span',null,'كل فصوله في أجزائه الخمسة بترتيبه'));all.onclick=()=>{P.close();fxHady()};P.inn.append(all);return}
-  if(k==='ahl'){const A=await getJSON('data/sx_ahl.json');const P=fxOpen('أهل بيته صلى الله عليه وسلم');P.inn.append(el('p','fx-lead','أزواجه أمهات المؤمنين وأولاده صلى الله عليه وسلم كما في «البداية والنهاية». اضغط الاسم لتقرأ ما أورده ابن كثير فيه.'));
+  if(k==='ahl'){const A=await getJSON('data/sx_ahl.json');const P=fxOpen('أهل بيته صلى الله عليه وسلم');P.inn.append(el('p','fx-lead','أزواجه أمهات المؤمنين وأولاده صلى الله عليه وسلم كما في «البداية والنهاية». اضغط الاسم لتقرأ ما أورده ابن كثير فيه.'));ahlTree(P,P.inn,A);return;
     P.inn.append(el('h3','dl-bk','أزواجه أمهات المؤمنين رضي الله عنهن · '+ar(A.w.length)));P.inn.append(ovGrid(A.w.map((w,j)=>[w.n,'رضي الله عنها',()=>{P.close();fxAhl('w'+j)},ar(j+1)])));
     P.inn.append(el('h3','dl-bk','أولاده صلى الله عليه وسلم · '+ar(A.c.length)));P.inn.append(ovGrid(A.c.map((c,j)=>[c.n,['زينب','أم كلثوم','فاطمة','رقية'].includes(c.n)?'رضي الله عنها':'',()=>{P.close();fxAhl('c'+j)},ar(j+1)])));return}
 }
+
+/* ---------- the drawings at the head of the overview pages (from the arches); every label is a title of the books, every tap opens their text ---------- */
+const VNS='http://www.w3.org/2000/svg',vmk=(t,a,p)=>{const e=document.createElementNS(VNS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.append(e);return e};
+// rings of segments (a segment's share by its weight); rings: [{r0,r1,items:[{t,w,go}],cls}]
+function ringDial(host,rings,hub,onPick){const C=180,svg=vmk('svg',{viewBox:'0 0 360 360',class:'rdial',role:'group'});const segs=[];
+  const pt=(r,a)=>[C+r*Math.sin(a),C-r*Math.cos(a)];
+  rings.forEach((R,ri)=>{const tot=R.items.reduce((s,x)=>s+(x.w||1),0);let acc=0;
+    R.items.forEach((it,i)=>{const a0=-(acc/tot)*2*Math.PI;acc+=(it.w||1);const a1=-(acc/tot)*2*Math.PI;const gap=.012;
+      const g=vmk('g',{class:'seg '+(R.cls||''),tabindex:'0',role:'button','aria-label':it.t},svg);
+      const [x0,y0]=pt(R.r1,a0-gap),[x1,y1]=pt(R.r1,a1+gap),[x2,y2]=pt(R.r0,a1+gap),[x3,y3]=pt(R.r0,a0-gap);const big=Math.abs(a1-a0)>Math.PI?1:0;
+      vmk('path',{d:`M${x0},${y0} A${R.r1},${R.r1} 0 ${big} 0 ${x1},${y1} L${x2},${y2} A${R.r0},${R.r0} 0 ${big} 1 ${x3},${y3} Z`},g);
+      const [tx,ty]=pt((R.r0+R.r1)/2,(a0+a1)/2);const t=vmk('text',{x:tx,y:ty},g);t.textContent=it.s||it.t;if(R.fs)t.style.fontSize=R.fs+'px';
+      const go=()=>{segs.forEach(s=>s.classList.toggle('on',s===g));onPick(it,ri,i)};g.addEventListener('click',go);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}});segs.push(g);it._g=g})});
+  const r=Math.min(...rings.map(x=>x.r0));vmk('circle',{cx:C,cy:C,r:r-6,class:'hub'},svg);const ht=vmk('text',{x:C,y:C,class:'hubt'},svg);ht.textContent=hub;
+  const w=el('div','day');w.append(svg);host.append(w);return segs}
+
+// صفته: the topics of the Shama'il, each by the number of its hadiths
+function sifaDial(P,host,F){const box=el('div');const items=F.sifa.map((s,i)=>{const n=s.c.reduce((a,c)=>a+c.had.length,0);return {t:s.t,s:s.t.length>10?s.t.split(' ')[0]:s.t,n,w:Math.max(n,24),i}});
+  const segs=ringDial(host,[{r0:84,r1:174,items,fs:11}],'شمائله',it=>{box.innerHTML='';const s=F.sifa[it.i];box.append(el('h3','fx-dh',s.t+' · '+ar(it.n)+' حديثًا'));
+    s.c.forEach(c=>{const b=el('button','hd-row');b.type='button';b.append(el('span',null,c.h),el('small',null,ar(c.had.length)));b.onclick=()=>{P.close();fxSifa(it.i)};box.append(b)})});
+  host.append(box);host.append(el('p','fx-note','كلما كثرت أحاديث الموضوع في «مختصر الشمائل» اتسعت مساحته في الدائرة، وعدد أحاديثه مكتوب عند اختياره.'));segs[0].dispatchEvent(new Event('click'))}
+
+// عبادته: of the day, the week and the year: each mark is a chapter of the two Sahihs (or the Farewell Pilgrimage), opened at that chapter
+const IBD=[{t:'اليوم والليلة',items:[['السحور','saw','باب تأخير السحور'],['الفجر','sal','باب القراءة في الفجر'],['الصباح','daw','باب ما يقول إذا أصبح'],['الظهر','sal','باب القراءة في الظهر'],['العصر','sal','باب القراءة في العصر'],['المغرب','sal','باب القراءة في المغرب'],['العشاء','sal','باب القراءة في العشاء'],['النوم','daw','باب ما يقول إذا نام'],['الليل','daw','باب الدعاء إذا انتبه بالليل']]},
+  {t:'الأسبوع',items:[['الجمعة','daw','باب الدعاء في الساعة التي في يوم الجمعة'],['صوم الجمعة','saw','باب صوم يوم الجمعة'],['الاثنين والخميس','msaw','باب استحباب صيام ثلاثة أيام من كل شهر وصوم يوم عرفة وعاشوراء والاثنين والخميس']]},
+  {t:'السنة',items:[['شعبان','saw','باب صوم شعبان'],['رمضان','saw','باب وجوب صوم رمضان'],['ليلة القدر','saw','باب فضل ليلة القدر'],['الاعتكاف','saw','باب الاعتكاف في العشر الأواخر، والاعتكاف في المساجد كلها'],['عرفة','saw','باب صوم يوم عرفة'],['الحج','@hajj',''],['عاشوراء','saw','باب صيام يوم عاشوراء']]}];
+async function openBab(k,title){if(k==='@hajj'){fxHajj();return}await fxFad(k);const o=document.querySelector('.fx:not([hidden])');if(!o)return;
+  for(let t=0;t<30;t++){const H=[...o.querySelectorAll('.sf-hd,.mg-hd')],tx=x=>((x.querySelector('b')||x).textContent||'').replace(/\s+/g,' ').trim();const h=H.find(x=>tx(x)===title)||H.find(x=>tx(x).includes(title));if(h){if(h.getAttribute('aria-expanded')!=='true')h.click();setTimeout(()=>{const s=h.closest('section')||h;o.scrollTo({top:s.getBoundingClientRect().top-o.getBoundingClientRect().top+o.scrollTop-((o.querySelector('.fx-top')||{}).offsetHeight||0)-((o.querySelector('.bk-bar')||{}).offsetHeight||0)-8})},120);return}await new Promise(r=>setTimeout(r,100))}}
+function ibadaDial(P,host){const box=el('div');const rings=[{r0:128,r1:176,cls:'r-d',fs:10.5},{r0:96,r1:126,cls:'r-w',fs:9.5},{r0:58,r1:94,cls:'r-y',fs:9.5}];
+  rings[0].items=IBD[0].items.map(x=>({t:x[0],k:x[1],b:x[2],g:IBD[0].t}));rings[1].items=IBD[1].items.map(x=>({t:x[0],s:x[0]==='الاثنين والخميس'?'الاثنين':x[0],k:x[1],b:x[2],g:IBD[1].t}));rings[2].items=IBD[2].items.map(x=>({t:x[0],s:x[0]==='ليلة القدر'?'القدر':x[0]==='الاعتكاف'?'اعتكاف':x[0],k:x[1],b:x[2],g:IBD[2].t}));
+  const key=el('div','rkey');[['r-d',IBD[0].t],['r-w',IBD[1].t],['r-y',IBD[2].t]].forEach(([c,t])=>{const s=el('span');s.append(el('i',c),t);key.append(s)});
+  ringDial(host,rings,'عبادته',it=>{box.innerHTML='';const c=el('div','rpick');c.append(el('small',null,it.g),el('b',null,it.t));const sub=it.k==='@hajj'?'حجة الوداع يومًا بيوم':(it.b+' · '+({sal:'صحيح البخاري',saw:'صحيح البخاري',daw:'صحيح البخاري',msaw:'صحيح مسلم'}[it.k]||''));c.append(el('span',null,sub));
+    const go=el('button','btn btn-quiet','افتح الباب');go.type='button';go.onclick=()=>{P.close();openBab(it.k,it.b)};c.append(go);box.append(c)});
+  host.append(key,box);host.append(el('p','fx-note','كل علامة في الحلقات باب بلفظه من الصحيحين في ذلك الوقت، والحج «حجة الوداع». وترتيب العلامات في الحلقة للتصفح.'))}
+
+// شؤونه: his letters to the kings, from the chapter of «زاد المعاد»: a line from Madinah to each, and its paragraphs as they are
+const KINGS=[['النجاشي','الحبشة',14.13,38.72,[1,2],'r',0],['قيصر','الروم',31.78,35.23,[3,4],'l',2],['كسرى','فارس',33.09,44.58,[5],'r',0],['المقوقس','الإسكندرية',31.2,29.92,[6],'r',10],['الحارث بن أبي شمر','البلقاء',32.03,35.73,[7],'r',-8],['هوذة بن علي','اليمامة',24.15,47.3,[8,16],'l',10],['جيفر وعبد الله','عمان',24.0,52.6,[9],'l',12],['المنذر بن ساوى','البحرين',25.38,49.59,[10],'l',-6],['ملوك حمير','اليمن',15.35,44.2,[11,12,13,14,15,19],'r',0],['فروة بن عمرو','معان',30.19,35.73,[17,18],'r',6]];
+async function kingsMap(P,host){let CO=[];try{CO=await getJSON('data/coast.json')}catch(e){}const S=await getJSON('data/sx_shu.json');const k=S.find(x=>x.s==='kutub');const z=((k.c.find(c=>(c.z||[]).length&&/الملوك/.test(c.t))||{}).z||[])[0];if(!z)return;
+  const la0=12.5,la1=35.6,lo0=28.6,lo1=53.4,kx=Math.cos(24*Math.PI/180),W=360,s_=W/((lo1-lo0)*kx),H=Math.round((la1-la0)*s_);
+  const X=lo=>(lo-lo0)*kx*s_,Y=la=>(la1-la)*s_;const svg=vmk('svg',{viewBox:`0 0 ${W} ${H}`,class:'kmap',role:'group','aria-label':'كتبه إلى الملوك'});
+  const cg=vmk('g',{class:'cst'},svg);CO.forEach(L=>{let d='';L.forEach((q,i)=>{d+=(i?'L':'M')+X(q[0]).toFixed(1)+','+Y(q[1]).toFixed(1)});vmk('path',{d},cg)});
+  const MD=[24.47,39.61],box=el('div');const pts=[];
+  KINGS.forEach(([n,land,la,lo,ps,side,dy],i)=>{const x=X(lo),y=Y(la),mx=X(MD[1]),my=Y(MD[0]);const g=vmk('g',{class:'kpt',tabindex:'0',role:'button','aria-label':n+'، '+land},svg);
+    const cx=(x+mx)/2+(y-my)*.18,cy=(y+my)/2-(x-mx)*.18;vmk('path',{d:`M${mx},${my} Q${cx},${cy} ${x},${y}`,class:'kln'},g);vmk('circle',{cx:x,cy:y,r:4.5,class:'kd'},g);
+    const right=side==='r';const t=vmk('text',{x:x+(right?8:-8),y:y+4+(dy||0),'text-anchor':right?'start':'end',class:'klb'},g);t.textContent=land;
+    const go=()=>{pts.forEach(p=>p.classList.toggle('on',p===g));box.innerHTML='';box.append(el('h3','fx-dh',n+' · '+land));ps.forEach(j=>{const r=z.x[j];if(r)box.append(qPanel(r[1]))});
+      const a=el('div','qp-act');a.append(goBtn(P,'اقرأه في زاد المعاد',18,z.x[ps[0]][0]));box.append(a)};
+    g.addEventListener('click',go);g.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();go()}});pts.push(g)});
+  vmk('circle',{cx:X(MD[1]),cy:Y(MD[0]),r:6,class:'kmd'},svg);const mt=vmk('text',{x:X(MD[1])-9,y:Y(MD[0])+4,'text-anchor':'end',class:'klb kmdt'},svg);mt.textContent='المدينة';
+  const w=el('div','kwrap');w.append(svg);host.append(w,box);host.append(el('p','fx-note','من «فصل في كتبه ورسله إلى الملوك» في زاد المعاد. المواضع على الخريطة على التقريب، والسواحل وحدها دون حدود الدول الحديثة، و«عمان» في طرف الخريطة.'));pts[0].dispatchEvent(new Event('click'))}
+
+// جهاده: his campaigns in the order of «مختصر السيرة», with the book's own markers of the years
+async function jihadStrip(P,host){const X=await getJSON('data/sira_x.json'),G=await getJSON('data/sx_gz.json'),M=await getJSON('data/sx_mg.json');const it=X.tl.it;
+  const nz=s=>s.replace(/^(غزوة|وقعة)\s+/,'').replace(/\s*\(.*\)/,'').replace(/[ًٌٍَُِّْ]/g,'').trim();
+  const L=G.filter(g=>!/^(وفد|حديث الإفك|حج أبي بكر|حجة الوداع|مرضه)/.test(g.t));const mk=it.map((x,i)=>[i,x.y]).filter(x=>x[1]&&x[1]<=10);
+  const w=el('div','jstrip');let last=0;
+  L.forEach(g=>{const y=Math.max(0,...mk.filter(m=>m[0]<=g.ti).map(m=>m[1]));if(y!==last){w.append(el('span','jy','السنة '+['','الأولى','الثانية','الثالثة','الرابعة','الخامسة','السادسة','السابعة','الثامنة','التاسعة','العاشرة'][y]));last=y}
+    const b=el('button','jd');b.type='button';b.append(el('i'),el('span',null,g.t));const ev=M.ev.findIndex(e=>nz(e.t)===nz(g.t)||nz(e.t).includes(nz(g.t))||nz(g.t).includes(nz(e.t)));
+    b.onclick=()=>{P.close();if(ev>=0)fxMgTL(ev);else{const t=document.getElementById('fxGz');if(t)t.click()}};w.append(b)});
+  host.append(el('h3','dl-bk','غزواته وسراياه على ترتيبها'),w,el('p','fx-note','الترتيب وعلامات السنين كما في «مختصر سيرة الرسول ﷺ»، ولم يُذكر فيه رأس السنة السابعة ولا العاشرة. اضغط الغزوة لتفتح أحاديثها في «المغازي في الصحيحين».'))}
+
+// أهل بيته: his wives in the order Ibn Kathir gave, and his children from their mothers as his text has it
+function ahlTree(P,host,A){const w=el('div','atree');
+  const wl=el('div','aw');A.w.forEach((x,j)=>{const b=el('button','an');b.type='button';b.append(el('i',null,ar(j+1)),el('span',null,x.n));b.onclick=()=>{P.close();fxAhl('w'+j)};wl.append(b)});
+  w.append(el('h3','dl-bk','أمهات المؤمنين على ترتيب زواجه بهن'),wl);
+  const kids=A.c.map((c,j)=>({c,j,m:c.n==='إبراهيم'?'مارية':'خديجة'}));const tr=el('div','ak');
+  ['خديجة','مارية'].forEach(m=>{const col=el('div','akc');const wi=A.w.findIndex(x=>x.n.includes(m));const mb=el('button','am');mb.type='button';mb.append(m==='خديجة'?'خديجة بنت خويلد':'مارية القبطية');if(wi>=0)mb.onclick=()=>{P.close();fxAhl('w'+wi)};else mb.disabled=true;col.append(mb);
+    const kl=el('div','akl');kids.filter(x=>x.m===m).forEach(({c,j})=>{const b=el('button','an');b.type='button';b.append(el('span',null,c.n));b.onclick=()=>{P.close();fxAhl('c'+j)};kl.append(b)});col.append(kl);tr.append(col)});
+  w.append(el('h3','dl-bk','أولاده صلى الله عليه وسلم من أمهاتهم'),tr,el('p','fx-note','الأولاد وأمهاتهم كما في قول الزبير الذي أورده ابن كثير: ولدت له خديجة القاسم وزينب وعبد الله وأم كلثوم وفاطمة ورقية، وولدت له مارية إبراهيم.'));host.append(w)}
 
 /* ---------- مواضع الخلاف مع المطبوع: علامات حمراء، وقراءة الصفحات المعلَّمة وحدها ---------- */
 let MK={};getJSON('data/marks.json').then(d=>{MK=d||{};renderMkBooks()}).catch(()=>{});
