@@ -2668,7 +2668,7 @@ html.own-noimg .pgimg,html.own-noimg .sx-pbtn,html.own-noimg .sx-pwrap,html.own-
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-0858';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-0900';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4479,7 +4479,8 @@ async function fxEvent(){const F=await sxFeat();const P=fxOpen('الحدث في 
   P.inn.append(el('p','fx-note','المواضع مأخوذة من فهارس الكتب وعناوينها، والنص ما تحت العنوان إلى العنوان الذي يليه كاملاً بلفظ الكتاب.'))}
 
 /* ---------- يومه صلى الله عليه وسلم ---------- */
-const DAYS=['الاستيقاظ','قيام الليل','سنة الفجر','الأذكار','الضحى','الصلاة','الطعام','خروجه','مع أهله','نومه'];
+// the short name of each part of the day in the circle, by its title (so a part added later keeps its own name)
+const DAYM={'إذا استيقظ من الليل':'الاستيقاظ','الخلاء والوضوء':'الخلاء والوضوء','قيام الليل والوتر':'قيام الليل','سنة الفجر':'سنة الفجر','أذكار الصباح والمساء':'الأذكار','صلاة الضحى':'الضحى','الصلاة والمسجد':'الصلاة','الطعام والشراب':'الطعام','لباسه وخروجه ودخوله':'خروجه','مع أهله':'مع أهله','نومه':'نومه'};
 async function fxDay(){const F=await sxFeat();const P=fxOpen('يومه صلى الله عليه وسلم');
   P.inn.append(el('p','fx-lead','هديه ﷺ في يومه وليلته كما ذكره ابن القيم في زاد المعاد. اضغط جزءاً من الدائرة.'));dayDial(P,P.inn,F)}
 function dayDial(P,host,F){
@@ -4490,7 +4491,7 @@ function dayDial(P,host,F){
   F.day.forEach((D,i)=>{const a0=-(i/N)*2*Math.PI,a1=-((i+1)/N)*2*Math.PI;const g=mk('g',{class:'seg',tabindex:'0',role:'button','aria-label':D.t});
     const [x0,y0]=pt(R1,a0),[x1,y1]=pt(R1,a1),[x2,y2]=pt(R0,a1),[x3,y3]=pt(R0,a0);
     g.append(mk('path',{d:`M${x0},${y0} A${R1},${R1} 0 0 0 ${x1},${y1} L${x2},${y2} A${R0},${R0} 0 0 1 ${x3},${y3} Z`}));
-    const [tx,ty]=pt((R1+R0)/2,(a0+a1)/2);const t=mk('text',{x:tx,y:ty});t.textContent=DAYS[i]||D.t;g.append(t);
+    const [tx,ty]=pt((R1+R0)/2,(a0+a1)/2);const t=mk('text',{x:tx,y:ty});t.textContent=DAYM[D.t]||D.t;g.append(t);
     const go=()=>show(i);g.addEventListener('click',go);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}});svg.append(g);segs.push(g)});
   svg.append(mk('circle',{cx:C,cy:C,r:R0-8,class:'hub'}));const ht=mk('text',{x:C,y:C,class:'hubt'});ht.textContent='يومه وليلته';svg.append(ht);
   wrap.append(svg);host.append(wrap,box);
