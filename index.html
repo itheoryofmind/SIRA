@@ -2311,7 +2311,7 @@ html.own-pg-on,html.own-pg-on body{overflow:hidden}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-16-2045';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-0424';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -5277,7 +5277,7 @@ function actions(t,blk,tn){
   const hid=t.closest('.own-hid-o');
   const [ov,c]=sheet('ماذا تريد؟');c.append(el('p','own-n','«'+short(ownText(blk),90)+'»'));
   if(hid)act(c,'👁 إظهار ما أخفيته هنا','يعود ظاهراً للجميع',async()=>{ov.remove();const r=await cfg({a:'unhide',id:hid.dataset.ownHid});oToast(r.ok?'ظهر من جديد.':'تعذّر؛ حاول مرة أخرى.',!r.ok)},'own-act-g');
-  act(c,'✏️ تعديل النص','يُنشر خلال دقائق، ويمكن التراجع عنه',()=>{ov.remove();pickText(blk,t,tn)});
+  act(c,'✏️ تعديل النص','يُنشر خلال ساعة على الأكثر، ويمكن التراجع عنه',()=>{ov.remove();pickText(blk,t,tn)});
   const P=parts(blk);
   P.forEach((n,i)=>{if(n.classList.contains('own-hid-o'))return;const k=kindName(n,i);act(c,'🙈 إخفاء '+k,short(ownText(n),60),()=>{ov.remove();hideOne(n,k)})});
   act(c,'➕ إضافة نص بعد '+kindName(blk,0).replace(' (القسم كاملاً)',''),'فقرة أو عنوان أو اقتباس، يظهر فوراً',()=>{ov.remove();addSheet(blk,null)});
@@ -5327,18 +5327,18 @@ function editor(c,old,tapped,onSave){const ta=el('textarea','own-ta');ta.value=o
   let tm;ta.oninput=()=>{clearTimeout(tm);tm=setTimeout(upd,250)};upd();
   if(tapped){const [T]=letters(tapped);const [n,ix]=letters(old);const a=n.indexOf(T.slice(0,Math.min(T.length,60)));
     if(a>=0)setTimeout(()=>{const st=ix[a],en=ix[Math.min(a+T.length,ix.length)-1]+1;try{ta.focus({preventScroll:true});ta.setSelectionRange(st,en);const lh=parseFloat(getComputedStyle(ta).lineHeight)||34;ta.scrollTop=Math.max(0,st/Math.max(20,ta.clientWidth/11)*lh-lh*2)}catch(e){}},60)}
-  sv.onclick=async()=>{if(!confirm('سيُنشر هذا التعديل في الموقع خلال دقائق. هل راجعت التغيير؟'))return;sv.disabled=true;sv.textContent='يُحفظ…';
+  sv.onclick=async()=>{if(!confirm('سيُنشر هذا التعديل في الموقع خلال ساعة على الأكثر. هل راجعت التغيير؟'))return;sv.disabled=true;sv.textContent='يُحفظ…';
     const r=await onSave(ta.value,nt.value.trim());if(!r){sv.disabled=false;sv.textContent='احفظ التعديل'}}}
 function oData(g,txt){const x=g.at[0];const [ov,c]=sheet('تعديل النص');
   c.append(el('p','own-n',fileName(x.f)+(g.at.length>1?' — والنص نفسه في '+ar(g.at.length)+' مواضع، يُعدَّل فيها كلها':'')));
   editor(c,g.s,txt,async(nw,note)=>{const sec=secName();let ok=0,busy=0;
     for(const a of g.at){const r=await call('/c/save',{f:a.f,path:a.p,old:a.s,nw,note,lb:fileName(a.f),sec});if(r.ok)ok++;else if(r.busy)busy++}
-    if(ok){ov.remove();oToast('حُفظ، ويظهر للجميع خلال دقائق.');return true}
+    if(ok){ov.remove();oToast('حُفظ، ويظهر للجميع خلال ساعة على الأكثر.');return true}
     oToast(busy?'على هذا الموضع تعديل ينتظر النشر؛ انتظر حتى يُنشر أو ألغه من السجل.':'تعذّر الحفظ؛ حاول مرة أخرى.',1);return false})}
 function uiSheet(w){const [ov,c]=sheet('تعديل لفظ من الموقع');
   c.append(el('p','own-n','هذا من ألفاظ الموقع نفسه (عنوان أو زر أو اسم قسم)، ويُعدَّل حيث ورد بلفظه هذا كاملاً.'));
   editor(c,w,'',async(nw,note)=>{if(/["'`\\<>]|\$\{/.test(nw)){oToast('لا تُستعمل في ألفاظ الموقع علامات التنصيص ولا < > ولا \\',1);return false}const r=await call('/c/save',{f:'ui',path:['ui',w.slice(0,300)],old:w,nw,note,lb:'«'+w.slice(0,80)+'»',sec:'ألفاظ الموقع'});
-    if(r.ok){ov.remove();oToast('حُفظ، ويظهر للجميع خلال دقائق.');return true}oToast(r.busy?'على هذا اللفظ تعديل ينتظر النشر.':'تعذّر الحفظ؛ حاول مرة أخرى.',1);return false})}
+    if(r.ok){ov.remove();oToast('حُفظ، ويظهر للجميع خلال ساعة على الأكثر.');return true}oToast(r.busy?'على هذا اللفظ تعديل ينتظر النشر.':'تعذّر الحفظ؛ حاول مرة أخرى.',1);return false})}
 
 /* ---------- adding a text after a place ---------- */
 const KINDS=[['p','فقرة'],['h','عنوان'],['q','اقتباس (نص منقول)']];
@@ -5389,14 +5389,14 @@ async function listSheet(kind){const t={hide:'ما أخفيته',add:'ما أض�
     acts.append(b);d.append(acts);c.append(d)}}
 async function logSheet(){const [ov,c]=sheet('سجل تصحيح النصوص');c.append(el('p','own-n','…'));const j=await call('/c/list');c.lastChild.remove();
   if(!j.ok){c.append(el('p','own-n','تعذّر الاتصال.'));return}if(!j.edits.length){c.append(el('p','own-n','لا تعديلات بعد.'));return}
-  if(j.edits.some(e=>(e.st==='p'||e.st==='t')&&Date.now()-e.at>45*60e3))c.append(el('div','own-warn','تعديل ينتظر منذ أكثر من ٤٥ دقيقة. إن طال الأمر: افتح مستودع الموقع في GitHub ← Actions ← «لوحة المحتوى» ← Run workflow.'));
+  if(j.edits.some(e=>(e.st==='p'||e.st==='t')&&Date.now()-e.at>120*60e3))c.append(el('div','own-warn','تعديل ينتظر منذ أكثر من ساعتين. إن طال الأمر: افتح مستودع الموقع في GitHub ← Actions ← «لوحة المحتوى» ← Run workflow.'));
   for(const e of j.edits){const d=el('div','own-ed');d.append(el('b',null,(e.rv?'تراجع: ':'')+(e.sec||'')),el('small',null,e.lb||''));
-    const st=e.st==='p'?['بانتظار النشر (يُنشر خلال دقائق)','']:e.st==='t'?['يُنشر الآن','']:e.st==='ok'?['نُشر في الموقع','own-good']:['لم يُنشر: '+(e.msg||''),'own-badt'];
+    const st=e.st==='p'?['بانتظار النشر (يُنشر خلال ساعة على الأكثر)','']:e.st==='t'?['يُنشر الآن','']:e.st==='ok'?['نُشر في الموقع','own-good']:['لم يُنشر: '+(e.msg||''),'own-badt'];
     d.append(el('div','own-st '+st[1],st[0]),el('small',null,when(e.at)+(e.note?' — '+e.note:'')));const df=el('div','own-diff');df.append(diffView(e.old,e.nw,40));d.append(df);
     const acts=el('div','own-acts');
     if(e.st==='p'){const b=el('button','own-b','إلغاء');b.type='button';b.onclick=async()=>{if(!confirm('إلغاء هذا التعديل قبل نشره؟'))return;const r=await call('/c/cancel',{id:e.id});if(!r.ok)oToast('تعذّر الإلغاء؛ لعله نُشر للتو.',1);ov.remove();logSheet()};acts.append(b)}
     if(e.st==='ok'&&!e.rv){const b=el('button','own-b','تراجع عن هذا التعديل');b.type='button';b.onclick=async()=>{if(!confirm('يعود النص كما كان قبل هذا التعديل. هل أنت متأكد؟'))return;
-      const r=await call('/c/save',{f:e.f,path:e.path,old:e.nw,nw:e.old,lb:e.lb,sec:e.sec,note:'تراجع عن تعديل '+when(e.at),rv:e.id});oToast(r.ok?'حُفظ التراجع، ويظهر خلال دقائق.':r.busy?'على هذا الموضع تعديل ينتظر النشر.':'تعذّر الحفظ.',!r.ok);ov.remove();logSheet()};acts.append(b)}
+      const r=await call('/c/save',{f:e.f,path:e.path,old:e.nw,nw:e.old,lb:e.lb,sec:e.sec,note:'تراجع عن تعديل '+when(e.at),rv:e.id});oToast(r.ok?'حُفظ التراجع، ويظهر خلال ساعة على الأكثر.':r.busy?'على هذا الموضع تعديل ينتظر النشر.':'تعذّر الحفظ.',!r.ok);ov.remove();logSheet()};acts.append(b)}
     if(acts.childNodes.length)d.append(acts);c.append(d)}}
 
 /* ---------- the pause ---------- */
