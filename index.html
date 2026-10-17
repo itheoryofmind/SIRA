@@ -4068,7 +4068,7 @@ audio.own-note-m{background:none;height:44px}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-1640';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-1646';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -5615,6 +5615,7 @@ function lastAny(){const x=LS.get('lastAnyS',null);return x&&x.n&&!HIDDEN.has(x.
 let SXRET=null;
 {const _op=openPart;openPart=function(){if($('#reader').hidden){document.querySelectorAll('.fx[hidden]').forEach(o=>o.remove());
     const L=[...document.querySelectorAll('.fx,#sxZub,#sxAtl')].filter(o=>!o.hidden);if(L.length){L.forEach(o=>o.hidden=true);sxUnlock();SXRET=L}else SXRET=null}
+  {const rb=$('#rBack');if(rb){if(!rb.dataset.home)rb.dataset.home=rb.innerHTML;const back=!!SXRET;rb.innerHTML=back?'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>':rb.dataset.home;rb.setAttribute('aria-label',back?'رجوع إلى حيث كنت':'الرجوع للرئيسية');rb.classList.toggle('rback',back)}}
   return _op.apply(this,arguments)}}
 {const _cr=closeReader;closeReader=function(){_cr.apply(this,arguments);renderShelfS();const L=SXRET;SXRET=null;if(L&&L.length){L.forEach(o=>o.hidden=false);sxLock()}}}
 $('#sxTl').onclick=()=>openSX('tl');
@@ -5824,7 +5825,7 @@ async function fxYearCards(k){const F=await sxFeat();const W=fxOpen('سنوات 
   const ks=[];for(let i=1;i<=63;i++)if(yrHas(F,i))ks.push(i);
   const near=(k,d)=>{for(let i=k+d;i>=1&&i<=63;i+=d)if(yrHas(F,i))return i;return 0};
   const lab=i=>i===1?'سنة مولده':'عمره '+ar(i);
-  const show=k=>{box.innerHTML='';yrFill(box,F,k,true,W.close);const p=near(k,-1),n=near(k,1);
+  const show=k=>{box.innerHTML='';yrFill(box,F,k,true,null);const p=near(k,-1),n=near(k,1);
     pv.textContent=p?'→ '+lab(p):'';pv.disabled=!p;pv.onclick=()=>p&&show(p);nx.textContent=n?lab(n)+' ←':'';nx.disabled=!n;nx.onclick=()=>n&&show(n);
     const j=ks.indexOf(k);ct.textContent=j>=0?ar(j+1)+' من '+ar(ks.length):'';
     W.ov.scrollTop=0;const g=$('#yrGrid');if(g){g.dataset.sel=k;[...g.children].forEach((b,i)=>b.classList.toggle('sel',i+1===k))}};
@@ -7956,7 +7957,7 @@ $('#openZubda').onclick=openZubdaD;
 /* the card that tells a reader about the reminder before the adhan: from the second visit, for a reader who chose a city and has not turned it on; «ليس الآن» hides it for a month */
 (function(){try{
   const v=(+LS.get('visits',0)||0)+1;LS.set('visits',v);
-  const box=$('#ntCard');if(!box)return;
+  return;   
   if(PRP.ios&&!PRP.app){setTimeout(()=>{const t=$('#installTxt');if(t&&t.innerHTML&&!/التنبيه/.test(t.innerHTML))t.innerHTML+=' وبعد تثبيته يصلك التنبيه قبل الأذان إن شئت.'},300);return}
   if(!PRP.can()||v<2||!LS.get('prPlace',null)||Date.now()-(+LS.get('ntCardX',0)||0)<30*864e5)return;
   prpSub().then(s=>{if(!s)box.hidden=false});
