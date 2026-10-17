@@ -1726,6 +1726,13 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 .q-mus .q-mt{display:block;font-family:"UthmanicHafs","Amiri",serif;font-size:1.15em;line-height:2.1;color:var(--verse,var(--palm))}
 .q-mus small{display:block;font-family:var(--ui);font-size:12px;color:var(--muted);margin-top:2px}
 
+/* a half tile left alone in its group takes the whole row, so no row has a gap */
+.ex button.ex-full{grid-column:1/-1}
+/* each tile: its title, then its line under it, the same in every tile of a row (not pushed apart by the taller neighbour) */
+.ex button{justify-content:flex-start;gap:4px}
+.ex button b{font-size:19px;line-height:1.35}
+.ex button span:not(.saw){font-size:14.5px;line-height:1.55}
+
 /* the site paused by its keeper */
 html.pz-on,html.pz-on body{overflow:hidden}
 .pz{position:fixed;inset:0;z-index:2147483000;background:var(--ground);display:grid;place-items:center;padding:24px 16px calc(24px + env(safe-area-inset-bottom))}
@@ -1917,53 +1924,55 @@ html.own-pg-on,html.own-pg-on body{overflow:hidden}
     <section class="sx-sec" aria-labelledby="exH">
       <h2 id="exH">أبواب الموقع</h2>
       <div class="ex">
-        <p class="exg" data-g="sh">صفته وهديه <span class="saw">ﷺ</span></p>
-        <button type="button" id="fxSifa"><b>صفته <span class="saw">ﷺ</span> كأنك تراه</b><span>مختصر الشمائل المحمدية كاملًا، وما في الصحيحين</span></button>
+        <p class="exg" data-g="sh">صفته وهديه <span class="saw">ﷺ</span></p>
+        <button type="button" class="wide" id="fxHady"><b>هديه <span class="saw">ﷺ</span></b><span>زاد المعاد لابن القيم: فهرس فصوله كاملاً بترتيبه</span></button>
+        <button type="button" id="fxSifa"><b>صفته <span class="saw">ﷺ</span> كأنك تراه</b><span>مختصر الشمائل المحمدية كاملًا، وما في الصحيحين</span></button>
         <button type="button" id="fxDay"><b>يومه صلى الله عليه وسلم</b><span>هديه في يومه وليلته من زاد المعاد</span></button>
-        <button type="button" class="wide" id="fxHady"><b>هديه <span class="saw">ﷺ</span></b><span>زاد المعاد لابن القيم: فهرس فصوله كاملاً بترتيبه</span></button>
-        <button type="button" id="fx-sal"><b>صفة صلاته <span class="saw">ﷺ</span></b><span>من صحيحي البخاري ومسلم</span></button>
+        <p class="exg" data-g="sh">عبادته وآدابه <span class="saw">ﷺ</span></p>
+        <button type="button" id="fx-sal"><b>صفة صلاته <span class="saw">ﷺ</span></b><span>من صحيحي البخاري ومسلم</span></button>
         <button type="button" id="fx-saw"><b>صيامه وقيامه واعتكافه</b><span>من صحيحي البخاري ومسلم</span></button>
-        <button type="button" id="fxAdb"><b>كتاب الأدب</b><span>من صحيح البخاري كاملاً بأبوابه</span></button>
-        <button type="button" id="fxDaw"><b>أدعيته وأذكاره <span class="saw">ﷺ</span></b><span>كتاب الدعوات من صحيح البخاري</span></button>
-        <button type="button" id="fx-ilm"><b>تعليمه أصحابه <span class="saw">ﷺ</span></b><span>كتاب العلم من صحيح البخاري</span></button>
-        <button type="button" id="shu-huquq"><b>من حقوقه <span class="saw">ﷺ</span></b><span>محبته وطاعته وتوقيره والصلاة عليه</span></button>
-        <button type="button" id="fx-aq"><b>التوحيد والعقيدة</b><span>من صحيحي البخاري ومسلم، مع شرح الغنيمان</span></button>
-        <button type="button" class="wide" id="fxJh"><b>كتاب الجهاد</b><span>كتب الجهاد من الصحيحين والسنن الأربع ورياض الصالحين وبلوغ المرام كاملة، مع شروحها</span></button>
+        <button type="button" id="fxDaw"><b>أدعيته وأذكاره <span class="saw">ﷺ</span></b><span>كتاب الدعوات من صحيح البخاري</span></button>
         <button type="button" id="fx-lbs"><b>الأطعمة والأشربة والطب واللباس</b><span>من صحيح البخاري كاملة بأبوابها</span></button>
-        <p class="exg" data-g="sg">من شؤونه <span class="saw">ﷺ</span></p>
-        <button type="button" id="shu-asma"><b>أسماؤه <span class="saw">ﷺ</span></b><span>من البخاري وزاد المعاد</span></button>
-        <button type="button" id="shu-khadam"><b>مواليه وخدمه وكتّابه</b><span>ومؤذنوه وأمراؤه وحرسه</span></button>
-        <button type="button" id="shu-silah"><b>سلاحه ودوابه ولباسه</b><span>وأثاثه وخاتمه ونعله</span></button>
-        <button type="button" id="shu-kutub"><b>كتبه إلى الملوك</b><span>وخاتمه الذي ختمها به</span></button>
-        <button type="button" id="shu-khasais"><b>من خصائصه <span class="saw">ﷺ</span></b><span>من القرآن والصحيحين</span></button>
+        <button type="button" id="fxAdb"><b>كتاب الأدب</b><span>من صحيح البخاري كاملاً بأبوابه</span></button>
+        <button type="button" id="fx-ilm"><b>تعليمه أصحابه <span class="saw">ﷺ</span></b><span>كتاب العلم من صحيح البخاري</span></button>
+        <p class="exg" data-g="sh">التوحيد والجهاد</p>
+        <button type="button" class="wide" id="fx-aq"><b>التوحيد والعقيدة</b><span>من صحيحي البخاري ومسلم، مع شرح الغنيمان</span></button>
+        <button type="button" class="wide" id="fxJh"><b>كتاب الجهاد</b><span>كتب الجهاد من الصحيحين والسنن الأربع ورياض الصالحين وبلوغ المرام كاملة، مع شروحها</span></button>
+        <p class="exg" data-g="sg">من شؤونه <span class="saw">ﷺ</span></p>
+        <button type="button" id="shu-asma"><b>أسماؤه <span class="saw">ﷺ</span></b><span>من البخاري وزاد المعاد</span></button>
+        <button type="button" id="shu-khasais"><b>من خصائصه <span class="saw">ﷺ</span></b><span>من القرآن والصحيحين</span></button>
+        <button type="button" id="shu-huquq"><b>من حقوقه <span class="saw">ﷺ</span></b><span>محبته وطاعته وتوقيره والصلاة عليه</span></button>
         <button type="button" id="fxDal"><b>دلائل النبوة</b><span>أحاديثها من الصحيحين</span></button>
         <button type="button" id="fx-mnq"><b>كتاب المناقب</b><span>من صحيح البخاري كاملاً بأبوابه</span></button>
         <button type="button" id="fx-mfad"><b>كتاب الفضائل</b><span>من صحيح مسلم كاملاً بأبوابه</span></button>
+        <button type="button" id="shu-khadam"><b>مواليه وخدمه وكتّابه</b><span>ومؤذنوه وأمراؤه وحرسه</span></button>
+        <button type="button" id="shu-silah"><b>سلاحه ودوابه ولباسه</b><span>وأثاثه وخاتمه ونعله</span></button>
+        <button type="button" id="shu-kutub"><b>كتبه إلى الملوك</b><span>وخاتمه الذي ختمها به</span></button>
         <p class="exg" data-g="ns">نسبه وآله</p>
-        <button type="button" id="sxTree"><b>شجرة النسب الشريف</b><span>نسبه <span class="saw">ﷺ</span>، وآل عبد المطلب</span></button>
-        <button type="button" id="fxAhl"><b>أهل بيته <span class="saw">ﷺ</span></b><span>أزواجه وأولاده، بلفظ ابن كثير</span></button>
+        <button type="button" id="sxTree"><b>شجرة النسب الشريف</b><span>نسبه <span class="saw">ﷺ</span>، وآل عبد المطلب</span></button>
+        <button type="button" id="fxAhl"><b>أهل بيته <span class="saw">ﷺ</span></b><span>أزواجه وأولاده، بلفظ ابن كثير</span></button>
         <p class="exg" data-g="sr">وقائع السيرة</p>
+        <button type="button" class="wide" id="fxSir"><b>السيرة في صحيح البخاري</b><span>من بدء الوحي إلى الهجرة وصلح الحديبية، بأبواب البخاري</span></button>
+        <button type="button" class="wide" id="fxEvent"><b>الحدث في كل الكتب</b><span>اختر حدثاً واقرأه في كل كتاب بصفحته</span></button>
         <button type="button" id="sxTl"><b>الخط الزمني</b><span>الأحداث بترتيبها وصفحاتها</span></button>
         <button type="button" id="sxZubda"><b>أربعون محطة</b><span>السيرة في بطاقات، بلفظ الكتاب</span></button>
-        <button type="button" class="wide" id="fxEvent"><b>الحدث في كل الكتب</b><span>اختر حدثاً واقرأه في كل كتاب بصفحته</span></button>
-        <button type="button" class="wide" id="fxSir"><b>السيرة في صحيح البخاري</b><span>من بدء الوحي إلى الهجرة وصلح الحديبية، بأبواب البخاري</span></button>
         <button type="button" id="fxRoad"><b>طريق الهجرة</b><span>المنازل كما ذكرها ابن إسحاق</span></button>
+        <button type="button" id="sxAtlas"><b>الأطلس</b><span>مواضع الأحداث بإحداثياتها</span></button>
         <button type="button" id="fxMg"><b>المغازي في الصحيحين</b><span>أحاديث كل غزوة على ترتيب وقوعها</span></button>
         <button type="button" id="fxGz"><b>الغزوات في سطور</b><span>أعدادها وأسماؤها بلفظ مختصر السيرة</span></button>
         <button type="button" id="fxHajj"><b>حجة الوداع يوماً بيوم</b><span>من خروجه إلى غدير خم</span></button>
-        <button type="button" id="shu-khutab"><b>خطبه <span class="saw">ﷺ</span></b><span>بلفظها من الصحيحين</span></button>
-        <button type="button" id="shu-wasaya"><b>وصاياه لأصحابه <span class="saw">ﷺ</span></b><span>بلفظها من الصحيحين</span></button>
-        <button type="button" id="shu-wafat"><b>مرضه ووفاته ووصاياه <span class="saw">ﷺ</span></b><span>من الصحيحين على ترتيب الأيام</span></button>
+        <button type="button" id="shu-khutab"><b>خطبه <span class="saw">ﷺ</span></b><span>بلفظها من الصحيحين</span></button>
+        <button type="button" id="shu-wafat"><b>مرضه ووفاته ووصاياه <span class="saw">ﷺ</span></b><span>من الصحيحين على ترتيب الأيام</span></button>
+        <button type="button" id="shu-wasaya"><b>وصاياه لأصحابه <span class="saw">ﷺ</span></b><span>بلفظها من الصحيحين</span></button>
         <button type="button" id="fxQa"><b>مسائل في السيرة</b><span>أسئلة وجواب كل سؤال بلفظ مصدره</span></button>
-        <button type="button" id="sxAtlas"><b>الأطلس</b><span>مواضع الأحداث بإحداثياتها</span></button>
-        <button type="button" class="wide" id="fxAyat"><b>ما نزل من القرآن في أحداث السيرة</b><span>أحداثٌ نصّت الكتب على أن آياتٍ نزلت فيها</span></button>
+        <button type="button" id="fxAyat"><b>ما نزل من القرآن في أحداث السيرة</b><span>أحداثٌ نصّت الكتب على أن آياتٍ نزلت فيها</span></button>
         <p class="exg" data-g="sb">أصحابه رضي الله عنهم</p>
-        <button type="button" id="fxFad"><b>فضائل أصحاب النبي <span class="saw">ﷺ</span></b><span>كتاب فضائل الصحابة من صحيح البخاري</span></button>
+        <button type="button" id="fxFad"><b>فضائل أصحاب النبي <span class="saw">ﷺ</span></b><span>كتاب فضائل الصحابة من صحيح البخاري</span></button>
         <button type="button" id="fxAns"><b>مناقب الأنصار رضي الله عنهم</b><span>أبوابها من صحيح البخاري</span></button>
         <p class="exg" data-g="kh">الخلفاء الراشدون</p>
+        <button type="button" class="wide" id="fxKh"><b>أحداث الخلافة الراشدة</b><span>من السقيفة إلى عام الجماعة، بلفظ مختصر السيرة وابن كثير، والصحيحان أولاً</span></button>
         <button type="button" id="khHome"><b>الخلافة الراشدة سنةً سنة</b><span>من «البداية والنهاية» لابن كثير</span></button>
         <button type="button" id="khHomeTl"><b>الخلفاء في الخط الزمني</b><span>من مختصر السيرة</span></button>
-        <button type="button" class="wide" id="fxKh"><b>أحداث الخلافة الراشدة</b><span>من السقيفة إلى عام الجماعة، بلفظ مختصر السيرة وابن كثير، والصحيحان أولاً</span></button>
       </div>
     </section>
 
@@ -2311,7 +2320,7 @@ html.own-pg-on,html.own-pg-on body{overflow:hidden}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-0442';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-0451';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3986,7 +3995,10 @@ function readCells(){if(!SXF)return new Set();const R=SXRD.get(),by={};for(const
 let CURG=null,CURGT=0;
 const GRX=[['kh',/الخلاف|الخلفاء/],['ns',/النسب|أهل بيته/],['sb',/أصحاب النبي|الأنصار/],['sg',/أسماؤه|مواليه|سلاحه|كتبه إلى|خاتمه|خصائصه|دلائل|المناقب|الفضائل من/],['sr',/الخط الزمني|محطة|الحدث|السيرة في صحيح|الهجرة|المغازي|الغزوات|حجة|خطبه|وصاياه|مرضه|الأطلس|ما نزل|مسائل/],['sh',/كتاب الجهاد|صفته|يومه|هديه|صلاة|صيام|الأدب|أدعيته|تعليمه|حقوقه|التوحيد|الأطعمة/]];
 function grpOf(t){if(CURG&&Date.now()-CURGT<4000)return CURG;for(const [g,r] of GRX)if(r.test(t||''))return g;return ''}
-function tagTiles(){let g='';document.querySelectorAll('.ex>*').forEach(e=>{if(e.classList.contains('exg'))g=e.dataset.g||'';else if(e.tagName==='BUTTON'){e.dataset.g=g;e.addEventListener('click',()=>{CURG=e.dataset.g;CURGT=Date.now()},true)}})}
+function tagTiles(){let g='';document.querySelectorAll('.ex>*').forEach(e=>{if(e.classList.contains('exg'))g=e.dataset.g||'';else if(e.tagName==='BUTTON'){e.dataset.g=g;e.addEventListener('click',()=>{CURG=e.dataset.g;CURGT=Date.now()},true)}});exEven()}
+// in every group, the tiles go in pairs: when a group has an odd number of (shown) half tiles, its last one takes the whole row
+function exEven(){const L=[...document.querySelectorAll('.ex>*')];let g=[];const fin=()=>{g.forEach(x=>x.classList.remove('ex-full'));if(g.length%2)g[g.length-1].classList.add('ex-full');g=[]};
+  for(const e of L){if(e.classList.contains('exg')){fin();continue}if(e.tagName!=='BUTTON'||e.classList.contains('wide')||e.classList.contains('own-hid')||e.hidden)continue;g.push(e)}fin()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tagTiles);else tagTiles();
 /* full-screen panel */
 function fxOpen(t){const ov=el('div','fx');{const g=grpOf(t);if(g)ov.dataset.g=g;CURG=null}ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label',t);
@@ -5199,7 +5211,8 @@ function recheck(root){if(root.nodeType!==1)return;const L=[root,...root.querySe
 function applyTo(root){recheck(root);
   for(const r of CFG.hide||[])try{matches(root,r,n=>{n.classList.add(OWN()?'own-hid-o':'own-hid');n.dataset.ownHid=r.id})}catch(e){}
   for(const a of CFG.add||[])try{matches(root,a,n=>after(n,a.id,()=>addEl(a)))}catch(e){}
-  for(const p of CFG.pages||[])try{matches(root,p,n=>after(n,p.id,()=>tileEl(p,n)))}catch(e){}}
+  for(const p of CFG.pages||[])try{matches(root,p,n=>after(n,p.id,()=>tileEl(p,n)))}catch(e){}
+  if(typeof exEven==='function')try{exEven()}catch(e){}}
 function reapply(){document.querySelectorAll('.own-add').forEach(x=>x.remove());document.querySelectorAll('.own-hid,.own-hid-o').forEach(x=>{x.classList.remove('own-hid','own-hid-o');delete x.dataset.ownHid});applyTo(document.body)}
 let pend=new Set(),tmr=0;
 new MutationObserver(ms=>{if(!(CFG.hide||[]).length&&!(CFG.add||[]).length&&!(CFG.pages||[]).length)return;

@@ -18,7 +18,7 @@ def apply(text, old, nw):
         out.append(('h', text[k:m.start(2)])); out.append(('j', m.group(2))); k = m.end(2)
     out.append(('h', text[k:]))
     eo, en = html.escape(old, False), html.escape(nw, False)
-    ht = re.compile(r'>([ \t\n]*)' + re.escape(eo) + r'([ \t\n]*)<')
+    ht = re.compile(r'>([ \t\n\u00a0]*)' + re.escape(eo) + r'([ \t\n\u00a0]*)<')
     js = [re.compile(q + r'([ ]*)' + re.escape(old) + r'([ ]*)' + q) for q in ("'", '"')]
     res = []
     for kind, seg in out:
