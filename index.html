@@ -1750,6 +1750,10 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 .sy-gx{font-family:var(--text);font-size:17px;line-height:2;color:var(--ink);margin:0 0 8px}
 .jh-aq q{display:block;font-family:var(--text);color:var(--ink);margin:4px 0 2px}.jh-aq q::before,.jh-aq q::after{content:none}
 
+/* a large link to a whole book inside a section */
+.wide-b{display:flex;flex-direction:column;gap:4px;width:100%;text-align:start;font:inherit;margin:4px 0 12px;padding:16px;border-radius:18px;border:1px solid rgba(201,160,74,.55);background:linear-gradient(135deg,#1F3A30 0%,#10241D 100%);color:#F4ECD8;cursor:pointer}
+.wide-b b{font-family:var(--text);font-size:21px}.wide-b span{font-family:var(--text);font-size:15px;color:#C9D1C8}
+
 /* the site paused by its keeper */
 html.pz-on,html.pz-on body{overflow:hidden}
 .pz{position:fixed;inset:0;z-index:2147483000;background:var(--ground);display:grid;place-items:center;padding:24px 16px calc(24px + env(safe-area-inset-bottom))}
@@ -2046,7 +2050,7 @@ html.own-pg-on,html.own-pg-on body{overflow:hidden}
         <button type="button" id="fx-ilm"><b>تعليمه أصحابه <span class="saw">ﷺ</span></b><span>كتاب العلم من صحيح البخاري</span></button>
         <p class="exg" data-g="sh">التوحيد والجهاد</p>
         <button type="button" class="wide" id="fx-aq"><b>التوحيد والعقيدة</b><span>من صحيحي البخاري ومسلم، مع شرح الغنيمان</span></button>
-        <button type="button" class="wide" id="fxJh"><b>كتاب الجهاد</b><span>كتب الجهاد من الصحيحين والسنن الأربع ورياض الصالحين وبلوغ المرام كاملة، مع شروحها</span></button>
+        <button type="button" class="wide" id="fxJh"><b>جهاده صلى الله عليه وسلم</b><span>هديه في الجهاد ومغازيه من زاد المعاد، وغزواته في الصحيحين، و«كتاب الجهاد» من الكتب الثمانية بشروحها</span></button>
         <p class="exg" data-g="sg">من شؤونه <span class="saw">ﷺ</span></p>
         <button type="button" id="shu-asma"><b>أسماؤه <span class="saw">ﷺ</span></b><span>من البخاري وزاد المعاد</span></button>
         <button type="button" id="shu-khasais"><b>من خصائصه <span class="saw">ﷺ</span></b><span>من القرآن والصحيحين</span></button>
@@ -2430,7 +2434,7 @@ html.own-pg-on,html.own-pg-on body{overflow:hidden}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-0531';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-0537';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4539,7 +4543,7 @@ sxFam=function(V,D){
   [['أبناؤه',sons],['بناته',dau]].forEach(([h,L])=>{if(!L.length)return;const g=el('div','ft-g');g.append(el('h4',null,h));const ul=el('ul');L.forEach(c=>{const li=node(c);if(c.t)li.querySelector('.fn-t').querySelectorAll('i').forEach(i=>{if(i.textContent==='بنت')i.remove()});ul.append(li)});g.append(ul);T.append(g)});
   V.append(T)};
 /* wiring */
-$('#fxEvent').onclick=fxEvent;{const b=document.getElementById('fxSiyar');if(b)b.onclick=()=>fxSiyar();}$('#fxMg').onclick=()=>fxMgTL();$('#fxDal').onclick=()=>fxDal();$('#fxHajj').onclick=()=>fxHajj();$('#fxAhl').onclick=()=>fxAhl();$('#fxGz').onclick=()=>fxGz();$('#fxKh').onclick=()=>fxKh();$('#fxFad').onclick=()=>fxFad();$('#fxAns').onclick=()=>fxFad('ans');$('#fxSir').onclick=()=>fxFad('sir');$('#fxDaw').onclick=()=>fxFad('daw');$('#fxAdb').onclick=()=>fxFad('adb');$('#fxHady').onclick=()=>fxHady();['sal','saw','ilm','aq','lbs','mnq','mfad'].forEach(k=>{const b=$('#fx-'+k);if(b)b.onclick=()=>fxFad(k)});{const q=$('#fxQa');if(q)q.onclick=()=>fxQa()}{const j=$('#fxJh');if(j)j.onclick=()=>fxJihad()}['asma','khadam','silah','kutub','khasais','huquq'].forEach(k=>{const b=$('#shu-'+k);if(b)b.onclick=()=>fxShu(k)});['wafat','khutab','wasaya'].forEach(k=>{const w=$('#shu-'+k);if(w)w.onclick=()=>fxFad(k)});$('#khHome').onclick=async()=>{await openZad(MB.k);setTimeout(()=>{const k=$('#sxKhul');k&&k.scrollIntoView({block:'start'})},120)};$('#khHomeTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
+$('#fxEvent').onclick=fxEvent;{const b=document.getElementById('fxSiyar');if(b)b.onclick=()=>fxSiyar();}$('#fxMg').onclick=()=>fxMgTL();$('#fxDal').onclick=()=>fxDal();$('#fxHajj').onclick=()=>fxHajj();$('#fxAhl').onclick=()=>fxAhl();$('#fxGz').onclick=()=>fxGz();$('#fxKh').onclick=()=>fxKh();$('#fxFad').onclick=()=>fxFad();$('#fxAns').onclick=()=>fxFad('ans');$('#fxSir').onclick=()=>fxFad('sir');$('#fxDaw').onclick=()=>fxFad('daw');$('#fxAdb').onclick=()=>fxFad('adb');$('#fxHady').onclick=()=>fxHady();['sal','saw','ilm','aq','lbs','mnq','mfad'].forEach(k=>{const b=$('#fx-'+k);if(b)b.onclick=()=>fxFad(k)});{const q=$('#fxQa');if(q)q.onclick=()=>fxQa()}{const j=$('#fxJh');if(j)j.onclick=()=>fxJihadHub()}['asma','khadam','silah','kutub','khasais','huquq'].forEach(k=>{const b=$('#shu-'+k);if(b)b.onclick=()=>fxShu(k)});['wafat','khutab','wasaya'].forEach(k=>{const w=$('#shu-'+k);if(w)w.onclick=()=>fxFad(k)});$('#khHome').onclick=async()=>{await openZad(MB.k);setTimeout(()=>{const k=$('#sxKhul');k&&k.scrollIntoView({block:'start'})},120)};$('#khHomeTl').onclick=async()=>{await openSX('tl');const t=$('#era4');t&&t.scrollIntoView({block:'start'})};$('#fxDay').onclick=fxDay;$('#fxAyat').onclick=fxAyat;$('#fxSifa').onclick=fxSifa;$('#fxRoad').onclick=fxRoad;
 $('#sxSearchBtn').onclick=()=>{const q=$('#q');q.scrollIntoView({block:'center',behavior:'smooth'});q.focus({preventScroll:true})};
 $('#sxMenuBtn').onclick=()=>openNav();
 
@@ -4861,7 +4865,7 @@ const msMgMeta=(h,full)=>'صحيح مسلم، '+(h.k||'كتاب الجهاد و�
 function xref(t,tile){const b=el('button','fx-xref',t+' ←');b.type='button';b.onclick=()=>{const o=b.closest('.fx');if(o){const c=o.querySelector('.fx-x');if(c)c.click()}const x=document.querySelector(tile);if(x)x.click()};return b}   // closes this section, then opens the other as its tile does
 async function fxMgTL(open){const M=await getJSON('data/sx_mg.json');const GZ=new Set(((await getJSON('data/sx_gz.json'))||[]).map(g=>g.k));const P=fxOpen('المغازي في الصحيحين');const MS={h:M.mh||[]};
   P.inn.append(el('p','fx-lead','أحاديث كتاب المغازي من صحيح البخاري، ومعها أحاديث كتاب الجهاد والسير من صحيح مسلم، مجموعةً على الغزوات والأحداث بحسب أبواب الكتابين، والأحداث مرتبة على ترتيب وقوعها في مختصر السيرة، وما لم يذكره المختصر من أبواب كتاب المغازي في موضعه من ترتيب البخاري. اضغط الحدث لترى أحاديثه.'));
-  P.inn.append(xref('وأحاديث فضل الجهاد وأحكامه كاملةً في «كتاب الجهاد»','#fxJh'));
+  P.inn.append(xref('وهديه في الجهاد، وأحاديث فضل الجهاد وأحكامه كاملةً في «جهاده صلى الله عليه وسلم»','#fxJh'));
   const list=el('div','mg-list');P.inn.append(list);
   const msCh=(cs,body)=>{const hd=el('p','mg-bk','من صحيح مسلم');body.append(hd);cs.forEach(c=>{const cb=el('div','mg-ch');if(c.bk)cb.append(el('p','mg-bk',c.bk));cb.append(el('h4',null,c.t||'(أحاديث في أول الكتاب قبل أول باب)'));if(c.tr){const tp=el('p','mg-tr');hdFill(tp,c.tr,[]);cb.append(tp)}c.hs.forEach(i=>cb.append(mgItem(MS,i,{clip:260,meta:msMgMeta,noBook:1}).w));body.append(cb)})};
   M.ev.forEach((ev,k)=>{const mc=(M.mev||{})[k]||[];const nb=ev.ch.reduce((a,c)=>a+c.hs.length,0),nm=mc.reduce((a,c)=>a+c.hs.length,0),n=nb+nm;if(!n)return;
@@ -5259,6 +5263,22 @@ async function fxSiyar(open){const IX=await getJSON('data/sx_sy_ix.json');const 
     if(!R.length){res.append(el('p','jh-ld','لا ترجمة بهذا الاسم.'));return}
     R.forEach(x=>{const b=el('button','sy-hit');b.type='button';b.append(el('b',null,x.t),el('small',null,syPg(x.v,x.v+'-'+x.p)));b.onclick=()=>{res.innerHTML='';sr.value='';show(x.v,x.i)};res.append(b)})},200)};
   show((open&&open.v)||'r',open&&open.i)}
+
+/* ---------- جهاده صلى الله عليه وسلم: هديه في الجهاد، ثم مغازيه وبعوثه، من «زاد المعاد» (الجزء الثالث متصلاً بترتيبه)، ثم غزواته في الصحيحين،
+   ثم «كتاب الجهاد» من الكتب الثمانية بشروحها. كل فصل من زاد المعاد يُقرأ بلفظه في صفحته، كما في «هديه صلى الله عليه وسلم» ---------- */
+async function fxJihadHub(){const G=await getJSON('data/sx_hady.json');const P=fxOpen('جهاده صلى الله عليه وسلم');
+  P.inn.append(el('p','fx-lead','هديه صلى الله عليه وسلم في الجهاد، ثم سياق مغازيه وبعوثه وسراياه، من «زاد المعاد» لابن القيم: فصول الجزء الثالث متصلة بترتيب الكتاب، اضغط الفصل لتقرأه بلفظه في صفحته. ثم غزواته في الصحيحين، ثم «كتاب الجهاد» من الصحيحين والسنن الأربع ورياض الصالحين وبلوغ المرام كاملاً بشروحه.'));
+  const it=(G.find(g=>g.t==='الجزء الثالث')||{it:[]}).it;
+  // the book's own two runs: from «الجهاد في أول الإسلام» to the order of his dealings with the disbelievers, then from «سياق مغازيه وبعوثه» to the end of the story of Thaqif's delegation
+  const a=it.findIndex(x=>x.h.startsWith('الجهاد في أول الإسلام')),b=it.findIndex(x=>x.h.startsWith('فصل في سياق مغازيه وبعوثه')),c=it.findIndex(x=>x.h==='فصل في الوفود');
+  const rows=(L,body)=>L.forEach(x=>{const r=el('button','hd-row');r.type='button';r.append(el('span',null,x.h),el('small',null,'ج'+ar(x.n-17)+' ص '+ar(x.p)));r.onclick=()=>{P.close();openPart(x.n,x.p,null,false,'txt')};body.append(r)});
+  const L=el('div','mg-list');P.inn.append(L);
+  if(a>=0&&b>a){const R1=it.slice(a,b),R2=it.slice(b,c>b?c:it.length);
+    L.append(accCard('هديه صلى الله عليه وسلم في الجهاد','زاد المعاد، ج٣ ص '+ar(R1[0].p)+'–'+ar(R2[0].p-1)+' · '+ar(R1.length)+' عنوانًا',body=>rows(R1,body)));
+    L.append(accCard('مغازيه وبعوثه وسراياه','زاد المعاد، ج٣ ص '+ar(R2[0].p)+'–'+ar((c>b?it[c].p:R2[R2.length-1].p))+' · '+ar(R2.length)+' عنوانًا',body=>rows(R2,body)))}
+  L.append(accCard('غزواته صلى الله عليه وسلم في الصحيحين','أحاديث كل غزوة على ترتيب وقوعها، وأعدادها في سطور',body=>{const x1=el('button','hd-row');x1.type='button';x1.append(el('span',null,'المغازي في الصحيحين'),el('small',null,'البخاري ومسلم'));x1.onclick=()=>{P.close();fxMgTL()};
+    const x2=el('button','hd-row');x2.type='button';x2.append(el('span',null,'الغزوات في سطور'),el('small',null,'مختصر السيرة'));x2.onclick=()=>{P.close();const g=$('#fxGz');if(g)g.click()};body.append(x1,x2)}));
+  const jb=el('button','wide-b');jb.type='button';jb.append(el('b',null,'كتاب الجهاد'),el('span',null,'كتب الجهاد من الصحيحين والسنن الأربع ورياض الصالحين وبلوغ المرام كاملة، مع شروحها'));jb.onclick=()=>{P.close();fxJihad()};L.append(jb)}
 
 /* ---------- مواضع الخلاف مع المطبوع: علامات حمراء، وقراءة الصفحات المعلَّمة وحدها ---------- */
 let MK={};getJSON('data/marks.json').then(d=>{MK=d||{};renderMkBooks()}).catch(()=>{});
