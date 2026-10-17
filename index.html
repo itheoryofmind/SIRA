@@ -29,7 +29,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07110E">
-<script>try{var t=JSON.parse(localStorage.getItem("theme")||"null");if(t&&t!=="auto"&&t!=="brown")document.documentElement.setAttribute("data-theme",t)}catch(e){}try{var z=new URLSearchParams(location.search).get("dz");if(z===null)z=JSON.parse(localStorage.getItem("own_dz")||'""');if(z&&/^[a-z]+$/.test(z))document.documentElement.classList.add("dz-"+z)}catch(e){}try{if(new URLSearchParams(location.search).get("dz")===null&&(!t||t==="auto")){var m=(JSON.parse(localStorage.getItem("own_dzm")||'{"haram":"white"}')||{})[z||"base"];if(m==="white"||m==="night")document.documentElement.setAttribute("data-theme",m)}}catch(e){}try{var dv=new URLSearchParams(location.search).get("dv");if(new URLSearchParams(location.search).get("dz")===null)dv=(JSON.parse(localStorage.getItem("own_dzv")||"{}")||{})[z];if(dv&&/^[a-z]$/.test(dv))document.documentElement.classList.add("dzv-"+dv)}catch(e){}
+<script>try{var t=JSON.parse(localStorage.getItem("theme")||"null");if(t&&t!=="auto"&&t!=="brown")document.documentElement.setAttribute("data-theme",t)}catch(e){}try{var z=new URLSearchParams(location.search).get("dz");if(z===null){z=JSON.parse(localStorage.getItem("own_dz")||'""');var my=JSON.parse(localStorage.getItem("my_dz")||'""'),pk=JSON.parse(localStorage.getItem("own_pick")||'["base","haram"]');if(my&&pk.indexOf(my)>=0)z=my==="base"?"":my}if(z&&/^[a-z]+$/.test(z))document.documentElement.classList.add("dz-"+z)}catch(e){}try{if(new URLSearchParams(location.search).get("dz")===null&&(!t||t==="auto")){var m=(JSON.parse(localStorage.getItem("own_dzm")||'{"haram":"white"}')||{})[z||"base"];if(m==="white"||m==="night")document.documentElement.setAttribute("data-theme",m)}}catch(e){}try{var dv=new URLSearchParams(location.search).get("dv");if(new URLSearchParams(location.search).get("dz")===null)dv=(JSON.parse(localStorage.getItem("own_dzv")||"{}")||{})[z];if(dv&&/^[a-z]$/.test(dv))document.documentElement.classList.add("dzv-"+dv)}catch(e){}
 // the preview runs inside a frame: history calls must never stop the page
 (function(){var H=window.history;['pushState','replaceState'].forEach(function(k){var f=H[k];H[k]=function(){try{return f.apply(H,arguments)}catch(e){}}})})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2607,7 +2607,7 @@ html.own-noimg .pgimg,html.own-noimg .sx-pbtn,html.own-noimg .sx-pwrap,html.own-
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-0744';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-0751';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -5647,20 +5647,30 @@ function openPage(p){const ov=el('div','own-pg');ov.setAttribute('role','dialog'
 
 /* ---------- the design the keeper chose (or one being previewed: ?dz=<design>&mode=auto|white|night) ---------- */
 const QS=new URLSearchParams(location.search),PVZ=QS.get('dz'),PVM=QS.get('mode');
+// the designs a reader may choose for himself (the keeper sets which, in his panel); 'base' is the site's original («طيبة»)
+const DZP=()=>(CFG.pick||['base','haram']).filter(k=>k==='base'||(typeof OWN_DESIGNS!=='undefined'&&OWN_DESIGNS[k]));
+function curDz(){const m=LS.get('my_dz','');if(m&&DZP().includes(m))return m==='base'?'':m;return LS.get('own_dz','')}
 function design(k){if(typeof OWN_DESIGNS==='undefined')return;const D=k&&OWN_DESIGNS[k];
   [...document.documentElement.classList].filter(c=>c.startsWith('dz-')).forEach(c=>document.documentElement.classList.remove(c));
   if(!D)return;   // the designs' styles are in the page itself; a design is its class on the page
   if(!document.getElementById('own-dzf-'+k)){const l=document.createElement('link');l.rel='stylesheet';l.id='own-dzf-'+k;l.href='https://fonts.googleapis.com/css2?'+D.f+'&display=swap';document.head.append(l)}
   document.documentElement.classList.add('dz-'+k)}
 if(PVZ!==null){design(PVZ);if(PVM){if(PVM==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',PVM)}}
-else design(LS.get('own_dz',''));
+else design(curDz());
 // «تلقائي» as the keeper set it for this design (white or night always, or the device's), when the reader has not chosen a mode
-function dmode(th){if(PVZ!==null)return;const t=th!==undefined?th:LS.get('theme',null);if(t&&t!=='auto')return;const m=(CFG.dzm||{haram:'white'})[LS.get('own_dz','')||'base'];const R=document.documentElement;if(m==='white'||m==='night')R.setAttribute('data-theme',m);else R.removeAttribute('data-theme')}
+function dmode(th){if(PVZ!==null)return;const t=th!==undefined?th:LS.get('theme',null);if(t&&t!=='auto')return;const m=(CFG.dzm||{haram:'white'})[curDz()||'base'];const R=document.documentElement;if(m==='white'||m==='night')R.setAttribute('data-theme',m);else R.removeAttribute('data-theme')}
 try{dmode()}catch(e){}
 // the variant of a design's top the keeper chose (or one being previewed: &dv=<letter>)
 function dvar(){const R=document.documentElement;[...R.classList].filter(c=>c.startsWith('dzv-')).forEach(c=>R.classList.remove(c));
-  const k=PVZ!==null?PVZ:LS.get('own_dz','');const v=PVZ!==null?QS.get('dv'):(CFG.dzv||{})[k];if(v&&/^[a-z]$/.test(v))R.classList.add('dzv-'+v)}
+  const k=PVZ!==null?PVZ:curDz();const v=PVZ!==null?QS.get('dv'):(CFG.dzv||{})[k];if(v&&/^[a-z]$/.test(v))R.classList.add('dzv-'+v)}
 try{dvar()}catch(e){}
+function drawPick(){if(PVZ!==null||typeof OWN_DESIGNS==='undefined')return;const P=DZP();document.querySelectorAll('.dzpick-w').forEach(w=>w.remove());if(P.length<2)return;
+  const cur=curDz()||'base',NM=k=>k==='base'?'طيبة':OWN_DESIGNS[k].n,SW=k=>k==='base'?'linear-gradient(135deg,#14231E 50%,#C9A04A 50%)':'linear-gradient(135deg,'+OWN_DESIGNS[k].sw[1]+' 50%,'+OWN_DESIGNS[k].sw[2]+' 50%)';
+  const row=()=>{const r=el('div','themes dzpick');r.setAttribute('role','group');r.setAttribute('aria-label','التصميم');P.forEach(k=>{const b=el('button');b.type='button';b.setAttribute('aria-pressed',k===cur?'true':'false');const i=document.createElement('i');i.style.background=SW(k);b.append(i,document.createTextNode(NM(k)));
+    b.onclick=()=>{LS.set('my_dz',k);design(k==='base'?'':k);try{dvar();dmode()}catch(e){}drawPick()};r.append(b)});return r};
+  document.querySelectorAll('.dtheme').forEach(t=>{const w=el('div','dtheme dzpick-w');w.append(el('span',null,'التصميم'),row());t.after(w)});
+  document.querySelectorAll('.sheet .themes:not(.dzpick)').forEach(t=>{const w=el('div','dzpick-w');w.append(el('h4',null,'التصميم'),row());t.after(w)})}
+try{drawPick()}catch(e){}
 if(typeof applyTheme==='function'){const _at=applyTheme;applyTheme=function(t){_at.apply(this,arguments);if(!t||t==='auto')try{dmode('auto')}catch(e){}}}
 
 /* ---------- the printed pages' images («قارن بالصورة»), shown or withheld by the keeper ---------- */
@@ -5674,7 +5684,7 @@ function pause(){if(CFG.on&&!OWN()){if(!pzv){pzv=el('div','pz');pzv.setAttribute
   else if(pzv){pzv.remove();pzv=null;document.documentElement.classList.remove('pz-on')}}
 
 async function load(){try{const r=await fetch(W+'/st?s='+SITE,{cache:'no-store'});if(!r.ok)return;const j=await r.json();
-  const ch=JSON.stringify([j.hide,j.add,j.pages])!==JSON.stringify([CFG.hide,CFG.add,CFG.pages]);CFG=j;LS.set('own_cfg',j);noimg();if(PVZ===null&&(j.dz||'')!==LS.get('own_dz','')){LS.set('own_dz',j.dz||'');design(j.dz||'')}LS.set('own_dzm',j.dzm||{});try{dmode()}catch(e){}LS.set('own_dzv',j.dzv||{});try{dvar()}catch(e){}pause();if(ch)reapply();drawPz()}catch(e){}}
+  const ch=JSON.stringify([j.hide,j.add,j.pages])!==JSON.stringify([CFG.hide,CFG.add,CFG.pages]);CFG=j;LS.set('own_cfg',j);noimg();if(PVZ===null){LS.set('own_dz',j.dz||'');LS.set('own_pick',j.pick||['base','haram']);const d=curDz();if(!document.documentElement.classList.contains('dz-'+d)||!d)design(d);drawPick()}LS.set('own_dzm',j.dzm||{});try{dmode()}catch(e){}LS.set('own_dzv',j.dzv||{});try{dvar()}catch(e){}pause();if(ch)reapply();drawPz()}catch(e){}}
 load();try{pause()}catch(e){}if((CFG.hide||[]).length||(CFG.add||[]).length||(CFG.pages||[]).length)try{applyTo(document.body)}catch(e){}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
 
