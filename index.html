@@ -1814,6 +1814,9 @@ html.own-pg-on,html.own-pg-on body{overflow:hidden}
 .own-grey{background:#3a352a!important;color:#f1ece0!important}
 .own-bar .own-b{flex:none}.own-bar .own-pk{flex:1}
 
+/* the keeper withheld the printed pages' images: the buttons and any opened image go; a page that has only its image stays */
+html.own-noimg .pgimg,html.own-noimg .sx-pbtn,html.own-noimg .sx-pwrap,html.own-noimg .istage:not([data-auto]){display:none!important}
+
 :root.dz-haram{--display:"Amiri",serif;--text:"Amiri","Scheherazade New",serif;--ui:"Tajawal",-apple-system,sans-serif}
 :root.dz-haram:not([data-theme=night]){--ground:#F6F5F0;--surface:#FFFFFF;--raised:#FFFFFF;--ink:#15241E;--muted:#4F5D56;--line:#E2E0D6;--brown:#0E3F31;--brown2:#155A45;--on-brown:#F6F2E6;--brass:#8A6416;--gold:#C59A3C;--brass-soft:#F3EBD6;--clay:#A4462E;--palm:#1C6B50;--verse:#1C6B50;--mark:#F0DE9E;--here:#C59A3C;--read:#1E2C26}
 @media (prefers-color-scheme:dark){:root.dz-haram:not([data-theme=white]):not([data-theme=brown]):not([data-theme=night]){--ground:#0A1612;--surface:#0F1E19;--raised:#13241E;--ink:#E9EEE9;--muted:#A1B0A8;--line:#1F332B;--brown:#08130F;--brown2:#103026;--on-brown:#EEE8D8;--brass:#D9B567;--gold:#E6C77F;--brass-soft:#25230F;--clay:#E08A6D;--palm:#76C3A2;--verse:#86CCAE;--mark:#4F4519;--here:#E6C77F;--read:#E3E6DF;color-scheme:dark}}
@@ -2527,7 +2530,7 @@ html.own-pg-on,html.own-pg-on body{overflow:hidden}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-0554';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-0559';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -5525,6 +5528,10 @@ function design(k){if(typeof OWN_DESIGNS==='undefined')return;const D=k&&OWN_DES
 if(PVZ!==null){design(PVZ);if(PVM){if(PVM==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',PVM)}}
 else design(LS.get('own_dz',''));
 
+/* ---------- the printed pages' images («قارن بالصورة»), shown or withheld by the keeper ---------- */
+function noimg(){document.documentElement.classList.toggle('own-noimg',!!CFG.noimg)}
+noimg();
+
 /* ---------- the pause ---------- */
 let pzv=null;
 function pause(){if(CFG.on&&!OWN()){if(!pzv){pzv=el('div','pz');pzv.setAttribute('role','alertdialog');pzv.setAttribute('aria-modal','true');document.body.append(pzv);document.documentElement.classList.add('pz-on')}
@@ -5532,7 +5539,7 @@ function pause(){if(CFG.on&&!OWN()){if(!pzv){pzv=el('div','pz');pzv.setAttribute
   else if(pzv){pzv.remove();pzv=null;document.documentElement.classList.remove('pz-on')}}
 
 async function load(){try{const r=await fetch(W+'/st?s='+SITE,{cache:'no-store'});if(!r.ok)return;const j=await r.json();
-  const ch=JSON.stringify([j.hide,j.add,j.pages])!==JSON.stringify([CFG.hide,CFG.add,CFG.pages]);CFG=j;LS.set('own_cfg',j);if(PVZ===null&&(j.dz||'')!==LS.get('own_dz','')){LS.set('own_dz',j.dz||'');design(j.dz||'')}pause();if(ch)reapply();drawPz()}catch(e){}}
+  const ch=JSON.stringify([j.hide,j.add,j.pages])!==JSON.stringify([CFG.hide,CFG.add,CFG.pages]);CFG=j;LS.set('own_cfg',j);noimg();if(PVZ===null&&(j.dz||'')!==LS.get('own_dz','')){LS.set('own_dz',j.dz||'');design(j.dz||'')}pause();if(ch)reapply();drawPz()}catch(e){}}
 load();try{pause()}catch(e){}if((CFG.hide||[]).length||(CFG.add||[]).length||(CFG.pages||[]).length)try{applyTo(document.body)}catch(e){}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
 

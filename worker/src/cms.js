@@ -47,7 +47,7 @@ async function putCfg(env, s, c) {
 function pub(c) {
   return { on: !!c.pause.on, msg: c.pause.on ? c.pause.msg : '', np: !!(c.pause.on && c.pause.np), hide: c.hide.map((h) => ({ id: h.id, sel: h.sel, fp: h.fp, sec: h.sec })),
     add: c.add.map((a) => ({ id: a.id, sel: a.sel, fp: a.fp, sec: a.sec, k: a.k, t: a.t })),
-    dz: c.dz || '', pages: c.pages.filter((p) => !p.off).map((p) => ({ id: p.id, sel: p.sel, fp: p.fp, sec: p.sec, title: p.title, sub: p.sub, blocks: p.blocks })), v: c.v || 0 };
+    dz: c.dz || '', noimg: !!c.noimg, pages: c.pages.filter((p) => !p.off).map((p) => ({ id: p.id, sel: p.sel, fp: p.fp, sec: p.sec, title: p.title, sub: p.sub, blocks: p.blocks })), v: c.v || 0 };
 }
 const okRule = (r) => r && typeof r.sel === 'string' && /^[a-z][a-z0-9]{0,11}(\.[A-Za-z_][A-Za-z0-9_-]{0,39})?$/.test(r.sel) && typeof r.fp === 'string' && /^[0-9a-z]{4,40}$/.test(r.fp) && typeof r.sec === 'string' && r.sec.length <= 200;
 const okBlocks = (b) => Array.isArray(b) && b.length <= 400 && b.every((x) => x && ['h', 'p', 'q'].includes(x.k) && typeof x.t === 'string' && x.t.length <= 20000);
@@ -184,6 +184,8 @@ export async function cmsFetch(req, env, u) {
       if (p.id) { const x = c.pages.find((x) => x.id === p.id); if (!x) return out({ ok: false }, 404); Object.assign(x, { title: str(p.title, 200), sub: str(p.sub, 300), blocks: p.blocks, off: !!p.off, at2: at }); }
       else { if (!okRule(b.r)) return out({ ok: false, bad: 1 }, 400); c.pages.push({ id: rid(), sel: b.r.sel, fp: b.r.fp, sec: b.r.sec, title: str(p.title, 200), sub: str(p.sub, 300), blocks: p.blocks, lb: str(b.lb, 300), at }); }
       if (c.pages.length > 200) return out({ ok: false, full: 1 }, 400);
+    } else if (a === 'noimg') {
+      c.noimg = !!b.on;
     } else if (a === 'design') {
       const id = str(b.id, 30);
       if (id && !/^[a-z]{2,20}$/.test(id)) return out({ ok: false, bad: 1 }, 400);
