@@ -2693,7 +2693,7 @@ html.own-noimg .pgimg,html.own-noimg .sx-pbtn,html.own-noimg .sx-pwrap,html.own-
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-1157';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-1215';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -5756,7 +5756,8 @@ const IBKSH=[[385, "شمائل رسول الله صلى الله عليه وسل
 function ibkShamail(P){const w=el('section','sf-ch');const hd=el('button','sf-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
   const tt=el('span','sf-tt');tt.append(el('b',null,'كتاب الشمائل من «البداية والنهاية» لابن كثير'),el('small',null,ar(IBKSH.length)+' عنوانًا، ج٨ ص ٣٨٥–٥٣٨'));hd.append(tt);w.append(hd);
   const body=el('div','sf-body');body.hidden=true;body.dataset.nohl=1;
-  body.append(el('p','fx-note','الكتاب بنصه في صفحاته، ومن أبوابه «حديث أم معبد» في صفته صلى الله عليه وسلم، وأتبعه ابن كثير بشرح غريب ألفاظه عن البيهقي وأبي عبيد، و«حديث هند بن أبي هالة».'));
+  {const n=el('div','fx-note');n.append(el('p',null,'الكتاب بنصه في صفحاته. ومن أبوابه «حديث أم معبد» في صفته صلى الله عليه وسلم، وأتبعه ابن كثير بشرح غريب ألفاظه عن البيهقي وأبي عبيد، وقال في القصة في موضع الهجرة: «وقصتها مشهورة مروية من طرق يشد بعضها بعضا».'));
+    const g=el('button','btn btn-link','قوله في البداية والنهاية، ج٤، ص ٤٧٢');g.type='button';g.onclick=()=>{P.close();openPart(32,472,['وقصتها مشهورة مروية من طرق'],false,'txt')};n.append(g);body.append(n)}
   IBKSH.forEach(([p,h])=>{const b=el('button','hd-row');b.type='button';b.append(el('span',null,h),el('small',null,'ص '+ar(p)));b.onclick=()=>{P.close();openPart(36,p,[h.replace(/^\[/,'').split(/[\]\[]/)[0].trim().split(/\s+/).slice(0,3).join(' ')],false,'txt')};body.append(b)});
   hd.onclick=()=>{const o=body.hidden;body.hidden=!o;w.classList.toggle('open',o);hd.setAttribute('aria-expanded',o)};w.append(body);P.inn.append(w)}
 
