@@ -1820,6 +1820,9 @@ html.own-pg-on,html.own-pg-on body{overflow:hidden}
 html.own-noimg .pgimg,html.own-noimg .sx-pbtn,html.own-noimg .sx-pwrap,html.own-noimg .istage:not([data-auto]){display:none!important}
 
 .dz-art{display:none}
+/* the verses of the Qur'an in the Uthmani script's font (King Fahd Complex, Hafs) in every design and mode */
+.q,.qu,.hd-v,.ayatext,.tq,.sx-hero .sx-verse .v1,.sx-hero .sx-verse .v2,.nz-q blockquote .qu{font-family:"UthmanicHafs","Amiri",serif!important}
+.q,.hd-v{font-size:1.04em}
 
 :root.dz-haram{--display:"Amiri",serif;--text:"Amiri","Scheherazade New",serif;--ui:"Tajawal",-apple-system,sans-serif}
 :root.dz-haram:not([data-theme=night]){--ground:#F6F5F0;--surface:#FFFFFF;--raised:#FFFFFF;--ink:#15241E;--muted:#4F5D56;--line:#E2E0D6;--brown:#0E3F31;--brown2:#155A45;--on-brown:#F6F2E6;--brass:#8A6416;--gold:#C59A3C;--brass-soft:#F3EBD6;--clay:#A4462E;--palm:#1C6B50;--verse:#1C6B50;--mark:#F0DE9E;--here:#C59A3C;--read:#1E2C26}
@@ -2620,7 +2623,7 @@ html.own-noimg .pgimg,html.own-noimg .sx-pbtn,html.own-noimg .sx-pwrap,html.own-
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-0650';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-0708';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
