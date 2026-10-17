@@ -5631,7 +5631,7 @@ function ringDial(host,rings,hub,onPick){const C=180,svg=vmk('svg',{viewBox:'0 0
 function sifaDial(P,host,F){const box=el('div');const items=F.sifa.map((s,i)=>{const n=s.c.reduce((a,c)=>a+c.had.length,0);return {t:s.t,s:s.t.length>10?s.t.split(' ')[0]:s.t,n,w:Math.max(n,24),i}});
   const segs=ringDial(host,[{r0:84,r1:174,items,fs:11}],'شمائله',it=>{box.innerHTML='';const s=F.sifa[it.i];box.append(el('h3','fx-dh',s.t+'، '+ar(it.n)+' حديثًا'));
     s.c.forEach(c=>{const b=el('button','hd-row');b.type='button';b.append(el('span',null,c.h),el('small',null,ar(c.had.length)));b.onclick=()=>{P.close();fxSifa(it.i)};box.append(b)})});
-  host.append(box);host.append(el('p','fx-note','كلما كثرت أحاديث الموضوع في «مختصر الشمائل» اتسعت مساحته في الدائرة، وعدد أحاديثه مكتوب عند اختياره.'));segs[0].dispatchEvent(new Event('click'))}
+  host.append(el('p','fx-note kh','كلما كثرت أحاديث الموضوع في «مختصر الشمائل» اتسعت مساحته في الدائرة، وعدد أحاديثه مكتوب عند اختياره.'),box);segs[0].dispatchEvent(new Event('click'))}
 
 // عبادته: of the day, the week and the year: each mark is a chapter of the two Sahihs (or the Farewell Pilgrimage), opened at that chapter
 const IBD=[{t:'اليوم والليلة',items:[['السحور','saw','باب تأخير السحور'],['الفجر','sal','باب القراءة في الفجر'],['الصباح','daw','باب ما يقول إذا أصبح'],['الظهر','sal','باب القراءة في الظهر'],['العصر','sal','باب القراءة في العصر'],['المغرب','sal','باب القراءة في المغرب'],['العشاء','sal','باب القراءة في العشاء'],['النوم','daw','باب ما يقول إذا نام'],['الليل','daw','باب الدعاء إذا انتبه بالليل']]},
