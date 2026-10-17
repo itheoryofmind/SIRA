@@ -1843,6 +1843,8 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 .atree .aw .an i{margin-inline-start:-31px}
 .jstrip .jd:active,.atree .an:active{border-color:var(--brass)}
 
+.ix-bk{font:600 .82rem/1.5 var(--f-ui,inherit);color:var(--brass,#9a7425);margin:.7rem .2rem .25rem}
+
 /* the site paused by its keeper */
 html.pz-on,html.pz-on body{overflow:hidden}
 .pz{position:fixed;inset:0;z-index:2147483000;background:var(--ground);display:grid;place-items:center;padding:24px 16px calc(24px + env(safe-area-inset-bottom))}
@@ -2683,7 +2685,7 @@ html.own-noimg .pgimg,html.own-noimg .sx-pbtn,html.own-noimg .sx-pwrap,html.own-
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-0920';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-0947';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -5603,9 +5605,11 @@ function ovGrid(items){const g=el('div','ov-grid');items.forEach(([t,sub,go,tag]
 async function fxOverview(k){
   if(k==='sifa'){const F=await sxFeat();const P=fxOpen('صفته صلى الله عليه وسلم');P.inn.append(el('p','fx-lead','موضوعات «مختصر الشمائل المحمدية» وعدد أبوابها وأحاديثها. اضغط الموضوع لتقرأ أحاديثه.'));sifaDial(P,P.inn,F);
     P.inn.append(ovGrid(F.sifa.map((s,i)=>{const nh=s.c.reduce((a,c)=>a+c.had.length,0);return [s.t,ar(s.c.length)+' '+(s.c.length<=10?'أبواب':'بابًا')+'، '+ar(nh)+' حديثًا',()=>{P.close();fxSifa(i)}]})));return}
-  if(k==='hady'){const G=await getJSON('data/sx_hady.json');const P=fxOpen('هديه صلى الله عليه وسلم');P.inn.append(el('p','fx-lead','فصول هديه صلى الله عليه وسلم من «زاد المعاد» لابن القيم بعناوينها في كل جزء. اضغط الفصل لتقرأه بلفظه.'));{const F=await sxFeat();P.inn.append(el('h3','dl-bk','يومه صلى الله عليه وسلم'));dayDial(P,P.inn,F)}
-    G.forEach(g=>{const seen=new Set(),L=[];g.it.forEach(x=>{const m=x.h.replace(/[\[\]]/g,'').match(/^(?:فصل في )?هدي(?:ه)?\s*(?:-\s*)?(?:صلى الله عليه وسلم\s*)?(?:-\s*)?(?:وسيرته\s*(?:صلى الله عليه وسلم)?\s*)?(.+)$/);if(!m)return;const t=m[1].trim();if(seen.has(t))return;seen.add(t);L.push([t,x])});
-      if(!L.length)return;P.inn.append(el('h3','dl-bk',g.t+'، '+ar(L.length)));const w=el('div','ov-chips');L.forEach(([t,x])=>{const b=el('button','ov-ch',t);b.type='button';b.title=x.h;b.onclick=()=>{P.close();openPart(x.n,x.p,null,false,'txt')};w.append(b)});P.inn.append(w)});
+  if(k==='hady'){const G=await getJSON('data/sx_hady.json');const P=fxOpen('هديه صلى الله عليه وسلم');P.inn.append(el('p','fx-lead','«زاد المعاد في هدي خير العباد» لابن القيم: فصوله كلها بعناوينها وترتيبها في أجزائه الخمسة. اضغط الجزء ثم الفصل لتقرأه بلفظه.'));{const F=await sxFeat();P.inn.append(el('h3','dl-bk','يومه صلى الله عليه وسلم'));dayDial(P,P.inn,F)}
+    P.inn.append(el('h3','dl-bk','فصول زاد المعاد في أجزائه، '+ar(G.reduce((a,g)=>a+g.it.length,0))+' عنوانًا'));
+    G.forEach(g=>{const card=el('section','sf-ch');const hd=el('button','sf-hd');hd.type='button';hd.setAttribute('aria-expanded','false');const tt=el('span','sf-tt');tt.append(el('b',null,g.t),el('small',null,ar(g.it.length)+' عنوانًا'));hd.append(tt);card.append(hd);
+      const body=el('div','sf-body');body.hidden=true;card.append(body);const w=el('div','ov-chips');g.it.forEach(x=>{const b=el('button','ov-ch',x.h);b.type='button';b.onclick=()=>{P.close();openPart(x.n,x.p,null,false,'txt')};w.append(b)});body.append(w);
+      hd.onclick=()=>{const o=body.hidden;body.hidden=!o;card.classList.toggle('open',o);hd.setAttribute('aria-expanded',o)};P.inn.append(card)});
     const all=el('button','wide-b');all.type='button';all.append(el('b',null,'فهرس زاد المعاد كاملاً'),el('span',null,'كل فصوله في أجزائه الخمسة بترتيبه'));all.onclick=()=>{P.close();fxHady()};P.inn.append(all);return}
   if(k==='ahl'){const A=await getJSON('data/sx_ahl.json');const P=fxOpen('أهل بيته صلى الله عليه وسلم');P.inn.append(el('p','fx-lead','أزواجه أمهات المؤمنين وأولاده صلى الله عليه وسلم كما في «البداية والنهاية». اضغط الاسم لتقرأ ما أورده ابن كثير فيه.'));ahlTree(P,P.inn,A);return;
     P.inn.append(el('h3','dl-bk','أزواجه أمهات المؤمنين رضي الله عنهن، '+ar(A.w.length)));P.inn.append(ovGrid(A.w.map((w,j)=>[w.n,'رضي الله عنها',()=>{P.close();fxAhl('w'+j)},ar(j+1)])));
@@ -5637,14 +5641,20 @@ function sifaDial(P,host,F){const box=el('div');const items=F.sifa.map((s,i)=>{c
 const IBD=[{t:'اليوم والليلة',items:[['السحور','saw','باب تأخير السحور'],['الفجر','sal','باب القراءة في الفجر'],['الصباح','daw','باب ما يقول إذا أصبح'],['الظهر','sal','باب القراءة في الظهر'],['العصر','sal','باب القراءة في العصر'],['المغرب','sal','باب القراءة في المغرب'],['العشاء','sal','باب القراءة في العشاء'],['النوم','daw','باب ما يقول إذا نام'],['الليل','daw','باب الدعاء إذا انتبه بالليل']]},
   {t:'الأسبوع',items:[['الجمعة','daw','باب الدعاء في الساعة التي في يوم الجمعة'],['صوم الجمعة','saw','باب صوم يوم الجمعة'],['الاثنين والخميس','msaw','باب استحباب صيام ثلاثة أيام من كل شهر وصوم يوم عرفة وعاشوراء والاثنين والخميس']]},
   {t:'السنة',items:[['شعبان','saw','باب صوم شعبان'],['رمضان','saw','باب وجوب صوم رمضان'],['ليلة القدر','saw','باب فضل ليلة القدر'],['الاعتكاف','saw','باب الاعتكاف في العشر الأواخر، والاعتكاف في المساجد كلها'],['عرفة','saw','باب صوم يوم عرفة'],['الحج','@hajj',''],['عاشوراء','saw','باب صيام يوم عاشوراء']]}];
-async function openBab(k,title){if(k==='@hajj'){fxHajj();return}await fxFad(k);const o=document.querySelector('.fx:not([hidden])');if(!o)return;
-  for(let t=0;t<30;t++){const H=[...o.querySelectorAll('.sf-hd,.mg-hd')],tx=x=>((x.querySelector('b')||x).textContent||'').replace(/\s+/g,' ').trim();const h=H.find(x=>tx(x)===title)||H.find(x=>tx(x).includes(title));if(h){if(h.getAttribute('aria-expanded')!=='true')h.click();setTimeout(()=>{const s=h.closest('section')||h;o.scrollTo({top:s.getBoundingClientRect().top-o.getBoundingClientRect().top+o.scrollTop-((o.querySelector('.fx-top')||{}).offsetHeight||0)-((o.querySelector('.bk-bar')||{}).offsetHeight||0)-8})},120);return}await new Promise(r=>setTimeout(r,100))}}
+async function openBab(k,title,idx){if(k==='@hajj'){fxHajj();return}await fxFad(k);const o=document.querySelector('.fx:not([hidden])');if(!o)return;
+  for(let t=0;t<30;t++){const H=[...o.querySelectorAll('.sf-hd,.mg-hd')],tx=x=>((x.querySelector('b')||x).textContent||'').replace(/\s+/g,' ').trim();const h=idx!=null?H[idx]:(H.find(x=>tx(x)===title)||H.find(x=>tx(x).includes(title)));if(h){if(h.getAttribute('aria-expanded')!=='true')h.click();setTimeout(()=>{const s=h.closest('section')||h;o.scrollTo({top:s.getBoundingClientRect().top-o.getBoundingClientRect().top+o.scrollTop-((o.querySelector('.fx-top')||{}).offsetHeight||0)-((o.querySelector('.bk-bar')||{}).offsetHeight||0)-8})},120);return}await new Promise(r=>setTimeout(r,100))}}
 function ibadaDial(P,host){const box=el('div');const rings=[{r0:128,r1:176,cls:'r-d',fs:10.5},{r0:96,r1:126,cls:'r-w',fs:9.5},{r0:58,r1:94,cls:'r-y',fs:9.5}];
   rings[0].items=IBD[0].items.map(x=>({t:x[0],k:x[1],b:x[2],g:IBD[0].t}));rings[1].items=IBD[1].items.map(x=>({t:x[0],s:x[0].replace(' و','\nو'),k:x[1],b:x[2],g:IBD[1].t}));rings[2].items=IBD[2].items.map(x=>({t:x[0],s:x[0]==='ليلة القدر'?'القدر':x[0]==='الاعتكاف'?'اعتكاف':x[0],k:x[1],b:x[2],g:IBD[2].t}));
   const key=el('div','rkey');[['r-d',IBD[0].t],['r-w',IBD[1].t],['r-y',IBD[2].t]].forEach(([c,t])=>{const s=el('span');s.append(el('i',c),t);key.append(s)});
   ringDial(host,rings,'عبادته',it=>{box.innerHTML='';const c=el('div','rpick');c.append(el('small',null,it.g),el('b',null,it.t));const sub=it.k==='@hajj'?'حجة الوداع يومًا بيوم':(it.b+' · '+({sal:'صحيح البخاري',saw:'صحيح البخاري',daw:'صحيح البخاري',msaw:'صحيح مسلم'}[it.k]||''));c.append(el('span',null,sub));
     const go=el('button','btn btn-quiet','افتح الباب');go.type='button';go.onclick=()=>{P.close();openBab(it.k,it.b)};c.append(go);box.append(c)});
-  host.append(key,box);host.append(el('p','fx-note','كل علامة في الحلقات باب بلفظه من الصحيحين في ذلك الوقت، والحج «حجة الوداع». وترتيب العلامات في الحلقة للتصفح.'))}
+  host.append(key,box);host.append(el('p','fx-note','الحلقات للتنقل: كل علامة فيها تفتح بابًا من الصحيحين في ذلك الوقت، والحج «حجة الوداع». وأبواب العبادة كلها في الفهرس تحتها.'));ibadaIndex(P,host)}
+async function ibadaIndex(P,host){host.append(el('h3','dl-bk','فهرس أبواب العبادة كاملاً'));
+  for(const k of ['sal','msal','saw','msaw','daw']){const C=FADC[k];const M=await getJSON('data/'+C.f+'.json');const card=el('section','sf-ch');const hd=el('button','sf-hd');hd.type='button';hd.setAttribute('aria-expanded','false');
+    const tt=el('span','sf-tt');tt.append(el('b',null,C.t),el('small',null,ar(M.ch.length)+' بابًا، '+(C.ms?'صحيح مسلم':'صحيح البخاري')));hd.append(tt);card.append(hd);const body=el('div','sf-body');body.hidden=true;card.append(body);
+    M.ch.forEach((c,ci)=>{if(c.bk)body.append(el('h4','ix-bk',c.bk));const t=c.t===''?'(أحاديث في أول الكتاب قبل أول باب)':c.t;const b=el('button','hd-row');b.type='button';b.append(el('span',null,t),el('small',null,ar(c.hs.length)));b.onclick=()=>{P.close();openBab(k,c.t,ci)};body.append(b)});
+    hd.onclick=()=>{const o=body.hidden;body.hidden=!o;card.classList.toggle('open',o);hd.setAttribute('aria-expanded',o)};host.append(card)}
+  const h=el('button','wide-b');h.type='button';h.append(el('b',null,'حجة الوداع'),el('span',null,'يومًا بيوم'));h.onclick=()=>{P.close();fxHajj()};host.append(h)}
 
 // شؤونه: his letters to the kings, from the chapter of «زاد المعاد»: a line from Madinah to each, and its paragraphs as they are
 const KINGS=[['النجاشي','الحبشة',14.13,38.72,[1,2],'r',0,'عمرو بن أمية الضمري'],['قيصر','الروم',31.78,35.23,[3,4],'l',-8,'دحية بن خليفة الكلبي'],['كسرى','فارس',33.09,44.58,[5],'r',0,'عبد الله بن حذافة السهمي'],['المقوقس','الإسكندرية',31.2,29.92,[6],'r',10,'حاطب بن أبي بلتعة'],['الحارث بن أبي شمر','البلقاء',32.03,35.73,[7],'r',-16,'شجاع بن وهب الأسدي'],['هوذة بن علي','اليمامة',24.15,47.3,[8,16],'l',10,'سليط بن عمرو'],['جيفر وعبد الله','عمان',24.0,52.6,[9],'l',12,'عمرو بن العاص'],['المنذر بن ساوى','البحرين',25.38,49.59,[10],'l',-8,'العلاء بن الحضرمي'],['ملوك حمير','اليمن',15.35,44.2,[11,12,13,14,15,19],'r',0,''],['فروة بن عمرو','معان',30.19,35.73,[17,18],'r',8,'']];
@@ -5666,12 +5676,12 @@ async function kingsMap(P,host){let CO=[];try{CO=await getJSON('data/coast.json'
 // جهاده: his campaigns in the order of «مختصر السيرة», with the book's own markers of the years
 async function jihadStrip(P,host){const X=await getJSON('data/sira_x.json'),G=await getJSON('data/sx_gz.json'),M=await getJSON('data/sx_mg.json');const it=X.tl.it;
   const nz=s=>s.replace(/^(غزوة|وقعة)\s+/,'').replace(/\s*\(.*\)/,'').replace(/[ًٌٍَُِّْ]/g,'').trim();
-  const L=G.filter(g=>!/^(وفد|حديث الإفك|حج أبي بكر|حجة الوداع|مرضه)/.test(g.t));const mk=it.map((x,i)=>[i,x.y]).filter(x=>x[1]&&x[1]<=10);
+  const L=G;const mk=it.map((x,i)=>[i,x.y]).filter(x=>x[1]&&x[1]<=10);
   const w=el('div','jstrip');let last=0;
   L.forEach(g=>{const y=Math.max(0,...mk.filter(m=>m[0]<=g.ti).map(m=>m[1]));if(y!==last){w.append(el('span','jy','السنة '+['','الأولى','الثانية','الثالثة','الرابعة','الخامسة','السادسة','السابعة','الثامنة','التاسعة','العاشرة'][y]));last=y}
     const b=el('button','jd');b.type='button';b.append(el('i'),el('span',null,g.t));const ev=M.ev.findIndex(e=>nz(e.t)===nz(g.t)||nz(e.t).includes(nz(g.t))||nz(g.t).includes(nz(e.t)));
     b.onclick=()=>{P.close();if(ev>=0)fxMgTL(ev);else{const t=document.getElementById('fxGz');if(t)t.click()}};w.append(b)});
-  host.append(el('h3','dl-bk','غزواته وسراياه على ترتيبها'),el('p','fx-note kh','اضغط الغزوة لتفتح أحاديثها.'),w,el('p','fx-note','الترتيب وعلامات السنين كما في «مختصر سيرة الرسول ﷺ»، ولم يُذكر فيه رأس السنة السابعة ولا العاشرة. اضغط الغزوة لتفتح أحاديثها في «المغازي في الصحيحين».'))}
+  host.append(el('h3','dl-bk','الغزوات في سطور، '+ar(L.length)),el('p','fx-note kh','اضغط الموضع لتفتح أحاديثه.'),w,el('p','fx-note','القائمة كاملة بترتيبها، وعلامات السنين كما في «مختصر سيرة الرسول ﷺ»، ولم يُذكر فيه رأس السنة السابعة ولا العاشرة. اضغط الموضع لتفتح أحاديثه في «المغازي في الصحيحين».'))}
 
 // أهل بيته: his wives in the order Ibn Kathir gave, and his children from their mothers as his text has it
 function ahlTree(P,host,A){const w=el('div','atree');
