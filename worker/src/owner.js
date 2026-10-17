@@ -1,7 +1,7 @@
 // The site keeper's private page: write a notice and send it to every device that turned notifications on, then see how many it reached.
 // Nothing of it is in the sites themselves. The page is at push.seeratuh.com/o and does nothing without his key;
 // only the key's SHA-256 is kept here, so the key itself is nowhere but on his phone.
-export const OWNER_H = 'a1cb1d5fd3785c36ee881003acbe3710c8bcde4058a777fb0ceed768fb8c9487';
+export const OWNER_H = 'e7bd7daf0e1659ae266b3ebd76e3b7fc4bc76cd5dec5c89ebfce57b4033da161';
 const PAGE_ORIGIN = 'https://push.seeratuh.com';
 const enc = new TextEncoder();
 const hex = (b) => [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, '0')).join('');
