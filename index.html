@@ -1827,6 +1827,21 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 .atree .am{font:700 15px var(--text);background:var(--brown);color:var(--on-brown);border:0;border-radius:12px;padding:9px 10px;cursor:pointer}
 .atree .akl{display:flex;flex-direction:column;gap:6px;border-inline-start:2px solid var(--gold);margin-inline-start:14px;padding-inline-start:10px}
 .atree .akl .an{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
+.kmap .klk{font:500 9px var(--ui);fill:var(--muted);paint-order:stroke;stroke:var(--surface);stroke-width:3px}
+.kenv{font:600 14px var(--ui);color:var(--brass);margin:-4px 0 10px}
+.fx-note.kh{margin-top:-4px}
+.kpulse .kd{animation:kPulse 1.4s ease-in-out 3}
+@keyframes kPulse{50%{stroke-width:4;r:7}}
+@media (prefers-reduced-motion:reduce){.kpulse .kd{animation:none}}
+
+/* the campaigns and the names: clearly buttons, as the tiles of the site (a card, a chevron) */
+.jstrip .jd,.atree .aw .an{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin:4px 0 4px 10px;padding:9px 12px 9px 30px;padding-inline-start:16px;position:relative;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.jstrip .jd::after,.atree .aw .an::after,.atree .akl .an::after{content:'';position:absolute;left:12px;top:50%;width:6px;height:6px;margin-top:-3px;border-left:1.5px solid var(--brass);border-bottom:1.5px solid var(--brass);transform:rotate(45deg)}
+.atree .akl .an{position:relative;padding-left:28px}
+.jstrip .jd i{inset-inline-start:-16px}
+.atree .aw .an{margin-inline-start:12px}
+.atree .aw .an i{margin-inline-start:-31px}
+.jstrip .jd:active,.atree .an:active{border-color:var(--brass)}
 
 /* the site paused by its keeper */
 html.pz-on,html.pz-on body{overflow:hidden}
@@ -2668,7 +2683,7 @@ html.own-noimg .pgimg,html.own-noimg .sx-pbtn,html.own-noimg .sx-pwrap,html.own-
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-0900';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-0909';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -5607,7 +5622,7 @@ function ringDial(host,rings,hub,onPick){const C=180,svg=vmk('svg',{viewBox:'0 0
       const g=vmk('g',{class:'seg '+(R.cls||''),tabindex:'0',role:'button','aria-label':it.t},svg);
       const [x0,y0]=pt(R.r1,a0-gap),[x1,y1]=pt(R.r1,a1+gap),[x2,y2]=pt(R.r0,a1+gap),[x3,y3]=pt(R.r0,a0-gap);const big=Math.abs(a1-a0)>Math.PI?1:0;
       vmk('path',{d:`M${x0},${y0} A${R.r1},${R.r1} 0 ${big} 0 ${x1},${y1} L${x2},${y2} A${R.r0},${R.r0} 0 ${big} 1 ${x3},${y3} Z`},g);
-      const [tx,ty]=pt((R.r0+R.r1)/2,(a0+a1)/2);const t=vmk('text',{x:tx,y:ty},g);t.textContent=it.s||it.t;if(R.fs)t.style.fontSize=R.fs+'px';
+      const [tx,ty]=pt((R.r0+R.r1)/2,(a0+a1)/2);const t=vmk('text',{x:tx,y:ty},g);const lines=(it.s||it.t).split('\n');if(lines.length===1)t.textContent=lines[0];else lines.forEach((l,j)=>{const s=vmk('tspan',{x:tx,dy:j?'1.15em':(-(lines.length-1)*.575)+'em'},t);s.textContent=l});if(R.fs)t.style.fontSize=R.fs+'px';
       const go=()=>{segs.forEach(s=>s.classList.toggle('on',s===g));onPick(it,ri,i)};g.addEventListener('click',go);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}});segs.push(g);it._g=g})});
   const r=Math.min(...rings.map(x=>x.r0));vmk('circle',{cx:C,cy:C,r:r-6,class:'hub'},svg);const ht=vmk('text',{x:C,y:C,class:'hubt'},svg);ht.textContent=hub;
   const w=el('div','day');w.append(svg);host.append(w);return segs}
@@ -5625,27 +5640,28 @@ const IBD=[{t:'اليوم والليلة',items:[['السحور','saw','باب �
 async function openBab(k,title){if(k==='@hajj'){fxHajj();return}await fxFad(k);const o=document.querySelector('.fx:not([hidden])');if(!o)return;
   for(let t=0;t<30;t++){const H=[...o.querySelectorAll('.sf-hd,.mg-hd')],tx=x=>((x.querySelector('b')||x).textContent||'').replace(/\s+/g,' ').trim();const h=H.find(x=>tx(x)===title)||H.find(x=>tx(x).includes(title));if(h){if(h.getAttribute('aria-expanded')!=='true')h.click();setTimeout(()=>{const s=h.closest('section')||h;o.scrollTo({top:s.getBoundingClientRect().top-o.getBoundingClientRect().top+o.scrollTop-((o.querySelector('.fx-top')||{}).offsetHeight||0)-((o.querySelector('.bk-bar')||{}).offsetHeight||0)-8})},120);return}await new Promise(r=>setTimeout(r,100))}}
 function ibadaDial(P,host){const box=el('div');const rings=[{r0:128,r1:176,cls:'r-d',fs:10.5},{r0:96,r1:126,cls:'r-w',fs:9.5},{r0:58,r1:94,cls:'r-y',fs:9.5}];
-  rings[0].items=IBD[0].items.map(x=>({t:x[0],k:x[1],b:x[2],g:IBD[0].t}));rings[1].items=IBD[1].items.map(x=>({t:x[0],s:x[0]==='الاثنين والخميس'?'الاثنين':x[0],k:x[1],b:x[2],g:IBD[1].t}));rings[2].items=IBD[2].items.map(x=>({t:x[0],s:x[0]==='ليلة القدر'?'القدر':x[0]==='الاعتكاف'?'اعتكاف':x[0],k:x[1],b:x[2],g:IBD[2].t}));
+  rings[0].items=IBD[0].items.map(x=>({t:x[0],k:x[1],b:x[2],g:IBD[0].t}));rings[1].items=IBD[1].items.map(x=>({t:x[0],s:x[0].replace(' و','\nو'),k:x[1],b:x[2],g:IBD[1].t}));rings[2].items=IBD[2].items.map(x=>({t:x[0],s:x[0]==='ليلة القدر'?'القدر':x[0]==='الاعتكاف'?'اعتكاف':x[0],k:x[1],b:x[2],g:IBD[2].t}));
   const key=el('div','rkey');[['r-d',IBD[0].t],['r-w',IBD[1].t],['r-y',IBD[2].t]].forEach(([c,t])=>{const s=el('span');s.append(el('i',c),t);key.append(s)});
   ringDial(host,rings,'عبادته',it=>{box.innerHTML='';const c=el('div','rpick');c.append(el('small',null,it.g),el('b',null,it.t));const sub=it.k==='@hajj'?'حجة الوداع يومًا بيوم':(it.b+' · '+({sal:'صحيح البخاري',saw:'صحيح البخاري',daw:'صحيح البخاري',msaw:'صحيح مسلم'}[it.k]||''));c.append(el('span',null,sub));
     const go=el('button','btn btn-quiet','افتح الباب');go.type='button';go.onclick=()=>{P.close();openBab(it.k,it.b)};c.append(go);box.append(c)});
   host.append(key,box);host.append(el('p','fx-note','كل علامة في الحلقات باب بلفظه من الصحيحين في ذلك الوقت، والحج «حجة الوداع». وترتيب العلامات في الحلقة للتصفح.'))}
 
 // شؤونه: his letters to the kings, from the chapter of «زاد المعاد»: a line from Madinah to each, and its paragraphs as they are
-const KINGS=[['النجاشي','الحبشة',14.13,38.72,[1,2],'r',0],['قيصر','الروم',31.78,35.23,[3,4],'l',2],['كسرى','فارس',33.09,44.58,[5],'r',0],['المقوقس','الإسكندرية',31.2,29.92,[6],'r',10],['الحارث بن أبي شمر','البلقاء',32.03,35.73,[7],'r',-8],['هوذة بن علي','اليمامة',24.15,47.3,[8,16],'l',10],['جيفر وعبد الله','عمان',24.0,52.6,[9],'l',12],['المنذر بن ساوى','البحرين',25.38,49.59,[10],'l',-6],['ملوك حمير','اليمن',15.35,44.2,[11,12,13,14,15,19],'r',0],['فروة بن عمرو','معان',30.19,35.73,[17,18],'r',6]];
+const KINGS=[['النجاشي','الحبشة',14.13,38.72,[1,2],'r',0,'عمرو بن أمية الضمري'],['قيصر','الروم',31.78,35.23,[3,4],'l',-8,'دحية بن خليفة الكلبي'],['كسرى','فارس',33.09,44.58,[5],'r',0,'عبد الله بن حذافة السهمي'],['المقوقس','الإسكندرية',31.2,29.92,[6],'r',10,'حاطب بن أبي بلتعة'],['الحارث بن أبي شمر','البلقاء',32.03,35.73,[7],'r',-16,'شجاع بن وهب الأسدي'],['هوذة بن علي','اليمامة',24.15,47.3,[8,16],'l',10,'سليط بن عمرو'],['جيفر وعبد الله','عمان',24.0,52.6,[9],'l',12,'عمرو بن العاص'],['المنذر بن ساوى','البحرين',25.38,49.59,[10],'l',-8,'العلاء بن الحضرمي'],['ملوك حمير','اليمن',15.35,44.2,[11,12,13,14,15,19],'r',0,''],['فروة بن عمرو','معان',30.19,35.73,[17,18],'r',8,'']];
 async function kingsMap(P,host){let CO=[];try{CO=await getJSON('data/coast.json')}catch(e){}const S=await getJSON('data/sx_shu.json');const k=S.find(x=>x.s==='kutub');const z=((k.c.find(c=>(c.z||[]).length&&/الملوك/.test(c.t))||{}).z||[])[0];if(!z)return;
   const la0=12.5,la1=35.6,lo0=28.6,lo1=53.4,kx=Math.cos(24*Math.PI/180),W=360,s_=W/((lo1-lo0)*kx),H=Math.round((la1-la0)*s_);
   const X=lo=>(lo-lo0)*kx*s_,Y=la=>(la1-la)*s_;const svg=vmk('svg',{viewBox:`0 0 ${W} ${H}`,class:'kmap',role:'group','aria-label':'كتبه إلى الملوك'});
   const cg=vmk('g',{class:'cst'},svg);CO.forEach(L=>{let d='';L.forEach((q,i)=>{d+=(i?'L':'M')+X(q[0]).toFixed(1)+','+Y(q[1]).toFixed(1)});vmk('path',{d},cg)});
   const MD=[24.47,39.61],box=el('div');const pts=[];
-  KINGS.forEach(([n,land,la,lo,ps,side,dy],i)=>{const x=X(lo),y=Y(la),mx=X(MD[1]),my=Y(MD[0]);const g=vmk('g',{class:'kpt',tabindex:'0',role:'button','aria-label':n+'، '+land},svg);
+  KINGS.forEach(([n,land,la,lo,ps,side,dy,env],i)=>{const x=X(lo),y=Y(la),mx=X(MD[1]),my=Y(MD[0]);const g=vmk('g',{class:'kpt',tabindex:'0',role:'button','aria-label':n+'، '+land},svg);
     const cx=(x+mx)/2+(y-my)*.18,cy=(y+my)/2-(x-mx)*.18;vmk('path',{d:`M${mx},${my} Q${cx},${cy} ${x},${y}`,class:'kln'},g);vmk('circle',{cx:x,cy:y,r:4.5,class:'kd'},g);
-    const right=side==='r';const t=vmk('text',{x:x+(right?8:-8),y:y+4+(dy||0),'text-anchor':right?'start':'end',class:'klb'},g);t.textContent=land;
-    const go=()=>{pts.forEach(p=>p.classList.toggle('on',p===g));box.innerHTML='';box.append(el('h3','fx-dh',n+' · '+land));ps.forEach(j=>{const r=z.x[j];if(r)box.append(qPanel(r[1]))});
+    const right=side==='r';const t=vmk('text',{x:x+(right?8:-8),y:y+4+(dy||0),'text-anchor':right?'start':'end',class:'klb'},g);t.textContent=land;const t2=vmk('text',{x:x+(right?8:-8),y:y+15+(dy||0),'text-anchor':right?'start':'end',class:'klk'},g);t2.textContent=n;
+    const go=()=>{pts.forEach(p=>p.classList.toggle('on',p===g));box.innerHTML='';box.append(el('h3','fx-dh',n+'، '+land));{const ok=env&&ps.some(j=>z.x[j]&&z.x[j][1].includes(env));if(ok)box.append(el('p','kenv','بعث إليه '+env))}ps.forEach(j=>{const r=z.x[j];if(r)box.append(qPanel(r[1]))});
       const a=el('div','qp-act');a.append(goBtn(P,'اقرأه في زاد المعاد',18,z.x[ps[0]][0]));box.append(a)};
     g.addEventListener('click',go);g.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();go()}});pts.push(g)});
   vmk('circle',{cx:X(MD[1]),cy:Y(MD[0]),r:6,class:'kmd'},svg);const mt=vmk('text',{x:X(MD[1])-9,y:Y(MD[0])+4,'text-anchor':'end',class:'klb kmdt'},svg);mt.textContent='المدينة';
-  const w=el('div','kwrap');w.append(svg);host.append(w,box);host.append(el('p','fx-note','من «فصل في كتبه ورسله إلى الملوك» في زاد المعاد. المواضع على الخريطة على التقريب، والسواحل وحدها دون حدود الدول الحديثة، و«عمان» في طرف الخريطة.'));pts[0].dispatchEvent(new Event('click'))}
+  host.append(el('h3','dl-bk',z.t),el('p','fx-note kh','من المدينة إلى كل ملك رسولٌ بكتابه. اضغط الموضع لتقرأ خبره بلفظ ابن القيم.'));
+  const w=el('div','kwrap kpulse');w.append(svg);host.append(w,box);setTimeout(()=>w.classList.remove('kpulse'),4200);svg.addEventListener('click',()=>w.classList.remove('kpulse'),{once:true});host.append(el('p','fx-note','من «فصل في كتبه ورسله إلى الملوك» في زاد المعاد. المواضع على الخريطة على التقريب، والسواحل وحدها دون حدود الدول الحديثة، و«عمان» في طرف الخريطة.'));pts[0].dispatchEvent(new Event('click'))}
 
 // جهاده: his campaigns in the order of «مختصر السيرة», with the book's own markers of the years
 async function jihadStrip(P,host){const X=await getJSON('data/sira_x.json'),G=await getJSON('data/sx_gz.json'),M=await getJSON('data/sx_mg.json');const it=X.tl.it;
@@ -5655,12 +5671,12 @@ async function jihadStrip(P,host){const X=await getJSON('data/sira_x.json'),G=aw
   L.forEach(g=>{const y=Math.max(0,...mk.filter(m=>m[0]<=g.ti).map(m=>m[1]));if(y!==last){w.append(el('span','jy','السنة '+['','الأولى','الثانية','الثالثة','الرابعة','الخامسة','السادسة','السابعة','الثامنة','التاسعة','العاشرة'][y]));last=y}
     const b=el('button','jd');b.type='button';b.append(el('i'),el('span',null,g.t));const ev=M.ev.findIndex(e=>nz(e.t)===nz(g.t)||nz(e.t).includes(nz(g.t))||nz(g.t).includes(nz(e.t)));
     b.onclick=()=>{P.close();if(ev>=0)fxMgTL(ev);else{const t=document.getElementById('fxGz');if(t)t.click()}};w.append(b)});
-  host.append(el('h3','dl-bk','غزواته وسراياه على ترتيبها'),w,el('p','fx-note','الترتيب وعلامات السنين كما في «مختصر سيرة الرسول ﷺ»، ولم يُذكر فيه رأس السنة السابعة ولا العاشرة. اضغط الغزوة لتفتح أحاديثها في «المغازي في الصحيحين».'))}
+  host.append(el('h3','dl-bk','غزواته وسراياه على ترتيبها'),el('p','fx-note kh','اضغط الغزوة لتفتح أحاديثها.'),w,el('p','fx-note','الترتيب وعلامات السنين كما في «مختصر سيرة الرسول ﷺ»، ولم يُذكر فيه رأس السنة السابعة ولا العاشرة. اضغط الغزوة لتفتح أحاديثها في «المغازي في الصحيحين».'))}
 
 // أهل بيته: his wives in the order Ibn Kathir gave, and his children from their mothers as his text has it
 function ahlTree(P,host,A){const w=el('div','atree');
   const wl=el('div','aw');A.w.forEach((x,j)=>{const b=el('button','an');b.type='button';b.append(el('i',null,ar(j+1)),el('span',null,x.n));b.onclick=()=>{P.close();fxAhl('w'+j)};wl.append(b)});
-  w.append(el('h3','dl-bk','أمهات المؤمنين على ترتيب زواجه بهن'),wl);
+  w.append(el('h3','dl-bk','أمهات المؤمنين على ترتيب زواجه بهن'),el('p','fx-note kh','اضغط الاسم لتقرأ ما أورده ابن كثير فيه.'),wl);
   const kids=A.c.map((c,j)=>({c,j,m:c.n==='إبراهيم'?'مارية':'خديجة'}));const tr=el('div','ak');
   ['خديجة','مارية'].forEach(m=>{const col=el('div','akc');const wi=A.w.findIndex(x=>x.n.includes(m));const mb=el('button','am');mb.type='button';mb.append(m==='خديجة'?'خديجة بنت خويلد':'مارية القبطية');if(wi>=0)mb.onclick=()=>{P.close();fxAhl('w'+wi)};else mb.disabled=true;col.append(mb);
     const kl=el('div','akl');kids.filter(x=>x.m===m).forEach(({c,j})=>{const b=el('button','an');b.type='button';b.append(el('span',null,c.n));b.onclick=()=>{P.close();fxAhl('c'+j)};kl.append(b)});col.append(kl);tr.append(col)});
