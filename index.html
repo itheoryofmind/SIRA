@@ -2311,7 +2311,7 @@ html.own-pg-on,html.own-pg-on body{overflow:hidden}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-17-0424';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-17-0440';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -5279,7 +5279,7 @@ function actions(t,blk,tn){
   if(hid)act(c,'👁 إظهار ما أخفيته هنا','يعود ظاهراً للجميع',async()=>{ov.remove();const r=await cfg({a:'unhide',id:hid.dataset.ownHid});oToast(r.ok?'ظهر من جديد.':'تعذّر؛ حاول مرة أخرى.',!r.ok)},'own-act-g');
   act(c,'✏️ تعديل النص','يُنشر خلال ساعة على الأكثر، ويمكن التراجع عنه',()=>{ov.remove();pickText(blk,t,tn)});
   const P=parts(blk);
-  P.forEach((n,i)=>{if(n.classList.contains('own-hid-o'))return;const k=kindName(n,i);act(c,'🙈 إخفاء '+k,short(ownText(n),60),()=>{ov.remove();hideOne(n,k)})});
+  P.forEach((n,i)=>{if(n.classList.contains('own-hid-o'))return;const k=kindName(n,i);act(c,'إخفاء '+k,short(ownText(n),60),()=>{ov.remove();hideOne(n,k)})});
   act(c,'➕ إضافة نص بعد '+kindName(blk,0).replace(' (القسم كاملاً)',''),'فقرة أو عنوان أو اقتباس، يظهر فوراً',()=>{ov.remove();addSheet(blk,null)});
   if(P.length>1)act(c,'➕ إضافة نص بعد '+kindName(P[1],1),'',()=>{ov.remove();addSheet(P[1],null)});
   const tb=blk.closest('button,a,[role=button]');if(tb&&secOf(tb)==='home')act(c,'🆕 إضافة قسم جديد بعد هذا المربع','بعنوانه ونصوصه، ويُفتح كسائر الأقسام',()=>{ov.remove();pageSheet(tb,null)})}
@@ -5368,14 +5368,14 @@ function pageSheet(anchor,p){const [ov,c]=sheet(p?'قسم أضفته':'قسم ج
     const P2={title,sub:su.value.trim(),blocks};if(p){P2.id=p.id;P2.off=!!p.off}
     const r=await cfg(p?{a:'page',p:P2}:{a:'page',p:P2,r:ruleOf(anchor),lb:'بعد مربع: '+short(ownText(anchor),80)});
     if(r.ok){ov.remove();oToast(p?'حُفظ.':'أُضيف القسم.')}else{sv.disabled=false;oToast('تعذّر؛ حاول مرة أخرى.',1)}};
-  if(p){const v=el('button','own-save own-grey',p.off?'👁 إظهار القسم':'🙈 إخفاء القسم (يبقى محفوظاً)');v.type='button';
+  if(p){const v=el('button','own-save own-grey',p.off?'👁 إظهار القسم':'إخفاء القسم (يبقى محفوظاً)');v.type='button';
       v.onclick=async()=>{const r=await cfg({a:'page',p:{id:p.id,title:p.title,sub:p.sub,blocks:p.blocks,off:!p.off}});if(r.ok){ov.remove();oToast(p.off?'ظهر القسم.':'أُخفي القسم.')}else oToast('تعذّر.',1)};c.append(v);
     const d=el('button','own-save own-redb','حذف القسم نهائياً');d.type='button';d.onclick=async()=>{if(!confirm('حذف هذا القسم بكل ما فيه؟ لا يمكن التراجع.'))return;const r=await cfg({a:'unpage',id:p.id});if(r.ok){ov.remove();oToast('حُذف القسم.')}else oToast('تعذّر.',1)};c.append(d)}}
 
 /* ---------- the menu: all that was hidden, added and corrected ---------- */
 function menuSheet(){const [ov,c]=sheet('وضع التعديل');
   act(c,'📝 سجل تصحيح النصوص','ما صحّحته، وحال نشره، والتراجع عنه',()=>{ov.remove();logSheet()});
-  act(c,'🙈 ما أخفيته','وإظهاره',()=>{ov.remove();listSheet('hide')});
+  act(c,'ما أخفيته','وإظهاره',()=>{ov.remove();listSheet('hide')});
   act(c,'➕ ما أضفته من نصوص','وتعديله وحذفه',()=>{ov.remove();listSheet('add')});
   act(c,'🆕 الأقسام التي أضفتها','وتعديلها وإخفاؤها وحذفها',()=>{ov.remove();listSheet('pages')});
   act(c,'🚪 الخروج من وضع التعديل','في هذا الجهاز',()=>{if(!confirm('الخروج من وضع التعديل في هذا الجهاز؟ تعود إليه من صفحة التنبيه.'))return;LS.set('ownk','');location.reload()});
