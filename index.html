@@ -2983,7 +2983,7 @@ audio.own-note-m{background:none;height:44px}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-18-1939';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-18-1942';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4385,7 +4385,7 @@ function openFb(kind){
   $('#fbWhoL').innerHTML=faw?'اسمك إن أحببت ذكره معها <small>(اختياري)</small>':'للتواصل معك <small>(اختياري)</small>';
   const T=$('#fbType');T.innerHTML='';
   if(faw){T.append(new Option('فائدة للنشر','فائدة للنشر'));T.value='فائدة للنشر'}else{
-  const opts=pageRep?['النص يخالف صورة الصفحة','خطأ في آية','حدود الصفحة (بدايتها أو نهايتها)','أخرى']:['تجربة المستخدم','تقنية','شرعية'];
+  const TK=typeof TSK!=='undefined'&&TSK.on?['خطأ في تشكيل حديث']:[];const opts=pageRep?['النص يخالف صورة الصفحة','خطأ في آية',...TK,'حدود الصفحة (بدايتها أو نهايتها)','أخرى']:['تجربة المستخدم','تقنية','شرعية',...TK];
   T.append(new Option('اختر…',''));opts.forEach(o=>T.append(new Option(o,o)));}
   $('#fbImgReq').textContent='(اختيارية)';$('#fbImgN').textContent=$('#fbImg').files&&$('#fbImg').files[0]?$('#fbImg').files[0].name:'لم تُختر صورة';
   const R=$('#fbRef');R.hidden=!pageRep||(faw&&$('#reader').hidden);
@@ -6194,7 +6194,7 @@ if(TSK.on)getJSON('data/tsk.json').then(d=>{if(!d)return;TSK.t=d.t;TSK.m=d.m;tsk
   const h=document.createElement('h4');h.textContent='تشكيل الأحاديث';const sg=document.createElement('div');sg.className='seg tsk-seg';
   [['1','بالتشكيل'],['0','بلا تشكيل']].forEach(([v,l])=>{const b=document.createElement('button');b.type='button';b.textContent=l;b.dataset.v=v;if((v==='1')===TSK.on)b.classList.add('on');b.setAttribute('aria-pressed',String((v==='1')===TSK.on));
     b.onclick=()=>{if((v==='1')===TSK.on)return;try{localStorage.setItem('tsk',v)}catch(e){}location.reload()};sg.append(b)});
-  const n=document.createElement('p');n.className='tsk-n';n.textContent='تشكيل الأحاديث من نسخ المكتبة الشاملة المشكولة، كلمةً كلمة، ولا يتغير حرف من النص.';
+  const n=document.createElement('p');n.className='tsk-n';n.textContent='تشكيل الأحاديث من نسخ المكتبة الشاملة المشكولة، كلمةً كلمة، ولا يتغير حرف من النص. وإن رأيت خطأ في تشكيل كلمة فحدّدها واضغط «تنبيه»، أو أرسل ملاحظة من نوع «خطأ في تشكيل حديث».';
   box.after(h,sg,n)})();
 
 /* the designs for the Sira site, chosen by its keeper (see owner_edit.js) */
@@ -6513,8 +6513,21 @@ function menuSheet(){const [ov,c]=sheet('وضع التعديل');
   act(c,'ما أخفيته','وإظهاره',()=>{ov.remove();listSheet('hide')});
   act(c,'➕ ما أضفته من نصوص','وتعديله وحذفه',()=>{ov.remove();listSheet('add')});
   act(c,'🆕 الأقسام التي أضفتها','وتعديلها وإخفاؤها وحذفها',()=>{ov.remove();listSheet('pages')});
+  if(SITE==='sira')act(c,'🔔 تنبيهات لوحة التحكم على هذا الجهاز','محاولة دخول خاطئة، ملاحظة من قارئ، تعطّل أحد الموقعين، وملخص كل جمعة',()=>{ov.remove();oAlerts()});
   act(c,'🚪 الخروج من وضع التعديل','في هذا الجهاز',()=>{if(!confirm('الخروج من وضع التعديل في هذا الجهاز؟ تعود إليه من صفحة التنبيه.'))return;LS.set('ownk','');location.reload()});
   c.append(el('p','own-n','للتعديل: اضغط «✏️ اضغط على أي شيء» ثم اضغط على النص أو المربع في الموقع.'))}
+// the keeper's alerts: this device's notification address, kept by the worker apart from the readers' (needs the app on the home screen)
+async function oSubNow(make){const reg=await navigator.serviceWorker.ready;let sb=await reg.pushManager.getSubscription();
+  if(!sb&&make){if(Notification.permission!=='granted'&&(await Notification.requestPermission())!=='granted')return null;const {key}=await (await fetch(W+'/key')).json();const k=key.replace(/-/g,'+').replace(/_/g,'/');sb=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:Uint8Array.from(atob(k+'='.repeat((4-k.length%4)%4)),c=>c.charCodeAt(0))})}
+  return sb?sb.toJSON():null}
+async function oAlerts(){const [ov,c]=sheet('تنبيهات لوحة التحكم');
+  if(!('serviceWorker' in navigator)||!('PushManager' in window)){c.append(el('p','own-n','هذا المتصفح لا يدعم الإشعارات. افتح الموقع من أيقونته في الشاشة الرئيسية.'));return}
+  const st=el('p','own-n','…');c.append(st);let sb=null;try{sb=await oSubNow(false)}catch(e){}
+  let on=false;if(sb){const r=await call('/c/osub',{a:'is',sub:sb});on=!!(r.ok&&r.on)}
+  const draw=()=>{st.textContent=on?'مفعّلة على هذا الجهاز.':'غير مفعّلة على هذا الجهاز.';b.textContent=on?'أوقفها على هذا الجهاز':'فعّلها على هذا الجهاز'};
+  const b=el('button','own-save','');b.type='button';
+  b.onclick=async()=>{b.disabled=true;try{if(on){const r=await call('/c/osub',{a:'off',sub:sb});if(r.ok)on=false}else{sb=sb||await oSubNow(true);if(!sb){oToast('لم يُسمح بالإشعارات على هذا الجهاز.',1)}else{const r=await call('/c/osub',{a:'on',sub:sb});if(r.ok){on=true;oToast('فُعّلت، ووصلك إشعار تجريبي.')}else oToast('تعذّر؛ حاول مرة أخرى.',1)}}}catch(e){oToast('تعذّر: '+e.message,1)}b.disabled=false;draw()};
+  c.append(b,el('p','own-n','تصلك وحدك على هذا الجهاز، ولا تصل إلى القرّاء: محاولة دخول بمفتاح خاطئ، وملاحظة جديدة من قارئ (واحدة كل عشر دقائق على الأكثر)، وإذا لم يفتح أحد الموقعين عشر دقائق ثم حين يعود، وملخص الأسبوع صباح كل جمعة. تحتاج أن يكون الموقع مفتوحاً من أيقونته في الشاشة الرئيسية.'));draw()}
 async function listSheet(kind){const t={hide:'ما أخفيته',add:'ما أضفته من نصوص',pages:'الأقسام التي أضفتها'}[kind];const [ov,c]=sheet(t);
   const r=await call('/c/hi');if(!r.ok){c.append(el('p','own-n','تعذّر الاتصال.'));return}FULL=r.cfg;const L=(FULL[kind]||[]).slice().reverse();
   if(!L.length){c.append(el('p','own-n','لا شيء.'));return}

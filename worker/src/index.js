@@ -7,7 +7,7 @@
 // - each reader picks which of these, and the hour of each (where the reader is)
 // Web Push: RFC 8291 (aes128gcm) and RFC 8292 (VAPID), with WebCrypto only.
 import { ownerFetch, installSeen, hourTxt, topOf, sendAll } from './owner.js';
-import { cmsFetch, pauseFetch, pushPaused, mediaFetch, runSched, logAuth } from './cms.js';
+import { cmsFetch, pauseFetch, pushPaused, mediaFetch, runSched, logAuth, setNotify, runWatch, runWeekly } from './cms.js';
 import H, { DAY0, SKIP } from './hadith.js';
 const HR = H.map((_, i) => i).filter((i) => !SKIP.includes(i));   // the days pass over the hadiths whose digital text has a misprint (dayskip.py)
 import { SI, KH } from './tl.js';
@@ -233,6 +233,20 @@ function siraStats(ms) {
   return [{ t: 'الأنواع التي فعّلوها', r: OKINDS.map(([k, l]) => { const v = hs.filter((h) => k in h), tp = topOf(v.map((h) => +h[k]))[0]; return [l, v.length, tp ? 'أكثرهم الساعة ' + hourTxt(+tp[0]) : '']; }) }];
 }
 
+// the keeper's alerts go to the devices he marked from the panel (osub:…), never to readers
+setNotify(async (env, msg) => {
+  let sent = 0, c;
+  do {
+    const l = await env.PUSH.list({ prefix: 'osub:', cursor: c });
+    for (const k of l.keys) {
+      const sub = await env.PUSH.get(k.name, 'json'); if (!sub) continue;
+      const st = await send(env, sub, msg).catch(() => 0);
+      if (st === 404 || st === 410) await env.PUSH.delete(k.name); else if (st >= 200 && st < 300) sent++;
+    }
+    c = l.list_complete ? null : l.cursor;
+  } while (c);
+  return sent;
+});
 export default {
   async fetch(req, env) {
     const u = new URL(req.url);
@@ -334,6 +348,8 @@ export default {
   async scheduled(ev, env, ctx) {
     // the notifications the keeper set ahead (each site's own pause is kept)
     try { await runSched(env, (msg) => sendAll(env, { site: SITE, name: 'سِيرَتُه', fanOut, job: (id, m) => [id, 'bc', m] }, msg)); } catch (e) { console.log('sched', String(e)); }
+    try { await runWatch(env); } catch (e) { console.log('watch', String(e)); }
+    try { await runWeekly(env); } catch (e) { console.log('weekly', String(e)); }
     if (await pushPaused(env)) { console.log('paused'); return; }
     const r = await fanOut(env, await due(env));
     // the old owner's-notice feature was removed: its stored records (keys beginning w:) are deleted once

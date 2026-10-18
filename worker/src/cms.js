@@ -176,6 +176,20 @@ export async function cmsFetch(req, env, u) {
     md.got = i + 1; md.done = md.got === n; await env.PUSH.put('md:' + id, JSON.stringify(md));
     return out({ ok: true, id, done: md.done });
   }
+  if (u.pathname === '/c/fx') {   // the weekly check of the text against its fingerprints (fidelity.yml), with the deploy's key
+    const k = await env.PUSH.get('admin');
+    if (!k || req.headers.get('X-Admin') !== k) return out({ ok: false }, 403);
+    let b; try { b = await req.json(); } catch (e) { return out({ ok: false }, 400); }
+    const s = okSite(b.s) ? b.s : 'sira', ch = Array.isArray(b.changed) ? b.changed.slice(0, 500) : [];
+    // a text the keeper corrected from the edit mode is his, not a change against the source
+    const mine = new Set();
+    for (const x of (await all(env)).filter((x) => siteOf(x) === s)) { const v = await env.PUSH.get(x.name, 'json'); if (v && v.st === 'ok') mine.add(v.f + '|' + JSON.stringify(v.path)); }
+    const bad = ch.filter((c) => !mine.has(c.f + '|' + JSON.stringify(c.p)));
+    const r = { at: Date.now(), total: +b.total || 0, changed: ch.length, bad: bad.length, miss: +b.miss || 0, first: bad.slice(0, 5) };
+    await env.PUSH.put('fxres:' + s, JSON.stringify(r));
+    if (bad.length || r.miss) await ownerAlert(env, 'fx' + s, 6 * 3600e3, { t: 'فحص أمانة النقل · ' + SNAME[s], b: 'وجد الفحص الأسبوعي ' + (bad.length ? bad.length + ' نصاً يخالف النص المفحوص' : '') + (r.miss ? (bad.length ? ' و' : '') + r.miss + ' ملفاً لا يُقرأ' : '') + '. افتح «فحص أمانة النقل» في اللوحة.', u: PANEL, tag: 'own-fx' });
+    return out({ ok: true, ...r });
+  }
   if (u.pathname === '/c/fb') return fbIn(req, env, out);
   if (u.pathname === '/c/hit') return hitIn(req, env, out);
   let b; try { b = JSON.parse(await req.text()); } catch (e) { return out({ ok: false }, 400); }
@@ -296,8 +310,22 @@ export async function logAuth(env, req, ok, path) {
     const dev = /iPhone/.test(ua) ? 'آيفون' : /iPad/.test(ua) ? 'آيباد' : /Android/.test(ua) ? 'أندرويد' : /Mac OS X/.test(ua) ? 'ماك' : /Windows/.test(ua) ? 'ويندوز' : 'جهاز آخر';
     L.unshift({ t: now, ok: !!ok, cc: str(cf.country, 4), city: str(cf.city, 60), dev, p: str(path, 20), n: 1 });
     await env.PUSH.put('log', JSON.stringify(L.slice(0, 80)));
+    if (!ok) await ownerAlert(env, 'bad', 3600e3, { t: 'لوحة التحكم', b: 'محاولة دخول بمفتاح خاطئ' + (cf.city ? ' من ' + cf.city : '') + ' (' + dev + '). إن لم تكن أنت فغيّر المفتاح.', u: PANEL, tag: 'own-bad' });
   } catch (e) {}
 }
+
+/* ---------- the keeper's own alerts, on the devices he marked (osub:…): a wrong key, a reader's note, a site down, the week ---------- */
+let NOTIFY = null;
+export function setNotify(f) { NOTIFY = f; }
+export async function ownerAlert(env, key, gapMs, msg) {
+  try {
+    if (!NOTIFY) return 0;
+    if (key) { const k = 'oa:' + key; if (await env.PUSH.get(k)) return 0; await env.PUSH.put(k, '1', { expirationTtl: Math.max(60, Math.round(gapMs / 1000)) }); }
+    return await NOTIFY(env, msg);
+  } catch (e) { return 0; }
+}
+const SNAME = { sira: 'سِيرَتُه', durar: 'الدرر السنية' };
+const PANEL = 'https://push.seeratuh.com/c';
 
 /* ---------- ملاحظات القرّاء: a copy of each note a reader sends from the site (the e-mail still goes), to read here ---------- */
 async function fbIn(req, env, out) {
@@ -313,6 +341,7 @@ async function fbIn(req, env, out) {
   const at = Date.now(), id = 'fb:' + at + '-' + rid();
   await env.PUSH.put(id, JSON.stringify({ s, ty: str(b.ty, 60), m, who: str(b.who, 200), ref: str(b.ref, 600), url: str(b.url, 300), ver: str(b.ver, 40), img, at }), { metadata: { s, st: 'n', at } });
   await env.PUSH.put(ipk, '1', { expirationTtl: 60 });
+  await ownerAlert(env, 'fb', 10 * 60e3, { t: 'ملاحظة من قارئ · ' + SNAME[s], b: (b.ty ? str(b.ty, 60) + ': ' : '') + m.slice(0, 140), u: PANEL, tag: 'own-fb' });
   return out({ ok: true });
 }
 async function fbAll(env) {
@@ -342,6 +371,17 @@ async function hitIn(req, env, out) {
 /* ---------- the panel's other cards ---------- */
 async function panelExtra(u, b, s, env, out) {
   const p = u.pathname;
+  if (p === '/c/osub') {   // the keeper's device: its subscription (from the site, where the app is installed) gets his alerts
+    const sub = b.sub;
+    if (b.a === 'list') { const l = await env.PUSH.list({ prefix: 'osub:' }); return out({ ok: true, n: l.keys.length, at: l.keys.map((x) => x.metadata || {}) }); }
+    if (!sub || typeof sub.endpoint !== 'string' || !/^https:\/\//.test(sub.endpoint) || !sub.keys || !sub.keys.p256dh || !sub.keys.auth) return out({ ok: false, bad: 1 }, 400);
+    const id = 'osub:' + [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(sub.endpoint)))].slice(0, 12).map((x) => x.toString(16).padStart(2, '0')).join('');
+    if (b.a === 'off') { await env.PUSH.delete(id); return out({ ok: true, on: false }); }
+    if (b.a === 'is') return out({ ok: true, on: !!(await env.PUSH.get(id)) });
+    await env.PUSH.put(id, JSON.stringify({ endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } }), { metadata: { at: Date.now(), s } });
+    const n = await ownerAlert(env, null, 0, { t: 'تنبيهات لوحة التحكم', b: 'فُعّلت على هذا الجهاز: محاولات الدخول الخاطئة، وملاحظات القرّاء، وتعطّل أحد الموقعين، وملخص كل جمعة.', u: PANEL, tag: 'own-on' });
+    return out({ ok: true, on: true, sent: n });
+  }
   if (p === '/c/log') return out({ ok: true, log: (await env.PUSH.get('log', 'json')) || [] });
   if (p === '/c/fbl') {
     const L = (await fbAll(env)).filter((x) => !b.s || (x.metadata && x.metadata.s === s)).sort((a, c) => (c.metadata.at || 0) - (a.metadata.at || 0)).slice(0, 150);
@@ -416,4 +456,40 @@ export async function runSched(env, sendSira) {
     }
     const D = (await env.PUSH.get('schdone', 'json')) || []; D.unshift({ ...v, sent: now, res }); await env.PUSH.put('schdone', JSON.stringify(D.slice(0, 30)));
   }
+}
+
+/* ---------- every five minutes: are the two sites answering? (an alert after ten minutes down, and when they are back) ---------- */
+export async function runWatch(env) {
+  for (const [s, url] of [['sira', 'https://seeratuh.com/version.json'], ['durar', 'https://dorarnajdiah.com/version.json']]) {
+    let ok = false;
+    try { const r = await fetch(url + '?w=' + Date.now(), { cf: { cacheTtl: 0 }, signal: AbortSignal.timeout(15000) }); ok = r.ok; } catch (e) {}
+    const k = 'down:' + s, n = +(await env.PUSH.get(k)) || 0;
+    if (ok) { if (n >= 2) await ownerAlert(env, null, 0, { t: SNAME[s], b: 'عاد الموقع يعمل.', u: s === 'sira' ? 'https://seeratuh.com/' : 'https://dorarnajdiah.com/', tag: 'own-up-' + s }); if (n) await env.PUSH.delete(k); continue; }
+    await env.PUSH.put(k, String(n + 1), { expirationTtl: 86400 });
+    if (n + 1 === 2) await ownerAlert(env, null, 0, { t: SNAME[s] + ' لا يفتح', b: 'الموقع لا يجيب منذ عشر دقائق تقريباً. سأخبرك حين يعود.', u: PANEL, tag: 'own-down-' + s });
+  }
+}
+/* ---------- every Friday after nine in the morning (Riyadh): the week in one notice ---------- */
+export async function runWeekly(env) {
+  const now = new Date(Date.now() + 3 * 36e5);   // Riyadh
+  if (now.getUTCDay() !== 5 || now.getUTCHours() < 9) return;
+  const wk = 'wk:' + now.toISOString().slice(0, 10);
+  if (await env.PUSH.get(wk)) return;
+  await env.PUSH.put(wk, '1', { expirationTtl: 8 * 86400 });
+  const since = Date.now() - 7 * 864e5, fb = (await fbAll(env)).filter((x) => x.metadata && x.metadata.at >= since);
+  const L = [];
+  const n = fb.length, nw = fb.filter((x) => x.metadata.st === 'n').length;
+  L.push('ملاحظات القرّاء: ' + (n ? n + (nw ? ' (لم تُراجع ' + nw + ')' : '') : 'لا شيء'));
+  if (env.STATS) {
+    const from = new Date(since).toISOString().slice(0, 10);
+    for (const s of ['sira', 'durar']) {
+      try {
+        const dv = await env.STATS.prepare("SELECT SUM(n) AS n FROM hits WHERE site = ?1 AND day >= ?2 AND k = '·أجهزة'").bind(s, from).first();
+        const tp = await env.STATS.prepare("SELECT k, SUM(n) AS n FROM hits WHERE site = ?1 AND day >= ?2 AND substr(k,1,1) <> '·' GROUP BY k ORDER BY n DESC LIMIT 1").bind(s, from).first();
+        if (dv && dv.n) L.push(SNAME[s] + ': ' + dv.n + ' جهاز×يوم' + (tp ? '، وأكثر ما قُرئ: ' + tp.k : ''));
+      } catch (e) {}
+    }
+  }
+  for (const s of ['sira', 'durar']) { const r = await env.PUSH.get('fxres:' + s, 'json'); if (r && Date.now() - r.at < 8 * 864e5) L.push('أمانة النقل في ' + SNAME[s] + ': ' + (r.bad || r.miss ? 'وُجد ما يخالف — افتح اللوحة' : 'سليمة')); }
+  await ownerAlert(env, null, 0, { t: 'أسبوعك في الموقعين', b: L.join('\n'), u: PANEL, tag: 'own-week' });
 }

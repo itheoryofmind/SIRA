@@ -1,0 +1,17 @@
+name: فحص أمانة النقل الأسبوعي
+# every Thursday night (Friday 02:13 Riyadh): the two sites' text against the fingerprints of the verified text; the keeper is told only if something differs
+on:
+  schedule:
+    - cron: '13 23 * * 4'
+  workflow_dispatch: {}
+permissions: {contents: read}
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with: {sparse-checkout: .github/fidelity}
+      - env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: python3 .github/fidelity/check.py
