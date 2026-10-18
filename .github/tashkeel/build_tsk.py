@@ -46,6 +46,25 @@ def marks_for(text,srcs):
                 if not all(x==y or not x or not y or set(x)<=set(y) or set(y)<=set(x) for x,y in zip(a,b)):
                     DISPUTE.append((text[ws[i][0]:ws[i][1]],''.join(c+m for (c,_),m in zip(split_marks(text[ws[i][0]:ws[i][1]]),r[0])),''.join(c+m for (c,_),m in zip(split_marks(text[ws[i][0]:ws[i][1]]),q[0])),r[1].name,r[2],sib,q[2],text))
                     res[i]=None
+    # a word the site already writes with marks (a verse in the mushaf's spelling) is left as it is
+    for i in range(len(res)):
+        if MARK.search(text[ws[i][0]:ws[i][1]]): res[i]=None
+    # option (أ), the keeper's choice: a mark is shown only when a second, independent copy gives the same one.
+    # Each letter keeps its mark only if another edition, or the same hadith in another book (aligned by the same rules),
+    # puts the same mark on it; a sukun one writes and the other leaves out is no difference in reading.
+    alts=[align(text,[S])[1] for S in srcs]
+    for i,r in enumerate(res):
+        if r is None or not any(r[0]): continue
+        others=[a[i] for S,a in zip(srcs,alts) if a[i] is not None and any(a[i][0]) and not (a[i][1].name==r[1].name and a[i][2]==r[2])]
+        conf=['']*len(r[0])
+        for q in others:
+            if len(q[0])!=len(r[0]): continue
+            for k,(x,y) in enumerate(zip(r[0],q[0])):
+                if conf[k]: continue
+                cx=''.join(sorted(x.replace('\u0652','')));cy=''.join(sorted(y.replace('\u0652','')))
+                if x and cx==cy and (cx or '\u0652' in x): conf[k]=x
+        CONF[0]+=sum(1 for m in r[0] if m);CONF[1]+=sum(1 for m in conf if m)
+        res[i]=(conf,r[1],r[2]) if any(conf) else None
     # last: a word that every vocalized book marks the same way wherever it stands (30 times at least, never otherwise)
     has=[r is not None and any(r[0]) for r in res]
     for i,r in enumerate(res):
@@ -71,7 +90,7 @@ def marks_for(text,srcs):
             if LET.match(ch): M[k]=m;k+=1
         if any(r[0]): stat[2]+=1
     return M,stat,ws,res
-PROV={};_last=[None];DISPUTE=[];BY={}
+PROV={};_last=[None];DISPUTE=[];BY={};CONF=[0,0]
 TAB={}
 def enc(M):
     out=[];run=0
@@ -117,4 +136,4 @@ if __name__=='__main__':
         REP[f]=st;print(f,st,f'{time.time()-t0:.0f}s',flush=True)
     json.dump({'t':{v:k for k,v in TAB.items()},'m':OUT},open('/tmp/tsk/tsk.json','w'),ensure_ascii=False,separators=(',',':'))
     json.dump(REP,open('/tmp/tsk/report.json','w'),ensure_ascii=False)
-    pickle.dump(PROV,open('/tmp/tsk/prov.pkl','wb'));pickle.dump(DISPUTE,open('/tmp/tsk/dispute.pkl','wb'));print('disputed words held back',len(DISPUTE))
+    pickle.dump(PROV,open('/tmp/tsk/prov.pkl','wb'));pickle.dump(DISPUTE,open('/tmp/tsk/dispute.pkl','wb'));print('disputed words held back',len(DISPUTE),'| marks confirmed',CONF[1],'of',CONF[0])

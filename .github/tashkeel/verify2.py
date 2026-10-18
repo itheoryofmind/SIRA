@@ -50,8 +50,9 @@ for k,(s,prov) in PROV.items():
         site=ws[i].group(0);marked=vw[i].group(0)
         if nb(site)!=nb(W[j]) and CAN.get(nb(site),nb(site))!=CAN.get(nb(W[j]),nb(W[j])): e2+=1;ex.append(('word',site,W[j]));continue
         # the marks: the same as the book's, letter by letter (over the letters both write)
-        mb=MK.findall(W[j]);ms=MK.findall(marked)
-        if ''.join(ms)!=''.join(mb) and len(site)==len(MK.sub('',W[j]).replace('ـ','')):
+        from align import split_marks,transfer
+        tb=transfer(split_marks(site),split_marks(W[j]));tm=[m for _,m in split_marks(marked)]
+        if tb is None or any(m and m!=b for m,b in zip(tm,tb)):
             e2+=1;ex.append(('marks',marked,W[j]));continue
         L= i>0 and j>0 and nb(ws[i-1].group(0))==nb(W[j-1])
         L= L or ((i==0 or BRE.search(s[ws[i-1].end():ws[i].start()])) and C['B'][j])
