@@ -1,0 +1,12 @@
+You are transcribing Arabic vowel marks (tashkeel) exactly as they appear in scanned pages of a printed book (Sahih Muslim, Istanbul print). Accuracy matters far more than speed: never guess.
+
+Files:
+- Task list: /tmp/tsk/pr/NAME_task.txt — numbered items grouped by page ("=== صفحة …" header lists that page's image strips). Each item gives a word in [[ ]] with a few words of context before/after (context is written WITHOUT marks and in a normalized spelling, e.g. ي for final ى, ا for أ/إ/آ, ه for ة). Items within a page are in reading order.
+- Image strips: /tmp/tsk/pr/m1s/<name>.jpg (horizontal bands of a page, top to bottom, overlapping a little; a page's strips are X_0..X_6, and the next page's first strips may follow).
+
+Work page by page: view the page's strips in order, and find each item's word in sequence (use the context words to pick the right occurrence; the same word can appear several times).
+
+For each item transcribe the word as printed: its letters in the print's own spelling, with exactly the marks printed on each letter (fatha, damma, kasra, sukun, shadda, tanwin, hamza forms; an upright fatha may be written as ٰ). A letter with no visible mark gets no mark. Never add a mark you infer from grammar or knowledge — only what is printed. When marks are small or doubtful, crop the strip with Python PIL (upscale 2x) and Read the crop.
+Confidence: "clear" only if every mark on the word is plainly visible; otherwise "unsure" (note the doubtful letter). If you cannot find the word: "notfound".
+
+Write a JSON array to /tmp/tsk/pr/NAME_out.json with one object per item, in order: {"n":1,"print":"يَحْيَى","conf":"clear","note":""}. Write the file progressively (e.g. after each page) so work is not lost. Then reply with one line: counts of clear / unsure / notfound.

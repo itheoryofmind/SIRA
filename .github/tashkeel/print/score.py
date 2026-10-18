@@ -3,7 +3,7 @@ D=K=O=None
 if __name__=="__main__": D=json.load(open(sys.argv[1]));K=json.load(open(sys.argv[2]));O=json.load(open(sys.argv[3]))
 MK='ًٌٍَُِّْٰ'
 def norm(w):
-    w=w.replace('ٰ','َ').replace('ٱ','ا').replace('أ','ا').replace('إ','ا').replace('آ','ا').replace('ى','ي').replace('ـ','')
+    w=re.sub(r'اً$','ًا',w);w=w.replace('ٰ','َ').replace('ٖ','ِ').replace('ٱ','ا').replace('أ','ا').replace('إ','ا').replace('آ','ا').replace('ى','ي').replace('ـ','')
     L=[]
     for ch in w:
         if ch in MK:
