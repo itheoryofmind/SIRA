@@ -22,7 +22,7 @@ jobs:
             for k in 1 2 3 4 5; do curl -fsSL --retry 3 -A 'Mozilla/5.0' "$u" -o "$f" && break; sleep 20; done
             grep "^$u " "$L" | cut -d' ' -f2 | sort -un | while read p; do
               n=$(basename "$u" .pdf)_$p
-              pdftoppm -f $p -l $p -singlefile -r 150 -gray -jpeg -jpegopt quality=80 "$f" "out/$n" || echo "fail $n"
+              pdftoppm -f $p -l $p -singlefile -r 250 -gray -jpeg -jpegopt quality=80 "$f" "out/$n" || echo "fail $n"
             done
             rm -f "$f"; echo "$u done $(ls out | wc -l)"
           done
