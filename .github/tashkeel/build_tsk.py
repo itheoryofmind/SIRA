@@ -49,6 +49,10 @@ def marks_for(text,srcs):
     # a word the site already writes with marks (a verse in the mushaf's spelling) is left as it is
     for i in range(len(res)):
         if MARK.search(text[ws[i][0]:ws[i][1]]): res[i]=None
+    # a verse quoted in a text ({…} or ﴿…﴾) is the Quran's: it is not given marks from these books
+    for m in re.finditer(r'\{[^}]*\}|﴿[^﴾]*﴾',text):
+        for i in range(len(res)):
+            if ws[i][0]>=m.start() and ws[i][1]<=m.end(): res[i]=None
     # option (أ), the keeper's choice: a mark is shown only when a second, independent copy gives the same one.
     # Each letter keeps its mark only if another edition, or the same hadith in another book (aligned by the same rules),
     # puts the same mark on it; a sukun one writes and the other leaves out is no difference in reading.
