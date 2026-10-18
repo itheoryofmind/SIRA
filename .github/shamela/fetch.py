@@ -20,5 +20,5 @@ for p in range(a,b+1):
         miss+=1;print('missing',p,flush=True)
         if miss>=30: break
         continue
-    miss=0;gzip.open(f,'wb').write(d);time.sleep(.25)
+    miss=0;gzip.open(f,'wb').write(d);time.sleep(.1)
 print('done',book,a,b)
