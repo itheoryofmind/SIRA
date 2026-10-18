@@ -19,13 +19,13 @@ if [ -z "$DB" ]; then
 fi
 D1=""
 if [ -n "$DB" ]; then
-  api -X POST "https://api.cloudflare.com/client/v4/accounts/$ACC/d1/database/$DB/query" -d '{"sql":"CREATE TABLE IF NOT EXISTS hits (site TEXT NOT NULL, day TEXT NOT NULL, k TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (site, day, k))"}' >/dev/null && echo "reading counts: ready" || DB=""
+  api -X POST "https://api.cloudflare.com/client/v4/accounts/$ACC/d1/database/$DB/query" -d '{"sql":"CREATE TABLE IF NOT EXISTS hits (site TEXT NOT NULL, day TEXT NOT NULL, k TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (site, day, k))"}' >/dev/null && echo "::notice::reading counts: ready" || DB=""
 fi
 [ -n "$DB" ] && D1="[[d1_databases]]
 binding = \"STATS\"
 database_name = \"sira-stats\"
 database_id = \"$DB\""
-[ -z "$DB" ] && echo "reading counts: no database (the token may lack D1 permission); everything else deploys"
+[ -z "$DB" ] && echo "::warning::reading counts: no database (the token may lack D1 permission); everything else deploys"
 cat > wrangler.toml <<T
 name = "sira-push"
 main = "src/index.js"
@@ -49,7 +49,7 @@ ADMIN=$(printf %s "$CLOUDFLARE_API_TOKEN" | sha256sum | cut -c1-40)
 api -X PUT "https://api.cloudflare.com/client/v4/accounts/$ACC/storage/kv/namespaces/$NS/values/admin" --data-binary "$ADMIN" -H "Content-Type: text/plain" >/dev/null && echo "test key set"
 # check it answers (the certificate of a new domain can take a minute or two)
 for i in $(seq 1 30); do
-  if out=$(curl -fsS https://push.seeratuh.com/health 2>/dev/null); then echo "live: $out"; curl -fsS https://push.seeratuh.com/key >/dev/null && echo "key ok"; exit 0; fi
+  if out=$(curl -fsS https://push.seeratuh.com/health 2>/dev/null); then echo "::notice::live: $out"; curl -fsS https://push.seeratuh.com/key >/dev/null && echo "key ok"; exit 0; fi
   sleep 10
 done
 echo "deployed, but push.seeratuh.com did not answer yet"; exit 1
