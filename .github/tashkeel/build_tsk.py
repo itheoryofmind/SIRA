@@ -32,6 +32,20 @@ def strings(x):
             yield from strings(v)
 def marks_for(text,srcs):
     ws,res=align(text,srcs)
+    # where the other edition of the same book reads a word differently (a vowel against a vowel), the word waits for the print
+    used=[r[1].name for r in res if r is not None and any(r[0])]
+    if used:
+        from collections import Counter as _C
+        from align import SIB as _SIB
+        home=_C(used).most_common(1)[0][0];sib=_SIB.get(home)
+        if sib and sib in BY:
+            _,res2=align(text,[BY[sib]])
+            for i,(r,q) in enumerate(zip(res,res2)):
+                if r is None or q is None or not any(r[0]) or not any(q[0]) or r[1].name==sib: continue
+                a=[''.join(sorted(m.replace('\u0652',''))) for m in r[0]];b=[''.join(sorted(m.replace('\u0652',''))) for m in q[0]]
+                if not all(x==y or not x or not y or set(x)<=set(y) or set(y)<=set(x) for x,y in zip(a,b)):
+                    DISPUTE.append((text[ws[i][0]:ws[i][1]],''.join(c+m for (c,_),m in zip(split_marks(text[ws[i][0]:ws[i][1]]),r[0])),''.join(c+m for (c,_),m in zip(split_marks(text[ws[i][0]:ws[i][1]]),q[0])),r[1].name,r[2],sib,q[2],text))
+                    res[i]=None
     # last: a word that every vocalized book marks the same way wherever it stands (30 times at least, never otherwise)
     has=[r is not None and any(r[0]) for r in res]
     for i,r in enumerate(res):
@@ -57,7 +71,7 @@ def marks_for(text,srcs):
             if LET.match(ch): M[k]=m;k+=1
         if any(r[0]): stat[2]+=1
     return M,stat,ws,res
-PROV={};_last=[None]
+PROV={};_last=[None];DISPUTE=[];BY={}
 TAB={}
 def enc(M):
     out=[];run=0
@@ -79,6 +93,7 @@ if __name__=='__main__':
     srcs=[]
     for b in books:
         C=pickle.load(open(f'/tmp/tsk/c_{b}.pkl','rb'));S=Src(C,b);srcs.append(S)
+    BY.update({S.name:S for S in srcs})
     files=sys.argv[2].split(',') if len(sys.argv)>2 and sys.argv[2]!='all' else sorted(f for f in os.listdir(DATA) if f.endswith('.json') and f not in SKIP)
     OUT={};REP={}
     for f in files:
@@ -102,4 +117,4 @@ if __name__=='__main__':
         REP[f]=st;print(f,st,f'{time.time()-t0:.0f}s',flush=True)
     json.dump({'t':{v:k for k,v in TAB.items()},'m':OUT},open('/tmp/tsk/tsk.json','w'),ensure_ascii=False,separators=(',',':'))
     json.dump(REP,open('/tmp/tsk/report.json','w'),ensure_ascii=False)
-    pickle.dump(PROV,open('/tmp/tsk/prov.pkl','wb'))
+    pickle.dump(PROV,open('/tmp/tsk/prov.pkl','wb'));pickle.dump(DISPUTE,open('/tmp/tsk/dispute.pkl','wb'));print('disputed words held back',len(DISPUTE))
