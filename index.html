@@ -2978,7 +2978,7 @@ audio.own-note-m{background:none;height:44px}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-18-1656';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-18-1818';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -6286,7 +6286,7 @@ function tcol(){const m=document.querySelector('meta[name=theme-color]');if(!m)r
   const c=getComputedStyle(document.documentElement).getPropertyValue('--h-tc').trim();if(c)m.content=c}
 try{tcol()}catch(e){}
 try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{try{tcol()}catch(e){}})}catch(e){}
-function drawPick(){if(PVZ!==null||typeof OWN_DESIGNS==='undefined')return;const P=DZP();document.querySelectorAll('.dzpick-w').forEach(w=>w.remove());if(P.length<2)return;
+function drawPick(){if(PVZ!==null||typeof OWN_DESIGNS==='undefined')return;const P=DZP();document.querySelectorAll('.dzpick-w').forEach(w=>w.remove());if(!P.length)return;
   const mine=(()=>{const m=LS.get('my_dz',''),o=LS.get('own_dz','');return !!(m&&P.includes(m)&&LS.get('my_dz_at',null)===o)})();
   const cur=curDz()||'base',NM=k=>k==='base'?(SITE==='sira'?'الهجرة':'الأصلي'):OWN_DESIGNS[k].n,SW=k=>k==='base'?'linear-gradient(135deg,#14231E 50%,#C9A04A 50%)':'linear-gradient(135deg,'+OWN_DESIGNS[k].sw[1]+' 50%,'+OWN_DESIGNS[k].sw[2]+' 50%)';
   const row=()=>{const r=el('div','themes dzpick');r.setAttribute('role','group');r.setAttribute('aria-label','التصميم');
@@ -6344,7 +6344,10 @@ function drawPz(){if(!pzB)return;pzB.textContent=CFG.on?'الموقع متوقف
   const hit=k=>{try{if(OWN()||!k)return;k=String(k).replace(/[\u0000-\u001f]/g,'').slice(0,80);let H=LS.get('own_hits',null);if(!H||H.d!==day()){flush();H=LS.get('own_hits',null)||{d:day(),c:{}}}if(!(k in H.c)&&Object.keys(H.c).length>=60)return;H.c[k]=Math.min(500,(H.c[k]||0)+1);LS.set('own_hits',H)}catch(e){}};
   if(typeof window.fxOpen==='function'){const o=window.fxOpen;window.fxOpen=function(t){hit(t);return o.apply(this,arguments)}}
   if(typeof window.openPart==='function'){const o=window.openPart;window.openPart=function(n){try{hit(typeof partName==='function'?partName(n):'الجزء '+n)}catch(e){}return o.apply(this,arguments)}}
-  if(!LS.get('own_hits',null))LS.set('own_hits',{d:day(),c:{}});setTimeout(flush,4000)}
+  if(!LS.get('own_hits',null))LS.set('own_hits',{d:day(),c:{}});setTimeout(flush,4000)
+  // the design this device reads in today, and whether the reader chose it himself (a one, not a count)
+  const dzMark=()=>{try{if(OWN())return;flush();const H=LS.get('own_hits',null)||{d:day(),c:{}};for(const k of Object.keys(H.c))if(k.startsWith('·تصميم:')||k.startsWith('·اختار:'))delete H.c[k];const d=curDz()||'base';H.c['·تصميم:'+d]=1;if(LS.get('my_dz','')&&d===(LS.get('my_dz','')||'base'))H.c['·اختار:'+d]=1;LS.set('own_hits',H)}catch(e){}};
+  setTimeout(dzMark,2500);document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(dzMark,1500)});document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('.dzpick'))setTimeout(dzMark,300)},true)}
 
 if(!KEY)return;
 const call=(p,o)=>fetch(W+p,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:KEY,s:SITE,...(o||{})})}).then(r=>r.json()).catch(()=>({ok:false,net:1}));

@@ -72,7 +72,10 @@ const EMPTY = () => ({ pause: { on: false }, hide: [], add: [], pages: [] });
 async function getCfg(env, s) {
   let c = await env.PUSH.get('cfg:' + s, 'json');
   if (!c && s === 'sira') { const p = await env.PUSH.get('pause', 'json'); c = EMPTY(); if (p) c.pause = p; }   // the first pause, kept before the settings existed
-  return Object.assign(EMPTY(), c || {});
+  c = Object.assign(EMPTY(), c || {});
+  // 2026-10-18, the keeper's word: on the Durar site readers choose only «تلقائي» and نجد (once; he can change it from the panel after)
+  if (s === 'durar' && !c.m1) { c.pick = (c.pick || []).filter((x) => x !== 'base'); if (!c.pick.includes('najd')) c.pick.push('najd'); c.m1 = 1; await env.PUSH.put('cfg:durar', JSON.stringify(c)); }
+  return c;
 }
 async function putCfg(env, s, c) {
   c.v = Date.now();
@@ -328,6 +331,10 @@ async function hitIn(req, env, out) {
   const q = 'INSERT INTO hits (site, day, k, n) VALUES (?1, ?2, ?3, ?4) ON CONFLICT(site, day, k) DO UPDATE SET n = n + excluded.n';
   const st = E.map(([k, n]) => env.STATS.prepare(q).bind(s, d, k, n));
   st.push(env.STATS.prepare(q).bind(s, d, '·أجهزة', 1));
+  // where the reader is, as Cloudflare knows it from the connection: the country and the city only (no address is kept)
+  const cf = req.cf || {};
+  if (cf.country && /^[A-Z]{2}$/.test(cf.country)) st.push(env.STATS.prepare(q).bind(s, d, '·بلد:' + cf.country, 1));
+  if (cf.city && typeof cf.city === 'string') st.push(env.STATS.prepare(q).bind(s, d, '·مدينة:' + String(cf.city).slice(0, 60) + (cf.country ? '|' + cf.country : ''), 1));
   try { await env.STATS.batch(st); } catch (e) { return out({ ok: false }, 500); }
   return out({ ok: true });
 }
@@ -383,9 +390,11 @@ async function panelExtra(u, b, s, env, out) {
     if (!env.STATS) return out({ ok: false, nodb: 1 });
     const from = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
     try {
-      const top = await env.STATS.prepare("SELECT k, SUM(n) AS n FROM hits WHERE site = ?1 AND day >= ?2 AND k <> '·أجهزة' GROUP BY k ORDER BY n DESC LIMIT 25").bind(s, from).all();
+      const Q = (w, lim) => env.STATS.prepare("SELECT k, SUM(n) AS n FROM hits WHERE site = ?1 AND day >= ?2 AND " + w + " GROUP BY k ORDER BY n DESC LIMIT " + lim).bind(s, from).all().then((r) => r.results || []);
+      const [top, dz, mine, cc, city] = await Promise.all([Q("substr(k,1,1) <> '·'", 25), Q("k LIKE '·تصميم:%'", 20), Q("k LIKE '·اختار:%'", 20), Q("k LIKE '·بلد:%'", 30), Q("k LIKE '·مدينة:%'", 30)]);
+      const cut = (L) => L.map((x) => ({ k: x.k.slice(x.k.indexOf(':') + 1), n: x.n }));
       const days = await env.STATS.prepare("SELECT day, n FROM hits WHERE site = ?1 AND day >= ?2 AND k = '·أجهزة' ORDER BY day DESC").bind(s, from).all();
-      return out({ ok: true, top: top.results || [], days: days.results || [] });
+      return out({ ok: true, top, dz: cut(dz), mine: cut(mine), cc: cut(cc), city: cut(city), days: days.results || [] });
     } catch (e) { return out({ ok: false, nodb: 1 }); }
   }
   return null;
