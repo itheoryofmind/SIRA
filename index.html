@@ -1875,6 +1875,9 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 /* تشكيل الأحاديث: the reader's choice in the settings */
 .tsk-n{font-size:13px;color:var(--muted);margin:6px 2px 0;line-height:1.7}
 
+/* the keeper's link at the foot of the notifications page: quiet, for him only */
+.nt-own{display:block;margin:22px auto 6px;background:none;border:0;color:var(--muted,#888);opacity:.6;font-size:12px;text-decoration:underline;cursor:pointer}
+
 /* the site paused by its keeper */
 html.pz-on,html.pz-on body{overflow:hidden}
 .pz{position:fixed;inset:0;z-index:2147483000;background:var(--ground);display:grid;place-items:center;padding:24px 16px calc(24px + env(safe-area-inset-bottom))}
@@ -2983,7 +2986,7 @@ audio.own-note-m{background:none;height:44px}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-18-1942';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-18-1950';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -5230,7 +5233,7 @@ function fxNotif(){
   if(!S){const bk=el('div','sheet-back');bk.id='ntBack';S=el('div','sheet');S.id='ntSheet';S.setAttribute('role','dialog');S.setAttribute('aria-label','الإشعارات');
     const hd=el('div','sheethead');hd.innerHTML='<div class="grip"></div>';const x=el('button','icon');x.type='button';x.setAttribute('aria-label','إغلاق');
     x.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';x.style.cssText='position:absolute;inset-inline-end:6px;top:6px';hd.append(x);
-    const B=el('div');B.id='ntBody';const h4=el('h4',null,'الإشعارات');const PD=el('div','nt-pendbox');PD.id='ntPend';S.append(hd,h4,PD,B);document.body.append(bk,S);
+    const B=el('div');B.id='ntBody';const h4=el('h4',null,'الإشعارات');const PD=el('div','nt-pendbox');PD.id='ntPend';S.append(hd,h4,PD,B);{const ft=el('button','nt-own','لصاحب الموقع: ربط تنبيهات لوحة التحكم بهذا الجهاز');ft.type='button';ft.onclick=()=>{if(window.ownPair)ownPair()};S.append(ft)}document.body.append(bk,S);
     const close=()=>{if(NTD.dirty&&!confirm('لم تحفظ التغييرات. أتغلق الصفحة دون حفظ؟'))return;bk.hidden=true;S.hidden=true;sxUnlock()};bk.onclick=close;x.onclick=close}
   NTD={n:JSON.parse(JSON.stringify(ntGet())),dirty:false,msg:null};
   document.getElementById('ntBack').hidden=false;S.hidden=false;sxLock();ntPaint();seqPend()}
@@ -6346,6 +6349,16 @@ function drawPz(){if(!pzB)return;pzB.textContent=CFG.on?'الموقع متوقف
   const go=()=>{if(!q)q=requestAnimationFrame(sb)};addEventListener('scroll',go,{passive:true,capture:true});addEventListener('resize',go);
   new MutationObserver(go).observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['class','hidden','data-theme','style']});setTimeout(go,300)}
 
+/* ---------- the keeper links this phone to the panel's alerts with a code from the panel (the app on the home screen keeps its own storage, so no key is needed here) ---------- */
+window.ownPair=async()=>{try{
+  if(!('serviceWorker' in navigator)||!('PushManager' in window)){alert('افتح الموقع من أيقونته في الشاشة الرئيسية، ثم أعد المحاولة.');return}
+  const code=(prompt('اكتب الرمز الذي تظهره لوحة التحكم في بطاقة «تنبيهاتك»:')||'').replace(/[^0-9٠-٩]/g,'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));if(code.length!==6)return;
+  if(Notification.permission!=='granted'&&(await Notification.requestPermission())!=='granted'){alert('لم يُسمح بالإشعارات على هذا الجهاز.');return}
+  const reg=await navigator.serviceWorker.ready;let sb=await reg.pushManager.getSubscription();
+  if(!sb){const {key}=await (await fetch(W+'/key')).json();const k=key.replace(/-/g,'+').replace(/_/g,'/');sb=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:Uint8Array.from(atob(k+'='.repeat((4-k.length%4)%4)),c=>c.charCodeAt(0))})}
+  const r=await (await fetch(W+'/c/pairgo',{method:'POST',body:JSON.stringify({code,sub:sb.toJSON()})})).json().catch(()=>({ok:false}));
+  alert(r.ok?'رُبط هذا الجهاز بتنبيهات لوحة التحكم، ووصلك إشعار تجريبي.':r.wait?'محاولات كثيرة؛ انتظر عشر دقائق.':'الرمز غير صحيح أو انتهى وقته. أظهر رمزاً جديداً من اللوحة.')}catch(e){alert('تعذّر: '+e.message)}};
+
 /* ---------- for every reader: a copy of each note to the keeper's panel, and the day's count of parts opened (numbers only) ---------- */
 {const F=document.getElementById('fbForm');
   if(F)F.addEventListener('submit',()=>{try{const ty=(document.getElementById('fbType')||{}).value||'',m=((document.getElementById('fbMsg')||{}).value||'').trim();
@@ -6521,6 +6534,7 @@ async function oSubNow(make){const reg=await navigator.serviceWorker.ready;let s
   if(!sb&&make){if(Notification.permission!=='granted'&&(await Notification.requestPermission())!=='granted')return null;const {key}=await (await fetch(W+'/key')).json();const k=key.replace(/-/g,'+').replace(/_/g,'/');sb=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:Uint8Array.from(atob(k+'='.repeat((4-k.length%4)%4)),c=>c.charCodeAt(0))})}
   return sb?sb.toJSON():null}
 async function oAlerts(){const [ov,c]=sheet('تنبيهات لوحة التحكم');
+  if(!(navigator.standalone||matchMedia('(display-mode: standalone)').matches)){c.append(el('p','own-n','الآيفون لا يرسل الإشعارات إلا إلى الموقع المفتوح من أيقونته في الشاشة الرئيسية. فاطلب رمزاً من بطاقة «تنبيهاتك» في لوحة التحكم، ثم افتح سِيرَتُه من أيقونتها ← القائمة ← «الإشعارات» ← «لصاحب الموقع» في آخر الصفحة، واكتب الرمز.'));return}
   if(!('serviceWorker' in navigator)||!('PushManager' in window)){c.append(el('p','own-n','هذا المتصفح لا يدعم الإشعارات. افتح الموقع من أيقونته في الشاشة الرئيسية.'));return}
   const st=el('p','own-n','…');c.append(st);let sb=null;try{sb=await oSubNow(false)}catch(e){}
   let on=false;if(sb){const r=await call('/c/osub',{a:'is',sub:sb});on=!!(r.ok&&r.on)}

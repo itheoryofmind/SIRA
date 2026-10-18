@@ -190,6 +190,19 @@ export async function cmsFetch(req, env, u) {
     if (bad.length || r.miss) await ownerAlert(env, 'fx' + s, 6 * 3600e3, { t: 'فحص أمانة النقل · ' + SNAME[s], b: 'وجد الفحص الأسبوعي ' + (bad.length ? bad.length + ' نصاً يخالف النص المفحوص' : '') + (r.miss ? (bad.length ? ' و' : '') + r.miss + ' ملفاً لا يُقرأ' : '') + '. افتح «فحص أمانة النقل» في اللوحة.', u: PANEL, tag: 'own-fx' });
     return out({ ok: true, ...r });
   }
+  if (u.pathname === '/c/pairgo') {   // the keeper's phone, with the code the panel showed (public, a few tries per address)
+    const ip = req.headers.get('CF-Connecting-IP') || '';
+    const rk = 'rlp:' + [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode('pair' + ip)))].slice(0, 10).map((x) => x.toString(16).padStart(2, '0')).join('');
+    const tries = +(await env.PUSH.get(rk)) || 0;
+    if (tries >= 5) return out({ ok: false, wait: 1 }, 429);
+    let b; try { b = JSON.parse(await req.text()); } catch (e) { return out({ ok: false }, 400); }
+    const code = String(b && b.code || '');
+    const ok = /^\d{6}$/.test(code) && (await env.PUSH.get('pair:' + code));
+    if (!ok) { await env.PUSH.put(rk, String(tries + 1), { expirationTtl: 600 }); return out({ ok: false }); }
+    await env.PUSH.delete('pair:' + code);
+    const r = await osubSet(env, b.sub, 'sira');
+    return out(r);
+  }
   if (u.pathname === '/c/fb') return fbIn(req, env, out);
   if (u.pathname === '/c/hit') return hitIn(req, env, out);
   let b; try { b = JSON.parse(await req.text()); } catch (e) { return out({ ok: false }, 400); }
@@ -315,6 +328,13 @@ export async function logAuth(env, req, ok, path) {
 }
 
 /* ---------- the keeper's own alerts, on the devices he marked (osub:…): a wrong key, a reader's note, a site down, the week ---------- */
+async function osubSet(env, sub, s) {
+  if (!sub || typeof sub.endpoint !== 'string' || !/^https:\/\//.test(sub.endpoint) || !sub.keys || !sub.keys.p256dh || !sub.keys.auth) return { ok: false, bad: 1 };
+  const id = 'osub:' + [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(sub.endpoint)))].slice(0, 12).map((x) => x.toString(16).padStart(2, '0')).join('');
+  await env.PUSH.put(id, JSON.stringify({ endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } }), { metadata: { at: Date.now(), s } });
+  const n = await ownerAlert(env, null, 0, { t: 'تنبيهات لوحة التحكم', b: 'رُبط هذا الجهاز: محاولات الدخول الخاطئة، وملاحظات القرّاء، وتعطّل أحد الموقعين، ونتيجة فحص الأمانة، وملخص كل جمعة.', u: 'https://push.seeratuh.com/c', tag: 'own-on' });
+  return { ok: true, on: true, sent: n };
+}
 let NOTIFY = null;
 export function setNotify(f) { NOTIFY = f; }
 export async function ownerAlert(env, key, gapMs, msg) {
@@ -374,6 +394,8 @@ async function panelExtra(u, b, s, env, out) {
   if (p === '/c/osub') {   // the keeper's device: its subscription (from the site, where the app is installed) gets his alerts
     const sub = b.sub;
     if (b.a === 'list') { const l = await env.PUSH.list({ prefix: 'osub:' }); return out({ ok: true, n: l.keys.length, at: l.keys.map((x) => x.metadata || {}) }); }
+    if (b.a === 'pair') { const code = String(100000 + (crypto.getRandomValues(new Uint32Array(1))[0] % 900000)); await env.PUSH.put('pair:' + code, '1', { expirationTtl: 600 }); return out({ ok: true, code }); }
+    if (b.a === 'clear') { const l = await env.PUSH.list({ prefix: 'osub:' }); for (const k of l.keys) await env.PUSH.delete(k.name); return out({ ok: true }); }
     if (!sub || typeof sub.endpoint !== 'string' || !/^https:\/\//.test(sub.endpoint) || !sub.keys || !sub.keys.p256dh || !sub.keys.auth) return out({ ok: false, bad: 1 }, 400);
     const id = 'osub:' + [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(sub.endpoint)))].slice(0, 12).map((x) => x.toString(16).padStart(2, '0')).join('');
     if (b.a === 'off') { await env.PUSH.delete(id); return out({ ok: true, on: false }); }
