@@ -2986,7 +2986,7 @@ audio.own-note-m{background:none;height:44px}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-18-1953';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-18-1956';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -6352,8 +6352,10 @@ function drawPz(){if(!pzB)return;pzB.textContent=CFG.on?'الموقع متوقف
 /* ---------- the keeper links this phone to the panel's alerts with a code from the panel (the app on the home screen keeps its own storage, so no key is needed here) ---------- */
 window.ownPair=async()=>{try{
   if(!('serviceWorker' in navigator)||!('PushManager' in window)){alert('افتح الموقع من أيقونته في الشاشة الرئيسية، ثم أعد المحاولة.');return}
+  // the permission first, straight from the tap (the phone refuses it after a dialog)
+  if(Notification.permission==='denied'){alert('الإشعارات ممنوعة لهذا الموقع على هذا الجهاز. فعّلها من الإعدادات ← الإشعارات ← سِيرَتُه، ثم أعد المحاولة.');return}
+  if(Notification.permission!=='granted'&&(await Notification.requestPermission())!=='granted'){alert('لم يُسمح بالإشعارات. إن لم تظهر لك نافذة السماح فأعد المحاولة، أو فعّلها من الإعدادات ← الإشعارات ← سِيرَتُه.');return}
   const code=(prompt('اكتب الرمز الذي تظهره لوحة التحكم في بطاقة «تنبيهاتك»:')||'').replace(/[^0-9٠-٩]/g,'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));if(code.length!==6)return;
-  if(Notification.permission!=='granted'&&(await Notification.requestPermission())!=='granted'){alert('لم يُسمح بالإشعارات على هذا الجهاز.');return}
   const reg=await navigator.serviceWorker.ready;let sb=await reg.pushManager.getSubscription();
   if(!sb){const {key}=await (await fetch(W+'/key')).json();const k=key.replace(/-/g,'+').replace(/_/g,'/');sb=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:Uint8Array.from(atob(k+'='.repeat((4-k.length%4)%4)),c=>c.charCodeAt(0))})}
   const r=await (await fetch(W+'/c/pairgo',{method:'POST',body:JSON.stringify({code,sub:sb.toJSON()})})).json().catch(()=>({ok:false}));
