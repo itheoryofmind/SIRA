@@ -2983,7 +2983,7 @@ audio.own-note-m{background:none;height:44px}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-18-1937';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-18-1939';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -6336,6 +6336,16 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
 /* =================== the keeper's edit mode =================== */
 let FULL=null,PICK=false,bar=null,pzB=null,pkB=null;
 function drawPz(){if(!pzB)return;pzB.textContent=CFG.on?'الموقع متوقف':'إيقاف';pzB.title=CFG.on?'الموقع متوقف الآن':'إيقاف الموقع مؤقتاً';pzB.classList.toggle('own-red',!!CFG.on)}
+/* ---------- the band under the phone's clock takes the colour of whatever is at the top of the screen now (a reading page's bar, a sheet, the masthead) ---------- */
+{let q=0;const sb=()=>{q=0;const b=document.getElementById('sbar');if(!b)return;const h=b.offsetHeight;if(!h)return;
+  let e=document.elementFromPoint(innerWidth/2,h+2),c=null;
+  while(e&&e!==document.documentElement){const cs=getComputedStyle(e);if(cs.backgroundImage&&cs.backgroundImage!=='none')break;
+    const m=cs.backgroundColor.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/);if(m&&(m[4]===undefined||+m[4]>.5)){c=[+m[1],+m[2],+m[3]];break}e=e.parentElement}
+  if(!c){if(b.style.background)b.style.background='';return}
+  const l=(.299*c[0]+.587*c[1]+.114*c[2])/255,k=l<.55?1:.62,v='rgb('+c.map(x=>Math.round(x*k)).join(',')+')';if(b.style.background!==v)b.style.background=v};
+  const go=()=>{if(!q)q=requestAnimationFrame(sb)};addEventListener('scroll',go,{passive:true,capture:true});addEventListener('resize',go);
+  new MutationObserver(go).observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['class','hidden','data-theme','style']});setTimeout(go,300)}
+
 /* ---------- for every reader: a copy of each note to the keeper's panel, and the day's count of parts opened (numbers only) ---------- */
 {const F=document.getElementById('fbForm');
   if(F)F.addEventListener('submit',()=>{try{const ty=(document.getElementById('fbType')||{}).value||'',m=((document.getElementById('fbMsg')||{}).value||'').trim();
