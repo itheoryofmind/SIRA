@@ -1,0 +1,27 @@
+name: shamela
+on:
+  workflow_dispatch:
+    inputs:
+      book: {required: true}
+      a: {required: true}
+      b: {required: true}
+permissions:
+  contents: write
+concurrency: shamela
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, path: tools}
+      - name: the source branch
+        run: |
+          git clone --depth 1 --branch shamela-src https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} src || (mkdir src && cd src && git init -b shamela-src && git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }})
+      - name: fetch
+        working-directory: src
+        run: |
+          python3 ../tools/.github/shamela/fetch.py ${{ inputs.book }} ${{ inputs.a }} ${{ inputs.b }} || true
+          git config user.name shamela-fetch; git config user.email noreply@github.com
+          git add shamela; git commit -qm "shamela ${{ inputs.book }} ${{ inputs.a }}-${{ inputs.b }}" || true
+          git push -q origin HEAD:shamela-src
