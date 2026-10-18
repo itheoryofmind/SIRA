@@ -1,0 +1,29 @@
+name: print pages
+# takes the pages of the printed editions (the PDFs Shamela links on each of its pages) as images, for checking the vowel marks
+on:
+  workflow_dispatch:
+    inputs:
+      list: {description: 'list file under .github/print/', required: true}
+permissions: {contents: write}
+jobs:
+  get:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get install -y poppler-utils >/dev/null
+      - name: pages
+        run: |
+          L=".github/print/${{ inputs.list }}"; B="pr-${{ inputs.list }}"; B="${B%.txt}"
+          mkdir -p out pdf
+          # lines: url page
+          cut -d' ' -f1 "$L" | sort -u | while read u; do
+            f="pdf/$(echo "$u" | md5sum | cut -c1-12).pdf"
+            for k in 1 2 3 4 5; do curl -fsSL --retry 3 -A 'Mozilla/5.0' "$u" -o "$f" && break; sleep 20; done
+            grep "^$u " "$L" | cut -d' ' -f2 | sort -un | while read p; do
+              n=$(basename "$u" .pdf)_$p
+              pdftoppm -f $p -l $p -singlefile -r 150 -gray -jpeg -jpegopt quality=80 "$f" "out/$n" || echo "fail $n"
+            done
+            rm -f "$f"; echo "$u done $(ls out | wc -l)"
+          done
+          cd out && git init -q && git checkout -q -b "$B" && git add . && git -c user.name=bot -c user.email=bot@x commit -qm pages && git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" "$B"
