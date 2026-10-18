@@ -2986,7 +2986,7 @@ audio.own-note-m{background:none;height:44px}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-18-1952';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-18-1953';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -6534,7 +6534,7 @@ async function oSubNow(make){const reg=await navigator.serviceWorker.ready;let s
   if(!sb&&make){if(Notification.permission!=='granted'&&(await Notification.requestPermission())!=='granted')return null;const {key}=await (await fetch(W+'/key')).json();const k=key.replace(/-/g,'+').replace(/_/g,'/');sb=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:Uint8Array.from(atob(k+'='.repeat((4-k.length%4)%4)),c=>c.charCodeAt(0))})}
   return sb?sb.toJSON():null}
 async function oAlerts(){const [ov,c]=sheet('تنبيهات لوحة التحكم');
-  if(!(navigator.standalone||matchMedia('(display-mode: standalone)').matches)){c.append(el('p','own-n','الآيفون لا يرسل الإشعارات إلا إلى الموقع المفتوح من أيقونته في الشاشة الرئيسية. فاطلب رمزاً من بطاقة «تنبيهاتك» في لوحة التحكم، ثم افتح سِيرَتُه من أيقونتها ← القائمة ← «الإشعارات» ← «لصاحب الموقع» في آخر الصفحة، واكتب الرمز.'));return}
+  if(!(navigator.standalone||matchMedia('(display-mode: standalone)').matches)){c.append(el('p','own-n','الآيفون لا يرسل الإشعارات إلا إلى الموقع المفتوح من أيقونته في الشاشة الرئيسية. فاطلب رمزاً من بطاقة «تنبيهاتك» في لوحة التحكم، ثم افتح سِيرَتُه من أيقونتها ← القائمة ← «الإشعارات»، واضغط على عنوان الصفحة «الإشعارات» خمس مرات متتالية، واكتب الرمز.'));return}
   if(!('serviceWorker' in navigator)||!('PushManager' in window)){c.append(el('p','own-n','هذا المتصفح لا يدعم الإشعارات. افتح الموقع من أيقونته في الشاشة الرئيسية.'));return}
   const st=el('p','own-n','…');c.append(st);let sb=null;try{sb=await oSubNow(false)}catch(e){}
   let on=false;if(sb){const r=await call('/c/osub',{a:'is',sub:sb});on=!!(r.ok&&r.on)}
