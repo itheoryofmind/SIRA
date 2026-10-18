@@ -1,0 +1,15 @@
+name: probe
+# fetches pages of the two sites as a reader gets them, for checking what is live
+on:
+  workflow_dispatch:
+    inputs:
+      urls: {description: 'space separated', required: true}
+permissions: {contents: write}
+jobs:
+  get:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          mkdir out && cd out
+          i=0; for u in ${{ inputs.urls }}; do i=$((i+1)); curl -sS -D h$i.txt -o f$i "$u?x=$(date +%s)"; echo "$u" >> urls.txt; done
+          git init -q && git checkout -q -b probe && git add . && git -c user.name=bot -c user.email=bot@x commit -qm probe && git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" probe
