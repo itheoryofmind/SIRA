@@ -6,8 +6,8 @@
 // - an event of the Sira, and one of the rightly guided caliphs, each day in order (the site's timeline, in the Mukhtasar's words)
 // - each reader picks which of these, and the hour of each (where the reader is)
 // Web Push: RFC 8291 (aes128gcm) and RFC 8292 (VAPID), with WebCrypto only.
-import { ownerFetch, installSeen, hourTxt, topOf } from './owner.js';
-import { cmsFetch, pauseFetch, pushPaused, mediaFetch } from './cms.js';
+import { ownerFetch, installSeen, hourTxt, topOf, sendAll } from './owner.js';
+import { cmsFetch, pauseFetch, pushPaused, mediaFetch, runSched, logAuth } from './cms.js';
 import H, { DAY0, SKIP } from './hadith.js';
 const HR = H.map((_, i) => i).filter((i) => !SKIP.includes(i));   // the days pass over the hadiths whose digital text has a misprint (dayskip.py)
 import { SI, KH } from './tl.js';
@@ -240,7 +240,7 @@ export default {
     { const c = await mediaFetch(req, env, u); if (c) return c; }
     { const c = await pauseFetch(req, env, u, SITE); if (c) return c; }
     { const c = await cmsFetch(req, env, u); if (c) return c; }
-    { const o = await ownerFetch(req, env, u, { site: SITE, name: 'سِيرَتُه', page: 1, fanOut, job: (id, msg) => [id, 'bc', msg], stats: siraStats }); if (o) return o; }
+    { const o = await ownerFetch(req, env, u, { site: SITE, name: 'سِيرَتُه', page: 1, fanOut, job: (id, msg) => [id, 'bc', msg], stats: siraStats, logAuth }); if (o) return o; }
     if (req.method === 'POST' && u.pathname === '/i') return installSeen(req, env, cors);
     if (u.pathname === '/key') return json({ key: (await vapid(env)).pub });
     if (u.pathname === '/health') return json({ ok: true, hadiths: H.length, maghazi: MG.length, sira: SI.length, caliphs: KH.length });
@@ -332,6 +332,8 @@ export default {
     return json({ ok: false }, 404);
   },
   async scheduled(ev, env, ctx) {
+    // the notifications the keeper set ahead (each site's own pause is kept)
+    try { await runSched(env, (msg) => sendAll(env, { site: SITE, name: 'سِيرَتُه', fanOut, job: (id, m) => [id, 'bc', m] }, msg)); } catch (e) { console.log('sched', String(e)); }
     if (await pushPaused(env)) { console.log('paused'); return; }
     const r = await fanOut(env, await due(env));
     // the old owner's-notice feature was removed: its stored records (keys beginning w:) are deleted once

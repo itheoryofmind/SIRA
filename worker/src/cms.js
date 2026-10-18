@@ -85,7 +85,7 @@ const DZM_DEF = { haram: 'white' };
 function pub(c) {
   return { on: !!c.pause.on, msg: c.pause.on ? c.pause.msg : '', np: !!(c.pause.on && c.pause.np), hide: c.hide.map((h) => ({ id: h.id, sel: h.sel, fp: h.fp, sec: h.sec })),
     add: c.add.map((a) => ({ id: a.id, sel: a.sel, fp: a.fp, sec: a.sec, k: a.k, t: a.t })),
-    note: (c.note && c.note.on) ? { t: c.note.t || '', m: c.note.m || null, v: c.note.at || 0 } : null, dz: c.dz || '', dzm: Object.assign({}, DZM_DEF, c.dzm || {}), dzv: c.dzv || {}, pick: c.pick || ['base', 'haram'], noimg: !!c.noimg, pages: c.pages.filter((p) => !p.off).map((p) => ({ id: p.id, sel: p.sel, fp: p.fp, sec: p.sec, title: p.title, sub: p.sub, blocks: p.blocks })), v: c.v || 0 };
+    note: (c.note && c.note.on && !(c.note.from && Date.now() < c.note.from) && !(c.note.to && Date.now() >= c.note.to)) ? { t: c.note.t || '', m: c.note.m || null, v: c.note.at || 0 } : null, tsk: c.tsk !== false, dz: c.dz || '', dzm: Object.assign({}, DZM_DEF, c.dzm || {}), dzv: c.dzv || {}, pick: c.pick || ['base', 'haram'], noimg: !!c.noimg, pages: c.pages.filter((p) => !p.off).map((p) => ({ id: p.id, sel: p.sel, fp: p.fp, sec: p.sec, title: p.title, sub: p.sub, blocks: p.blocks })), v: c.v || 0 };
 }
 const okRule = (r) => r && typeof r.sel === 'string' && /^[a-z][a-z0-9]{0,11}(\.[A-Za-z_][A-Za-z0-9_-]{0,39})?$/.test(r.sel) && typeof r.fp === 'string' && /^[0-9a-z]{4,40}$/.test(r.fp) && typeof r.sec === 'string' && r.sec.length <= 200;
 const okBlocks = (b) => Array.isArray(b) && b.length <= 400 && b.every((x) => x && ['h', 'p', 'q'].includes(x.k) && typeof x.t === 'string' && x.t.length <= 20000);
@@ -173,9 +173,13 @@ export async function cmsFetch(req, env, u) {
     md.got = i + 1; md.done = md.got === n; await env.PUSH.put('md:' + id, JSON.stringify(md));
     return out({ ok: true, id, done: md.done });
   }
+  if (u.pathname === '/c/fb') return fbIn(req, env, out);
+  if (u.pathname === '/c/hit') return hitIn(req, env, out);
   let b; try { b = JSON.parse(await req.text()); } catch (e) { return out({ ok: false }, 400); }
-  if (!(await isOwner(b && b.k, env))) return out({ ok: false }, 403);
+  if (!(await isOwner(b && b.k, env))) { await logAuth(env, req, false, u.pathname); return out({ ok: false }, 403); }
   const s = okSite(b.s) ? b.s : 'sira';
+  if (u.pathname === '/c/hi' && b.login) await logAuth(env, req, true, u.pathname);
+  { const r = await panelExtra(u, b, s, env, out); if (r) return r; }
 
   // a new key: its fingerprint replaces the old one at once (the key itself never reaches here)
   if (u.pathname === '/c/key') {
@@ -246,7 +250,11 @@ export async function cmsFetch(req, env, u) {
       if (on && !t && !mm) return out({ ok: false, bad: 1 }, 400);
       const old = c.note && c.note.m;
       if (old && (old.k === 'a' || old.k === 'v') && (!mm || mm.u !== old.u)) await dropMedia(env, old.u);
-      c.note = { on, t, m: mm, at };
+      const from = Number.isFinite(+b.from) && +b.from > 0 ? +b.from : 0, to = Number.isFinite(+b.to) && +b.to > 0 ? +b.to : 0;
+      if (from && to && to <= from) return out({ ok: false, bad: 1 }, 400);
+      c.note = { on, t, m: mm, at, from, to };
+    } else if (a === 'tsk') {
+      c.tsk = !!b.on;
     } else if (a === 'noimg') {
       c.noimg = !!b.on;
     } else if (a === 'design') {
@@ -273,4 +281,130 @@ export async function cmsFetch(req, env, u) {
     return out({ ok: true, cfg: c, pause: c.pause });
   }
   return out({ ok: false }, 404);
+}
+
+
+/* ---------- سجل الدخول: every opening of the panel with the key, and every try with a wrong key ---------- */
+export async function logAuth(env, req, ok, path) {
+  try {
+    const L = (await env.PUSH.get('log', 'json')) || [], now = Date.now();
+    if (!ok) { const last = L.find((x) => !x.ok); if (last && now - last.t < 30e3) { last.n = (last.n || 1) + 1; await env.PUSH.put('log', JSON.stringify(L)); return; } }
+    const cf = req.cf || {}, ua = req.headers.get('User-Agent') || '';
+    const dev = /iPhone/.test(ua) ? 'آيفون' : /iPad/.test(ua) ? 'آيباد' : /Android/.test(ua) ? 'أندرويد' : /Mac OS X/.test(ua) ? 'ماك' : /Windows/.test(ua) ? 'ويندوز' : 'جهاز آخر';
+    L.unshift({ t: now, ok: !!ok, cc: str(cf.country, 4), city: str(cf.city, 60), dev, p: str(path, 20), n: 1 });
+    await env.PUSH.put('log', JSON.stringify(L.slice(0, 80)));
+  } catch (e) {}
+}
+
+/* ---------- ملاحظات القرّاء: a copy of each note a reader sends from the site (the e-mail still goes), to read here ---------- */
+async function fbIn(req, env, out) {
+  if (req.method !== 'POST') return out({ ok: false }, 405);
+  const ip = req.headers.get('CF-Connecting-IP') || '';
+  const ipk = 'rl:' + [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode('fb' + ip)))].slice(0, 10).map((x) => x.toString(16).padStart(2, '0')).join('');
+  if (await env.PUSH.get(ipk)) return out({ ok: false, wait: 1 }, 429);
+  let b; try { b = JSON.parse(await req.text()); } catch (e) { return out({ ok: false }, 400); }
+  const s = okSite(b.s) ? b.s : 'sira', m = str(b.m, 4000).trim();
+  if (!m && !b.img) return out({ ok: false, bad: 1 }, 400);
+  let img = '';
+  if (typeof b.img === 'string' && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(b.img) && b.img.length <= 900000) img = b.img;
+  const at = Date.now(), id = 'fb:' + at + '-' + rid();
+  await env.PUSH.put(id, JSON.stringify({ s, ty: str(b.ty, 60), m, who: str(b.who, 200), ref: str(b.ref, 600), url: str(b.url, 300), ver: str(b.ver, 40), img, at }), { metadata: { s, st: 'n', at } });
+  await env.PUSH.put(ipk, '1', { expirationTtl: 60 });
+  return out({ ok: true });
+}
+async function fbAll(env) {
+  const L = []; let cursor;
+  do { const l = await env.PUSH.list({ prefix: 'fb:', cursor }); for (const x of l.keys) L.push(x); cursor = l.list_complete ? null : l.cursor; } while (cursor);
+  return L;
+}
+
+/* ---------- القراءة: how often each part is opened; each device sends its own day's counts once (nothing about the reader) ---------- */
+async function hitIn(req, env, out) {
+  if (req.method !== 'POST' || !env.STATS) return out({ ok: false, nodb: 1 });
+  let b; try { b = JSON.parse(await req.text()); } catch (e) { return out({ ok: false }, 400); }
+  const s = okSite(b.s) ? b.s : 'sira', d = str(b.d, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || !b.c || typeof b.c !== 'object') return out({ ok: false, bad: 1 }, 400);
+  const E = Object.entries(b.c).filter(([k, n]) => typeof k === 'string' && k.length >= 1 && k.length <= 80 && !/[\u0000-\u001f]/.test(k) && Number.isInteger(n) && n > 0 && n <= 500).slice(0, 60);
+  const q = 'INSERT INTO hits (site, day, k, n) VALUES (?1, ?2, ?3, ?4) ON CONFLICT(site, day, k) DO UPDATE SET n = n + excluded.n';
+  const st = E.map(([k, n]) => env.STATS.prepare(q).bind(s, d, k, n));
+  st.push(env.STATS.prepare(q).bind(s, d, '·أجهزة', 1));
+  try { await env.STATS.batch(st); } catch (e) { return out({ ok: false }, 500); }
+  return out({ ok: true });
+}
+
+/* ---------- the panel's other cards ---------- */
+async function panelExtra(u, b, s, env, out) {
+  const p = u.pathname;
+  if (p === '/c/log') return out({ ok: true, log: (await env.PUSH.get('log', 'json')) || [] });
+  if (p === '/c/fbl') {
+    const L = (await fbAll(env)).filter((x) => !b.s || (x.metadata && x.metadata.s === s)).sort((a, c) => (c.metadata.at || 0) - (a.metadata.at || 0)).slice(0, 150);
+    const r = [];
+    for (const x of L) { const v = await env.PUSH.get(x.name, 'json'); if (v) { const { img, ...rest } = v; r.push({ id: x.name, st: x.metadata.st, hasImg: !!img, ...rest }); } }
+    return out({ ok: true, fb: r });
+  }
+  if (p === '/c/fbi') { const v = String(b.id || '').startsWith('fb:') ? await env.PUSH.get(String(b.id), 'json') : null; return out({ ok: !!v, img: v ? v.img : '' }); }
+  if (p === '/c/fbs') {
+    const id = String(b.id || ''); if (!id.startsWith('fb:')) return out({ ok: false }, 400);
+    if (b.st === 'x') { await env.PUSH.delete(id); return out({ ok: true }); }
+    const v = await env.PUSH.getWithMetadata(id); if (!v || !v.value) return out({ ok: false }, 404);
+    await env.PUSH.put(id, v.value, { metadata: { ...v.metadata, st: b.st === 'd' ? 'd' : 'n' } });
+    return out({ ok: true });
+  }
+  if (p === '/c/sched') {   // a notification to send at a time chosen ahead
+    if (b.a === 'add') {
+      const at = +b.at, t = str(b.t, 80).trim(), body = str(b.b, 600).trim(), sites = (Array.isArray(b.sites) ? b.sites : []).filter(okSite);
+      if (!(at > Date.now() + 60e3) || at > Date.now() + 400 * 864e5 || !body || !sites.length) return out({ ok: false, bad: 1 }, 400);
+      const id = 'sch:' + at + '-' + rid();
+      await env.PUSH.put(id, JSON.stringify({ at, t, b: body, sites }), { metadata: { at } });
+      return out({ ok: true, id });
+    }
+    if (b.a === 'del') { const id = String(b.id || ''); if (id.startsWith('sch:')) await env.PUSH.delete(id); return out({ ok: true }); }
+    const L = []; let cursor;
+    do { const l = await env.PUSH.list({ prefix: 'sch:', cursor }); for (const x of l.keys) L.push(x.name); cursor = l.list_complete ? null : l.cursor; } while (cursor);
+    const r = []; for (const id of L) { const v = await env.PUSH.get(id, 'json'); if (v) r.push({ id, ...v }); }
+    return out({ ok: true, sched: r.sort((a, c) => a.at - c.at), done: (await env.PUSH.get('schdone', 'json')) || [] });
+  }
+  if (p === '/c/backup') {
+    const cfg = { sira: await getCfg(env, 'sira'), durar: await getCfg(env, 'durar') };
+    const edits = []; for (const x of await all(env)) { const v = await env.PUSH.get(x.name, 'json'); if (v) edits.push({ id: x.name, ...v }); }
+    const sched = []; { let cursor; do { const l = await env.PUSH.list({ prefix: 'sch:', cursor }); for (const x of l.keys) { const v = await env.PUSH.get(x.name, 'json'); if (v) sched.push({ id: x.name, ...v }); } cursor = l.list_complete ? null : l.cursor; } while (cursor); }
+    return out({ ok: true, kind: 'seeratuh-backup', v: 1, at: Date.now(), cfg, edits, sched });
+  }
+  if (p === '/c/restore') {
+    const c = b.cfg;
+    if (!c || typeof c !== 'object' || !Array.isArray(c.hide) || !Array.isArray(c.add) || !Array.isArray(c.pages) || !c.pause || typeof c.pause !== 'object') return out({ ok: false, bad: 1 }, 400);
+    if (new TextEncoder().encode(JSON.stringify(c)).length > 1.5e6) return out({ ok: false, full: 1 }, 400);
+    const old = await getCfg(env, s);
+    await env.PUSH.put('cfgold:' + s, JSON.stringify(old), { expirationTtl: 30 * 86400 });   // the settings before, for a month
+    await putCfg(env, s, Object.assign(EMPTY(), c));
+    return out({ ok: true });
+  }
+  if (p === '/c/stats') {
+    if (!env.STATS) return out({ ok: false, nodb: 1 });
+    const from = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
+    try {
+      const top = await env.STATS.prepare("SELECT k, SUM(n) AS n FROM hits WHERE site = ?1 AND day >= ?2 AND k <> '·أجهزة' GROUP BY k ORDER BY n DESC LIMIT 25").bind(s, from).all();
+      const days = await env.STATS.prepare("SELECT day, n FROM hits WHERE site = ?1 AND day >= ?2 AND k = '·أجهزة' ORDER BY day DESC").bind(s, from).all();
+      return out({ ok: true, top: top.results || [], days: days.results || [] });
+    } catch (e) { return out({ ok: false, nodb: 1 }); }
+  }
+  return null;
+}
+
+/* ---------- the notifications set ahead: sent by the scheduler when their time comes ---------- */
+export async function runSched(env, sendSira) {
+  const now = Date.now(), L = []; let cursor;
+  do { const l = await env.PUSH.list({ prefix: 'sch:', cursor }); for (const x of l.keys) if (x.metadata && x.metadata.at <= now) L.push(x.name); cursor = l.list_complete ? null : l.cursor; } while (cursor);
+  for (const id of L) {
+    const v = await env.PUSH.get(id, 'json'); await env.PUSH.delete(id); if (!v) continue;
+    const msg = { t: v.t, b: v.b }, res = {};
+    for (const site of v.sites) {
+      if (await pushPaused(env, site)) { res[site] = 'paused'; continue; }
+      try {
+        if (site === 'sira') res[site] = await sendSira(msg);
+        else { const pk = await env.PUSH.get('admin'); const r = await fetch('https://push.dorarnajdiah.com/o/bc', { method: 'POST', headers: { 'X-Peer': pk || '', 'Content-Type': 'application/json' }, body: JSON.stringify(msg) }); res[site] = await r.json(); }
+      } catch (e) { res[site] = { ok: false }; }
+    }
+    const D = (await env.PUSH.get('schdone', 'json')) || []; D.unshift({ ...v, sent: now, res }); await env.PUSH.put('schdone', JSON.stringify(D.slice(0, 30)));
+  }
 }

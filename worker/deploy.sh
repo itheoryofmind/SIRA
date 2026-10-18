@@ -12,6 +12,20 @@ if [ -z "$NS" ]; then
   NS=$(api -X POST "https://api.cloudflare.com/client/v4/accounts/$ACC/storage/kv/namespaces" -d '{"title":"sira-push"}' | python3 -c 'import sys,json;print(json.load(sys.stdin)["result"]["id"])')
   echo "store created"
 fi
+# the reading counts (القراءة in the panel): a small D1 database; if the token cannot make one, the worker goes on without it
+DB=$(api "https://api.cloudflare.com/client/v4/accounts/$ACC/d1/database?name=sira-stats" 2>/dev/null | python3 -c 'import sys,json;r=[d["uuid"] for d in json.load(sys.stdin).get("result") or [] if d.get("name")=="sira-stats"];print(r[0] if r else "")' || true)
+if [ -z "$DB" ]; then
+  DB=$(api -X POST "https://api.cloudflare.com/client/v4/accounts/$ACC/d1/database" -d '{"name":"sira-stats"}' 2>/dev/null | python3 -c 'import sys,json;print(json.load(sys.stdin)["result"]["uuid"])' 2>/dev/null || true)
+fi
+D1=""
+if [ -n "$DB" ]; then
+  api -X POST "https://api.cloudflare.com/client/v4/accounts/$ACC/d1/database/$DB/query" -d '{"sql":"CREATE TABLE IF NOT EXISTS hits (site TEXT NOT NULL, day TEXT NOT NULL, k TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (site, day, k))"}' >/dev/null && echo "reading counts: ready" || DB=""
+fi
+[ -n "$DB" ] && D1="[[d1_databases]]
+binding = \"STATS\"
+database_name = \"sira-stats\"
+database_id = \"$DB\""
+[ -z "$DB" ] && echo "reading counts: no database (the token may lack D1 permission); everything else deploys"
 cat > wrangler.toml <<T
 name = "sira-push"
 main = "src/index.js"
@@ -25,6 +39,7 @@ id = "$NS"
 [[services]]
 binding = "SELF"
 service = "sira-push"
+$D1
 [triggers]
 crons = ["*/5 * * * *"]   # every five minutes: each reader's kinds at their hour, one after another five minutes apart
 T

@@ -43,12 +43,27 @@ async function installs(env) {
 const out = (o, st) => new Response(JSON.stringify(o), { status: st || 200, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': PAGE_ORIGIN, 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' } });
 
 // ctx: { site, name, fanOut(env, jobs), job(id, msg) }
+export async function sendAll(env, ctx, m) {   // the same notice to everyone with notifications on, now
+  const ids = await allIds(env);
+  const msg = { t: String(m.t || '').trim().slice(0, 80) || ctx.name, b: String(m.b || '').trim().slice(0, 600), u: ctx.site + '/', tag: 'bc' + Date.now() };
+  return { ok: true, n: ids.length, ...(await ctx.fanOut(env, ids.map((id) => ctx.job(id, msg)))) };
+}
 export async function ownerFetch(req, env, u, ctx) {
   if (u.pathname === '/o' && req.method === 'GET' && ctx.page)
     return new Response(PAGE, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow', 'Referrer-Policy': 'no-referrer', 'X-Frame-Options': 'DENY' } });
+  // a notice set ahead in the panel, sent by the other site's worker when its time comes (the two workers share a key the deploy keeps)
+  if (req.method === 'POST' && u.pathname === '/o/bc') {
+    const pk = await env.PUSH.get('peer');
+    if (!pk || req.headers.get('X-Peer') !== pk) return out({ ok: false }, 403);
+    let b; try { b = JSON.parse(await req.text()); } catch (e) { return out({ ok: false }, 400); }
+    const body = String(b.b || '').trim().slice(0, 600); if (!body) return out({ ok: false }, 400);
+    const ids = await allIds(env);
+    const msg = { t: String(b.t || '').trim().slice(0, 80) || ctx.name, b: body, u: ctx.site + '/', tag: 'bc' + Date.now() };
+    return out({ ok: true, n: ids.length, ...(await ctx.fanOut(env, ids.map((id) => ctx.job(id, msg)))) });
+  }
   if (req.method !== 'POST' || (u.pathname !== '/o/count' && u.pathname !== '/o/send')) return null;
   let b; try { b = JSON.parse(await req.text()); } catch (e) { return out({ ok: false }, 400); }
-  if (!(await isOwner(b && b.k, env, !ctx.page))) return out({ ok: false }, 403);
+  if (!(await isOwner(b && b.k, env, !ctx.page))) { if (ctx.logAuth) await ctx.logAuth(env, req, false, u.pathname); return out({ ok: false }, 403); }
   const metas = [], ids = await allIds(env, u.pathname === '/o/count' ? metas : null);
   if (u.pathname === '/o/count') return out({ ok: true, n: ids.length, ins: await installs(env), kinds: ctx.stats ? ctx.stats(metas) : [] });
   const t = String(b.t || '').trim().slice(0, 80) || ctx.name, body = String(b.b || '').trim().slice(0, 600);
