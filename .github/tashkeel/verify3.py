@@ -11,6 +11,8 @@ for b in books_:
     C=book(b);N=[canon(norm(w)) for w in C['W']];C['NN']=N
     for i,w in enumerate(N): IDX[w].append((b,i))
 INVD=pickle.load(open('/tmp/tsk/inv.pkl','rb'))
+import os
+PRINT=json.load(open('/tmp/tsk/pr/print_ok.json')) if os.path.exists('/tmp/tsk/pr/print_ok.json') else {}
 marks=conf=0;bad=[];DROP={}
 for k,(s,prov) in PROV.items():
     n=int(k.split(':')[0]);M=dec(MAP[k],n);v=lay(s,M)
@@ -23,6 +25,12 @@ for k,(s,prov) in PROV.items():
         need=[k2 for k2,m in enumerate(shown) if m]
         ok=set()
         if b=='inv': ok=set(need)
+        if f'{b}:{j}' in PRINT:
+            t=transfer(sl,split_marks(PRINT[f'{b}:{j}']))
+            if t is not None:
+                for k2 in need:
+                    a=''.join(sorted(shown[k2].replace('ْ','')));c=''.join(sorted(t[k2].replace('ْ','')))
+                    if a==c and (a or t[k2]): ok.add(k2)
         for (bb,jj) in IDX.get(w,()):
             if b!='inv' and bb==b and jj==j: continue
             N=book(bb)['NN']

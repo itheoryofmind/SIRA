@@ -6,6 +6,7 @@ from align import Src,align,split_marks,transfer
 class _I: name='inv'
 INVS=_I()
 INV=pickle.load(open('/tmp/tsk/inv.pkl','rb'))
+PRINT=json.load(open('/tmp/tsk/pr/print_ok.json')) if os.path.exists('/tmp/tsk/pr/print_ok.json') else {}
 from corpus import WORD,MARK
 DATA='/tmp/durar_work/sitebuild/data'
 LET=re.compile(r'[ء-غف-يٱ]')
@@ -60,6 +61,11 @@ def marks_for(text,srcs):
     for i,r in enumerate(res):
         if r is None or not any(r[0]): continue
         others=[a[i] for S,a in zip(srcs,alts) if a[i] is not None and any(a[i][0]) and not (a[i][1].name==r[1].name and a[i][2]==r[2])]
+        # the print itself, read from the page image (pr/print_ok.json): a second witness like another edition
+        pk=f'{r[1].name}:{r[2]}'
+        if pk in PRINT:
+            t=transfer(split_marks(text[ws[i][0]:ws[i][1]]),split_marks(PRINT[pk]))
+            if t is not None: others=others+[(t,None,None)]
         conf=['']*len(r[0])
         for q in others:
             if len(q[0])!=len(r[0]): continue
