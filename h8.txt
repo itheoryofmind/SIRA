@@ -1,0 +1,24 @@
+HTTP/2 200 
+server: GitHub.com
+content-type: application/json; charset=utf-8
+x-origin-cache: HIT
+last-modified: Sun, 18 Oct 2026 15:21:25 GMT
+access-control-allow-origin: *
+etag: "6ad4e3f5-3c4"
+expires: Sun, 18 Oct 2026 15:46:16 GMT
+cache-control: max-age=600
+x-proxy-cache: MISS
+x-github-request-id: 4C56:1C5672:481D513:4EC847E:6AD4E770
+x-github-edge-region: iad
+accept-ranges: bytes
+age: 0
+date: Sun, 18 Oct 2026 15:36:16 GMT
+via: 1.1 varnish
+x-served-by: cache-iad-khef600062-IAD
+x-cache: MISS
+x-cache-hits: 0
+x-timer: S1792337777.632496,VS0,VE12
+vary: Accept-Encoding
+x-fastly-request-id: 562a0b73f969550351250ce2586e8349b8510f97
+content-length: 964
+
