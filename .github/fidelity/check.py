@@ -30,4 +30,4 @@ for s,site in (('sira','https://seeratuh.com/'),('durar','https://dorarnajdiah.c
             if h(t)!=x: ch.append({'f':f,'p':p})
     body=json.dumps({'s':s,'total':total,'changed':ch[:500],'miss':miss}).encode()
     r=urllib.request.urlopen(urllib.request.Request('https://push.seeratuh.com/c/fx',data=body,headers={'X-Admin':ADMIN,'Content-Type':'application/json'}),timeout=60).read().decode()
-    print(s,'texts',total,'changed',len(ch),'files not read',miss,'->',r)
+    print('::notice::'+s,'texts',total,'changed',len(ch),'files not read',miss,'->',r)
