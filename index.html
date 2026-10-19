@@ -1964,6 +1964,7 @@ audio.own-note-m{background:none;height:44px}
 
 /* the band under the phone's clock (the app reaches the top of the screen): the colour of the design's top, a shade darker where that top is light so the clock stays readable */
 #sbar{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--sb,#000);z-index:2147483000;pointer-events:none}
+.pz-k{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}.pz-k input{flex:1 1 180px;min-width:0;font:inherit;font-size:17px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg,#fff);color:var(--ink);direction:ltr;text-align:center}.pz-k .pz-m{flex:0 0 100%;margin:4px 0 0;font-size:15px}
 
 :root.dz-haram{--display:"Amiri",serif;--text:"Amiri","Scheherazade New",serif;--ui:"Tajawal",-apple-system,sans-serif}
 :root.dz-haram:not([data-theme=night]){--ground:#F6F5F0;--surface:#FFFFFF;--raised:#FFFFFF;--ink:#15241E;--muted:#4F5D56;--line:#E2E0D6;--brown:#0E3F31;--brown2:#155A45;--on-brown:#F6F2E6;--brass:#8A6416;--gold:#C59A3C;--brass-soft:#F3EBD6;--clay:#A4462E;--palm:#1C6B50;--verse:#1C6B50;--mark:#F0DE9E;--here:#C59A3C;--read:#1E2C26}
@@ -2986,7 +2987,7 @@ audio.own-note-m{background:none;height:44px}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-19-1050';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-19-1106';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -6315,7 +6316,14 @@ noimg();
 /* ---------- the pause ---------- */
 let pzv=null;
 function pause(){if(CFG.on&&!OWN()){if(!pzv){pzv=el('div','pz');pzv.setAttribute('role','alertdialog');pzv.setAttribute('aria-modal','true');document.body.append(pzv);document.documentElement.classList.add('pz-on')}
-    pzv.textContent='';const c=el('div','pz-c');c.append(el('div','pz-n',HOME));const b=el('button','pz-b','تحقّق مرة أخرى');b.type='button';b.onclick=()=>{b.disabled=true;load().then(()=>{b.disabled=false})};c.append(el('p','pz-m',CFG.msg||''),b);pzv.append(c)}
+    pzv.textContent='';const c=el('div','pz-c');c.append(el('div','pz-n',HOME));const b=el('button','pz-b','تحقّق مرة أخرى');b.type='button';b.onclick=()=>{b.disabled=true;load().then(()=>{b.disabled=false})};const m=el('p','pz-m',CFG.msg||'');c.append(m,b);pzv.append(c);
+    // the keeper alone: five taps on the message, then his key, and the site opens for him (the key is checked by the server)
+    let n=0,t0=0;m.addEventListener('click',()=>{const t=Date.now();if(t-t0>4000)n=0;t0=t;n++;if(n<5||c.querySelector('.pz-k'))return;n=0;
+      const f=el('form','pz-k');const i=el('input');i.type='password';i.autocomplete='current-password';i.placeholder='المفتاح';i.setAttribute('aria-label','المفتاح');
+      const g=el('button','pz-b','دخول');g.type='submit';const e=el('p','pz-m','');f.append(i,g,e);c.append(f);i.focus();
+      f.onsubmit=async ev=>{ev.preventDefault();const v=i.value.trim().replace(/^.*#(own|k)=/,'');if(!v)return;g.disabled=true;e.textContent='يتحقق…';
+        let ok=false;try{const r=await fetch(W+'/c/hi',{method:'POST',body:JSON.stringify({k:v,s:SITE})});ok=!!(await r.json()).ok}catch(x){}
+        if(ok){LS.set('ownk',v);KEY=v;pause();try{location.reload()}catch(x){}}else{g.disabled=false;e.textContent='المفتاح غير صحيح.'}}})}
   else if(pzv){pzv.remove();pzv=null;document.documentElement.classList.remove('pz-on')}}
 
 /* ---------- the keeper's message on the home page: a card under the top (the site keeps working), with a sound or a video if he put one ---------- */
