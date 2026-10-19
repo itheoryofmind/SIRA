@@ -404,6 +404,21 @@ async function panelExtra(u, b, s, env, out) {
     const n = await ownerAlert(env, null, 0, { t: 'تنبيهات لوحة التحكم', b: 'فُعّلت على هذا الجهاز: محاولات الدخول الخاطئة، وملاحظات القرّاء، وتعطّل أحد الموقعين، وملخص كل جمعة.', u: PANEL, tag: 'own-on' });
     return out({ ok: true, on: true, sent: n });
   }
+  if (p === '/c/rv') {   // «فروق النص والطبعة»: the keeper's choice on each difference (the list itself is in the repository)
+    if (b.a === 'list') {
+      const r = {}; let cur;
+      do { const l = await env.PUSH.list({ prefix: 'rv:', cursor: cur }); for (const k of l.keys) r[k.name.slice(3)] = k.metadata || {}; cur = l.list_complete ? null : l.cursor; } while (cur);
+      return out({ ok: true, rv: r });
+    }
+    if (b.a === 'set') {
+      const id = str(b.id, 80);
+      if (!/^[a-z0-9_:.-]{1,80}$/i.test(id) || !['print', 'shamela', 'later', ''].includes(b.c || '')) return out({ ok: false, bad: 1 }, 400);
+      if (!b.c && !b.n) { await env.PUSH.delete('rv:' + id); return out({ ok: true }); }
+      await env.PUSH.put('rv:' + id, '1', { metadata: { c: b.c || '', n: str(b.n, 250), eid: str(b.eid, 60), at: Date.now() } });
+      return out({ ok: true });
+    }
+    return out({ ok: false, bad: 1 }, 400);
+  }
   if (p === '/c/log') return out({ ok: true, log: (await env.PUSH.get('log', 'json')) || [] });
   if (p === '/c/fbl') {
     const L = (await fbAll(env)).filter((x) => !b.s || (x.metadata && x.metadata.s === s)).sort((a, c) => (c.metadata.at || 0) - (a.metadata.at || 0)).slice(0, 150);
