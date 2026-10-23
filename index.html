@@ -2987,7 +2987,7 @@ audio.own-note-m{background:none;height:44px}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-23-0956';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-23-1012';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3605,7 +3605,7 @@ function pageBlock(T,n,p){
     const st=el('div','istage');st.dataset.auto='1';b.append(st);IO.observe(st);return b;
   }
   const x=T.p[p],isIdx=n&&p>=VOLS[n].f;
-  const hd=el('div','pghd');const ib=el('button','pgimg',x?'قارن بالصورة':'');ib.type='button';if(VOLS[n]&&VOLS[n].ni)ib.hidden=true;
+  const hd=el('div','pghd');const ib=el('button','pgimg',x?'قارن بالصورة':'');ib.type='button';ib.dataset.bk=n;if(VOLS[n]&&VOLS[n].ni)ib.hidden=true;
   hd.append(el('span','pgno','ص '+ar(p)));
   if(x&&(x[0]&2)){const a=el('button','approx','≈ حدود تقريبية');a.type='button';a.onclick=()=>toast('نص هذه الصفحة كاملاً في موضعه، لكن لم تكتمل مطابقة أول الصفحة أو آخرها مع الصورة، فقد يكون أول سطر أو آخره من الصفحة المجاورة. عند العزو راجع الصورة.',7000);hd.append(a)}
   const mid=MID&&MID[n+':'+p];
@@ -4549,7 +4549,7 @@ $('#sxTl').onclick=()=>openSX('tl');
 const SXIMGMAP={};
 for(const n in SXIMG){const v=SXIMG[n];v.s.forEach(([f,ps])=>ps.forEach((p,i)=>{SXIMGMAP[n+':'+p]={f,i,c:ps.length,h:v.h}}))}
 {const _pb=pageBlock;pageBlock=function(T,n,p){const b=_pb(T,n,p);const m=SXIMGMAP[n+':'+p];const hd=b.querySelector('.pghd');
-  if(m&&hd){const btn=el('button','sx-pbtn','قارن بالصورة');btn.type='button';let box=null;
+  if(m&&hd){const btn=el('button','sx-pbtn','قارن بالصورة');btn.type='button';btn.dataset.bk=n;let box=null;
     btn.onclick=e=>{e.stopPropagation();if(box){box.remove();box=null;btn.classList.remove('on');btn.textContent='قارن بالصورة';return}
       box=el('div','sx-pwrap');const im=el('div','sx-pimg');im.style.aspectRatio='1000/'+m.h;
       im.style.backgroundImage='url("img/'+m.f+'")';im.style.backgroundSize='100% '+(m.c*100)+'%';im.style.backgroundPosition='0 '+(m.c>1?(m.i/(m.c-1)*100):0)+'%';
@@ -6313,7 +6313,7 @@ try{drawPick()}catch(e){}
 if(typeof applyTheme==='function'){const _at=applyTheme;applyTheme=function(t){_at.apply(this,arguments);if(!t||t==='auto')try{dmode('auto')}catch(e){}try{tcol()}catch(e){}}}
 
 /* ---------- the printed pages' images («قارن بالصورة»), shown or withheld by the keeper ---------- */
-function noimg(){document.documentElement.classList.toggle('own-noimg',!!CFG.noimg)}
+function noimg(){document.documentElement.classList.toggle('own-noimg',!!CFG.noimg);let st=document.getElementById('own-noimgb');if(!st){st=document.createElement('style');st.id='own-noimgb';document.head.append(st)}st.textContent=(CFG.noimgb||[]).map(k=>'[data-bk="'+k+'"].sx-pbtn,[data-bk="'+k+'"].sx-pbtn+.sx-pwrap,[data-bk="'+k+'"].pgimg{display:none!important}').join('')}
 noimg();
 
 /* ---------- the pause ---------- */
