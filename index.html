@@ -319,6 +319,7 @@ footer .waqf{max-width:520px;margin:8px auto 0;font-family:var(--text);font-size
 .q{color:var(--verse);font-family:var(--display);font-size:1.08em}
 .qu{font-family:"UthmanicHafs","Amiri",serif;font-size:1.1em;line-height:2.3}
 .reffix{font:12px var(--ui);color:var(--brass);border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:0 7px;margin-inline:4px;vertical-align:middle;line-height:1.7}
+.tw::after{content:"\0640"}
 .q.qa{cursor:pointer;-webkit-tap-highlight-color:rgba(183,137,60,.18)}
 /* a clear but quiet cue that a verse opens: a small «تفسير» tag after it (tap the verse or the tag) */
 .q.qa::after{content:"\2060تفسير";display:inline;font-family:var(--ui);font-size:11px;line-height:1;font-weight:600;color:var(--brass);border:1px solid var(--brass);border-radius:6px;padding:3px 5px 2px;margin-inline-start:4px;vertical-align:.35em;opacity:.8;width:max-content;word-spacing:0;letter-spacing:0;text-align:center;white-space:nowrap;text-indent:0}
@@ -2987,7 +2988,7 @@ audio.own-note-m{background:none;height:44px}
 <script>
 "use strict";
 const DV='37';
-const APP_VER='2026-10-23-1604';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-23-1618';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3527,13 +3528,16 @@ function richInline(s,hl,inQ,rep){
   // in some parts the digital edition lost the ligature ﷺ after the Prophet's name and left a lone "(": shown as in print
   // the digital edition's straight quotation marks, shown as the print has them: « »  (only when they pair up)
   for(const ch of s){
+    // a one-letter preposition (ب ك ل ف) written apart before a quotation, a verse or a bracket: joined to it on screen with a
+    // kashida, as the print sets it («بـ ﴿…﴾»); the kashida is left out when copying
+    if(!sup&&'{"«(['.includes(ch)){const mt=buf.match(/(^|[\s(«"])([بكلف])(\s+)$/);if(mt){const sp=mt[3];buf=buf.slice(0,buf.length-sp.length);flush();node.append(el('span','tw'));buf=sp}}
     if(ch==='\u0003'||ch==='\u0004'){flush();const d=ch==='\u0004',g=el('button',d?'gap d':'gap');g.type='button';g.setAttribute('aria-label',d?'النص هنا يخالف المطبوع':'هنا في المطبوع كلام ليس في النص');g.onclick=e=>{e.stopPropagation();midNote(0,1,d)};node.append(g);continue}
     if(ch==='\uE000'){if(!qspan&&!ed){flush();qspan=el('span','q');const r=VSQ.shift();if(r&&r[3]){qspan.classList.add('qa');qspan.dataset.s=r[3];qspan.dataset.a=r[4];qspan.dataset.b=r[5]}f.append(qspan);node=qspan}continue}
     if(ch==='\uE001'){if(qspan){flush();node=f;qspan=null}continue}
     if(ch==='\u0001'){flush();sup=el('sup','fn');sup.title='رقم حاشية في النسخة الرقمية، والحاشية غير منقولة هنا';node.append(sup);continue}
     if(ch==='\u0002'){if(sup){sup.textContent=buf;buf=''}sup=null;continue}
     if(sup){buf+=ch;continue}
-    if(ch==='{'&&!qspan&&!ed){{const mt=buf.match(/(^|[\s(«"])([بكلف])(\s?)$/);if(mt){const sp=mt[3];buf=buf.slice(0,buf.length-sp.length);flush();node.append(el('span','tw','\u0640'));buf=sp}}flush();k++;qspan=el('span','q');const b=el('span','qb','{');b.dataset.c='﴿';qspan.append(b);f.append(qspan);node=qspan;
+    if(ch==='{'&&!qspan&&!ed){flush();k++;qspan=el('span','q');const b=el('span','qb','{');b.dataset.c='﴿';qspan.append(b);f.append(qspan);node=qspan;
       // the verse in the Uthmani script of the King Fahd Complex, when the quotation matches it word for word
       if(rep&&rep[k]!=null){const r=rep[k];
         // the reference was checked word for word against the verse: a tap shows it in full with its place
@@ -5145,6 +5149,13 @@ const hdV=(z,prev)=>{const k=z.slice(1,-1).trim();let u=QV&&QV[k];if(prev&&QVC[k
 // the Prophet's own words in the Sira books' quotations: phrases two readers agreed on (data/sx_gold.json, src/gold)
 let GOLD=null;getJSON('data/sx_gold.json').then(x=>{GOLD=x||{}}).catch(()=>{GOLD={}});
 const goldFor=t=>(GOLD&&t&&(GOLD[t]||(t[0]==='«'&&GOLD[t.slice(1,-1)])))||null;
+/* a one-letter preposition (ب ك ل ف) written apart before a quotation, a verse or a bracket: joined to it on screen with a
+   kashida drawn by the style (.tw::after), as the print sets it; nothing is added to the text, so copying is unchanged */
+function twJoin(e){const W=document.createTreeWalker(e,NodeFilter.SHOW_TEXT);const L=[];let n;while((n=W.nextNode()))L.push(n);
+  const isOpen=c=>!!c&&'«"(['.includes(c)||c==='﴿';
+  L.forEach((t,ix)=>{let x=t;for(let g=0;g<30;g++){const v=x.nodeValue;const R=/(^|[\s(«"])([بكلف])(\s+)/g;let m,at=-1;
+    while((m=R.exec(v))){const af=m.index+m[0].length;const nc=af<v.length?v[af]:((L[ix+1]&&L[ix+1].nodeValue)||'')[0];if(isOpen(nc)){at=m.index+m[1].length+1;break}}
+    if(at<0)break;const rest=x.splitText(at);const sp=document.createElement('span');sp.className='tw';rest.parentNode.insertBefore(sp,rest);x=rest}})}
 function hdFill(e,t,pm,ph){if(ph===undefined&&!(pm&&pm.length)){ph=goldFor(t);if(!ph&&t&&t.includes('\n')){const u=[].concat(...t.split('\n').map(z=>goldFor(z)||[]));if(u.length)ph=u}}
   if(ph&&ph.length){const rg=[];ph.forEach(w=>{const i=t.indexOf(w);if(i>=0&&t.indexOf(w,i+1)<0)rg.push([i,i+w.length])});rg.sort((a,b)=>a[0]-b[0]);if(rg.length){shFill(e,t,rg);return}}
   e.textContent='';let si=-1;const gold=new Set(pm||[]);t=t.replace(/\{\s*/g,'﴿').replace(/\s*\}/g,'﴾');
@@ -6110,6 +6121,7 @@ document.addEventListener('click',async e=>{if(!/\bdz-aqd\b/.test(document.docum
   const f=()=>{t=false;H.style.setProperty('--py',Math.min(90,scrollY*.18).toFixed(1)+'px')};addEventListener('scroll',()=>{if(!t){t=true;requestAnimationFrame(f)}},{passive:true})})();
 // «الهجرة»: a tap on the map opens the road as Ibn Hisham gives it
 document.addEventListener('click',e=>{if(!/\bdz-hijra\b/.test(document.documentElement.className))return;if(e.target.closest('.sx-hero .dz-art'))fxRoad()});
+{const _hf=hdFill;hdFill=function(e,...a){const r=_hf(e,...a);try{twJoin(e)}catch(_){}return r}}
 
 /* ---------- مواضع الخلاف مع المطبوع: علامات حمراء، وقراءة الصفحات المعلَّمة وحدها ---------- */
 let MK={};getJSON('data/marks.json').then(d=>{MK=d||{};renderMkBooks()}).catch(()=>{});
