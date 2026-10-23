@@ -88,7 +88,7 @@ const DZM_DEF = { haram: 'white' };
 function pub(c) {
   return { on: !!c.pause.on, msg: c.pause.on ? c.pause.msg : '', np: !!(c.pause.on && c.pause.np), hide: c.hide.map((h) => ({ id: h.id, sel: h.sel, fp: h.fp, sec: h.sec })),
     add: c.add.map((a) => ({ id: a.id, sel: a.sel, fp: a.fp, sec: a.sec, k: a.k, t: a.t })),
-    note: (c.note && c.note.on && !(c.note.from && Date.now() < c.note.from) && !(c.note.to && Date.now() >= c.note.to)) ? { t: c.note.t || '', m: c.note.m || null, v: c.note.at || 0 } : null, tsk: c.tsk !== false, dz: c.dz || '', dzm: Object.assign({}, DZM_DEF, c.dzm || {}), dzv: c.dzv || {}, pick: c.pick || ['base', 'haram'], noimg: !!c.noimg, noimgb: Array.isArray(c.noimgb) ? c.noimgb : [], pages: c.pages.filter((p) => !p.off).map((p) => ({ id: p.id, sel: p.sel, fp: p.fp, sec: p.sec, title: p.title, sub: p.sub, blocks: p.blocks })), v: c.v || 0 };
+    note: (c.note && c.note.on && !(c.note.from && Date.now() < c.note.from) && !(c.note.to && Date.now() >= c.note.to)) ? { t: c.note.t || '', m: c.note.m || null, v: c.note.at || 0 } : null, tsk: c.tsk !== false, dz: c.dz || '', dzm: Object.assign({}, DZM_DEF, c.dzm || {}), dzv: c.dzv || {}, pick: c.pick || ['base', 'haram'], noimg: !!c.noimg, noimgb: Array.isArray(c.noimgb) ? c.noimgb : [], lnk: Array.isArray(c.lnk) ? c.lnk.map((x) => [x.f, x.p, x.i, x.k, x.s, x.a, x.z]) : [], pages: c.pages.filter((p) => !p.off).map((p) => ({ id: p.id, sel: p.sel, fp: p.fp, sec: p.sec, title: p.title, sub: p.sub, blocks: p.blocks })), v: c.v || 0 };
 }
 const okRule = (r) => r && typeof r.sel === 'string' && /^[a-z][a-z0-9]{0,11}(\.[A-Za-z_][A-Za-z0-9_-]{0,39})?$/.test(r.sel) && typeof r.fp === 'string' && /^[0-9a-z]{4,40}$/.test(r.fp) && typeof r.sec === 'string' && r.sec.length <= 200;
 const okBlocks = (b) => Array.isArray(b) && b.length <= 400 && b.every((x) => x && ['h', 'p', 'q'].includes(x.k) && typeof x.t === 'string' && x.t.length <= 20000);
@@ -287,6 +287,14 @@ export async function cmsFetch(req, env, u) {
       c.tsk = !!b.on;
     } else if (a === 'noimg') {
       c.noimg = !!b.on;
+    } else if (a === 'lnk') {
+      // a verse link chosen by the keeper for a quotation that stands in more than one place of the mushaf
+      const e = b.e || {}, n = (x) => Number.isInteger(x) && x >= 0 && x < 100000;
+      if (!okFile(e.f) || !n(e.p) || !n(e.i) || !n(e.k) || (b.on && !(n(e.s) && e.s >= 1 && e.s <= 114 && n(e.a) && n(e.z) && e.a >= 1 && e.z >= e.a))) return out({ ok: false, bad: 1 }, 400);
+      const key = e.f + ':' + e.p + ':' + e.i + ':' + e.k;
+      c.lnk = (Array.isArray(c.lnk) ? c.lnk : []).filter((x) => x.key !== key);
+      if (b.on) c.lnk.push({ key, f: e.f, p: e.p, i: e.i, k: e.k, s: e.s, a: e.a, z: e.z, at });
+      if (c.lnk.length > 5000) return out({ ok: false, full: 1 }, 400);
     } else if (a === 'noimgb') {
       const k = str(b.k, 12);
       if (!/^[a-z0-9]{1,12}$/.test(k)) return out({ ok: false, bad: 1 }, 400);
