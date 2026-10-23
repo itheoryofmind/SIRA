@@ -30,6 +30,34 @@ def git(*a):
 def dump(d):
     return json.dumps(d, ensure_ascii=False, separators=(',', ':'))
 
+def uadj(d, path, old, new):
+    # the verse marks of a book page (data 'u') follow the corrected text: a verse span's places move with the text,
+    # and a verse whose words changed is no longer shown in the mushaf's script until it is checked again
+    import difflib
+    try:
+        if not (isinstance(d, dict) and 'u' in d and len(path) == 3 and path[0] == 'p'): return
+        L = d['u'].get(str(path[1]))
+        if not L: return
+        it = path[2] - 1
+        ops = difflib.SequenceMatcher(None, old, new, autojunk=False).get_opcodes()
+        def f(i, end=False):
+            for tag, a1, a2, b1, b2 in ops:
+                if a1 <= i < a2 or (end and i == a2 and tag == 'equal'):
+                    return b1 + (i - a1) if tag == 'equal' else (b2 if end else b1)
+            return len(new)
+        br = lambda t: re.findall(r'\{([^{}]*)\}', t)
+        bo, bn = br(old), br(new)
+        for r in L:
+            if r[0] != it: continue
+            if r[1] == 's':
+                r[6], r[7] = f(r[6]), f(r[7], True)
+            elif isinstance(r[1], int) and r[2]:
+                k = r[1]
+                if k >= len(bn) or k >= len(bo) or bo[k] != bn[k]:
+                    r[2] = None; r[3] = None
+    except Exception:
+        pass
+
 def verse(t):
     return re.sub(r'\{\s*', '﴿', re.sub(r'\s*\}', '﴾', t))
 
@@ -69,6 +97,7 @@ for e in E:
     if cur != e['old']:
         done.append((e, False, 'تغيّر النص في هذا الموضع منذ فتحته؛ افتحه من جديد')); continue
     o[last] = e['nw']
+    uadj(d, e['path'], e['old'], e['nw'])
     done.append((e, True, ''))
 
 ok = [x for x in done if x[1]]
