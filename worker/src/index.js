@@ -117,7 +117,50 @@ function seqMsg(m, kind, i) {
   return { t: (again ? 'لم تقرأه بعد · ' : '') + x[0], b: x[1], u, tag: kind === 'mg' ? 'maghazi' : kind };
 }
 
-// every Friday to all who turned the notifications on: al-Ahzab 56 only (King Fahd Complex text)
+// ---- prayer times: the same calculation as the site (index.html, prTimes) ----
+const PRM = { uq: [18.5, '90'], mwl: [18, 17], egy: [19.5, 17.5], isna: [15, 15], kar: [18, 18] };
+const NAMES = ['الفجر', 'الشروق', 'الظهر', 'العصر', 'المغرب', 'العشاء'];
+function prTimes(y, m, d, lat, lng, mk, hanafi, ramadan) {
+  const R = Math.PI / 180, sin = (x) => Math.sin(x * R), cos = (x) => Math.cos(x * R), tan = (x) => Math.tan(x * R),
+    asin = (x) => Math.asin(x) / R, acos = (x) => Math.acos(x) / R, atan2 = (a, b) => Math.atan2(a, b) / R, acot = (x) => Math.atan(1 / x) / R,
+    fix = (a, b) => { a = a - b * Math.floor(a / b); return a < 0 ? a + b : a; };
+  if (m <= 2) { y -= 1; m += 12; } const A = Math.floor(y / 100), B = 2 - A + Math.floor(A / 4);
+  const jd0 = Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5;
+  const sun = (t) => { const D = jd0 + t - 2451545, g = fix(357.529 + 0.98560028 * D, 360), q = fix(280.459 + 0.98564736 * D, 360),
+    L = fix(q + 1.915 * sin(g) + 0.020 * sin(2 * g), 360), e = 23.439 - 0.00000036 * D, RA = fix(atan2(cos(e) * sin(L), cos(L)) / 15, 24);
+    return { dec: asin(sin(e) * sin(L)), eqt: q / 15 - RA }; };
+  const noon = (h) => { const s = sun(h / 24 - lng / 360); return fix(12 - s.eqt, 24); };
+  const ang = (a, h, ccw) => { const s = sun(h / 24 - lng / 360), n = noon(h), c = (-sin(a) - sin(s.dec) * sin(lat)) / (cos(s.dec) * cos(lat));
+    if (c < -1 || c > 1) return NaN; const T = acos(c) / 15; return n + (ccw ? -T : T); };
+  const asr = (h) => { const s = sun(h / 24 - lng / 360); return ang(-acot((hanafi ? 2 : 1) + tan(Math.abs(lat - s.dec))), h, false); };
+  const M = PRM[mk] || PRM.uq; let t = [5, 6, 12, 13, 18, 18, 18];
+  for (let k = 0; k < 2; k++) t = [ang(M[0], t[0], true), ang(0.833, t[1], true), noon(t[2]), asr(t[3]), ang(0.833, t[4], false),
+    typeof M[1] === 'string' ? NaN : ang(M[1], t[5], false)];
+  t[2] += 1 / 60;
+  if (typeof M[1] === 'string') t[5] = t[4] + (ramadan ? 120 : +M[1]) / 60;
+  return t.map((h) => h - lng / 15);
+}
+// Friday: every subscriber, from an hour after sunrise to half an hour before maghrib, every two hours (never in the hour and a half
+// before the Friday prayer nor the 45 minutes after it), by the reader's place: the coordinates the network gives when the reader
+// subscribes or opens the site (no permission asked, nothing else kept); before that, the capital of the reader's time zone
+const TZPLACE = { 'Asia/Riyadh': [24.71, 46.68], 'Asia/Kuwait': [29.37, 47.98], 'Asia/Qatar': [25.29, 51.53], 'Asia/Bahrain': [26.23, 50.59], 'Asia/Dubai': [25.2, 55.27], 'Asia/Muscat': [23.59, 58.41], 'Asia/Aden': [12.79, 45.03], 'Asia/Baghdad': [33.31, 44.36], 'Asia/Amman': [31.95, 35.93], 'Asia/Damascus': [33.51, 36.29], 'Asia/Beirut': [33.89, 35.5], 'Asia/Jerusalem': [31.77, 35.21], 'Asia/Gaza': [31.5, 34.47], 'Asia/Hebron': [31.53, 35.1], 'Africa/Cairo': [30.04, 31.24], 'Africa/Khartoum': [15.5, 32.56], 'Africa/Tripoli': [32.89, 13.19], 'Africa/Tunis': [36.81, 10.18], 'Africa/Algiers': [36.75, 3.06], 'Africa/Casablanca': [33.57, -7.59], 'Africa/Nouakchott': [18.08, -15.98], 'Africa/Mogadishu': [2.05, 45.32], 'Asia/Karachi': [24.86, 67.0], 'Asia/Kolkata': [28.61, 77.21], 'Asia/Dhaka': [23.81, 90.41], 'Asia/Jakarta': [-6.2, 106.85], 'Asia/Kuala_Lumpur': [3.14, 101.69], 'Europe/Istanbul': [41.01, 28.98], 'Europe/London': [51.51, -0.13], 'Europe/Paris': [48.86, 2.35], 'Europe/Berlin': [52.52, 13.4], 'America/New_York': [40.71, -74.01], 'America/Chicago': [41.88, -87.63], 'America/Los_Angeles': [34.05, -118.24] };
+function placeLL(m, tz) {
+  const la = +m.la, lo = +m.lo;
+  if (isFinite(la) && isFinite(lo) && Math.abs(la) <= 90 && Math.abs(lo) <= 180 && (la || lo)) return [la, lo];
+  return TZPLACE[tz] || null;
+}
+function ymdOf(tz, t) { const p = {}; for (const x of new Intl.DateTimeFormat('en-US', { timeZone: tz, year: 'numeric', month: 'numeric', day: 'numeric' }).formatToParts(new Date(t))) p[x.type] = x.value; return [+p.year, +p.month, +p.day]; }
+function fridaySlots(la, lo, tz, now) {
+  if (local(tz, now).wd !== 'Fri') return [];
+  const [y, m, d] = ymdOf(tz, now), h = prTimes(y, m, d, la, lo, 'uq', false, false), base = Date.UTC(y, m - 1, d);
+  if ([h[1], h[2], h[4]].some(isNaN)) return [];
+  const rise = base + h[1] * 36e5, noon = base + h[2] * 36e5, magh = base + h[4] * 36e5, out = [];
+  for (let t = rise + 36e5; t <= magh - 30 * 6e4; t += 2 * 36e5) if (!(t > noon - 90 * 6e4 && t < noon + 45 * 6e4)) out.push(t);
+  const last = magh - 30 * 6e4; if (!out.length || last - out[out.length - 1] > 45 * 6e4) out.push(last);
+  return out;
+}
+const llOf = (req) => { const c = req.cf || {}; const la = +c.latitude, lo = +c.longitude; return (isFinite(la) && isFinite(lo) && (la || lo)) ? { la: +la.toFixed(2), lo: +lo.toFixed(2) } : null; };
+// every Friday to every subscriber: al-Ahzab 56 only (King Fahd Complex text)
 const VERSE = "إِنَّ ٱللَّهَ وَمَلَٰٓئِكَتَهُۥ يُصَلُّونَ عَلَى ٱلنَّبِيِّۚ يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ صَلُّواْ عَلَيۡهِ وَسَلِّمُواْ تَسۡلِيمًا";
 function friday() {
   return { t: 'يوم الجمعة', b: '﴿' + VERSE + '﴾ [الأحزاب: ٥٦]', u: SITE + '/#fr', tag: 'friday' };
@@ -168,19 +211,21 @@ async function inner(env) {
 
 // every reader whose hour it is: [id, kind]
 async function due(env, force) {
-  const out = [];
+  const out = [], fmemo = new Map();
   let cursor;
   do {
     const l = await env.PUSH.list({ prefix: 's:', cursor });
     for (const k of l.keys) {
       const m = norm(k.metadata), tz = okTz(m.tz) ? m.tz : DEF_TZ;
-      if (force) { if ({ daily: 'sh', friday: 'fr' }[force] in m.h || force in m.h) out.push([k.name, force]); continue; }
+      if (force) { if (force === 'friday' || { daily: 'sh' }[force] in m.h || force in m.h) out.push([k.name, force]); continue; }
       const L = local(tz), slot = Math.floor(L.mi / 5);
       // the kinds due this hour, in the page's order; two in one hour come five minutes apart, not together
-      const now = ORDER.filter((kind) => kind in m.h && m.h[kind] === L.h
-        && !(kind === 'fr' && L.wd !== 'Fri') && !(kind === 'pl' && !planOf(m.pl)));
+      const now = ORDER.filter((kind) => kind !== 'fr' && kind in m.h && m.h[kind] === L.h
+        && !(kind === 'pl' && !planOf(m.pl)));
       const kind = now[slot];
-      if (kind) out.push([k.name, kind === 'sh' ? 'daily' : kind === 'fr' ? 'friday' : kind]);
+      if (kind) out.push([k.name, kind === 'sh' ? 'daily' : kind]);
+      const ll = placeLL(m, tz), tnow = Date.now();
+      if (ll && L.wd === 'Fri') { const g = ll.join(',') + '|' + tz; if (!fmemo.has(g)) fmemo.set(g, fridaySlots(ll[0], ll[1], tz, tnow).some((t) => tnow >= t && tnow - t < 5 * 6e4)); if (fmemo.get(g)) out.push([k.name, 'friday']); }
     }
     cursor = l.list_complete ? null : l.cursor;
   } while (cursor);
@@ -277,6 +322,7 @@ export default {
       const id = await idOf(body.endpoint), v = await env.PUSH.getWithMetadata(id, 'json');
       if (!v || !v.value) return json({ ok: false, none: 1 });
       const m = norm(v.metadata), tz = okTz(m.tz) ? m.tz : DEF_TZ, ix = { ...(m.ix || {}) };
+      { const ll = llOf(req); if (ll && (Math.abs((+v.metadata.la || 0) - ll.la) > 0.3 || Math.abs((+v.metadata.lo || 0) - ll.lo) > 0.3)) { v.metadata = { ...v.metadata, la: ll.la, lo: ll.lo }; await env.PUSH.put(id, JSON.stringify(v.value), { metadata: v.metadata }); } }
       const kinds = ['si', 'kh', 'mg'].filter((k) => k in m.h || (m.ix && k in m.ix));
       for (const k of kinds) if (!Number.isInteger(ix[k])) { const c = curIx(m, k, tz); if (c !== null) ix[k] = c; }
       if (u.pathname === '/read') {
@@ -314,6 +360,7 @@ export default {
       // what this call says, over what was kept
       const om = old && old.value ? norm(old.metadata) : null;
       const md = { tz: okTz(body.tz) ? body.tz : (om && okTz(om.tz) ? om.tz : DEF_TZ) };
+      { const ll = llOf(req) || (om && isFinite(+om.la) ? { la: om.la, lo: om.lo } : null); if (ll) { md.la = ll.la; md.lo = ll.lo; } }
       let h = om ? { ...om.h } : {};
       if (body.h && typeof body.h === 'object') {   // the notifications page: the whole choice
         h = {};
