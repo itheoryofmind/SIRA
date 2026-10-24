@@ -2990,7 +2990,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-24-1810';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-24-1811';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3524,7 +3524,7 @@ function richInline(s,hl,inQ,rep){
     // the rest of a verse begun on the previous page: linked with it when the whole quotation was matched
     const r=rep&&rep[-1];if(r&&r[3]){qspan.classList.add('qa');qspan.dataset.s=r[3];qspan.dataset.a=r[4];qspan.dataset.b=r[5]}}
   const flush=()=>{if(buf){appendHL(node,buf,hl);buf=''}};
-  let k=-1,skip=false,sup=null,fix=null;s=s.replace(/ (?=[.،؛:؟!](?:\s|$))/g,'\u00a0');
+  let k=-1,skip=false,skipO="",sup=null,fix=null;s=s.replace(/ (?=[.،؛:؟!](?:\s|$))/g,'\u00a0');
   // footnote numbers of the digital edition after a hadith or a verse (its takhrij notes, not carried here): small and muted
   s=s.replace(/(["}]|"،)(\s?)(\d{1,2})(?=[\s.،؛:؟,]|$)/g,'$1$2\u0001$3\u0002');
   // in some parts the digital edition lost the ligature ﷺ after the Prophet's name and left a lone "(": shown as in print
@@ -3546,10 +3546,10 @@ function richInline(s,hl,inQ,rep){
         if(r[3]){qspan.classList.add('qa');qspan.dataset.s=r[3];qspan.dataset.a=r[4];qspan.dataset.b=r[5]}
         if(r[6]!=null)fix=r;
         // the quotation is the verse's own words: shown in the mushaf's script and vowelling (the book's text stays stored as it is)
-        if(window.UTHM&&r[2]&&typeof r[2]==='string'){qspan.classList.add('qm');qspan.append(document.createTextNode(r[2]));skip=true}}
+        if(window.UTHM&&r[2]&&typeof r[2]==='string'){qspan.classList.add('qm');qspan.append(document.createTextNode(r[2]));skip=true;skipO=''}}
       continue}
-    if(ch==='}'&&qspan&&!ed){if(skip)buf='';else flush();skip=false;const b=el('span','qb','}');b.dataset.c='﴾';qspan.append(b);node=f;qspan=null;continue}
-    if(skip)continue;
+    if(ch==='}'&&qspan&&!ed){if(skip){buf='';qspan.dataset.o=skipO}else flush();skip=false;const b=el('span','qb','}');b.dataset.c='﴾';qspan.append(b);node=f;qspan=null;continue}
+    if(skip){skipO+=ch;continue}
     if(ch==='['&&!ed&&!BRP){flush();ed=el('span','ed');ed.title='بصيغة النسخة الرقمية، وقد لا يكون في المطبوع بلفظه';edParent=node;node.append(ed);node=ed;buf='[';continue}
     if(ch===']'&&ed){buf+=']';flush();node=edParent;{let pv=ed.previousSibling;while(pv&&pv.nodeType===3&&!pv.nodeValue.trim())pv=pv.previousSibling;if(pv&&pv.nodeType===1&&pv.classList.contains('ed')&&pv.textContent===ed.textContent&&/^\[[^\]]*:[^\]]*\]$/.test(ed.textContent))ed.classList.add('ed-dup')}ed=null;
       if(fix){const r=fix,b=el('button','reffix','تصويب المرجع');b.type='button';b.onclick=e=>{e.stopPropagation();refFixNote(r)};node.append(b);fix=null}
@@ -4227,7 +4227,12 @@ async function markPassage(){
     const b=document.querySelector('#tpage .pgblk[data-p="'+q.p+'"] .tbody');
     if(b&&TX.n===q.n){PASSAGE=null;const S=bodyText(b).s;let t=q.t,j=S.indexOf(t);
       if(j<0){t=t.slice(0,Math.min(40,t.length));j=S.indexOf(t)}
-      if(j<0){toast('فُتحت الصفحة، ولم يُعثر على الفقرة بلفظها.',3000);return}
+      if(j<0){   // a verse shown in the mushaf's script: the passage is looked up in the book's stored wording kept on it
+        const nz=x=>x.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^\u0621-\u064A]/g,'');
+        const tq=nz(q.t);let hit=null;
+        for(const v of b.querySelectorAll('.q.qm[data-o]')){const o=nz(v.dataset.o);if(o.length<3)continue;if(tq.includes(o)||o.includes(tq.slice(0,24))||(tq.length>12&&o.includes(tq.slice(-24)))){hit=v;break}}
+        if(hit){hit.classList.add('hlt','c-l');TX.lock=true;hit.scrollIntoView({block:'center'});setTimeout(()=>{TX.lock=false},300);return}
+        toast('فُتحت الصفحة، ولم يُعثر على الفقرة بلفظها.',3000);return}
       {const W=/[\u0621-\u065F\u0670-\u06D3\w]/;let e=j+t.length;while(j>0&&W.test(S[j-1])&&W.test(S[j]))j--;while(e<S.length&&W.test(S[e])&&W.test(S[e-1]))e++;t=S.slice(j,e)}   // whole words: a mark never cuts a word in two
       wrapRange(b,j,j+t.length,{i:'lnk',c:'l'});const sp=b.querySelector('.hlt[data-id="lnk"]');
       if(sp){TX.lock=true;sp.scrollIntoView({block:'center'});setTimeout(()=>{TX.lock=false},300)}return}
