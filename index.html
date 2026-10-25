@@ -2990,7 +2990,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-25-1008';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-25-1009';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -5160,10 +5160,14 @@ const mgCh=(M,h)=>h.ch;
 const HDN=/((?:[وفبلك]{0,2})رسول الله صلى الله عليه وسلم|(?:[وفبك]{0,2})للنبي صلى الله عليه وسلم|(?:[وفبك]{0,2})النبي صلى الله عليه وسلم|(?:[وفبلك]{0,2})نبي الله صلى الله عليه وسلم|(?:[وفبلك]{0,2})رسول الله ﷺ|(?:[وفبك]{0,2})النبي ﷺ)/;
 let QV=null;getJSON('data/qv.json').then(x=>{QV=x||{}}).catch(()=>{QV={}});
 // the verses of the collections in the mushaf script (data/qu.json: brace content -> Uthmani text, only where certain; uth_sx.py)
+// the mushaf text stands in only when it carries the quotation's words: same letters (vowels aside) and the same number of words
+const quSk=t=>t.replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g,'').replace(/[^\u0621-\u064A\u0671]/g,'').replace(/[اأإآٱءؤئوىيةهت]/g,'').replace(/(.)\1+/g,'$1');
+const quW=t=>t.split(/[^\u0621-\u064A\u0671\u064B-\u065F\u0670\u0640\u06D6-\u06ED]+/).filter(x=>/[\u0621-\u064A\u0671]/.test(x.replace(/[\u064B-\u065F\u0670\u0640\u06D6-\u06ED]/g,'')));
+const quBad=(o,u)=>{if(quSk(o)!==quSk(u))return true;const w=quW(o);let n=0;for(let i=0;i<w.length;i++){if(['يا','ها','ويا','فيا','أيا'].includes(w[i].replace(/[\u064B-\u065F\u0670\u0640]/g,''))&&i+1<w.length)i++;n++}const m=quW(u).length;return m!==n&&m!==w.length};
 let QU=null;getJSON('data/qu.json').then(x=>{QU=x||{}}).catch(()=>{QU={}});
 // a fragment that two verses share in different Mushaf forms: the verse is chosen by the words just before it in the text
 const QVC={};
-const hdV=(z,prev)=>{const k=z.slice(1,-1).trim();let u=QV&&QV[k];if(prev&&QVC[k]){const c=QVC[k].find(([n])=>prev.includes(n));if(c)u=c[1]}const ut=window.UTHM&&QU&&QU[k];const sp=el('span','hd-v'+(ut?' qm':''),'﴿'+(ut||k)+'﴾');if(u)sp.title=u;return sp};
+const hdV=(z,prev)=>{const k=z.slice(1,-1).trim();let u=QV&&QV[k];if(prev&&QVC[k]){const c=QVC[k].find(([n])=>prev.includes(n));if(c)u=c[1]}const ut=window.UTHM&&QU&&QU[k]&&!quBad(k,QU[k])?QU[k]:null;const sp=el('span','hd-v'+(ut?' qm':''),'﴿'+(ut||k)+'﴾');if(u)sp.title=u;return sp};
 // the Prophet's own words in the Sira books' quotations: phrases two readers agreed on (data/sx_gold.json, src/gold)
 let GOLD=null;getJSON('data/sx_gold.json').then(x=>{GOLD=x||{}}).catch(()=>{GOLD={}});
 const goldFor=t=>(GOLD&&t&&(GOLD[t]||(t[0]==='«'&&GOLD[t.slice(1,-1)])))||null;
