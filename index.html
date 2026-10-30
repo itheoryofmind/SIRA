@@ -1860,6 +1860,9 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 .bab-h{position:relative}.bab-h.on{outline:2px solid color-mix(in srgb,var(--brass,#9a7425) 60%,transparent);outline-offset:3px;border-radius:12px}
 .bab-no{display:block;font:600 .74rem/1.4 var(--f-ui,inherit);color:var(--brass,#9a7425);margin-bottom:.2rem}
 :root.dz-khatam .sx-logo::after,:root.dz-khatamt .sx-logo::after{display:none!important}
+/* the great circle opens the Mukhtasar: a small «ابدأ القراءة» in it, where its arrow was (the circles design only) */
+.sx-start{display:none}
+:root.dz-khatam .sx-logo .sx-start,:root.dz-khatamt .sx-logo .sx-start{display:block!important;position:absolute!important;left:50%!important;bottom:calc(var(--R)*.16)!important;transform:translateX(-50%)!important;margin:0!important;width:auto!important;height:auto!important;font-size:11.5px!important;line-height:1.25!important;font-weight:500!important;white-space:nowrap!important;letter-spacing:0!important;color:var(--h-gold,#C59A3C)!important;padding:3px 10px!important;border:1px solid color-mix(in srgb,var(--h-gold,#C59A3C) 40%,transparent)!important;border-radius:999px!important;background:transparent!important}
 /* the six circles of the home: no arrow under each (2026-10-30, the keeper's choice); their own shine says they open */
 .dz-arc button span::after{display:none!important}
 .scroll-cue{position:fixed;z-index:30;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));width:44px;height:44px;margin-left:-22px;border-radius:50%;border:1px solid color-mix(in srgb,var(--gold,#C59A3C) 70%,transparent);background:color-mix(in srgb,var(--surface,#fff) 82%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 6px 16px -8px rgba(0,0,0,.4);cursor:pointer;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .4s,transform .4s}
@@ -2536,7 +2539,7 @@ audio.own-note-m{background:none;height:44px}
       <path class="tip" d="M40 66 L24 58 L10 66 L24 74Z M280 66 L296 58 L310 66 L296 74Z"/>
       <circle class="dot" cx="6" cy="66" r="2.4"/><circle class="dot" cx="314" cy="66" r="2.4"/>
       <path class="orn" d="M160 9 l4 7 -4 7 -4 -7z M160 109 l4 7 -4 7 -4 -7z"/>
-    </svg><span class="w"><svg class="nm" role="img" aria-label="سيرته"><use href="#sxName"/></svg></span><span class="s">صلى الله عليه وسلم</span></h1>
+    </svg><span class="w"><svg class="nm" role="img" aria-label="سيرته"><use href="#sxName"/></svg></span><span class="s">صلى الله عليه وسلم</span><span class="sx-start">ابدأ القراءة</span></h1>
     <p class="sx-verse"><span class="v1">مُّحَمَّدࣱ رَّسُولُ ٱللَّهِۚ</span> <span class="v2">وَٱلَّذِينَ مَعَهُۥٓ أَشِدَّآءُ عَلَى ٱلۡكُفَّارِ رُحَمَآءُ بَيۡنَهُمۡۖ</span> <span class="sx-ref">[الفتح: ٢٩]</span></p>
     <p class="sx-tag">سيرة النبي صلى الله عليه وسلم وشمائله ومغازيه وهديه، ثم خلفاؤه الراشدون</p>
     <p class="hijri" id="hijri" hidden></p>
@@ -2996,7 +2999,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-0739';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-0743';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
