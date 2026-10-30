@@ -297,5 +297,27 @@
 686
 ],
 "at": "2026-10-30"
+},
+"durar:1": {
+"name": "الدرر السنية ج1",
+"site": "durar",
+"total": 608,
+"checked": 394,
+"diffs": 350,
+"new": 72,
+"illegible": 0,
+"unchecked": [],
+"at": "2026-10-30"
+},
+"durar:2": {
+"name": "الدرر السنية ج2",
+"site": "durar",
+"total": 372,
+"checked": 238,
+"diffs": 201,
+"new": 68,
+"illegible": 0,
+"unchecked": [],
+"at": "2026-10-30"
 }
 }
