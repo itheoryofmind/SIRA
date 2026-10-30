@@ -109,6 +109,22 @@ for e in E:
         cur = o[last]
     except Exception:
         done.append((e, False, 'الموضع لم يعد موجوداً')); continue
+    if e['path'][0] == 'u' and isinstance(cur, list):
+        # a verse's mushaf place (for its tafsir and aya number), from «الفحص الأسبوعي»: only if it is still as seen, and the new
+        # place's mushaf text holds exactly the words shown
+        try:
+            new = json.loads(e['nw'])
+            import umatch as UM
+            TMK = re.compile(r'\s*۝[٠-٩]+\s*'); nm = lambda t: ' '.join(x for x in TMK.sub(' ', t).split() if x != '\u06de')
+            UT = {(q[0], q[1]): q[2] for q in UM.Q}
+            ok_ = (json.dumps(cur, ensure_ascii=False, separators=(',', ':')) == e['old'] and isinstance(new, list) and len(new) == len(cur) and new[:2] == cur[:2]
+                   and all(isinstance(new[i], int) for i in (3, 4, 5)) and new[4] <= new[5]
+                   and nm(new[2]) in ' '.join(nm(UT.get((new[3], a), '')) for a in range(new[4], new[5] + 1)))
+        except Exception:
+            ok_ = False
+        if not ok_:
+            done.append((e, False, 'لم يُطبَّق: تغيّر هذا الموضع منذ الفحص، أو الموضع الجديد لا يطابق نص الآية')); continue
+        o[last] = new; done.append((e, True, 'صُحّح موضع الآية في المصحف')); continue
     if not isinstance(cur, str):
         done.append((e, False, 'الموضع ليس نصاً')); continue
     msg = ''

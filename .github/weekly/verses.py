@@ -53,6 +53,39 @@ def note(site, f, path, s, m, why, kind, mus=None, mref=None, fix=None):
     if mus: r['mus'] = mus
     if mref: r['mref'] = mref
     return r
+TMK = re.compile(r'\s*۝[٠-٩]+\s*')
+def nm(t): return ' '.join(x for x in TMK.sub(' ', t).split() if x != '\u06de')
+def tafsir(site, f, d, pg, e, notes):
+    """a verse shown in the mushaf's script: is the place kept for its tafsir button and aya number the place of these very words?"""
+    su, a0, a1 = e[3], e[4], e[5]
+    ok = isinstance(su, int) and isinstance(a0, int) and isinstance(a1, int) and a0 <= a1 and (su, a0) in UTH and (su, a1) in UTH
+    if ok:
+        rng = ' '.join(nm(UTH[(su, a)]) for a in range(a0, a1 + 1))
+        ok = nm(e[2]) in rng and all(a0 <= U.tonum(x) <= a1 for x in re.findall('۝([٠-٩]+)', e[2]))
+    if ok: return
+    P = d['p'][int(pg)]; s = P[e[0] + 1] if e[0] + 1 < len(P) and isinstance(P[e[0] + 1], str) else ''
+    body, ref, m = None, None, None
+    if e[1] == 's' and len(e) > 7: body = s[e[6]:e[7]]
+    elif isinstance(e[1], int) and e[1] >= 0:
+        ops = [i for i, c in enumerate(s) if c == '{']
+        if e[1] < len(ops):
+            m = re.compile(r'\{([^{}]*)\}').match(s, ops[e[1]])
+            if m: body = m.group(1); ref = ref2(s, m.end())
+    h = None
+    if body:
+        b2 = body.replace('"', '').strip()
+        h = U.find(b2, ref[0], ref[1]) if isinstance(ref, tuple) else U.find(b2)
+    idx = d['u'][pg].index(e)
+    old = json.dumps(e, ensure_ascii=False, separators=(',', ':'))
+    r = {'id': 'wkv_' + hashlib.md5((site + f + pg + old).encode()).hexdigest()[:12], 's': site, 'f': f, 'path': ['p', int(pg), e[0] + 1],
+         'pre': s[max(0, (m.start() if m else 0) - 60):(m.start() if m else 0)], 'old': (m.group(0) if m else (body or '')), 'post': s[(m.end() if m else 0):(m.end() if m else 0) + 60],
+         'sec': 'v', 'v': 1, 'wk': 1, 'side': 1, 'kind': 'tafsir', 'sev': 1,
+         'why': 'زر «تفسير» ورقم الآية لهذه الآية يشيران إلى %s %s، ونص الآية المعروض ليس نص ذلك الموضع' % (NAME.get(su, '?'), ar(a0) + ('-' + ar(a1) if a1 != a0 else '')) + ('؛ وموضعها الصحيح: %s %s' % (NAME[h[1]], ar(h[2]) + ('-' + ar(h[3]) if h[3] != h[2] else '')) if h else '؛ ولم يتحدد موضعها الصحيح آلياً (لفظها في أكثر من موضع)')}
+    if h:
+        new = list(e); new[2], new[3], new[4], new[5] = h[0], h[1], h[2], h[3]
+        r['mus'] = h[0]; r['mref'] = NAME[h[1]] + ': ' + ar(h[2]) + ('-' + ar(h[3]) if h[3] != h[2] else '')
+        r['fix'] = {'u': ['u', pg, idx], 'old': old, 'nw': json.dumps(new, ensure_ascii=False, separators=(',', ':')), 'what': 'زر التفسير ورقم الآية ← %s' % r['mref']}
+    notes.append(r)
 def run(site, root):
     notes = []
     for fp in sorted(glob.glob(os.path.join(root, 't*.json'))):
@@ -61,6 +94,9 @@ def run(site, root):
         except Exception: continue
         if 'p' not in d: continue
         UU = d.get('u') or {}
+        for pg, L in UU.items():
+            for e in L:
+                if len(e) > 5 and e[2] and e[3]: tafsir(site, f, d, pg, e, notes)
         for pg, P in enumerate(d['p']):
             if not isinstance(P, list): continue
             have = {(r[0], r[1]): r for r in (UU.get(str(pg)) or []) if isinstance(r[1], int) and r[2]}
