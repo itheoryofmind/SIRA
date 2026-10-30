@@ -1859,6 +1859,11 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 .bab-t{font-family:var(--f-head,inherit);font-size:1.15rem;margin:.6rem 0 .3rem}
 .bab-h{position:relative}.bab-h.on{outline:2px solid color-mix(in srgb,var(--brass,#9a7425) 60%,transparent);outline-offset:3px;border-radius:12px}
 .bab-no{display:block;font:600 .74rem/1.4 var(--f-ui,inherit);color:var(--brass,#9a7425);margin-bottom:.2rem}
+/* the six circles of the home: no arrow under each (2026-10-30, the keeper's choice); a line under them says they open, shown until the first tap on one of them */
+.dz-arc button span::after{display:none!important}
+.arc-hint{margin:6px auto 2px;text-align:center;grid-column:1/-1;align-self:start;position:relative;z-index:3;font-size:14px;letter-spacing:.2px;color:color-mix(in srgb,var(--h-gold,var(--gold,#C59A3C)) 75%,transparent);animation:arc-hint-in .8s ease-out .6s both}
+@keyframes arc-hint-in{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.arc-hint{animation:none}}
 .scroll-cue{position:fixed;z-index:30;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));width:44px;height:44px;margin-left:-22px;border-radius:50%;border:1px solid color-mix(in srgb,var(--gold,#C59A3C) 70%,transparent);background:color-mix(in srgb,var(--surface,#fff) 82%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 6px 16px -8px rgba(0,0,0,.4);cursor:pointer;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .4s,transform .4s}
 .scroll-cue::before,.scroll-cue::after{content:"";position:absolute;left:50%;width:8px;height:8px;margin-left:-5px;border-right:1.8px solid var(--gold,#C59A3C);border-bottom:1.8px solid var(--gold,#C59A3C);transform:rotate(45deg)}
 .scroll-cue::before{top:11px;opacity:.55}.scroll-cue::after{top:17px}
@@ -2534,6 +2539,7 @@ audio.own-note-m{background:none;height:44px}
       <circle class="dot" cx="6" cy="66" r="2.4"/><circle class="dot" cx="314" cy="66" r="2.4"/>
       <path class="orn" d="M160 9 l4 7 -4 7 -4 -7z M160 109 l4 7 -4 7 -4 -7z"/>
     </svg><span class="w"><svg class="nm" role="img" aria-label="سيرته"><use href="#sxName"/></svg></span><span class="s">صلى الله عليه وسلم</span></h1>
+    <p class="arc-hint" id="arcHint" hidden>اضغط على أي قسم لتتصفحه</p>
     <p class="sx-verse"><span class="v1">مُّحَمَّدࣱ رَّسُولُ ٱللَّهِۚ</span> <span class="v2">وَٱلَّذِينَ مَعَهُۥٓ أَشِدَّآءُ عَلَى ٱلۡكُفَّارِ رُحَمَآءُ بَيۡنَهُمۡۖ</span> <span class="sx-ref">[الفتح: ٢٩]</span></p>
     <p class="sx-tag">سيرة النبي صلى الله عليه وسلم وشمائله ومغازيه وهديه، ثم خلفاؤه الراشدون</p>
     <p class="hijri" id="hijri" hidden></p>
@@ -2993,7 +2999,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-0711';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-0718';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -6105,10 +6111,22 @@ function ibkShamail(P){const w=el('section','sf-ch');const hd=el('button','sf-hd
   sync();new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['class']})}}
 
 /* the home page goes on below the first screen: a small sign at its foot, until the reader scrolls (every design) */
+{const h=document.getElementById('arcHint');let seen=false;try{seen=localStorage.getItem('arcHint')==='1'}catch(e){}
+  // under the circles whatever the design: moved down past the lowest circle, into the space above the verse
+  const home0=h&&h.parentNode,next0=h&&h.nextSibling;
+  const place=()=>{if(!h||h.hidden)return;const nav=document.querySelector('.dz-arc');if(!nav)return;h.style.transform='';
+    const B=()=>Math.max(...[...nav.querySelectorAll('button,button span')].map(x=>x.getBoundingClientRect()).filter(r=>r.height).map(r=>r.bottom));
+    const vr=document.querySelector('.sx-verse');const after=vr&&B()>vr.getBoundingClientRect().bottom;
+    // circles after the verse (rows of tiles in some designs): the line is the last row of their grid; circles first: moved under them
+    if(after){if(h.parentNode!==nav)nav.append(h);return}
+    if(h.parentNode!==home0)home0.insertBefore(h,next0);const r=h.getBoundingClientRect(),d=B()+18-r.top;if(d>0)h.style.transform='translateY('+d+'px)'};
+  if(h&&!seen&&document.querySelector('.dz-arc button')){h.hidden=false;setTimeout(place,60);setTimeout(place,800);addEventListener('resize',place);new MutationObserver(place).observe(document.documentElement,{attributes:true,attributeFilter:['class']});document.querySelectorAll('.dz-arc button').forEach(b=>b.addEventListener('click',()=>{h.hidden=true;try{localStorage.setItem('arcHint','1')}catch(e){}},{once:true}))}}
 {const home=document.getElementById('home')||document.body;const cue=document.createElement('button');cue.type='button';cue.className='scroll-cue';cue.setAttribute('aria-label','انزل لبقية الصفحة');
   cue.onclick=()=>window.scrollBy({top:Math.round(innerHeight*.75),behavior:'smooth'});document.body.append(cue);
   const upd=()=>{const onHome=!document.getElementById('reader')||document.getElementById('reader').hidden;const lk=document.body.classList.contains('ov-locked')||document.body.classList.contains('sx-locked')||document.body.classList.contains('pg-locked');
-    cue.classList.toggle('on',onHome&&!lk&&window.scrollY<40&&document.documentElement.scrollHeight>innerHeight+200)};
+    cue.classList.toggle('on',!cueDone&&onHome&&!lk&&window.scrollY<40&&document.documentElement.scrollHeight>innerHeight+200)};
+  // shown for a few seconds only, then gone for this visit: it must not stay over the search and its options
+  let cueDone=false;setTimeout(()=>{cueDone=true;cue.classList.remove('on')},7000);addEventListener('touchstart',()=>{if(!cueDone){cueDone=true;cue.classList.remove('on')}},{passive:true,once:true});
   addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);setTimeout(upd,900);new MutationObserver(upd).observe(document.body,{attributes:true,attributeFilter:['class']})}
 
 // «الإسطرلاب»: a tap on the limb opens that year of his life (the nearest year that has events)
