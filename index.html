@@ -1899,7 +1899,7 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 .ds-part{margin-top:14px}
 .ds-part>summary{cursor:pointer;font-weight:700;padding:8px 0}
 .ds-row{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin:0 0 10px;font-size:14px}
-.ds-row label{display:inline-flex;gap:4px;align-items:center}
+.ds-row label{display:inline-flex;gap:4px;align-items:center}.ds-row input[type=radio]{accent-color:var(--brass)}.ds-hint{flex-basis:100%;font-size:12.5px;line-height:1.6;opacity:.78}
 .ds-warn{font-size:13px;line-height:1.8;color:var(--muted);border:1px dashed var(--line);border-radius:10px;padding:8px 10px;margin:0 0 10px}
 .ds-sum{font-size:14px;margin:0 0 8px}
 .ds-more{font-size:13px;padding:2px 0}
@@ -3146,7 +3146,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-1430';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-1440';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4280,7 +4280,7 @@ function dsRender(R,res,q,deep){R.innerHTML='';
       frag.append(b)})});
   R.append(frag)}
 function dsSetup(){const f=$('#exact2');if(!f||$('#dsRow'))return;const row=el('div','ds-row');row.id='dsRow';row.hidden=!DS.on();
-  [['','في الكتاب'],['q','سريع في كل الكتب'],['d','ذكي في كل الكتب']].forEach(([v,l],i)=>{const lb=el('label');const r=el('input');r.type='radio';r.name='dsm';r.value=v;if(!i)r.checked=true;lb.append(r,' '+l);row.append(lb)});
+  [['','عادي'],['q','سريع'],['d','ذكي']].forEach(([v,l],i)=>{const lb=el('label');const r=el('input');r.type='radio';r.name='dsm';r.value=v;if(!i)r.checked=true;lb.append(r,' '+l);row.append(lb)});{const hint=el('small','ds-hint');row.append(hint);const H={'':'يبحث عن كلماتك في هذا الكتاب.','q':'يبحث عن العبارة كما كتبتها، حرفاً بحرف، في كل ما في الموقع: الكتب ومجموعات الأحاديث والشروح والتفسير.','d':'يفهم سؤالك، ويبحث بالكلمة وأصلها وما في معناها في كل ما في الموقع، ويقدّم الأقرب. يعرض النصوص كما هي، ولا يكتب شيئاً من عنده.'};const upd=()=>{const c=row.querySelector('input:checked');hint.textContent=H[c?c.value:'']||''};row.addEventListener('change',upd);upd()}
   row.prepend(el('b',null,'نوع البحث: '));f.closest('.filter').after(row);
   $('#sform2').addEventListener('submit',async e=>{const m=(document.querySelector('input[name=dsm]:checked')||{}).value;if(!m||row.hidden)return;e.stopImmediatePropagation();e.preventDefault();$('#q2').blur();
     const R=$('#res2');R.innerHTML='';const pr=progressBar(R);const res=m==='d'?await smartSearch($('#q2').value,nm=>{pr.t.textContent='جارٍ تحميل '+nm+'…'}):await deepSearch($('#q2').value,false,nm=>{pr.t.textContent='جارٍ البحث في '+nm+'…'});pr.done();
@@ -4289,7 +4289,7 @@ function dsSetup(){const f=$('#exact2');if(!f||$('#dsRow'))return;const row=el('
 
 /* the same choice under the home page's search box */
 function dsSetupHome(){const ex=$('#exact');if(!ex||$('#dsRowH'))return;const row=el('div','ds-row');row.id='dsRowH';row.hidden=!DS.on();
-  [['','كالمعتاد'],['q','سريع في كل الكتب'],['d','ذكي في كل الكتب']].forEach(([v,l],i)=>{const lb=el('label');const r=el('input');r.type='radio';r.name='dsmh';r.value=v;if(!i)r.checked=true;lb.append(r,' '+l);row.append(lb)});
+  [['','عادي'],['q','سريع'],['d','ذكي']].forEach(([v,l],i)=>{const lb=el('label');const r=el('input');r.type='radio';r.name='dsmh';r.value=v;if(!i)r.checked=true;lb.append(r,' '+l);row.append(lb)});{const hint=el('small','ds-hint');row.append(hint);const H={'':'يبحث عن كلماتك في كتب الموقع الأساسية.','q':'يبحث عن العبارة كما كتبتها، حرفاً بحرف، في كل ما في الموقع: الكتب ومجموعات الأحاديث والشروح والتفسير.','d':'يفهم سؤالك، ويبحث بالكلمة وأصلها وما في معناها في كل ما في الموقع، ويقدّم الأقرب. يعرض النصوص كما هي، ولا يكتب شيئاً من عنده.'};const upd=()=>{const c=row.querySelector('input:checked');hint.textContent=H[c?c.value:'']||''};row.addEventListener('change',upd);upd()}
   row.prepend(el('b',null,'نوع البحث: '));ex.closest('label').after(row);
   $('#sform').addEventListener('submit',async e=>{const m=(document.querySelector('input[name=dsmh]:checked')||{}).value;if(!m||row.hidden)return;e.stopImmediatePropagation();e.preventDefault();$('#q').blur();
     const sec=$('#resSec'),R=$('#res');sec.hidden=false;if($('#filterRow'))$('#filterRow').hidden=true;R.innerHTML='';const pr=progressBar(R);sec.scrollIntoView({behavior:'smooth',block:'start'});
