@@ -1,0 +1,46 @@
+name: الفحص الأسبوعي الشامل
+# every Friday morning: the verses of both sites against the mushaf, and a batch of the Sira hadith against the hadith
+# encyclopedia (dorar.net); what is found becomes notes in the control panel («فروق النص والطبعة»), and a word reaches his phone
+on:
+  schedule:
+    - cron: '41 2 * * 5'
+  workflow_dispatch:
+    inputs:
+      hadith_n: {description: 'how many hadith this run', required: false, default: '600'}
+permissions:
+  contents: write
+  id-token: write   # GitHub's signed token: proves to push.seeratuh.com which repository is asking
+concurrency:
+  group: cms
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /data/
+            /.github/
+      - uses: actions/checkout@v4
+        with:
+          repository: itheoryofmind/DURAR
+          path: durar_repo
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /data/
+      - name: Check
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+          HADITH_N: ${{ inputs.hadith_n || '600' }}
+        run: python3 .github/weekly/weekly.py
+      - name: Save the notes
+        run: |
+          git add .github/review/rv.json .github/weekly/state.json .github/weekly/hnotes.json
+          git diff --cached --quiet && exit 0
+          git -c user.name="الفحص الأسبوعي" -c user.email=cms@seeratuh.com commit -qm "الفحص الأسبوعي: ملاحظات الآيات والأحاديث"
+          for i in 1 2 3 4; do git push -q origin HEAD && break; git pull -q --rebase origin main; done
