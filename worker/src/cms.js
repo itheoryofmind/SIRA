@@ -254,6 +254,7 @@ export async function cmsFetch(req, env, u) {
     const id = P + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
     const v = { s, f, path, old, nw, note: str(b.note, 300), lb: str(b.lb, 200), sec: str(b.sec, 120), rv: b.rv ? str(b.rv, 60) : '', force: b.force ? 1 : 0, st: 'p', at: Date.now() };
     await env.PUSH.put(id, JSON.stringify(v), { metadata: { st: 'p', f, s } });
+    await ghRun(env, s, 'cms.yml');
     const fin = AL.filter((x) => x.metadata && (x.metadata.st === 'ok' || x.metadata.st === 'err'));
     for (const x of fin.slice(0, Math.max(0, AL.length - 300))) await env.PUSH.delete(x.name);
     return out({ ok: true, id });
@@ -423,6 +424,18 @@ async function hitIn(req, env, out) {
 }
 
 /* ---------- the panel's other cards ---------- */
+// GitHub runs a scheduled workflow only every few hours; with a key of his (Actions: read and write, the two repositories only)
+// his choices are published at once: each saved correction starts its site's «لوحة المحتوى», and «شغّل الفحص الآن» starts the weekly check
+const GH_REPO = { sira: 'itheoryofmind/SIRA', durar: 'itheoryofmind/DURAR' };
+async function ghRun(env, site, wf, gap = 90e3) {
+  try {
+    const t = await env.PUSH.get('ghtok'); if (!t) return false;
+    const k = 'ghrun:' + site + ':' + wf; if (gap && (await env.PUSH.get(k))) return true;
+    const r = await fetch('https://api.github.com/repos/' + GH_REPO[site] + '/actions/workflows/' + wf + '/dispatches', { method: 'POST', headers: { Authorization: 'Bearer ' + t, Accept: 'application/vnd.github+json', 'User-Agent': 'seeratuh-panel', 'Content-Type': 'application/json' }, body: JSON.stringify({ ref: 'main' }) });
+    if (gap) await env.PUSH.put(k, '1', { expirationTtl: Math.max(60, Math.round(gap / 1000)) });
+    return r.status === 204;
+  } catch (e) { return false; }
+}
 async function panelExtra(u, b, s, env, out) {
   const p = u.pathname;
   if (p === '/c/osub') {   // the keeper's device: its subscription (from the site, where the app is installed) gets his alerts
@@ -437,6 +450,17 @@ async function panelExtra(u, b, s, env, out) {
     await env.PUSH.put(id, JSON.stringify({ endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } }), { metadata: { at: Date.now(), s } });
     const n = await ownerAlert(env, null, 0, { t: 'تنبيهات لوحة التحكم', b: 'فُعّلت على هذا الجهاز: محاولات الدخول الخاطئة، وملاحظات القرّاء، وتعطّل أحد الموقعين، وملخص كل جمعة.', u: PANEL, tag: 'own-on' });
     return out({ ok: true, on: true, sent: n });
+  }
+  if (p === '/c/gh') {   // his GitHub key for publishing at once: kept here only, never sent back
+    if (b.a === 'is') return out({ ok: true, on: !!(await env.PUSH.get('ghtok')) });
+    if (b.a === 'clear') { await env.PUSH.delete('ghtok'); return out({ ok: true, on: false }); }
+    const t = str(b.t, 300).trim();
+    if (!/^(github_pat_|ghp_)[A-Za-z0-9_]{20,}$/.test(t)) return out({ ok: false, bad: 1 });
+    const h = { Authorization: 'Bearer ' + t, Accept: 'application/vnd.github+json', 'User-Agent': 'seeratuh-panel' };
+    const chk = await Promise.all(Object.values(GH_REPO).map((r) => fetch('https://api.github.com/repos/' + r + '/actions/workflows', { headers: h }).then((x) => x.status).catch(() => 0)));
+    if (chk.some((x) => x !== 200)) return out({ ok: false, denied: 1 });
+    await env.PUSH.put('ghtok', t);
+    return out({ ok: true, on: true });
   }
   if (p === '/c/dorar') {   // a hadith's words looked up in the hadith encyclopedia (dorar.net), for comparing in the panel
     const q = str(b.q, 300).replace(/[\u064B-\u065F\u0670]/g, '').split(/\s+/).filter((w) => /[\u0621-\u064A]/.test(w)).slice(0, 10).join(' ');
@@ -464,7 +488,7 @@ async function panelExtra(u, b, s, env, out) {
     }
     if (b.a === 'ctl') {
       if (typeof b.auto === 'boolean') ctl.auto = b.auto;
-      if (b.run) { ctl.run = Date.now(); ctl.stop = 0; }
+      if (b.run) { ctl.run = Date.now(); ctl.stop = 0; await env.PUSH.put('wkctl', JSON.stringify(ctl)); ctl.now = await ghRun(env, 'sira', 'weekly.yml', 0); }
       if (b.stop) ctl.stop = Date.now();
       await env.PUSH.put('wkctl', JSON.stringify(ctl));
       return out({ ok: true, ctl });

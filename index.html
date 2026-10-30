@@ -2993,7 +2993,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-0703';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-0711';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -6518,6 +6518,15 @@ function diffView(a,b,ctx){const A=toks(a),B=toks(b);let i=0;while(i<A.length&&i
   const f=el('span');const head=A.slice(0,i).join(''),tail=A.slice(A.length-j).join('');ctx=ctx||120;
   f.append(head.length>ctx?'… ':'',head.slice(-ctx));for(const [k,t] of ops)f.append(k===0?document.createTextNode(t):el(k<0?'del':'ins',null,t));
   f.append(tail.slice(0,ctx),tail.length>ctx?' …':'');return f}
+const SURN=["الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس", "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه", "الأنبياء", "الحج", "المؤمنون", "النور", "الفرقان", "الشعراء", "النمل", "القصص", "العنكبوت", "الروم", "لقمان", "السجدة", "الأحزاب", "سبإ", "فاطر", "يس", "الصافات", "ص", "الزمر", "غافر", "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", "الأحقاف", "محمد", "الفتح", "الحجرات", "ق", "الذاريات", "الطور", "النجم", "القمر", "الرحمٰن", "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة", "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", "التحريم", "الملك", "القلم", "الحاقة", "المعارج", "نوح", "الجن", "المزمل", "المدثر", "القيامة", "الإنسان", "المرسلات", "النبإ", "النازعات", "عبس", "التكوير", "الانفطار", "المطففين", "الانشقاق", "البروج", "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد", "الشمس", "الليل", "الضحى", "الشرح", "التين", "العلق", "القدر", "البينة", "الزلزلة", "العاديات", "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", "قريش", "الماعون", "الكوثر", "الكافرون", "النصر", "المسد", "الإخلاص", "الفلق", "الناس", "بني إسرائيل", "المؤمن", "حم السجدة", "القتال", "براءة", "الدهر", "تبارك", "الزلزال", "اقرأ", "تبت", "سبأ", "النبأ"];
+// a verse reference he types in another form — (الروم: ٤٨) or [النور : ٤٣] — written the way this site writes its references,
+// so it shows like the others (small and muted); only when the name is a sura's name and numbers follow the colon
+function refFix(t){const K=x=>x.replace(/[ً-ٰٟ]/g,'').replace(/^سورة\s*/,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/\s+/g,' ').trim();
+  if(!refFix.S)refFix.S=new Set(SURN.map(K));const dur=/dorarnajdiah/.test(location.hostname);
+  return t.replace(/([\(\[])\s*(سورة\s*)?([^\(\)\[\]:0-9٠-٩\n]{2,22}?)\s*(?:آية|الآية|الآيات|الآيتان)?\s*:\s*([0-9٠-٩][0-9٠-٩\s،,\-–و]*?)\s*([\)\]])/g,(m,o,sw,nm,nums,c)=>{
+    if(!refFix.S.has(K(nm)))return m;const n=nums.replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\s*[-–]\s*/g,'-').replace(/\s*[،,]\s*/g,'، ').trim();
+    const name=nm.trim();const out=dur?'[سورة '+name+' آية: '+n+']':'['+name+': '+n+']';return out})}
+
 function editor(c,old,tapped,onSave){c.append(el('p','own-n','في المربع النص كاملاً، والمظلَّل فيه هو ما ضغطت عليه. حدّد بإصبعك أي جزء منه ثم «احذف المحدد»، أو اكتب مكانه.'));const ta=el('textarea','own-ta');ta.value=old;ta.dir='rtl';c.append(ta);
   {const r=el('div','own-row');const dl=el('button','own-b','احذف المحدد');dl.type='button';const rs=el('button','own-b','أرجع النص كما كان');rs.type='button';r.append(dl,rs);c.append(r);
    dl.onclick=()=>{const a=ta.selectionStart,b=ta.selectionEnd;if(a===b){oToast('حدّد في المربع النص الذي تريد حذفه أولاً.',1);return}let v=ta.value.slice(0,a)+ta.value.slice(b);v=v.slice(0,a).replace(/ +$/,'')+(a>0&&v[a]&&!/^[ \u060c.:;\]})]/.test(v.slice(a))?' ':'')+v.slice(a).replace(/^ +/,'');ta.value=v;ta.dispatchEvent(new Event('input'));try{ta.focus();ta.setSelectionRange(a,a)}catch(e){}};
@@ -6527,7 +6536,8 @@ function editor(c,old,tapped,onSave){c.append(el('p','own-n','في المربع 
   const sv=el('button','own-save','احفظ التعديل');sv.type='button';c.append(sv);
   const upd=()=>{dv.textContent='';wn.textContent='';const v=ta.value;if(v===old){dv.append(el('span','own-n','لم يتغير شيء بعد.'));sv.disabled=true;return}sv.disabled=false;if(!v.trim())dv.append(el('div','own-warn','سيُحذف هذا النص كله من موضعه.'));dv.append(diffView(old,v));
     const bad=MARKS.filter(([o,x])=>cnt(old,o)!==cnt(v,o)||cnt(old,x)!==cnt(v,x)).map(x=>x[0]+x[1]);
-    if(bad.length)wn.append(el('div','own-warn','تغيّر عدد العلامات '+bad.join(' ')+' — بها يُعرف كلامه صلى الله عليه وسلم والآيات وإحالاتها؛ فإن لم تقصد تغييرها فأعدها كما كانت.'))};
+    if(bad.length)wn.append(el('div','own-warn','تغيّر عدد العلامات '+bad.join(' ')+' — بها يُعرف كلامه صلى الله عليه وسلم والآيات وإحالاتها؛ فإن لم تقصد تغييرها فأعدها كما كانت.'));
+    {const f=refFix(v);if(f!==v){const w=el('div','own-warn','في ما كتبته إحالة آية بغير صيغة إحالات الموقع، فتظهر بخط النص الكبير. تُكتب بصيغتها هكذا:');const d2=el('div','own-diff');d2.append(diffView(v,f,30));const fb=el('button','own-b','اكتبها بصيغة الموقع');fb.type='button';fb.onclick=()=>{ta.value=f;upd()};wn.append(w,d2,fb)}}};
   let tm;ta.oninput=()=>{clearTimeout(tm);tm=setTimeout(upd,250)};upd();
   if(tapped){const [T]=letters(tapped);const [n,ix]=letters(old);const a=n.indexOf(T.slice(0,Math.min(T.length,60)));
     if(a>=0)setTimeout(()=>{const st=ix[a],en=ix[Math.min(a+T.length,ix.length)-1]+1;try{ta.focus({preventScroll:true});ta.setSelectionRange(st,en);const lh=parseFloat(getComputedStyle(ta).lineHeight)||34;ta.scrollTop=Math.max(0,st/Math.max(20,ta.clientWidth/11)*lh-lh*2)}catch(e){}},60)}
