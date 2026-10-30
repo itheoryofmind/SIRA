@@ -227,7 +227,7 @@ export async function cmsFetch(req, env, u) {
   }
   if (u.pathname === '/c/save') {
     const { f, path, old, nw } = b;
-    if (!okFile(f) || !okPath(path) || !okText(old) || !okText(nw) || old === nw || !nw.trim()) return out({ ok: false, bad: 1 }, 400);
+    if (!okFile(f) || !okPath(path) || !okText(old) || !okText(nw) || old === nw) return out({ ok: false, bad: 1 }, 400);
     const AL = await all(env);
     const same = AL.filter((x) => x.metadata && (x.metadata.st === 'p' || x.metadata.st === 't') && x.metadata.f === f && siteOf(x) === s);
     for (const x of same) { const v = await env.PUSH.get(x.name, 'json'); if (v && JSON.stringify(v.path) === JSON.stringify(path)) return out({ ok: false, busy: 1 }); }
