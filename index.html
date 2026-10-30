@@ -3017,7 +3017,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-1159';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-1206';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4147,7 +4147,7 @@ function dsRender(R,res,q,deep){R.innerHTML='';
     L.forEach(h=>{const b=el(h.n?'button':'div','hit');if(h.n)b.type='button';const w=el('div','where',h.where);if(h.also.length)w.append(el('span','tag','والنص نفسه في: '+h.also.join('؛ ')));
       const s=el('div','snip');s.append('…'+h.a,el('mark',null,h.m),h.b+'…');b.append(w,s);
       if(h.raw.length>s.textContent.length+20){const more=el('button','btn btn-link ds-more','النص كاملاً');more.type='button';more.onclick=ev=>{ev.stopPropagation();s.textContent=h.raw;more.remove()};b.append(more)}
-      if(h.n)b.onclick=()=>{const ov=$('#sOverlay'),y=ov.scrollTop;closeSearch();openPart(h.n,h.p,[norm(q.trim())]).then(()=>{setBack('رجوع إلى نتائج البحث',()=>{ov.hidden=false;ov.scrollTop=y})})};
+      if(h.n)b.onclick=()=>{const ov=$('#sOverlay');if(ov.hidden){openPart(h.n,h.p,[norm(q.trim())]);return}const y=ov.scrollTop;closeSearch();openPart(h.n,h.p,[norm(q.trim())]).then(()=>{setBack('رجوع إلى نتائج البحث',()=>{ov.hidden=false;ov.scrollTop=y})})};
       frag.append(b)})});
   R.append(frag)}
 function dsSetup(){const f=$('#exact2');if(!f||$('#dsRow'))return;const row=el('div','ds-row');row.id='dsRow';row.hidden=!DS.on();
@@ -4157,6 +4157,16 @@ function dsSetup(){const f=$('#exact2');if(!f||$('#dsRow'))return;const row=el('
     const R=$('#res2');R.innerHTML='';const pr=progressBar(R);const res=await deepSearch($('#q2').value,m==='d',nm=>{pr.t.textContent='جارٍ البحث في '+nm+'…'});pr.done();
     if(!res){R.append(el('p','note','اكتب كلمة من حرفين على الأقل.'));return}if(res.error&&!res.out.length){R.append(el('p','note','تعذّر تحميل نص البحث. تأكد من الاتصال بالإنترنت.'));return}dsRender(R,res,$('#q2').value,m==='d')},true)}
 
+
+/* the same choice under the home page's search box */
+function dsSetupHome(){const ex=$('#exact');if(!ex||$('#dsRowH'))return;const row=el('div','ds-row');row.id='dsRowH';row.hidden=!DS.on();
+  [['','كالمعتاد'],['q','سريع في كل الكتب'],['d','محقق في كل الكتب']].forEach(([v,l],i)=>{const lb=el('label');const r=el('input');r.type='radio';r.name='dsmh';r.value=v;if(!i)r.checked=true;lb.append(r,' '+l);row.append(lb)});
+  row.prepend(el('b',null,'نوع البحث: '));ex.closest('label').after(row);
+  $('#sform').addEventListener('submit',async e=>{const m=(document.querySelector('input[name=dsmh]:checked')||{}).value;if(!m||row.hidden)return;e.stopImmediatePropagation();e.preventDefault();$('#q').blur();
+    const sec=$('#resSec'),R=$('#res');sec.hidden=false;if($('#filterRow'))$('#filterRow').hidden=true;R.innerHTML='';const pr=progressBar(R);sec.scrollIntoView({behavior:'smooth',block:'start'});
+    const res=await deepSearch($('#q').value,m==='d',nm=>{pr.t.textContent='جارٍ البحث في '+nm+'…'});pr.done();
+    if(!res){R.append(el('p','note','اكتب كلمة من حرفين على الأقل.'));return}if(res.error&&!res.out.length){R.append(el('p','note','تعذّر تحميل نص البحث. تأكد من الاتصال بالإنترنت.'));return}dsRender(R,res,$('#q').value,m==='d')},true)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',dsSetupHome);else setTimeout(dsSetupHome,0);
 function openSearch(){dsSetup();if($('#dsRow'))$('#dsRow').hidden=!DS.on();$('#onlyPart').closest('label').hidden=isB(cur.n)&&!(mbOf(cur.n)&&mbOf(cur.n).ps.length>1);$('#sOverlay').hidden=false;setTimeout(()=>$('#q2').focus(),50)}
 function closeSearch(){$('#sOverlay').hidden=true}
 $('#qSearch').onclick=openSearch;$('#sClose').onclick=closeSearch;
