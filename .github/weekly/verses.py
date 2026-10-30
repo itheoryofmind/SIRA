@@ -146,7 +146,35 @@ def run(site, root):
                             notes.append(note(site, f, path, s, m, 'لفظ الآية في الموقع لا يوجد في المصحف بهذا الترتيب (كلمة زائدة أو ناقصة أو مختلفة)، والإحالة: %s %s' % (NAME[su], '-'.join(ar(n) for n in nums)), 'words', mus, NAME[su] + ': ' + '-'.join(ar(n) for n in nums) if nums else None))
                     elif not at and len(body.split()) >= 4:
                         notes.append(note(site, f, path, s, m, 'نص بين قوسي الآية لا يوجد في المصحف بهذا الترتيب، وليس بعده إحالة', 'words'))
+    if os.path.exists(os.path.join(root, 'qu.json')): run_sx(site, root, notes)
     return notes
+def walk_s(o, path):
+    if isinstance(o, str): yield path, o
+    elif isinstance(o, list):
+        for i, x in enumerate(o): yield from walk_s(x, path + [i])
+    elif isinstance(o, dict):
+        for k, x in o.items(): yield from walk_s(x, path + [k])
+INNER = re.compile(r'\s*\{\s*(\d+)\s*\}\s*(?=[^{]*\})')
+def run_sx(site, root, notes):
+    """the collections (sx_*.json): a verse is shown in the mushaf's script when qu.json has it; any other text between
+    the verse braces is looked for in the mushaf and, when its words are not there, becomes a note"""
+    QU = json.load(open(os.path.join(root, 'qu.json'), encoding='utf-8'))
+    for fp in sorted(glob.glob(os.path.join(root, 'sx_*.json'))):
+        f = os.path.basename(fp)
+        try: d = json.load(open(fp, encoding='utf-8'))
+        except Exception: continue
+        for path, s in walk_s(d, []):
+            if '{' not in s: continue
+            t = INNER.sub(lambda x: ' (%s) ' % x.group(1), s)
+            for m in re.finditer(r'\{([^{}]*)\}', s):
+                body = m.group(1).strip()
+                if body in QU or re.fullmatch(r'\s*\d+\s*', body): continue
+                if '{' in s[:m.start()] and s[:m.start()].count('{') > s[:m.start()].count('}'): continue   # inside a verse with numbers in it
+                if U.SKIP.search(body): continue
+                b = U.skOf(re.sub(r'\[[^\]]*\]|\([^)]*\)', '', body))
+                if len(b) < 6: continue
+                if where_sk(b): continue
+                notes.append(note(site, f, path, s, m, 'نص بين قوسي الآية في هذه المجموعة لا يوجد في المصحف بهذا اللفظ أو الترتيب (خطأ نقل، أو ألفاظ ليست آية وُضعت بين قوسي الآية)', 'words'))
 if __name__ == '__main__':
     N = run(sys.argv[1], sys.argv[2])
     json.dump(N, sys.stdout, ensure_ascii=False)

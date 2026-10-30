@@ -39,6 +39,9 @@ def place(x):
         elif x['b'] in pic:
             off, n, h = pic[x['b']]; g = x['p'] + off
             if g >= 0: x['img'] = ['%d_%03d.png' % (x['b'], g // n), g % n, n, h]
+    elif (x.get('f') or '').startswith('sx_'):
+        x['b'], x['p'] = 'sx', 0
+        if x['f'] in lnk: x['lnk'] = lnk[x['f']]
     return x
 by = collections.defaultdict(list)
 for x in R: by[(x.get('s'), x.get('f'), x.get('p'))].append(x)
