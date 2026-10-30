@@ -1,0 +1,50 @@
+# «نقل الدومين»: يُشغَّل مرة واحدة بعد نقل الموقعين إلى حساب GitHub جديد أو دومين جديد (انظر docs/اقرأني-أولاً.md).
+# يغيّر اسم الدومين واسم الحساب في كل ملفات الموقع، ويجعل المفتاح الذي تختاره مفتاحَ صاحب الموقع. لا يمس نصوص الكتب.
+name: نقل الدومين
+on:
+  workflow_dispatch:
+    inputs:
+      sira:
+        description: 'دومين موقع السيرة الجديد (مثل: example.com)، أو اتركه كما هو'
+        required: true
+        default: seeratuh.com
+      durar:
+        description: 'دومين موقع الدرر الجديد، أو اتركه كما هو'
+        required: true
+        default: dorarnajdiah.com
+      user:
+        description: 'اسم حسابك في GitHub'
+        required: true
+      key:
+        description: 'بصمة المفتاح (٦٤ حرفاً من ملف الإعدادات) — اختياري'
+        required: false
+permissions:
+  contents: write
+jobs:
+  move:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: التغيير
+        env: { S: '${{ inputs.sira }}', D: '${{ inputs.durar }}', U: '${{ inputs.user }}', K: '${{ inputs.key }}' }
+        run: |
+          set -e
+          S=$(echo "$S" | tr 'A-Z' 'a-z' | sed 's#^https\?://##; s#/.*##; s#^www\.##'); D=$(echo "$D" | tr 'A-Z' 'a-z' | sed 's#^https\?://##; s#/.*##; s#^www\.##')
+          for x in "$S" "$D"; do echo "$x" | grep -Eq '^[a-z0-9-]+(\.[a-z0-9-]+)+$' || { echo "::error::الدومين غير صحيح: $x"; exit 1; }; done
+          echo "$U" | grep -Eq '^[A-Za-z0-9-]{1,39}$' || { echo "::error::اسم الحساب غير صحيح"; exit 1; }
+          git ls-files -z | while IFS= read -r -d '' f; do
+            case "$f" in *.png|*.jpg|*.jpeg|*.gif|*.webp|*.pdf|*.ttf|*.woff|*.woff2|*.ico|*.zip) continue;; esac
+            grep -Iq . "$f" 2>/dev/null || continue
+            grep -qE 'seeratuh\.com|dorarnajdiah\.com|itheoryofmind' "$f" || continue
+            sed -i -e "s/seeratuh\.com/$S/g" -e "s/dorarnajdiah\.com/$D/g" -e "s/itheoryofmind/$U/g" "$f"
+          done
+          # the Cloudflare account is found from the token on the new account
+          sed -i '/CLOUDFLARE_ACCOUNT_ID: [0-9a-f]\{32\}/d' .github/workflows/*.yml || true
+          if [ -n "$K" ]; then
+            echo "$K" | grep -Eq '^[0-9a-f]{64}$' || { echo "::error::بصمة المفتاح يجب أن تكون ٦٤ حرفاً (0-9 و a-f)"; exit 1; }
+            [ -f worker/src/owner.js ] && sed -i "s/^export const OWNER_H = '[0-9a-f]\{64\}';/export const OWNER_H = '$K';/" worker/src/owner.js
+          fi
+          git config user.name "نقل الدومين"; git config user.email "move@$S"
+          git add -A; git commit -qm "نقل الدومين: $S و $D، والحساب $U" || echo "لا تغيير"
+          git push
+          echo "::notice::تمّ. الدومين: $S و $D — الحساب: $U"

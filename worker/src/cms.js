@@ -7,7 +7,7 @@
 //  - the site's settings, applied at once without publishing: pausing the site with a message, hiding any part of it,
 //    adding text after any place, and whole new sections (cfg:<site>). Every reader's page asks /st?s=<site> on opening.
 // The workflows prove which repository they run in with GitHub's own signed token (OIDC), so no password is kept anywhere.
-import { isOwner, whoIs } from './owner.js';
+import { isOwner, whoIs, OWNER_H } from './owner.js';
 import PAGE from './cms_page.js';
 
 const SITES = { sira: { origin: 'https://seeratuh.com', repo: 'itheoryofmind/sira' }, durar: { origin: 'https://dorarnajdiah.com', repo: 'itheoryofmind/durar' } };
@@ -446,6 +446,8 @@ async function ghRun(env, site, wf, gap = 90e3) {
 }
 // what a helper may do, by what the keeper gave him
 function helperMay(p, b, P) {
+  if (P.boss) return p !== '/c/key';   // «رئيسي»: all the keeper does in this panel (the keeper himself is never one of the helpers, so none can stop him)
+  if (p === '/c/export') return !!P.dl;
   if (p === '/c/hi') return !(b && b.s === undefined && !b.login && !P.push);   // the Durar worker's check before sending a notice asks with the key alone
   if (p === '/c/list' || p === '/c/stats') return true;
   if (p === '/c/save' || p === '/c/cancel') return !!(P.ed || P.rv);
@@ -464,12 +466,12 @@ function helperMay(p, b, P) {
   }
   return false;
 }
-const PERMS = ['rv', 'ed', 'pub', 'cfg', 'wk', 'fb', 'msg', 'push', 'dz', 'pause'];
+const PERMS = ['rv', 'ed', 'pub', 'cfg', 'wk', 'fb', 'msg', 'push', 'dz', 'pause', 'dl', 'boss'];
 async function panelExtra(u, b, s, env, out, who) {
   const p = u.pathname;
   if (p === '/c/helpers') {   // the keeper's helpers: add (a new key, shown once), change what one may do, stop or remove one
     const L = (await env.PUSH.get('helpers', 'json')) || [];
-    const clean = (o) => Object.fromEntries(PERMS.map((k) => [k, !!(o && o[k])]));
+    const clean = (o) => Object.fromEntries(PERMS.map((k) => [k, !!(o && (o[k] || o.boss))]));   // «رئيسي» holds every permission
     if (b.a === 'add') {
       const name = str(b.name, 60).trim(); if (!name || L.length >= 20) return out({ ok: false, bad: 1 }, 400);
       const key = [...crypto.getRandomValues(new Uint8Array(24))].map((x) => x.toString(16).padStart(2, '0')).join('');
@@ -483,6 +485,33 @@ async function panelExtra(u, b, s, env, out, who) {
     if (b.a === 'del' && x) await env.PUSH.put('helpers', JSON.stringify(L.filter((y) => y !== x)));
     const R = ((await env.PUSH.get('helpers', 'json')) || []).map(({ h, ...y }) => y);
     return out({ ok: true, helpers: R });
+  }
+  if (p === '/c/export') {   // everything the panel keeps, for moving the sites elsewhere: the settings and the decisions (no keys)
+    const X = { v: 1, at: Date.now(), cfg: {}, fxres: {}, rv: {}, wk: {} };
+    for (const s2 of ['sira', 'durar']) { X.cfg[s2] = await env.PUSH.get('cfg:' + s2, 'json'); X.fxres[s2] = await env.PUSH.get('fxres:' + s2, 'json'); }
+    for (const [pre, o] of [['rv:', X.rv], ['wk:', X.wk]]) { let cur; do { const l = await env.PUSH.list({ prefix: pre, cursor: cur }); for (const k of l.keys) o[k.name.slice(pre.length)] = k.metadata || {}; cur = l.list_complete ? null : l.cursor; } while (cur); }
+    X.wkctl = await env.PUSH.get('wkctl', 'json'); X.wkst = await env.PUSH.get('wkst', 'json');
+    X.helpers = ((await env.PUSH.get('helpers', 'json')) || []).map((x) => ({ name: x.name, perms: x.perms, off: !!x.off }));
+    // the fingerprints (never the keys) of the keeper's key and of each «رئيسي»: one of them becomes the keeper's key on a new home
+    const oh = await env.PUSH.get('ownerh');
+    if (!who.helper || (who.helper.perms && who.helper.perms.boss)) X.keys = { owner: /^[0-9a-f]{64}$/.test(oh || '') ? oh : OWNER_H, boss: ((await env.PUSH.get('helpers', 'json')) || []).filter((x) => x.perms && x.perms.boss).map((x) => ({ name: x.name, h: x.h })) };
+    return out({ ok: true, x: X });
+  }
+  if (p === '/c/import') {   // the same, put back on a new home (the keeper or a «رئيسي» only; the helpers' keys cannot move: make new ones)
+    if (who.helper && !(who.helper.perms && who.helper.perms.boss)) return out({ ok: false, denied: 1 }, 403);
+    const X = b.x; if (!X || X.v !== 1 || typeof X.cfg !== 'object') return out({ ok: false, bad: 1 }, 400);
+    let n = 0;
+    for (const s2 of ['sira', 'durar']) {
+      if (X.cfg[s2] && typeof X.cfg[s2] === 'object') { const old = await env.PUSH.get('cfg:' + s2); if (old) await env.PUSH.put('cfgold:' + s2, old); await env.PUSH.put('cfg:' + s2, JSON.stringify(X.cfg[s2])); n++; }
+      if (X.fxres && X.fxres[s2]) await env.PUSH.put('fxres:' + s2, JSON.stringify(X.fxres[s2]));
+    }
+    // the decisions, a few hundred at a time (the panel asks again with «from» until «next» is null)
+    const D = [...Object.entries(X.rv || {}).map(([k, m]) => ['rv:' + k, m]), ...Object.entries(X.wk || {}).map(([k, m]) => ['wk:' + k, m])];
+    const from = Math.max(0, +b.from || 0), to = Math.min(D.length, from + 300);
+    if (from > 0) n = 0;
+    for (let i = from; i < to; i++) { const [k, m] = D[i]; if (!/^(rv|wk):[\w.:-]{1,200}$/.test(k)) continue; await env.PUSH.put(k, '1', { metadata: m || {} }); n++; }
+    if (from === 0) { if (X.wkctl) await env.PUSH.put('wkctl', JSON.stringify(X.wkctl)); if (X.wkst) await env.PUSH.put('wkst', JSON.stringify(X.wkst)); }
+    return out({ ok: true, n, next: to < D.length ? to : null, total: D.length });
   }
   if (p === '/c/queue') {   // a helper's edits that wait for the keeper: list, publish, or drop
     const AL = (await all(env)).filter((x) => x.metadata && x.metadata.st === 'q');
