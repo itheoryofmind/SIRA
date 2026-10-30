@@ -141,7 +141,7 @@ export async function cmsFetch(req, env, u) {
   if (req.method !== 'POST') return null;
 
   // the workflows: the waiting corrections of their own site, and the result of each
-  if (u.pathname === '/c/pending' || u.pathname === '/c/done' || u.pathname === '/c/report') {
+  if (u.pathname === '/c/pending' || u.pathname === '/c/done' || u.pathname === '/c/report' || u.pathname === '/c/wkctl' || u.pathname === '/c/wkst') {
     let s = await oidcSite(req.headers.get('X-OIDC'));
     if (!s) { const k = await env.PUSH.get('admin'); if (k && req.headers.get('X-Admin') === k) s = 'sira'; }
     if (!s) return out({ ok: false }, 403);
@@ -151,6 +151,19 @@ export async function cmsFetch(req, env, u) {
       const edits = [];
       for (const x of L) { const v = await env.PUSH.get(x.name, 'json'); if (!v) continue; edits.push({ id: x.name, ...v }); await env.PUSH.put(x.name, JSON.stringify({ ...v, st: 't' }), { metadata: { ...x.metadata, st: 't', tk: now } }); }
       return out({ ok: true, site: s, edits });
+    }
+    if (u.pathname === '/c/wkctl') {   // the weekly check asks: run now? stop? which notes did he set aside for good?
+      if (s !== 'sira') return out({ ok: false }, 403);
+      const ign = []; let cur;
+      do { const l = await env.PUSH.list({ prefix: 'wk:', cursor: cur }); for (const k of l.keys) if (k.metadata && k.metadata.c === 'ignore') ign.push(k.name.slice(3)); cur = l.list_complete ? null : l.cursor; } while (cur);
+      return out({ ok: true, ctl: (await env.PUSH.get('wkctl', 'json')) || { auto: true }, st: (await env.PUSH.get('wkst', 'json')) || {}, ign });
+    }
+    if (u.pathname === '/c/wkst') {   // and says how it goes
+      if (s !== 'sira') return out({ ok: false }, 403);
+      let r; try { r = await req.json(); } catch (e) { return out({ ok: false }, 400); }
+      const st = { ...((await env.PUSH.get('wkst', 'json')) || {}), ...(r && typeof r === 'object' ? r : {}), t: Date.now() };
+      await env.PUSH.put('wkst', JSON.stringify(st));
+      return out({ ok: true });
     }
     if (u.pathname === '/c/report') {   // a word to the keeper's phone from his site's own workflows: what was published, what was refused, a weekly check
       let r; try { r = await req.json(); } catch (e) { return out({ ok: false }, 400); }
@@ -424,6 +437,29 @@ async function panelExtra(u, b, s, env, out) {
     await env.PUSH.put(id, JSON.stringify({ endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } }), { metadata: { at: Date.now(), s } });
     const n = await ownerAlert(env, null, 0, { t: 'تنبيهات لوحة التحكم', b: 'فُعّلت على هذا الجهاز: محاولات الدخول الخاطئة، وملاحظات القرّاء، وتعطّل أحد الموقعين، وملخص كل جمعة.', u: PANEL, tag: 'own-on' });
     return out({ ok: true, on: true, sent: n });
+  }
+  if (p === '/c/wk') {   // «الفحص الأسبوعي»: its switch, a run asked now, a stop, and his choice on each note (the notes are in the repository)
+    const ctl = (await env.PUSH.get('wkctl', 'json')) || { auto: true };
+    if (b.a === 'get') {
+      const dec = {}; let cur;
+      do { const l = await env.PUSH.list({ prefix: 'wk:', cursor: cur }); for (const k of l.keys) dec[k.name.slice(3)] = k.metadata || {}; cur = l.list_complete ? null : l.cursor; } while (cur);
+      return out({ ok: true, ctl, st: (await env.PUSH.get('wkst', 'json')) || {}, dec });
+    }
+    if (b.a === 'ctl') {
+      if (typeof b.auto === 'boolean') ctl.auto = b.auto;
+      if (b.run) { ctl.run = Date.now(); ctl.stop = 0; }
+      if (b.stop) ctl.stop = Date.now();
+      await env.PUSH.put('wkctl', JSON.stringify(ctl));
+      return out({ ok: true, ctl });
+    }
+    if (b.a === 'set') {
+      const id = str(b.id, 80);
+      if (!/^wk[vh]_[0-9a-f]{12}$/.test(id) || !['ignore', 'fixed', 'later', ''].includes(b.c || '')) return out({ ok: false, bad: 1 }, 400);
+      if (!b.c) { await env.PUSH.delete('wk:' + id); return out({ ok: true }); }
+      await env.PUSH.put('wk:' + id, '1', { metadata: { c: b.c, at: Date.now() } });
+      return out({ ok: true });
+    }
+    return out({ ok: false, bad: 1 }, 400);
   }
   if (p === '/c/rv') {   // «فروق النص والطبعة»: the keeper's choice on each difference (the list itself is in the repository)
     if (b.a === 'list') {

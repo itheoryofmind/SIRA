@@ -55,7 +55,7 @@ def compare(site, results, book=None):
         if best is None or k > best[0]: best = (k, tx, info, diff, cov)
     return best
 SAMPLE = []
-def run(root, start, n, sleep=1.5):
+def run(root, start, n, sleep=1.5, should_stop=None):
     H = []
     for fp in sorted(glob.glob(os.path.join(root, 'sx_*.json'))):
         f = os.path.basename(fp)
@@ -73,15 +73,16 @@ def run(root, start, n, sleep=1.5):
         if k in seen: continue
         seen.add(k); U.append(x)
     notes = []; done = 0; nores = 0; errs = 0
+    stopped = False
     for j in range(n):
         if not U: break
+        if should_stop and j and j % 25 == 0 and should_stop(): stopped = True; break
         f, i, fld, m, p, no = U[(start + j) % len(U)]
         try: R = query(m)
         except Exception as e: errs += 1; time.sleep(sleep * 3); continue
         done += 1; time.sleep(sleep)
         if not R: nores += 1; continue
         b = compare(m, R, hint(f))
-        if j < 3: SAMPLE.append({'site': m[:200], 'got': [(t[:200], i_[:150]) for t, i_ in R[:3]], 'best': (b[4], b[3]) if b else None})
         if not b: continue
         (cov, nd), tx, info, diff, cv = b
         # a word written differently (a letter dropped, changed or added), not a word more or less: that is how a copying slip
@@ -92,7 +93,7 @@ def run(root, start, n, sleep=1.5):
             notes.append({'id': idn, 's': 'sira', 'f': f, 'path': ['h', i, fld], 'pre': '«', 'old': m, 'post': '»', 'b': 'sx', 'p': p if isinstance(p, int) else 0, 'hno': no, 'sec': 'h', 'wk': 1, 'side': 1, 'sev': 2,
                           'why': 'الموسوعة الحديثية في الدرر السنية (dorar.net) فيها هذا الحديث بلفظ يختلف في كلمة أو كلمتين: «' + tx[:400] + '» — ' + info + '. وقد يكون الفرق اختلاف رواية أو طبعة، فقارن بصورة المطبوع قبل أن تقرر.',
                           'dorar': tx[:600], 'dorar_info': info})
-    return {'sample': SAMPLE, 'total': len(U), 'checked': done, 'nores': nores, 'errs': errs, 'next': (start + n) % max(1, len(U)), 'notes': notes}
+    return {'stopped': stopped, 'total': len(U), 'checked': done, 'nores': nores, 'errs': errs, 'next': (start + done + errs) % max(1, len(U)), 'notes': notes}
 if __name__ == '__main__':
     r = run(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
     json.dump(r, sys.stdout, ensure_ascii=False)

@@ -1,22 +1,21 @@
-name: الفحص الأسبوعي الشامل
-# every Friday morning: the verses of both sites against the mushaf, and a batch of the Sira hadith against the hadith
-# encyclopedia (dorar.net); what is found becomes notes in the control panel («فروق النص والطبعة»), and a word reaches his phone
+name: الفحص الأسبوعي
+# asked every ten minutes; it works only when the keeper pressed «شغّل الفحص الآن» in the control panel, or on Friday morning while
+# «التشغيل التلقائي» is on there. The verses of both sites against the mushaf, and a batch of the Sira hadith against the hadith
+# encyclopedia (dorar.net); its notes go to the panel's «الفحص الأسبوعي» card, and nothing in the sites' text is changed.
 on:
   schedule:
-    - cron: '41 2 * * 5'
-  workflow_dispatch:
-    inputs:
-      hadith_n: {description: 'how many hadith this run', required: false, default: '600'}
+    - cron: '*/10 * * * *'
+  workflow_dispatch: {}
 permissions:
   contents: write
   id-token: write   # GitHub's signed token: proves to push.seeratuh.com which repository is asking
 concurrency:
-  group: cms
+  group: weekly
   cancel-in-progress: false
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,7 +24,14 @@ jobs:
           sparse-checkout: |
             /data/
             /.github/
-      - uses: actions/checkout@v4
+      - id: gate
+        name: Is it time?
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+          GATE_ONLY: '1'
+        run: python3 .github/weekly/gate.py
+      - if: steps.gate.outputs.go == '1'
+        uses: actions/checkout@v4
         with:
           repository: itheoryofmind/DURAR
           path: durar_repo
@@ -33,14 +39,15 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /data/
-      - name: Check
+      - if: steps.gate.outputs.go == '1'
+        name: Check
         env:
           PYTHONDONTWRITEBYTECODE: '1'
-          HADITH_N: ${{ inputs.hadith_n || '600' }}
         run: python3 .github/weekly/weekly.py
-      - name: Save the notes
+      - if: steps.gate.outputs.go == '1'
+        name: Save the notes
         run: |
-          git add .github/review/rv.json .github/weekly/state.json .github/weekly/hnotes.json
+          git add .github/weekly/notes.json
           git diff --cached --quiet && exit 0
-          git -c user.name="الفحص الأسبوعي" -c user.email=cms@seeratuh.com commit -qm "الفحص الأسبوعي: ملاحظات الآيات والأحاديث"
+          git -c user.name="الفحص الأسبوعي" -c user.email=cms@seeratuh.com commit -qm "الفحص الأسبوعي: الملاحظات"
           for i in 1 2 3 4; do git push -q origin HEAD && break; git pull -q --rebase origin main; done
