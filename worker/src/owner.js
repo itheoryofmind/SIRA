@@ -12,8 +12,17 @@ export async function isOwner(k, env, remote) {
   if (env && env.PUSH && !remote) { const o = await env.PUSH.get('ownerh'); if (o && /^[0-9a-f]{64}$/.test(o)) want = o; }
   let d = 0; for (let i = 0; i < h.length; i++) d |= h.charCodeAt(i) ^ want.charCodeAt(i);
   if (d === 0 && h.length === want.length) return true;
-  if (remote) { try { const r = await (await fetch('https://push.seeratuh.com/c/hi', { method: 'POST', body: JSON.stringify({ k }) })).json(); return !!(r && r.ok); } catch (e) {} }
+  if (remote) { try { const r = await (await fetch('https://push.seeratuh.com/c/hi', { method: 'POST', body: JSON.stringify({ k }) })).json(); return !!(r && r.ok && (!r.helper || (r.helper.perms || {}).push)); } catch (e) {} }
   return false;
+}
+// who holds this key: the keeper, or a helper he added in the panel (only each helper key's SHA-256 is kept, with the name and what it may do)
+export async function whoIs(k, env) {
+  if (await isOwner(k, env)) return { owner: true };
+  if (typeof k !== 'string' || k.length < 30 || k.length > 100 || !env || !env.PUSH) return null;
+  const h = hex(await crypto.subtle.digest('SHA-256', enc.encode(k)));
+  const L = (await env.PUSH.get('helpers', 'json')) || [];
+  const x = L.find((x) => x.h === h && !x.off);
+  return x ? { helper: { id: x.id, name: x.name, perms: x.perms || {} } } : null;
 }
 async function allIds(env, metas) {
   const ids = []; let cursor;
@@ -63,9 +72,11 @@ export async function ownerFetch(req, env, u, ctx) {
   }
   if (req.method !== 'POST' || (u.pathname !== '/o/count' && u.pathname !== '/o/send')) return null;
   let b; try { b = JSON.parse(await req.text()); } catch (e) { return out({ ok: false }, 400); }
-  if (!(await isOwner(b && b.k, env, !ctx.page))) { if (ctx.logAuth) await ctx.logAuth(env, req, false, u.pathname); return out({ ok: false }, 403); }
+  let who = ctx.page ? await whoIs(b && b.k, env) : ((await isOwner(b && b.k, env, true)) ? { owner: true } : null);
+  if (who && who.helper && u.pathname === '/o/send' && !who.helper.perms.push) who = null;
+  if (!who) { if (ctx.logAuth) await ctx.logAuth(env, req, false, u.pathname); return out({ ok: false }, 403); }
   const metas = [], ids = await allIds(env, u.pathname === '/o/count' ? metas : null);
-  if (u.pathname === '/o/count') return out({ ok: true, n: ids.length, ins: await installs(env), kinds: ctx.stats ? ctx.stats(metas) : [] });
+  if (u.pathname === '/o/count') return out({ ok: true, n: ids.length, ins: await installs(env), kinds: ctx.stats ? ctx.stats(metas) : [], me: who });
   const t = String(b.t || '').trim().slice(0, 80) || ctx.name, body = String(b.b || '').trim().slice(0, 600);
   if (!body) return out({ ok: false, empty: 1 }, 400);
   const msg = { t, b: body, u: ctx.site + '/', tag: 'bc' + Date.now() };

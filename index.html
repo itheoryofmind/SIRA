@@ -6552,12 +6552,12 @@ function oData(g,txt){const x=g.at[0];const [ov,c]=sheet('تعديل النص');
     for(const a of g.at){const r=await call('/c/save',{f:a.f,path:a.p,old:a.s,nw,note,lb:fileName(a.f),sec});if(r.ok)ok++;else if(r.busy)busy++}
     if(!ok&&busy&&confirm('على هذا الموضع تعديل سابق ينتظر النشر. إن حفظت تعديلك الآن يُطبَّق بعده على النص كما يصير، فإن تعذّر جمعهما كُتب نصك هذا مكان النص كله. هل تريد حفظه مع ذلك؟')){
       for(const a of g.at){const r=await call('/c/save',{f:a.f,path:a.p,old:a.s,nw,note,lb:fileName(a.f),sec,force:1});if(r.ok)ok++}}
-    if(ok){ov.remove();oToast('حُفظ، ويظهر للجميع خلال ساعة على الأكثر.');return true}
+    if(ok){ov.remove();oToast(window.HELPQ?'حُفظ، وينتظر موافقة صاحب الموقع قبل أن يُنشر.':'حُفظ، ويظهر للجميع خلال ساعة على الأكثر.');return true}
     oToast(busy?'لم يُحفظ: على هذا الموضع تعديل ينتظر النشر؛ انتظر حتى يُنشر أو ألغه من السجل.':'تعذّر الحفظ؛ حاول مرة أخرى.',1);return false})}
 function uiSheet(w){const [ov,c]=sheet('تعديل لفظ من الموقع');
   c.append(el('p','own-n','هذا من ألفاظ الموقع نفسه (عنوان أو زر أو اسم قسم)، ويُعدَّل حيث ورد بلفظه هذا كاملاً.'));
   editor(c,w,'',async(nw,note)=>{if(/["'`\\<>]|\$\{/.test(nw)){oToast('لا تُستعمل في ألفاظ الموقع علامات التنصيص ولا < > ولا \\',1);return false}const r=await call('/c/save',{f:'ui',path:['ui',w.slice(0,300)],old:w,nw,note,lb:'«'+w.slice(0,80)+'»',sec:'ألفاظ الموقع'});
-    if(r.ok){ov.remove();oToast('حُفظ، ويظهر للجميع خلال ساعة على الأكثر.');return true}oToast(r.busy?'على هذا اللفظ تعديل ينتظر النشر.':'تعذّر الحفظ؛ حاول مرة أخرى.',1);return false})}
+    if(r.ok){ov.remove();oToast(window.HELPQ?'حُفظ، وينتظر موافقة صاحب الموقع قبل أن يُنشر.':'حُفظ، ويظهر للجميع خلال ساعة على الأكثر.');return true}oToast(r.busy?'على هذا اللفظ تعديل ينتظر النشر.':'تعذّر الحفظ؛ حاول مرة أخرى.',1);return false})}
 
 /* ---------- adding a text after a place ---------- */
 const KINDS=[['p','فقرة'],['h','عنوان'],['q','اقتباس (نص منقول)']];
@@ -6651,7 +6651,7 @@ function pauseSheet(){const [ov,c]=sheet('إيقاف الموقع مؤقتاً')
     const r=await cfg({a:'pause',on:true,msg,np:cb.checked});if(r.ok){drawPz();ov.remove();oToast('توقف الموقع.')}else{b.disabled=false;oToast('تعذّر؛ حاول مرة أخرى.',1)}};
   c.append(el('div','own-lb','الرسالة التي تظهر لمن يفتح الموقع'),ta,l,b)}
 
-call('/c/hi').then(r=>{if(r.ok){FULL=r.cfg;oBar();reapply()}else if(!r.net){LS.set('ownk','');KEY='';reapply();oToast('مفتاح وضع التعديل غير صحيح.',1)}});
+call('/c/hi').then(r=>{if(r.ok){FULL=r.cfg;window.HELPQ=!!(r.helper&&!r.helper.perms.pub);oBar();reapply()}else if(!r.net){LS.set('ownk','');KEY='';reapply();oToast('مفتاح وضع التعديل غير صحيح.',1)}});
 })();
 
 $('#navBtn').onclick=openNav;$('#navClose').onclick=closeNav;$('#navBack').onclick=closeNav;

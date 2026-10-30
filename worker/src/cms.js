@@ -7,7 +7,7 @@
 //  - the site's settings, applied at once without publishing: pausing the site with a message, hiding any part of it,
 //    adding text after any place, and whole new sections (cfg:<site>). Every reader's page asks /st?s=<site> on opening.
 // The workflows prove which repository they run in with GitHub's own signed token (OIDC), so no password is kept anywhere.
-import { isOwner } from './owner.js';
+import { isOwner, whoIs } from './owner.js';
 import PAGE from './cms_page.js';
 
 const SITES = { sira: { origin: 'https://seeratuh.com', repo: 'itheoryofmind/sira' }, durar: { origin: 'https://dorarnajdiah.com', repo: 'itheoryofmind/durar' } };
@@ -226,10 +226,13 @@ export async function cmsFetch(req, env, u) {
   if (u.pathname === '/c/fb') return fbIn(req, env, out);
   if (u.pathname === '/c/hit') return hitIn(req, env, out);
   let b; try { b = JSON.parse(await req.text()); } catch (e) { return out({ ok: false }, 400); }
-  if (!(await isOwner(b && b.k, env))) { await logAuth(env, req, false, u.pathname); return out({ ok: false }, 403); }
+  const who = await whoIs(b && b.k, env);
+  if (!who) { await logAuth(env, req, false, u.pathname); return out({ ok: false }, 403); }
+  const HP = who.helper ? who.helper.perms : null;
+  if (HP && !helperMay(u.pathname, b, HP)) return out({ ok: false, perm: 1 }, 403);
   const s = okSite(b.s) ? b.s : 'sira';
-  if (u.pathname === '/c/hi' && b.login) await logAuth(env, req, true, u.pathname);
-  { const r = await panelExtra(u, b, s, env, out); if (r) return r; }
+  if (u.pathname === '/c/hi' && b.login) await logAuth(env, req, true, u.pathname + (who.helper ? ' · ' + who.helper.name : ''));
+  { const r = await panelExtra(u, b, s, env, out, who); if (r) return r; }
 
   // a new key: its fingerprint replaces the old one at once (the key itself never reaches here)
   if (u.pathname === '/c/key') {
@@ -238,7 +241,7 @@ export async function cmsFetch(req, env, u) {
     await env.PUSH.put('ownerh', nh);
     return out({ ok: true });
   }
-  if (u.pathname === '/c/hi') { const c = await getCfg(env, s); return out({ ok: true, site: s, pause: c.pause, cfg: c }); }
+  if (u.pathname === '/c/hi') { const c = await getCfg(env, s); return out({ ok: true, site: s, pause: c.pause, cfg: c, ...(who.helper ? { helper: who.helper } : {}) }); }
   if (u.pathname === '/c/list') {
     const L = (await all(env)).filter((x) => siteOf(x) === s).slice(-80).reverse();
     const r = [];
@@ -252,8 +255,10 @@ export async function cmsFetch(req, env, u) {
     const same = AL.filter((x) => x.metadata && (x.metadata.st === 'p' || x.metadata.st === 't') && x.metadata.f === f && siteOf(x) === s);
     if (!b.force) for (const x of same) { const v = await env.PUSH.get(x.name, 'json'); if (v && JSON.stringify(v.path) === JSON.stringify(path)) return out({ ok: false, busy: 1 }); }
     const id = P + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
-    const v = { s, f, path, old, nw, note: str(b.note, 300), lb: str(b.lb, 200), sec: str(b.sec, 120), rv: b.rv ? str(b.rv, 60) : '', force: b.force ? 1 : 0, st: 'p', at: Date.now() };
-    await env.PUSH.put(id, JSON.stringify(v), { metadata: { st: 'p', f, s } });
+    const q = HP && !HP.pub;   // a helper who may not publish by himself: kept for the keeper's approval
+    const v = { s, f, path, old, nw, note: (who.helper ? '[' + who.helper.name + '] ' : '') + str(b.note, 300), lb: str(b.lb, 200), sec: str(b.sec, 120), rv: b.rv ? str(b.rv, 60) : '', force: b.force ? 1 : 0, st: q ? 'q' : 'p', at: Date.now(), ...(who.helper ? { by: who.helper.name } : {}) };
+    await env.PUSH.put(id, JSON.stringify(v), { metadata: { st: q ? 'q' : 'p', f, s } });
+    if (q) { await ownerAlert(env, 'hq', 30 * 60e3, { t: 'تعديل ينتظر موافقتك', b: who.helper.name + ': ' + (v.lb || f) }); return out({ ok: true, id, queued: 1 }); }
     await ghRun(env, s, 'cms.yml');
     const fin = AL.filter((x) => x.metadata && (x.metadata.st === 'ok' || x.metadata.st === 'err'));
     for (const x of fin.slice(0, Math.max(0, AL.length - 300))) await env.PUSH.delete(x.name);
@@ -436,8 +441,59 @@ async function ghRun(env, site, wf, gap = 90e3) {
     return r.status === 204;
   } catch (e) { return false; }
 }
-async function panelExtra(u, b, s, env, out) {
+// what a helper may do, by what the keeper gave him
+function helperMay(p, b, P) {
+  if (p === '/c/hi') return !(b && b.s === undefined && !b.login && !P.push);   // the Durar worker's check before sending a notice asks with the key alone
+  if (p === '/c/list' || p === '/c/stats') return true;
+  if (p === '/c/save' || p === '/c/cancel') return !!(P.ed || P.rv);
+  if (p === '/c/rv') return !!P.rv;
+  if (p === '/c/dorar') return !!(P.rv || P.wk);
+  if (p === '/c/wk') return b && b.a === 'ctl' ? !!P.wk : !!(P.rv || P.wk);
+  if (p === '/c/fbi' || p === '/c/fbl' || p === '/c/fbs') return !!P.fb;
+  if (p === '/c/sched') return !!P.push;
+  if (p === '/c/cfg') {
+    const a = b && b.a;
+    if (['hide', 'unhide', 'add', 'unadd', 'page', 'unpage', 'lnk'].includes(a)) return !!P.cfg;
+    if (a === 'note') return !!P.msg;
+    if (a === 'pause') return !!P.pause;
+    if (['design', 'dzmode', 'dzvar', 'pick', 'noimg', 'noimgb', 'tsk'].includes(a)) return !!P.dz;
+    return false;
+  }
+  return false;
+}
+const PERMS = ['rv', 'ed', 'pub', 'cfg', 'wk', 'fb', 'msg', 'push', 'dz', 'pause'];
+async function panelExtra(u, b, s, env, out, who) {
   const p = u.pathname;
+  if (p === '/c/helpers') {   // the keeper's helpers: add (a new key, shown once), change what one may do, stop or remove one
+    const L = (await env.PUSH.get('helpers', 'json')) || [];
+    const clean = (o) => Object.fromEntries(PERMS.map((k) => [k, !!(o && o[k])]));
+    if (b.a === 'add') {
+      const name = str(b.name, 60).trim(); if (!name || L.length >= 20) return out({ ok: false, bad: 1 }, 400);
+      const key = [...crypto.getRandomValues(new Uint8Array(24))].map((x) => x.toString(16).padStart(2, '0')).join('');
+      const h = [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(key)))].map((x) => x.toString(16).padStart(2, '0')).join('');
+      const x = { id: 'h' + Date.now().toString(36), name, h, perms: clean(b.perms), at: Date.now() };
+      L.push(x); await env.PUSH.put('helpers', JSON.stringify(L));
+      return out({ ok: true, key, id: x.id });
+    }
+    const x = L.find((x) => x.id === b.id);
+    if (b.a === 'set' && x) { if (b.perms) x.perms = clean(b.perms); if (b.off != null) x.off = !!b.off; await env.PUSH.put('helpers', JSON.stringify(L)); }
+    if (b.a === 'del' && x) await env.PUSH.put('helpers', JSON.stringify(L.filter((y) => y !== x)));
+    const R = ((await env.PUSH.get('helpers', 'json')) || []).map(({ h, ...y }) => y);
+    return out({ ok: true, helpers: R });
+  }
+  if (p === '/c/queue') {   // a helper's edits that wait for the keeper: list, publish, or drop
+    const AL = (await all(env)).filter((x) => x.metadata && x.metadata.st === 'q');
+    if (b.a === 'ok' || b.a === 'no') {
+      const x = AL.find((x) => x.name === b.id); if (!x) return out({ ok: false });
+      if (b.a === 'no') { await env.PUSH.delete(x.name); return out({ ok: true }); }
+      const v = await env.PUSH.get(x.name, 'json'); if (!v) return out({ ok: false });
+      await env.PUSH.put(x.name, JSON.stringify({ ...v, st: 'p' }), { metadata: { ...x.metadata, st: 'p' } });
+      await ghRun(env, v.s || 'sira', 'cms.yml');
+      return out({ ok: true });
+    }
+    const R = []; for (const x of AL) { const v = await env.PUSH.get(x.name, 'json'); if (v) R.push({ id: x.name, ...v }); }
+    return out({ ok: true, q: R });
+  }
   if (p === '/c/osub') {   // the keeper's device: its subscription (from the site, where the app is installed) gets his alerts
     const sub = b.sub;
     if (b.a === 'list') { const l = await env.PUSH.list({ prefix: 'osub:' }); return out({ ok: true, n: l.keys.length, at: l.keys.map((x) => x.metadata || {}) }); }
