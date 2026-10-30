@@ -1895,6 +1895,9 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 .isn-src{display:block;color:var(--muted);font-size:12px;margin:2px 0 6px}
 .isn-td p{margin:0 0 6px;line-height:1.9;font-size:15px}
 .isn-via,.isn-may,.isn-no{font-size:14px;color:var(--muted);line-height:1.8}
+.ds-h{font-size:16px;margin:14px 0 6px}
+.ds-part{margin-top:14px}
+.ds-part>summary{cursor:pointer;font-weight:700;padding:8px 0}
 .ds-row{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin:0 0 10px;font-size:14px}
 .ds-row label{display:inline-flex;gap:4px;align-items:center}
 .ds-warn{font-size:13px;line-height:1.8;color:var(--muted);border:1px dashed var(--line);border-radius:10px;padding:8px 10px;margin:0 0 10px}
@@ -3017,7 +3020,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-1209';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-1220';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4151,22 +4154,75 @@ function dsRender(R,res,q,deep){R.innerHTML='';
       frag.append(b)})});
   R.append(frag)}
 function dsSetup(){const f=$('#exact2');if(!f||$('#dsRow'))return;const row=el('div','ds-row');row.id='dsRow';row.hidden=!DS.on();
-  [['','في الكتاب'],['q','سريع في كل الكتب'],['d','محقق في كل الكتب']].forEach(([v,l],i)=>{const lb=el('label');const r=el('input');r.type='radio';r.name='dsm';r.value=v;if(!i)r.checked=true;lb.append(r,' '+l);row.append(lb)});
+  [['','في الكتاب'],['q','سريع في كل الكتب'],['d','ذكي في كل الكتب']].forEach(([v,l],i)=>{const lb=el('label');const r=el('input');r.type='radio';r.name='dsm';r.value=v;if(!i)r.checked=true;lb.append(r,' '+l);row.append(lb)});
   row.prepend(el('b',null,'نوع البحث: '));f.closest('.filter').after(row);
   $('#sform2').addEventListener('submit',async e=>{const m=(document.querySelector('input[name=dsm]:checked')||{}).value;if(!m||row.hidden)return;e.stopImmediatePropagation();e.preventDefault();$('#q2').blur();
-    const R=$('#res2');R.innerHTML='';const pr=progressBar(R);const res=await deepSearch($('#q2').value,m==='d',nm=>{pr.t.textContent='جارٍ البحث في '+nm+'…'});pr.done();
-    if(!res){R.append(el('p','note','اكتب كلمة من حرفين على الأقل.'));return}if(res.error&&!res.out.length){R.append(el('p','note','تعذّر تحميل نص البحث. تأكد من الاتصال بالإنترنت.'));return}dsRender(R,res,$('#q2').value,m==='d')},true)}
+    const R=$('#res2');R.innerHTML='';const pr=progressBar(R);const res=m==='d'?await smartSearch($('#q2').value,nm=>{pr.t.textContent='جارٍ تحميل '+nm+'…'}):await deepSearch($('#q2').value,false,nm=>{pr.t.textContent='جارٍ البحث في '+nm+'…'});pr.done();
+    if(!res){R.append(el('p','note','اكتب كلمة من حرفين على الأقل.'));return}if(m==='d'){dsRenderSmart(R,res,$('#q2').value);return}if(res.error&&!res.out.length){R.append(el('p','note','تعذّر تحميل نص البحث. تأكد من الاتصال بالإنترنت.'));return}dsRender(R,res,$('#q2').value,false)},true)}
 
 
 /* the same choice under the home page's search box */
 function dsSetupHome(){const ex=$('#exact');if(!ex||$('#dsRowH'))return;const row=el('div','ds-row');row.id='dsRowH';row.hidden=!DS.on();
-  [['','كالمعتاد'],['q','سريع في كل الكتب'],['d','محقق في كل الكتب']].forEach(([v,l],i)=>{const lb=el('label');const r=el('input');r.type='radio';r.name='dsmh';r.value=v;if(!i)r.checked=true;lb.append(r,' '+l);row.append(lb)});
+  [['','كالمعتاد'],['q','سريع في كل الكتب'],['d','ذكي في كل الكتب']].forEach(([v,l],i)=>{const lb=el('label');const r=el('input');r.type='radio';r.name='dsmh';r.value=v;if(!i)r.checked=true;lb.append(r,' '+l);row.append(lb)});
   row.prepend(el('b',null,'نوع البحث: '));ex.closest('label').after(row);
   $('#sform').addEventListener('submit',async e=>{const m=(document.querySelector('input[name=dsmh]:checked')||{}).value;if(!m||row.hidden)return;e.stopImmediatePropagation();e.preventDefault();$('#q').blur();
     const sec=$('#resSec'),R=$('#res');sec.hidden=false;if($('#filterRow'))$('#filterRow').hidden=true;R.innerHTML='';const pr=progressBar(R);sec.scrollIntoView({behavior:'smooth',block:'start'});
-    const res=await deepSearch($('#q').value,m==='d',nm=>{pr.t.textContent='جارٍ البحث في '+nm+'…'});pr.done();
-    if(!res){R.append(el('p','note','اكتب كلمة من حرفين على الأقل.'));return}if(res.error&&!res.out.length){R.append(el('p','note','تعذّر تحميل نص البحث. تأكد من الاتصال بالإنترنت.'));return}dsRender(R,res,$('#q').value,m==='d')},true)}
+    const res=m==='d'?await smartSearch($('#q').value,nm=>{pr.t.textContent='جارٍ تحميل '+nm+'…'}):await deepSearch($('#q').value,false,nm=>{pr.t.textContent='جارٍ البحث في '+nm+'…'});pr.done();
+    if(!res){R.append(el('p','note','اكتب كلمة من حرفين على الأقل.'));return}if(m==='d'){dsRenderSmart(R,res,$('#q').value);return}if(res.error&&!res.out.length){R.append(el('p','note','تعذّر تحميل نص البحث. تأكد من الاتصال بالإنترنت.'));return}dsRender(R,res,$('#q').value,false)},true)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',dsSetupHome);else setTimeout(dsSetupHome,0);
+/* ---------- البحث الذكي: يفهم صيغة السؤال، ويبحث بالكلمة وجذرها وما في معناها من ألفاظ الكتب، ويرتّب ولا يُخفي ---------- */
+const DS_SYN=[["موالاه", "والي", "يوالي", "تولي", "يتولي", "تولاهم", "اولياء", "ولي", "الولاء", "البراء", "براءه", "موده", "يوادون", "مواده", "مظاهره", "مظاهرتهم"], ["كفار", "كافر", "كفر", "الكافرين", "المشركين", "مشرك", "شرك", "اهل الكتاب", "اليهود", "النصاري"], ["طاغوت", "طواغيت", "الطاغوت", "الطواغيت", "الجبت", "الاوثان", "الاصنام", "وثن", "صنم"], ["جهاد", "الجهاد", "المجاهدين", "مجاهد", "يجاهد", "جاهدوا", "القتال", "قتال", "يقاتلون", "قاتلوا", "الغزو", "غزا", "غزوه", "سريه", "السرايا", "النفير", "الرباط", "مرابط"], ["شهيد", "الشهداء", "شهاده", "الشهاده", "استشهد", "قتل في سبيل الله"], ["قتلي", "قتل", "قتيل", "مقتول", "قتلوا", "صرعي", "مصارع"], ["اسري", "اسير", "الاسري", "اسروا", "فداء", "الفداء"], ["غنيمه", "غنائم", "الغنائم", "الانفال", "الفيء", "فيء", "السلب", "الخمس"], ["توحيد", "التوحيد", "لا اله الا الله", "الالهيه", "الربوبيه", "العباده", "اخلاص", "الاخلاص"], ["شرك", "الشرك", "مشرك", "المشركين", "اشرك", "يشركون", "الند", "الانداد"], ["بدعه", "البدع", "البدعه", "مبتدع", "محدثات", "محدثه", "احدث"], ["قبور", "القبور", "زياره القبور", "الاضرحه", "المشاهد", "البناء علي القبور", "الاستغاثه بالاموات"], ["شفاعه", "الشفاعه", "يشفع", "شفيع", "الشافعين"], ["نواقض", "ناقض", "نواقض الاسلام", "الرده", "مرتد", "ارتد", "الردة"], ["صلاه", "الصلاه", "صلي", "يصلي", "المصلين", "الصلوات", "صلاتهم"], ["صيام", "الصيام", "صوم", "صام", "يصوم", "رمضان", "الصائم"], ["زكاه", "الزكاه", "صدقه", "الصدقات", "زكي"], ["حج", "الحج", "العمره", "حجه الوداع", "مناسك", "الاحرام", "الطواف"], ["هجره", "الهجره", "هاجر", "المهاجرين", "هاجروا"], ["انصار", "الانصار", "الاوس", "الخزرج"], ["بدر", "غزوه بدر", "يوم بدر", "البدريين", "اهل بدر"], ["غزوه احد", "يوم احد"], ["الخندق", "الاحزاب", "غزوه الخندق", "يوم الخندق"], ["الحديبيه", "صلح الحديبيه", "بيعه الرضوان"], ["فتح مكه", "الفتح", "يوم الفتح", "عام الفتح"], ["تبوك", "غزوه تبوك", "جيش العسره"], ["حنين", "يوم حنين", "الطائف", "اوطاس"], ["خيبر", "يوم خيبر", "غزوه خيبر"], ["وفاه", "الوفاه", "توفي", "موته", "مرضه"], ["مولده", "ولادته", "مولد", "عام الفيل"], ["نسبه", "النسب", "نسب"], ["ازواجه", "زوجاته", "امهات المؤمنين", "تزوج", "نسائه"], ["اولاده", "بناته", "ابنته", "ابنه", "ذريته"], ["خاتم", "خاتمه", "نقش", "الخاتم"], ["صفته", "صفه النبي", "شمائله", "خلقه الشريف", "صفاته"], ["معجزه", "معجزات", "المعجزات", "دلائل النبوه", "علامات النبوه"], ["الخلافه", "خليفه", "الخلفاء", "الخلفاء الراشدين", "امير المؤمنين", "البيعه", "بايع"], ["ابو بكر", "الصديق", "ابي بكر", "ابا بكر"], ["الفاروق", "عمر بن الخطاب"], ["عثمان", "ذو النورين", "عثمان بن عفان"], ["علي بن ابي طالب", "ابو الحسن"], ["صحابه", "الصحابه", "اصحابه", "اصحاب رسول الله"], ["سحر", "السحر", "ساحر", "السحره"], ["كهانه", "الكهانه", "كاهن", "الكهان", "العراف", "التنجيم", "المنجم"], ["تمائم", "التمائم", "تميمه", "الرقي", "الرقيه", "التوله"], ["ذبح", "الذبح", "ذبيحه", "الذبائح", "النذر", "نذر"], ["حلف", "الحلف", "يمين", "الايمان بغير الله", "القسم"], ["توسل", "التوسل", "الوسيله", "الاستغاثه", "الاستعانه", "دعاء غير الله"], ["اسماء الله", "الصفات", "الاسماء والصفات", "الاستواء", "العرش", "العلو"], ["نفاق", "النفاق", "منافق", "المنافقين"], ["امر بالمعروف", "المعروف", "المنكر", "النهي عن المنكر", "الحسبه"], ["امام", "الامام", "ولي الامر", "ولاه الامر", "السلطان", "الامراء", "الخروج علي"], ["تكفير", "كفر", "يكفر", "التكفير", "الكفر"], ["هجر", "الهجر", "مجانبه", "مقاطعه", "اهل البدع"], ["تشبه", "التشبه", "التشبه بالكفار", "مشابهه"], ["عيد", "الاعياد", "اعياد المشركين", "المولد"], ["عمر بن الخطاب", "الفاروق", "عمر رضي الله عنه"], ["علي بن ابي طالب", "علي رضي الله عنه"]];
+const DS_STOP=new Set('ما ماذا من هو هي هم هن كم هل كيف متي اين لماذا لم لما في علي عن الي الى او ثم الذي التي الذين اللذين ذلك تلك هذا هذه هؤلاء حكم احكام قول اقوال العلماء العلما مساله مسأله اريد ابغي ابي ابحث بحث عدد معني المراد ماهو ماهي وش ايش اذكر اذكري بين اعطني كل جميع بعض او اي اية اي'.split(' '));
+function dsSk(w){let x=norm(w).replace(/[^ء-ي]/g,'');const o=x;x=x.replace(/^(?:وال|فال|بال|كال|لل|ال)/,'');if(x.length<3)x=o;
+  for(const s of ['تهم','تها','هما','كما','هم','هن','ها','كم','كن','نا','ون','ين','ان','ات','وا','ته','يه','ه','ي','ك'])if(x.endsWith(s)&&x.length-s.length>=3){x=x.slice(0,-s.length);break}
+  if(x.length>=5&&x[0]==='م')x=x.slice(1);
+  let y=x[0]+x.slice(1).replace(/[اويءئؤي]/g,'');if(y.length<2)y=x;return y.replace(/(.)\1+/g,'$1')}
+const dsBare=w=>{const x=norm(w).replace(/[^ء-ي ]/g,'').trim();const y=x.replace(/^(?:وال|فال|بال|كال|لل|ال)/,'');return y.length>=2?y:x};
+function dsSynOf(t){const b=dsBare(t),k=dsSk(t),out=new Set();for(const g of DS_SYN){if(g.some(m=>dsBare(m)===b||(k.length>=3&&!m.includes(' ')&&dsSk(m)===k)))g.forEach(m=>{if(dsBare(m)!==b)out.add(norm(m))})}return [...out]}
+let DSC=null;
+async function dsCorpus(onStatus){if(DSC)return DSC;const C=[],seen=new Map();
+  const add=(h,raw)=>{const nt=norm(raw);const key=nt.replace(/[^ء-ي0-9]/g,'');if(key.length<4)return;if(seen.has(key)){seen.get(key).also.push(h.where);return}
+    h.raw=raw;h.nt=nt;h.also=[];h.sk=null;seen.set(key,h);C.push(h)};
+  const vols=VOLS.filter(v=>v.n&&DH['data/t'+v.n+'.json']).map(v=>v.n);
+  for(const n of vols){if(onStatus)onStatus(partName(n));let S;try{S=await searchPart(n)}catch(e){continue}
+    for(let p=1;p<S.length;p++){const pg=S[p];if(!pg)continue;pg.raw.split('\n').forEach(par=>add({n,p,src:pg.src,book:partName(n),where:partName(n)+'، ص '+ar(p)},par))}}
+  const sx=Object.keys(DH).filter(k=>/^data\/(sx_|saadi\.json)/.test(k)&&!/sx_(gold|sy_ix|jh)\.json$/.test(k)).map(k=>k.slice(5)).sort((a,b)=>(a==='saadi.json')-(b==='saadi.json')||a.localeCompare(b));
+  for(const f of sx){const nm=dsName(f);if(onStatus)onStatus(nm);let d;try{d=await getJSON('data/'+f)}catch(e){continue}dsWalk(d,s=>s.split('\n').forEach(par=>add({f,book:nm,where:nm},par)))}
+  return DSC=C}
+const dsSkOf=h=>h.sk||(h.sk=' '+h.nt.split(/[^ء-ي]+/).filter(w=>w.length>1).map(dsSk).join(' ')+' ');
+function dsTerms(q){const Q=norm(q).replace(/[؟?!.,،؛:«»"()\[\]{}]/g,' ');const W=Q.split(/\s+/).filter(Boolean);const T=[];
+  for(let i=0;i<W.length;i++){const w=W[i];if(DS_STOP.has(w)||DS_STOP.has(w.replace(/^و/,''))||w.length<2)continue;T.push(w)}
+  const R=T.map(w=>({w,re:dsPat1(w,true)[0],sk:dsSk(w),syn:dsSynOf(w).map(s=>new RegExp('(^|[^ء-ي])(?:و|ف)?(?:ب|ل|ك)?'+dsEsc(s)+'(?=[^ء-ي]|$)'))}));
+  // the words of the question that come together in it («غزوة بدر», «قتلى المشركين»): a text with them together comes first
+  R.pairs=[];for(let i=0;i+1<T.length;i++)R.pairs.push(new RegExp(dsEsc(dsBare(T[i]))+'\\S{0,3}\\s+(?:\\S{1,3}\\s+)?(?:ال)?'+dsEsc(dsBare(T[i+1]))));return R}
+function dsScore(h,T){const L=[];let first=-1,len=0;const P=[];for(const t of T){let lv=0;const r=t.re.exec(h.nt);if(r){lv=3;const k=r.index+r[1].length;P.push(k);if(first<0||k<first){first=k;len=r[0].length-r[1].length}}
+    else if(t.sk.length>=3&&dsSkOf(h).includes(' '+t.sk+' '))lv=2;else if(t.syn.some(s=>s.test(h.nt)))lv=1;L.push(lv)}
+  if(!L.some(Boolean))return null;let bonus=0;if(T.pairs)for(const pr of T.pairs)if(pr.test(h.nt))bonus+=1;
+  if(P.length>1&&P.length===T.length&&Math.max(...P)-Math.min(...P)<200)bonus+=1;return {L,bonus,first,len}}
+async function smartSearch(q,onStatus){const T=dsTerms(q);if(!T.length)return null;const C=await dsCorpus(onStatus);const hits=[];const df=T.map(()=>0);
+  for(const h of C){const s=dsScore(h,T);if(!s)continue;s.L.forEach((lv,i)=>{if(lv)df[i]++});hits.push([h,s])}
+  // a rare word of the question weighs more than a common one (غزوة, المشركين): the weight of each word is how rare it is in the books
+  const N=C.length,W=df.map(d=>Math.log((N+1)/(d+1))+0.5);const best=W.reduce((a,b)=>a+b,0)*3;
+  const out=hits.map(([h,s])=>{let sc=0,mc=0;s.L.forEach((lv,i)=>{if(lv){mc++;sc+=W[i]*lv}});sc+=s.bonus*(best/T.length/2);const ln=h.nt.length;if(ln>400)sc/=1+Math.log(ln/400)/2;/* a long text gathers words by chance: weighed a little less */const x=Object.assign({},h,{sc,mc,a:null});if(s.first>=0&&s.len>0)Object.assign(x,snip(h.raw,s.first,s.len));return x});
+  out.sort((a,b)=>b.sc-a.sc);
+  // «الأقرب»: those that carry most of the question's weight; the rest stay under «مواضع فيها بعض كلمات سؤالك»
+  const cut=best*0.6;return {full:out.filter(x=>x.sc>=cut),part:out.filter(x=>x.sc<cut),T}}
+function dsRenderSmart(R,res,q){R.innerHTML='';
+  R.append(el('p','ds-warn','هذه أداة للتسهيل، تعرض نصوص كتب الموقع كما هي، ولا تكتب شيئاً من عندها. لا يُجزم بها؛ راجع النصوص بنفسك: هل هي في مسألتك، أو فيها ما يشتبه بها. البحث الذكي يبحث بكلمات سؤالك وجذورها وما في معناها من ألفاظ الكتب، ويقدّم ما اجتمعت فيه كلماتك، والكلمة النادرة في الكتب أثقل من الكثيرة، ولا يُخفي شيئاً: ما فيه بعض الكلمات تحت «مواضع فيها بعض كلمات سؤالك».'));
+  R.append(el('p','ds-sum','كلمات البحث: '+res.T.map(t=>t.w).join('، ')));
+  const list=(L,box)=>{const books=[];L.forEach(h=>{if(!books.includes(h.book))books.push(h.book)});
+    books.forEach(bk=>{const B=L.filter(h=>h.book===bk);const g=el('div','rgroup');g.append(el('span',null,bk),el('small',null,ar(B.length)+' موضع'));box.append(g);
+      B.forEach(h=>{const b=el(h.n?'button':'div','hit');if(h.n)b.type='button';const w=el('div','where',h.where);if(h.also.length)w.append(el('span','tag','والنص نفسه في: '+h.also.join('؛ ')));
+        const s=el('div','snip');if(h.a!=null)s.append('…'+h.a,el('mark',null,h.m),h.b+'…');else s.textContent=h.raw.length>300?h.raw.slice(0,300)+'…':h.raw;b.append(w,s);
+        if(h.raw.length>s.textContent.length+20){const more=el('button','btn btn-link ds-more','النص كاملاً');more.type='button';more.onclick=ev=>{ev.stopPropagation();s.textContent=h.raw;more.remove()};b.append(more)}
+        if(h.n)b.onclick=()=>{const ov=$('#sOverlay');if(ov.hidden){openPart(h.n,h.p,res.T.map(t=>t.w));return}const y=ov.scrollTop;closeSearch();openPart(h.n,h.p,res.T.map(t=>t.w)).then(()=>{setBack('رجوع إلى نتائج البحث',()=>{ov.hidden=false;ov.scrollTop=y})})};
+        box.append(b)})})};
+  const f=document.createDocumentFragment();
+  if(res.full.length){f.append(el('h3','ds-h','الأقرب إلى سؤالك: '+ar(res.full.length)));list(res.full.slice(0,400),f);
+    if(res.full.length>400){const mb=el('button','btn btn-quiet','اعرض البقية ('+ar(res.full.length-400)+')');mb.type='button';mb.onclick=()=>{const g=document.createDocumentFragment();list(res.full.slice(400),g);mb.replaceWith(g)};f.append(mb)}}
+  else f.append(el('p','note','لم يُوجد موضع قريب من سؤالك بكل كلماته؛ انظر المواضع التي فيها بعض كلماته.'));
+  if(res.part.length){const d=el('details','ds-part');d.append(el('summary',null,'مواضع فيها بعض كلمات سؤالك: '+ar(res.part.length)));let done=false;d.addEventListener('toggle',()=>{if(d.open&&!done){done=true;const g=document.createDocumentFragment();list(res.part,g);d.append(g)}});f.append(d)}
+  R.append(f)}
 function openSearch(){dsSetup();if($('#dsRow'))$('#dsRow').hidden=!DS.on();$('#onlyPart').closest('label').hidden=isB(cur.n)&&!(mbOf(cur.n)&&mbOf(cur.n).ps.length>1);$('#sOverlay').hidden=false;setTimeout(()=>$('#q2').focus(),50)}
 function closeSearch(){$('#sOverlay').hidden=true}
 $('#qSearch').onclick=openSearch;$('#sClose').onclick=closeSearch;
