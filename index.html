@@ -3146,7 +3146,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-2000';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-2100';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -5532,7 +5532,10 @@ const NTF=[['sh',6,'حديث من الشمائل كل يوم','حديث من م�
   ['si',21,'محطة من السيرة كل يوم','حدث من سيرته <span class="saw">ﷺ</span> على ترتيب وقوعه، من المولد إلى الوفاة، بلفظ مختصر السيرة.'],
   ['kh',22,'من أخبار الخلفاء الراشدين','خبر كل يوم على الترتيب، من حديث السقيفة وبيعة أبي بكر الصديق إلى صلح الحسن بن علي ومعاوية رضي الله عنهم.'],
   ['pl',20,'ورد خطة القراءة','تذكير بورد اليوم من خطتك.'],
-  ['fr',9,'تذكير يوم الجمعة','آية الأمر بالصلاة على النبي <span class="saw">ﷺ</span> من سورة الأحزاب.']];
+  ['fr',9,'تذكير يوم الجمعة','آية الأمر بالصلاة على النبي <span class="saw">ﷺ</span> من سورة الأحزاب، بأوقات مدينتك.']];
+// how often on Friday (the reader's choice; twice unless chosen otherwise)
+const FRQ=[[1,'مرة واحدة: صباحاً، بعد الشروق بساعة'],[2,'مرتين: صباحاً، وقبل المغرب بنصف ساعة'],[6,'كل ساعتين من الصباح إلى قبيل المغرب']];
+const frq=n=>[1,2,6].includes(+n.fq)?+n.fq:2;
 const NTFDEF=Object.fromEntries(NTF.map(x=>[x[0],x[1]]));
 // the reader's choice: {h:{kind:hour}, sd:{si,kh}, tz:null (the phone's own) or a zone}; readers from before this page keep what they had
 function ntGet(){let n=LS.get('ntf',null);if(n&&n.h)return n;n={h:{},sd:{},tz:null};
@@ -5553,7 +5556,7 @@ async function ntSync(n,ask,test){
   if(!Object.keys(n.h).length){if(s)await pushDrop(s);ntSet(n);return true}
   if(!s){if(!ask)return false;s=await pushGet();if(!s)return false}
   if('mg' in n.h){n.sd=n.sd||{};n.sd.mg=mgStart()}
-  const body={sub:s,tz:myTz(),h:n.h,sd:n.sd,cx:n.cx!==false,pl:pl?{t:pl.t,d:pl.d}:null};if(test)body.test=1;
+  const body={sub:s,tz:myTz(),h:n.h,sd:n.sd,cx:n.cx!==false,fq:frq(n),pl:pl?{t:pl.t,d:pl.d}:null};if(test)body.test=1;
   const r=await fetch(PUSHU+'/sub',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw 0;
   const j=await r.json();n.sd=j.sd||{};ntSet(n);LS.set('pushTz',myTz());return true}
 // the time zone of the phone changed (travel): tell the sender
@@ -5590,7 +5593,7 @@ function fxNotif(){
   document.getElementById('ntBack').hidden=false;S.hidden=false;sxLock();ntPaint();seqPend()}
 // the page edits a draft; nothing reaches the sender until «حفظ»
 let NTD={n:null,dirty:false,msg:null};
-const ntList=(h,cx)=>NTF.filter(x=>x[0] in h).map(x=>x[2]+(x[0]==='si'&&cx!==false?'، ثم أخبار الخلفاء':'')+': '+hName(h[x[0]]));
+const ntList=(h,cx,fq)=>NTF.filter(x=>x[0] in h).map(x=>x[2]+(x[0]==='si'&&cx!==false?'، ثم أخبار الخلفاء':'')+': '+(x[0]==='fr'?FRQ.find(f=>f[0]===frq({fq}))[1]:hName(h[x[0]])));
 async function ntPaint(){const S=document.getElementById('ntSheet'),B0=document.getElementById('ntBody');if(!B0)return;const top=S?S.scrollTop:0;const B=el('div');
   try{await ntPaint0(B)}finally{B0.replaceChildren(...B.childNodes);if(S)S.scrollTop=top}}
 async function ntPaint0(B){
@@ -5614,11 +5617,13 @@ async function ntPaint0(B){
     const sw=el('button','nt-sw');sw.type='button';sw.setAttribute('role','switch');sw.setAttribute('aria-label',t);sw.setAttribute('aria-checked',on?'true':'false');
     sw.disabled=!ok||noPlan;top.append(tx,sw);r.append(top);
     sw.onclick=()=>{if(k in n.h)delete n.h[k];else n.h[k]=saved.h[k]??def;mark()};
-    if(on){const tm=el('label','nt-tm');tm.innerHTML='<span>الوقت:</span> ';const sel=el('select');sel.setAttribute('aria-label','وقت '+t);
+    if(on&&k==='fr'){const tm=el('label','nt-tm');tm.innerHTML='<span>كم مرة:</span> ';const sel=el('select');sel.setAttribute('aria-label','كم مرة يصلك تذكير الجمعة');
+      FRQ.forEach(([v,t])=>sel.append(new Option(t,v)));sel.value=frq(n);tm.append(sel);r.append(tm);sel.onchange=()=>{n.fq=+sel.value;mark()}}
+    else if(on){const tm=el('label','nt-tm');tm.innerHTML='<span>الوقت:</span> ';const sel=el('select');sel.setAttribute('aria-label','وقت '+t);
       for(let h=0;h<24;h++)sel.append(new Option(hName(h),h));sel.value=n.h[k];tm.append(sel);r.append(tm);
       sel.onchange=()=>{n.h[k]=+sel.value;mark()}
       // another kind at the same hour: say so (they come five minutes apart)
-      const same=NTF.filter(x=>x[0]!==k&&(x[0] in n.h)&&n.h[x[0]]===n.h[k]&&!(x[0]==='pl'&&!pl)).map(x=>'«'+x[2]+'»');
+      const same=NTF.filter(x=>x[0]!==k&&x[0]!=='fr'&&(x[0] in n.h)&&n.h[x[0]]===n.h[k]&&!(x[0]==='pl'&&!pl)).map(x=>'«'+x[2]+'»');
       if(same.length)r.append(el('p','nt-same','في هذه الساعة يصلك أيضاً: '+same.join(' و')+'، بينهما خمس دقائق.'))
       if(k==='si'){const cx=el('label','nt-cx');const cb=document.createElement('input');cb.type='checkbox';cb.checked=n.cx!==false;
         cx.append(cb,el('span',null,'عند تمام السيرة أكمل بأخبار الخلفاء الراشدين على الترتيب'));cb.onchange=()=>{n.cx=cb.checked;mark()};r.append(cx)}}
@@ -5634,8 +5639,8 @@ async function ntPaint0(B){
     catch(e){NTD.msg=['nt-err','تعذّر الحفظ الآن، فلم يتغير شيء. تأكد من اتصالك بالإنترنت ثم اضغط «حفظ» مرة أخرى.']}
     ntPaint();seqPend()};
   const live=sub&&Object.keys(saved.h).length;
-  if(NTD.msg){const s=el('div',NTD.msg[0]);s.append(el('p',null,NTD.msg[1]));if(NTD.msg[0]==='nt-ok'&&live){const u=el('ul');ntList(saved.h,saved.cx).forEach(x=>u.append(el('li',null,x)));s.append(u)}B.append(s)}
-  else if(!NTD.dirty&&live){const s=el('div','nt-ok');s.append(el('p',null,'المفعّل الآن بتوقيت '+tzName(myTz())+':'));const u=el('ul');ntList(saved.h,saved.cx).forEach(x=>u.append(el('li',null,x)));s.append(u);B.append(s)}
+  if(NTD.msg){const s=el('div',NTD.msg[0]);s.append(el('p',null,NTD.msg[1]));if(NTD.msg[0]==='nt-ok'&&live){const u=el('ul');ntList(saved.h,saved.cx,saved.fq).forEach(x=>u.append(el('li',null,x)));s.append(u)}B.append(s)}
+  else if(!NTD.dirty&&live){const s=el('div','nt-ok');s.append(el('p',null,'المفعّل الآن بتوقيت '+tzName(myTz())+':'));const u=el('ul');ntList(saved.h,saved.cx,saved.fq).forEach(x=>u.append(el('li',null,x)));s.append(u);B.append(s)}
   else if(NTD.dirty)B.append(el('p','nt-pend','لم تُحفظ التغييرات بعد.'));
   if(live&&!NTD.dirty){const tb=el('button','nt-test','أرسل إشعاراً تجريبياً');tb.type='button';
     tb.onclick=async()=>{tb.disabled=true;tb.textContent='جارٍ الإرسال…';

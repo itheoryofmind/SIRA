@@ -1,6 +1,8 @@
 name: durar-push
 on:
   workflow_dispatch: {}
+  push:
+    paths: ['worker/durar-deploy.txt', '.github/workflows/durar-push.yml']
 permissions:
   contents: write
 jobs:
