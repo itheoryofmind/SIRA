@@ -100,6 +100,17 @@ for e in E:
     uadj(d, e['path'], e['old'], e['nw'])
     done.append((e, True, ''))
 
+# a verse he corrected is shown again in the mushaf's script when its words are now the mushaf's words (umatch.py)
+try:
+    import umatch
+    for f, (d, s) in OPEN.items():
+        if not (isinstance(d, dict) and 'p' in d): continue
+        pgs = {e['path'][1] for e, g, m in done if g and e.get('f') == f and len(e['path']) == 3 and e['path'][0] == 'p'}
+        for pg in sorted(pgs | {p + 1 for p in pgs if p + 1 < len(d['p'])}):
+            umatch.page(d, pg)
+except Exception as x:
+    print('mushaf script not refreshed:', x)
+
 ok = [x for x in done if x[1]]
 okd = [x for x in ok if x[0]['f'] != 'ui']
 sha = ''
