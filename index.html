@@ -1860,11 +1860,13 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 .bab-h{position:relative}.bab-h.on{outline:2px solid color-mix(in srgb,var(--brass,#9a7425) 60%,transparent);outline-offset:3px;border-radius:12px}
 .bab-no{display:block;font:600 .74rem/1.4 var(--f-ui,inherit);color:var(--brass,#9a7425);margin-bottom:.2rem}
 :root.dz-khatam .sx-logo::after,:root.dz-khatamt .sx-logo::after{display:none!important}
-/* the six circles of the home: no arrow under each (2026-10-30, the keeper's choice); a line under them says they open, shown until the first tap on one of them */
+/* the six circles of the home: no arrow under each (2026-10-30, the keeper's choice); a soft pulse on them says they open, on each visit until the first tap on one of them */
 .dz-arc button span::after{display:none!important}
-.arc-hint{margin:6px auto 2px;text-align:center;grid-column:1/-1;align-self:start;position:relative;z-index:3;font-size:14px;letter-spacing:0;color:color-mix(in srgb,var(--h-gold,var(--gold,#C59A3C)) 75%,transparent);animation:arc-hint-in .8s ease-out .6s both}
-@keyframes arc-hint-in{from{opacity:0}to{opacity:1}}
-@media (prefers-reduced-motion:reduce){.arc-hint{animation:none}}
+.dz-arc.pulse button{animation:arc-pulse 1.5s ease-in-out 1.4s 2}
+.dz-arc.pulse button:nth-child(2){animation-delay:1.55s}.dz-arc.pulse button:nth-child(3){animation-delay:1.7s}.dz-arc.pulse button:nth-child(4){animation-delay:1.85s}.dz-arc.pulse button:nth-child(5){animation-delay:2s}.dz-arc.pulse button:nth-child(6){animation-delay:2.15s}
+/* the glow follows the door's own shape (circle, tile or arch), whatever the design */
+@keyframes arc-pulse{0%,100%{filter:none;scale:1}45%{filter:drop-shadow(0 0 7px color-mix(in srgb,var(--h-gold,var(--gold,#C59A3C)) 75%,transparent));scale:1.045}}
+@media (prefers-reduced-motion:reduce){.dz-arc.pulse button{animation:none}}
 .scroll-cue{position:fixed;z-index:30;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));width:44px;height:44px;margin-left:-22px;border-radius:50%;border:1px solid color-mix(in srgb,var(--gold,#C59A3C) 70%,transparent);background:color-mix(in srgb,var(--surface,#fff) 82%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 6px 16px -8px rgba(0,0,0,.4);cursor:pointer;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .4s,transform .4s}
 .scroll-cue::before,.scroll-cue::after{content:"";position:absolute;left:50%;width:8px;height:8px;margin-left:-5px;border-right:1.8px solid var(--gold,#C59A3C);border-bottom:1.8px solid var(--gold,#C59A3C);transform:rotate(45deg)}
 .scroll-cue::before{top:11px;opacity:.55}.scroll-cue::after{top:17px}
@@ -2533,7 +2535,6 @@ audio.own-note-m{background:none;height:44px}
       <span style="display:flex"><button class="sx-ib" type="button" id="sxMenuBtn" aria-label="القائمة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button></span>
       <span style="display:flex"><button class="sx-ib" type="button" id="sxSearchBtn" aria-label="بحث"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></span>
     </header>
-    <p class="arc-hint" id="arcHint" hidden>اختر باباً من أبوابه ﷺ</p>
     <h1 class="sx-logo"><svg class="sx-cart" viewBox="0 0 320 132" aria-hidden="true">
       <path class="o" d="M40 66 C40 34 70 16 100 16 H220 C250 16 280 34 280 66 C280 98 250 116 220 116 H100 C70 116 40 98 40 66Z"/>
       <path class="i" d="M48 66 C48 39 74 23 101 23 H219 C246 23 272 39 272 66 C272 93 246 109 219 109 H101 C74 109 48 93 48 66Z"/>
@@ -3000,7 +3001,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-0728';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-0733';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -6112,17 +6113,8 @@ function ibkShamail(P){const w=el('section','sf-ch');const hd=el('button','sf-hd
   sync();new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['class']})}}
 
 /* the home page goes on below the first screen: a small sign at its foot, until the reader scrolls (every design) */
-{const h=document.getElementById('arcHint');let seen=false;try{seen=localStorage.getItem('arcHint')==='1'}catch(e){}
-  // under the circles whatever the design: moved down past the lowest circle, into the space above the verse
-  const home0=h&&h.parentNode,next0=h&&h.nextSibling;
-  const place=()=>{if(!h||h.hidden)return;const nav=document.querySelector('.dz-arc');if(!nav)return;h.style.transform='';h.style.visibility='';
-    const R=()=>[...nav.querySelectorAll('button,button span')].map(x=>x.getBoundingClientRect()).filter(r=>r.height);
-    const vr=document.querySelector('.sx-verse');const after=vr&&Math.max(...R().map(r=>r.bottom))>vr.getBoundingClientRect().bottom;
-    // doors after the verse (rows of tiles in some designs): the first row of their grid; doors first (the circle): between the top buttons and the circles
-    if(after){if(h.parentNode!==nav)nav.prepend(h);return}
-    if(h.parentNode!==home0)home0.insertBefore(h,next0);const hd=document.querySelector('.sx-top');const top=Math.min(...R().map(r=>r.top)),hb=hd?hd.getBoundingClientRect().bottom:0,r=h.getBoundingClientRect();
-    if(top-hb<r.height+8){h.style.visibility='hidden';return}h.style.transform='translateY('+((hb+top)/2-(r.top+r.height/2))+'px)'};
-  if(h&&!seen&&document.querySelector('.dz-arc button')){h.hidden=false;setTimeout(place,60);setTimeout(place,800);addEventListener('resize',place);new MutationObserver(place).observe(document.documentElement,{attributes:true,attributeFilter:['class']});document.querySelectorAll('.dz-arc button').forEach(b=>b.addEventListener('click',()=>{h.hidden=true;try{localStorage.setItem('arcHint','1')}catch(e){}},{once:true}))}}
+{let seen=false;try{seen=localStorage.getItem('arcHint')==='1'}catch(e){}const B=document.querySelectorAll('.dz-arc button');
+  if(!seen&&B.length){B[0].parentNode.classList.add('pulse');B.forEach(b=>b.addEventListener('click',()=>{B[0].parentNode.classList.remove('pulse');try{localStorage.setItem('arcHint','1')}catch(e){}},{once:true}))}}
 {const home=document.getElementById('home')||document.body;const cue=document.createElement('button');cue.type='button';cue.className='scroll-cue';cue.setAttribute('aria-label','انزل لبقية الصفحة');
   cue.onclick=()=>window.scrollBy({top:Math.round(innerHeight*.75),behavior:'smooth'});document.body.append(cue);
   const upd=()=>{const onHome=!document.getElementById('reader')||document.getElementById('reader').hidden;const lk=document.body.classList.contains('ov-locked')||document.body.classList.contains('sx-locked')||document.body.classList.contains('pg-locked');
