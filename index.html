@@ -1860,13 +1860,8 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 .bab-h{position:relative}.bab-h.on{outline:2px solid color-mix(in srgb,var(--brass,#9a7425) 60%,transparent);outline-offset:3px;border-radius:12px}
 .bab-no{display:block;font:600 .74rem/1.4 var(--f-ui,inherit);color:var(--brass,#9a7425);margin-bottom:.2rem}
 :root.dz-khatam .sx-logo::after,:root.dz-khatamt .sx-logo::after{display:none!important}
-/* the six circles of the home: no arrow under each (2026-10-30, the keeper's choice); a soft pulse on them says they open, on each visit until the first tap on one of them */
+/* the six circles of the home: no arrow under each (2026-10-30, the keeper's choice); their own shine says they open */
 .dz-arc button span::after{display:none!important}
-.dz-arc.pulse button{animation:arc-pulse 1.5s ease-in-out 1.4s 2}
-.dz-arc.pulse button:nth-child(2){animation-delay:1.55s}.dz-arc.pulse button:nth-child(3){animation-delay:1.7s}.dz-arc.pulse button:nth-child(4){animation-delay:1.85s}.dz-arc.pulse button:nth-child(5){animation-delay:2s}.dz-arc.pulse button:nth-child(6){animation-delay:2.15s}
-/* the glow follows the door's own shape (circle, tile or arch), whatever the design */
-@keyframes arc-pulse{0%,100%{filter:none;scale:1}45%{filter:drop-shadow(0 0 7px color-mix(in srgb,var(--h-gold,var(--gold,#C59A3C)) 75%,transparent));scale:1.045}}
-@media (prefers-reduced-motion:reduce){.dz-arc.pulse button{animation:none}}
 .scroll-cue{position:fixed;z-index:30;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));width:44px;height:44px;margin-left:-22px;border-radius:50%;border:1px solid color-mix(in srgb,var(--gold,#C59A3C) 70%,transparent);background:color-mix(in srgb,var(--surface,#fff) 82%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 6px 16px -8px rgba(0,0,0,.4);cursor:pointer;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .4s,transform .4s}
 .scroll-cue::before,.scroll-cue::after{content:"";position:absolute;left:50%;width:8px;height:8px;margin-left:-5px;border-right:1.8px solid var(--gold,#C59A3C);border-bottom:1.8px solid var(--gold,#C59A3C);transform:rotate(45deg)}
 .scroll-cue::before{top:11px;opacity:.55}.scroll-cue::after{top:17px}
@@ -3001,7 +2996,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-0735';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-0739';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -6113,8 +6108,6 @@ function ibkShamail(P){const w=el('section','sf-ch');const hd=el('button','sf-hd
   sync();new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['class']})}}
 
 /* the home page goes on below the first screen: a small sign at its foot, until the reader scrolls (every design) */
-{let seen=false;try{seen=localStorage.getItem('arcPulse')==='1'}catch(e){}const B=document.querySelectorAll('.dz-arc button');
-  if(!seen&&B.length){B[0].parentNode.classList.add('pulse');B.forEach(b=>b.addEventListener('click',()=>{B[0].parentNode.classList.remove('pulse');try{localStorage.setItem('arcPulse','1')}catch(e){}},{once:true}))}}
 {const home=document.getElementById('home')||document.body;const cue=document.createElement('button');cue.type='button';cue.className='scroll-cue';cue.setAttribute('aria-label','انزل لبقية الصفحة');
   cue.onclick=()=>window.scrollBy({top:Math.round(innerHeight*.75),behavior:'smooth'});document.body.append(cue);
   const upd=()=>{const onHome=!document.getElementById('reader')||document.getElementById('reader').hidden;const lk=document.body.classList.contains('ov-locked')||document.body.classList.contains('sx-locked')||document.body.classList.contains('pg-locked');
