@@ -1,0 +1,25 @@
+name: فحص تعديلاتي
+# every Friday morning: are the keeper's own corrections still as he left them? If not, a word reaches his phone
+on:
+  schedule:
+    - cron: '23 3 * * 5'
+  workflow_dispatch: {}
+permissions:
+  contents: read
+  id-token: write   # GitHub's signed token: proves to push.seeratuh.com which repository is asking
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /data/
+            /.github/
+      - name: Compare
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 .github/cms/minecheck.py

@@ -141,7 +141,7 @@ export async function cmsFetch(req, env, u) {
   if (req.method !== 'POST') return null;
 
   // the workflows: the waiting corrections of their own site, and the result of each
-  if (u.pathname === '/c/pending' || u.pathname === '/c/done') {
+  if (u.pathname === '/c/pending' || u.pathname === '/c/done' || u.pathname === '/c/report') {
     let s = await oidcSite(req.headers.get('X-OIDC'));
     if (!s) { const k = await env.PUSH.get('admin'); if (k && req.headers.get('X-Admin') === k) s = 'sira'; }
     if (!s) return out({ ok: false }, 403);
@@ -151,6 +151,13 @@ export async function cmsFetch(req, env, u) {
       const edits = [];
       for (const x of L) { const v = await env.PUSH.get(x.name, 'json'); if (!v) continue; edits.push({ id: x.name, ...v }); await env.PUSH.put(x.name, JSON.stringify({ ...v, st: 't' }), { metadata: { ...x.metadata, st: 't', tk: now } }); }
       return out({ ok: true, site: s, edits });
+    }
+    if (u.pathname === '/c/report') {   // a word to the keeper's phone from his site's own workflows: what was published, what was refused, a weekly check
+      let r; try { r = await req.json(); } catch (e) { return out({ ok: false }, 400); }
+      const t = str(r.t, 80), m = str(r.b, 700);
+      if (!t || !m) return out({ ok: false, bad: 1 }, 400);
+      const n = await ownerAlert(env, null, 0, { t: SNAME[s] + ' · ' + t, b: m, u: PANEL, tag: 'own-cms-' + s + (r.tag ? '-' + str(r.tag, 20) : '') });
+      return out({ ok: true, sent: n });
     }
     let b; try { b = await req.json(); } catch (e) { return out({ ok: false }, 400); }
     const id = str(b.id, 80);

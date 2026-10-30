@@ -2993,7 +2993,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-0550';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-0559';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -6607,6 +6607,8 @@ async function listSheet(kind){const t={hide:'ما أخفيته',add:'ما أض�
     const acts=el('div','own-acts');const b=el('button','own-b',kind==='hide'?'إظهار':kind==='add'?'تعديل أو حذف':'تعديل');b.type='button';
     b.onclick=async()=>{if(kind==='hide'){const q=await cfg({a:'unhide',id:x.id});oToast(q.ok?'ظهر من جديد.':'تعذّر.',!q.ok);ov.remove();listSheet(kind)}else{ov.remove();kind==='add'?addSheet(null,x):pageSheet(null,x)}};
     acts.append(b);d.append(acts);c.append(d)}}
+function markOf(o,n){let i=0;while(i<o.length&&i<n.length&&o[i]===n[i])i++;let j=0;while(j<o.length-i&&j<n.length-i&&o[o.length-1-j]===n[n.length-1-j])j++;
+  let a=i,b=n.length-j;if(b-a<6){a=Math.max(0,a-12);b=Math.min(n.length,b+12)}while(a>0&&/\S/.test(n[a-1]))a--;while(b<n.length&&/\S/.test(n[b]))b++;return n.slice(a,b).trim().slice(0,120)}
 async function logSheet(){const [ov,c]=sheet('سجل تصحيح النصوص');c.append(el('p','own-n','…'));const j=await call('/c/list');c.lastChild.remove();
   if(!j.ok){c.append(el('p','own-n','تعذّر الاتصال.'));return}if(!j.edits.length){c.append(el('p','own-n','لا تعديلات بعد.'));return}
   if(j.edits.some(e=>(e.st==='p'||e.st==='t')&&Date.now()-e.at>120*60e3))c.append(el('div','own-warn','تعديل ينتظر منذ أكثر من ساعتين. إن طال الأمر: افتح مستودع الموقع في GitHub ← Actions ← «لوحة المحتوى» ← Run workflow.'));
@@ -6614,6 +6616,9 @@ async function logSheet(){const [ov,c]=sheet('سجل تصحيح النصوص');c
     const st=e.st==='p'?['بانتظار النشر (يُنشر خلال ساعة على الأكثر)','']:e.st==='t'?['يُنشر الآن','']:e.st==='ok'?['نُشر في الموقع'+(e.msg?' — '+e.msg:''),'own-good']:['لم يُنشر: '+(e.msg||''),'own-badt'];
     d.append(el('div','own-st '+st[1],st[0]),el('small',null,when(e.at)+(e.note?' — '+e.note:'')));const df=el('div','own-diff');df.append(diffView(e.old,e.nw,40));d.append(df);
     const acts=el('div','own-acts');
+    {const m=/^t(\d+)\.json$/.exec(e.f||'');if(m&&e.path&&e.path[0]==='p'){const pg=e.path[1];
+      const g=el('button','own-b','اذهب إلى الموضع');g.type='button';g.onclick=()=>{const w=(e.nw||'').length&&e.old!=null?markOf(e.old,e.nw):'';closeSheet();openHash('#v'+m[1]+'p'+pg+(w?'~'+encodeURIComponent(w):''),true)};acts.append(g);
+      if(e.st==='ok'){const sv=el('small',null,'');d.append(sv);textOf(+m[1]).then(T=>{let o=T;for(const k of e.path)o=o&&o[k];sv.textContent=o===e.nw?'✓ في الموقع الآن كما عدّلته':'⚠️ نص هذا الموضع الآن يختلف عمّا كتبته؛ افتحه وتحقق، أو انظر «تعديلاتي» في لوحة التحكم.';sv.className=o===e.nw?'own-good':'own-badt'}).catch(()=>{})}}}
     if(e.st==='p'){const b=el('button','own-b','إلغاء');b.type='button';b.onclick=async()=>{if(!confirm('إلغاء هذا التعديل قبل نشره؟'))return;const r=await call('/c/cancel',{id:e.id});if(!r.ok)oToast('تعذّر الإلغاء؛ لعله نُشر للتو.',1);ov.remove();logSheet()};acts.append(b)}
     if(e.st==='err'&&e.f!=='ui'){const b=el('button','own-b','أُصرّ على تعديلي');b.type='button';b.onclick=async()=>{if(!confirm('سبب عدم النشر: '+(e.msg||'')+'\n\nإن كنت متأكداً يُطبَّق تعديلك على النص كما هو الآن، فإن تعذّر جمعه مع ما تغيّر كُتب نصك مكان النص كله. هل تريد ذلك؟'))return;
       const r=await call('/c/save',{f:e.f,path:e.path,old:e.old,nw:e.nw,note:e.note||'',lb:e.lb,sec:e.sec,force:1});oToast(r.ok?'حُفظ بإصرارك، ويُنشر خلال ساعة على الأكثر.':'تعذّر الحفظ.',!r.ok);ov.remove();logSheet()};acts.append(b)}

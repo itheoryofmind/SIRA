@@ -120,6 +120,7 @@ for e in E:
         if p2 is not None: nw = p2; msg = 'طُبّق تعديلك على النص الحالي مع إبقاء التعديل الآخر.'
         else: msg = 'لم يمكن جمعه مع التعديل الآخر، فكُتب نصك كما هو مكان النص كله (بإصرارك).'
     o[last] = nw
+    e['_old'], e['_nw'] = cur, nw
     uadj(d, e['path'], cur, nw)
     done.append((e, True, msg))
 
@@ -189,6 +190,24 @@ if ok:
                     h = h.replace('>' + a + '<', '>' + b + '<')
         if h != h0:
             open(p, 'w', encoding='utf-8').write(h)
+    # «تعديلاتي» in the control panel: every correction he published, kept for good (.github/cms/mine.json)
+    try:
+        import difflib
+        MP = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mine.json')
+        MN = json.load(open(MP, encoding='utf-8')) if os.path.exists(MP) else []
+        now = time.strftime('%Y-%m-%d %H:%M', time.gmtime(time.time() + 3 * 3600))
+        for e, _, m in ok:
+            a_, b_ = (e['old'], e['nw']) if e['f'] == 'ui' else (e.get('_old', e['old']), e.get('_nw', e['nw']))
+            H = []
+            for t, a1, a2, b1, b2 in difflib.SequenceMatcher(None, a_, b_, autojunk=False).get_opcodes():
+                if t == 'equal': continue
+                if H and a1 - H[-1][1] < 12: H[-1] = [H[-1][0], a2, H[-1][2], b2]
+                else: H.append([a1, a2, b1, b2])
+            ch = [{'pre': a_[max(0, a1 - 50):a1], 'old': a_[a1:a2], 'new': b_[b1:b2], 'post': a_[a2:a2 + 50]} for a1, a2, b1, b2 in H[:6]]
+            MN.append({'at': now, 'f': e['f'], 'path': e['path'], 'ch': ch, 'nw': b_ if e['f'] != 'ui' else '', 'lb': e.get('lb') or '', 'sec': e.get('sec') or '', 'note': e.get('note') or '', 'msg': m or ''})
+        open(MP, 'w', encoding='utf-8').write(json.dumps(MN, ensure_ascii=False, separators=(',', ':')))
+    except Exception as x:
+        print('mine.json not updated:', x)
     # new fingerprints and a new version, so open copies of the site fetch the corrected files
     ix = open('index.html', encoding='utf-8').read()
     for f in sorted(changed):
@@ -227,3 +246,15 @@ for e, good, m in done:
     except Exception as x:
         print('report failed', e['id'], x)
     print(e['id'], 'ok' if good else 'refused: ' + m)
+
+# a word to his phone: how many were published, and each refused one with its reason
+try:
+    ng = sum(1 for x in done if x[1]); bad = [x for x in done if not x[1]]
+    if done:
+        t = ('نُشر %d تعديلاً' % ng if ng else '') + ('، ' if ng and bad else '') + ('لم يُنشر %d' % len(bad) if bad else '')
+        lines = [((e.get('lb') or e['f']) + ': ' + m)[:160] for e, _, m in bad[:4]]
+        body = '\n'.join(lines) if bad else 'كل ما حفظته نُشر في الموقع. التفاصيل في «تعديلاتي» في اللوحة.'
+        if bad: body += '\nوللإصرار عليه: «سجل تصحيح النصوص» ← «أُصرّ على تعديلي».'
+        post('/c/report', {'t': t.translate(str.maketrans('0123456789', '٠١٢٣٤٥٦٧٨٩')), 'b': body, 'tag': 'pub'})
+except Exception as x:
+    print('report to phone failed:', x)
