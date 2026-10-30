@@ -27,7 +27,18 @@ def query(text):
         info = re.sub(r'\s+', ' ', info).strip()
         out.append((tx, info[:300]))
     return out
-def compare(site, results):
+HINT = [('abudawud', 'أبي داود'), ('tirmidhi', 'الترمذي'), ('nasai', 'النسائي'), ('ibnmajah', 'ابن ماجه'), ('bukhari', 'البخاري'), ('muslim', 'مسلم')]
+def hint(f):
+    for k, v in HINT:
+        if k in f: return v
+    if re.match(r'sx_b[a-z]', f): return 'البخاري'
+    if re.match(r'sx_m[a-z]', f): return 'مسلم'
+    return None
+def compare(site, results, book=None):
+    # the same book's narration first: another book's wording is another narration
+    if book:
+        same = [r for r in results if book in r[1]]
+        if same: results = same
     sw = words(site); best = None
     for tx, info in results:
         rw = words(tx)
@@ -69,14 +80,14 @@ def run(root, start, n, sleep=1.5):
         except Exception as e: errs += 1; time.sleep(sleep * 3); continue
         done += 1; time.sleep(sleep)
         if not R: nores += 1; continue
-        b = compare(m, R)
+        b = compare(m, R, hint(f))
         if j < 3: SAMPLE.append({'site': m[:200], 'got': [(t[:200], i_[:150]) for t, i_ in R[:3]], 'best': (b[4], b[3]) if b else None})
         if not b: continue
         (cov, nd), tx, info, diff, cv = b
         # a word written differently (a letter dropped, changed or added), not a word more or less: that is how a copying slip
         # looks; whole words added or missing are usually another narration, and are left alone
         typo = diff and len(diff) <= 2 and all(t == 'replace' and len(a) == len(c) and all(difflib.SequenceMatcher(None, x, y).ratio() >= 0.6 for x, y in zip(a, c)) for t, a, c in diff)
-        if cv >= 0.85 and typo:
+        if cv >= 0.85 and typo and (not hint(f) or hint(f) in info):
             idn = 'wkh_' + hashlib.md5((f + str(i) + m).encode()).hexdigest()[:12]
             notes.append({'id': idn, 's': 'sira', 'f': f, 'path': ['h', i, fld], 'pre': '«', 'old': m, 'post': '»', 'b': 'sx', 'p': p if isinstance(p, int) else 0, 'hno': no, 'sec': 'h', 'wk': 1, 'side': 1, 'sev': 2,
                           'why': 'الموسوعة الحديثية في الدرر السنية (dorar.net) فيها هذا الحديث بلفظ يختلف في كلمة أو كلمتين: «' + tx[:400] + '» — ' + info + '. وقد يكون الفرق اختلاف رواية أو طبعة، فقارن بصورة المطبوع قبل أن تقرر.',
