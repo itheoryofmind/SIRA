@@ -1895,6 +1895,11 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 .isn-src{display:block;color:var(--muted);font-size:12px;margin:2px 0 6px}
 .isn-td p{margin:0 0 6px;line-height:1.9;font-size:15px}
 .isn-via,.isn-may,.isn-no{font-size:14px;color:var(--muted);line-height:1.8}
+.ds-row{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin:0 0 10px;font-size:14px}
+.ds-row label{display:inline-flex;gap:4px;align-items:center}
+.ds-warn{font-size:13px;line-height:1.8;color:var(--muted);border:1px dashed var(--line);border-radius:10px;padding:8px 10px;margin:0 0 10px}
+.ds-sum{font-size:14px;margin:0 0 8px}
+.ds-more{font-size:13px;padding:2px 0}
 .tsk-n{font-size:13px;color:var(--muted);margin:6px 2px 0;line-height:1.7}
 
 /* the keeper's link at the foot of the notifications page: quiet, for him only */
@@ -3012,7 +3017,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-1152';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-1159';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4109,7 +4114,50 @@ $('#mSave').onclick=async()=>{closeSheet();const n=cur.n;
   try{await saveVol(n);toast('حُفظ '+partName(n)+' للقراءة بدون إنترنت')}catch(e){toast('تعذّر الحفظ. تأكد من الاتصال بالإنترنت.')}};
 
 /* in-reader search */
-function openSearch(){$('#onlyPart').closest('label').hidden=isB(cur.n)&&!(mbOf(cur.n)&&mbOf(cur.n).ps.length>1);$('#sOverlay').hidden=false;setTimeout(()=>$('#q2').focus(),50)}
+/* ---------- البحث في كل كتب الموقع (تجربة للمالك، ثم للقرّاء إذا أظهره): لا يكتب شيئاً من عنده؛ يعرض النصوص كما هي، كل موضع بلا استثناء ---------- */
+const DS={on:()=>{try{if(OWN())return true}catch(e){}try{const c=JSON.parse(localStorage.getItem('own_cfg')||'null');return !!(c&&c.srch)}catch(e){return false}},cache:{}};
+const DS_PRE='(?:و|ف)?(?:ب|ك|ل)?(?:ال|لل)?',DS_SUF='(?:ه|ها|هم|هما|هن|كم|كما|كن|نا|ني|ي|ك|ات|ون|ين|ان|ا|وا|ت|تم|تن|يه|يها|يهم)?';
+const dsEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+function dsPat(q,deep){const alts=q.split(/\s+أو\s+/).filter(x=>x.trim());if(alts.length>1){const A=alts.map(a=>dsPat1(a,deep)).filter(Boolean);return A.length?{alt:A}:null}const one=dsPat1(q,deep);return one?{alt:[one]}:null}
+function dsPat1(q,deep){const Q=norm(q.trim()).replace(/[^ء-ي0-9\s]/g,' ').replace(/\s+/g,' ').trim();if(Q.length<2)return null;
+  if(!deep)return [new RegExp('(^|[^ء-ي])'+dsEsc(Q)+'(?=[^ء-ي]|$)')];
+  return Q.split(' ').filter(w=>w.length>1).map(w=>{let s=w.replace(/^(?:وال|فال|بال|كال|ال|لل)/,'');if(s.length<2)s=w;s=s.replace(/ه$/,'');return new RegExp('(^|[^ء-ي])'+DS_PRE+dsEsc(s)+'(?:ه)?'+DS_SUF+'(?=[^ء-ي]|$)')})}
+function dsHit(nt,PP){for(const P of PP.alt){const h=dsHit1(nt,P);if(h)return h}return null}
+function dsHit1(nt,P){let first=-1,len=0;for(const r of P){const m=r.exec(nt);if(!m)return null;const k=m.index+m[1].length;if(first<0||k<first){first=k;len=m[0].length-m[1].length}}return {k:first,len}}
+const DSX={sx_baq:'التوحيد والعقيدة في صحيح البخاري',sx_maq:'التوحيد والعقيدة في صحيح مسلم',sx_bans:'مناقب الأنصار',sx_bsir:'السيرة في صحيح البخاري',sx_bdaw:'أدعيته وأذكاره ﷺ',sx_badab:'كتاب الأدب من صحيح البخاري',sx_mfad:'كتاب الفضائل من صحيح مسلم',sx_bmnq:'كتاب المناقب من صحيح البخاري',sx_bsal:'صفة صلاة النبي ﷺ',sx_bsaw:'صيامه وقيامه واعتكافه ﷺ',sx_msal:'كتاب الصلاة من صحيح مسلم',sx_msaw:'صيامه واعتكافه ﷺ (مسلم)',sx_shs:'الأطعمة والأشربة والطب واللباس في صحيح البخاري',sx_msh:'كتاب الأشربة واللباس من صحيح مسلم',sx_khutab:'خطبه ﷺ',sx_wasaya:'وصاياه ﷺ',sx_wafat:'مرضه ووفاته ﷺ',sx_bilm:'تعليمه ﷺ أصحابه',sx_ghun:'شرح كتاب التوحيد من صحيح البخاري للغنيمان',sx_mg:'المغازي في صحيح البخاري ومسلم',sx_bfad:'فضائل الصحابة في صحيح البخاري',sx_bsif:'صفة النبي ﷺ في صحيح البخاري',sx_alam:'علامات النبوة في صحيح البخاري',sx_hjr:'الهجرة في صحيح البخاري',sx_hjrb:'الهجرة في صحيح البخاري',sx_sy_1:'سير أعلام النبلاء (التراجم)',sx_sy_2:'سير أعلام النبلاء (التراجم)',sx_sy_3:'سير أعلام النبلاء (التراجم)',sx_sy_r:'سير أعلام النبلاء: الخلفاء الراشدون',sx_ahl:'أهل بيته ﷺ',sx_bab:'أبواب الصحيحين كاملة',sx_dal:'دلائل النبوة',sx_feat:'سنوات عمره والأحداث',sx_gz:'غزواته ﷺ',sx_hady:'هديه ﷺ من زاد المعاد',sx_hajj:'حجة الوداع',sx_kh:'الخلفاء الراشدون',sx_khn:'أنساب الخلفاء الراشدين',sx_msif:'صفته ﷺ في صحيح مسلم',sx_nuzul:'نزول القرآن في الأحداث',sx_qa:'سؤال وجواب في السيرة',sx_shu:'شمائله وحقوقه ﷺ'};
+const dsName=f=>{const b=f.replace(/\.json$/,'');if(b==='saadi')return 'تفسير السعدي';if(DSX[b])return DSX[b];const JB={"bukhari": "صحيح البخاري", "muslim": "صحيح مسلم", "abudawud": "سنن أبي داود", "tirmidhi": "سنن الترمذي", "nasai": "سنن النسائي", "ibnmajah": "سنن ابن ماجه", "bulugh": "بلوغ المرام", "riyad": "رياض الصالحين"};if(/^sx_jhi_/.test(b))return 'كتاب الجهاد من '+(JB[b.slice(7)]||'كتب السنة');if(/^sx_jhc_/.test(b))return 'كتاب الجهاد: شروح '+(JB[b.slice(7)]||'كتب السنة');try{return fileName(f)}catch(e){return 'نصوص الموقع'}};
+function dsWalk(o,cb){if(typeof o==='string'){if(o.length>3)cb(o);return}if(Array.isArray(o)){o.forEach(x=>dsWalk(x,cb));return}if(o&&typeof o==='object')Object.values(o).forEach(x=>dsWalk(x,cb))}
+async function deepSearch(q,deep,onStatus){const P=dsPat(q,deep);if(!P)return null;const out=[],seen=new Map();
+  const vols=VOLS.filter(v=>v.n&&DH['data/t'+v.n+'.json']).map(v=>v.n);
+  const add=(h,raw)=>{const key=norm(raw).replace(/[^ء-ي0-9]/g,'');if(seen.has(key)){seen.get(key).also.push(h.where);return}h.also=[];seen.set(key,h);out.push(h)};
+  for(const n of vols){if(onStatus)onStatus(partName(n));let S;try{S=await searchPart(n)}catch(e){return {error:true,out}}
+    for(let p=1;p<S.length;p++){const pg=S[p];if(!pg)continue;
+      pg.raw.split('\n').forEach(par=>{const nt=norm(par);const m=dsHit(nt,P);if(!m)return;add(Object.assign({n,p,src:pg.src,book:partName(n),where:partName(n)+'، ص '+ar(p),raw:par},snip(par,m.k,m.len)),par)})}}
+  const sx=Object.keys(DH).filter(k=>/^data\/(sx_|saadi\.json)/.test(k)&&!/sx_(gold|sy_ix|jh)\.json$/.test(k)).map(k=>k.slice(5)).sort((a,b)=>(a==='saadi.json')-(b==='saadi.json')||a.localeCompare(b));
+  for(const f of sx){const nm=dsName(f);if(onStatus)onStatus(nm);let d;try{d=await getJSON('data/'+f)}catch(e){continue}
+    dsWalk(d,s=>{s.split('\n').forEach(par=>{const nt=norm(par);const m=dsHit(nt,P);if(!m)return;add(Object.assign({f,book:nm,where:nm,raw:par},snip(par,m.k,m.len)),par)})})}
+  return {out}}
+function dsRender(R,res,q,deep){R.innerHTML='';
+  R.append(el('p','ds-warn','هذه أداة للتسهيل، تعرض المواضع التي فيها كلمات بحثك من كتب الموقع كما هي، ولا تكتب شيئاً من عندها. لا يُجزم بها؛ راجع النصوص بنفسك: هل هي في مسألتك، أو فيها ما يشتبه بها. والبحث بالحروف لا بالمعنى، فالجمع المخالف لمفرده (مثل: الطاغوت والطواغيت) اكتبه معه بـ«أو»: الطاغوت أو الطواغيت.'));
+  if(!res.out.length){R.append(el('p','note','لم يُوجد في كتب الموقع نص فيه '+(deep?'هذه الكلمات':'هذه العبارة')+'.'));return}
+  const books=[];res.out.forEach(h=>{if(!books.includes(h.book))books.push(h.book)});
+  R.append(el('p','ds-sum','عدد المواضع: '+ar(res.out.length)+' في '+ar(books.length)+' '+(books.length>2&&books.length<11?'كتب':'كتاب')+(deep?' (بحث محقق: الكلمات وما اتصل بها من حروف، في فقرة واحدة)':' (بحث سريع: العبارة بنصها)')));
+  const frag=document.createDocumentFragment();
+  books.forEach(bk=>{const L=res.out.filter(h=>h.book===bk);const g=el('div','rgroup');g.append(el('span',null,bk),el('small',null,ar(L.length)+' موضع'));frag.append(g);
+    L.forEach(h=>{const b=el(h.n?'button':'div','hit');if(h.n)b.type='button';const w=el('div','where',h.where);if(h.also.length)w.append(el('span','tag','والنص نفسه في: '+h.also.join('؛ ')));
+      const s=el('div','snip');s.append('…'+h.a,el('mark',null,h.m),h.b+'…');b.append(w,s);
+      if(h.raw.length>s.textContent.length+20){const more=el('button','btn btn-link ds-more','النص كاملاً');more.type='button';more.onclick=ev=>{ev.stopPropagation();s.textContent=h.raw;more.remove()};b.append(more)}
+      if(h.n)b.onclick=()=>{const ov=$('#sOverlay'),y=ov.scrollTop;closeSearch();openPart(h.n,h.p,[norm(q.trim())]).then(()=>{setBack('رجوع إلى نتائج البحث',()=>{ov.hidden=false;ov.scrollTop=y})})};
+      frag.append(b)})});
+  R.append(frag)}
+function dsSetup(){const f=$('#exact2');if(!f||$('#dsRow'))return;const row=el('div','ds-row');row.id='dsRow';row.hidden=!DS.on();
+  [['','في الكتاب'],['q','سريع في كل الكتب'],['d','محقق في كل الكتب']].forEach(([v,l],i)=>{const lb=el('label');const r=el('input');r.type='radio';r.name='dsm';r.value=v;if(!i)r.checked=true;lb.append(r,' '+l);row.append(lb)});
+  row.prepend(el('b',null,'نوع البحث: '));f.closest('.filter').after(row);
+  $('#sform2').addEventListener('submit',async e=>{const m=(document.querySelector('input[name=dsm]:checked')||{}).value;if(!m||row.hidden)return;e.stopImmediatePropagation();e.preventDefault();$('#q2').blur();
+    const R=$('#res2');R.innerHTML='';const pr=progressBar(R);const res=await deepSearch($('#q2').value,m==='d',nm=>{pr.t.textContent='جارٍ البحث في '+nm+'…'});pr.done();
+    if(!res){R.append(el('p','note','اكتب كلمة من حرفين على الأقل.'));return}if(res.error&&!res.out.length){R.append(el('p','note','تعذّر تحميل نص البحث. تأكد من الاتصال بالإنترنت.'));return}dsRender(R,res,$('#q2').value,m==='d')},true)}
+
+function openSearch(){dsSetup();if($('#dsRow'))$('#dsRow').hidden=!DS.on();$('#onlyPart').closest('label').hidden=isB(cur.n)&&!(mbOf(cur.n)&&mbOf(cur.n).ps.length>1);$('#sOverlay').hidden=false;setTimeout(()=>$('#q2').focus(),50)}
 function closeSearch(){$('#sOverlay').hidden=true}
 $('#qSearch').onclick=openSearch;$('#sClose').onclick=closeSearch;
 $('#sform2').addEventListener('submit',async e=>{
