@@ -1899,7 +1899,7 @@ p .hd-v,.yc-txt .hd-v,.cm-p .hd-v,q .hd-v,.sf-tt .hd-v,.mg-tt .hd-v{cursor:point
 .ds-part{margin-top:14px}
 .ds-part>summary{cursor:pointer;font-weight:700;padding:8px 0}
 .ds-row{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin:0 0 10px;font-size:14px}
-.ds-row label{display:inline-flex;gap:4px;align-items:center}.ds-row input[type=radio]{accent-color:var(--brass)}.ds-hint{flex-basis:100%;font-size:12.5px;line-height:1.6;opacity:.78}
+.ds-row label{display:inline-flex;gap:4px;align-items:center}.ds-row input[type=radio]{accent-color:var(--brass)}.dnote{font-size:12.5px;line-height:1.7;opacity:.8;margin:0 2px 10px;border-inline-start:3px solid var(--brass);padding:2px 10px}.ds-hint{flex-basis:100%;font-size:12.5px;line-height:1.6;opacity:.78}
 .ds-warn{font-size:13px;line-height:1.8;color:var(--muted);border:1px dashed var(--line);border-radius:10px;padding:8px 10px;margin:0 0 10px}
 .ds-sum{font-size:14px;margin:0 0 8px}
 .ds-more{font-size:13px;padding:2px 0}
@@ -3146,7 +3146,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-1440';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-1450';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -6546,7 +6546,7 @@ const OWN_DESIGNS={"haram": {"n": "القناديل", "d": "أروقة الحر�
 const SITE='sira',W='https://push.seeratuh.com',HOME='سِيرَتُه';
 {const h=new URLSearchParams(location.hash.slice(1)).get('own');if(h){LS.set('ownk',h);history.replaceState(null,'',location.pathname+location.search)}}
 let KEY=LS.get('ownk','');const OWN=()=>!!KEY;window.OWNQ=()=>!!KEY;
-let CFG=LS.get('own_cfg',null)||{on:false,msg:'',hide:[],add:[],pages:[]};
+let CFG=LS.get('own_cfg',null)||{on:false,msg:'',hide:[],add:[],pages:[]};setTimeout(()=>{try{dnote(CFG)}catch(e){}},0);
 
 /* ---------- letters and fingerprints ---------- */
 const SAW='صلىاللهعليهوسلم';
@@ -6670,8 +6670,9 @@ function drawNote(){const N=CFG.note;const old=document.querySelector('.own-note
     else{v=document.createElement(m.k==='a'?'audio':'video');v.controls=true;v.preload='metadata';v.setAttribute('playsinline','');v.className='own-note-m';v.src=W+'/m/'+encodeURIComponent(m.u)}
     d.append(v)}
   at.after(d)}
+function dnote(c){let e=document.getElementById('dnote');if(!(c&&c.dnote)){if(e)e.remove();return}if(e)return;const f=document.getElementById('sform');if(!f)return;e=document.createElement('p');e.id='dnote';e.className='dnote';e.textContent='نصوص الكتب في هذا الموقع منقولة من نسختها الرقمية (المكتبة الشاملة)، وتُقابَل بطبعتها المصوّرة تدريجياً، وقد يقع فيها فرق يسير عن المطبوع. إن وجدت خطأً فأبلغنا، ولك أن تراجع صورة الصفحة.';(f.parentNode).insertBefore(e,f)}
 async function load(){try{const r=await fetch(W+'/st?s='+SITE,{cache:'no-store'});if(!r.ok)return;const j=await r.json();
-  const ch=JSON.stringify([j.hide,j.add,j.pages])!==JSON.stringify([CFG.hide,CFG.add,CFG.pages]);CFG=j;LS.set('own_cfg',j);noimg();if(PVZ===null){LS.set('own_dz',j.dz||'');LS.set('own_pick',j.pick||['base','haram']);const d=curDz();if(!document.documentElement.classList.contains('dz-'+d)||!d)design(d);drawPick()}LS.set('own_dzm',j.dzm||{});try{dmode()}catch(e){}LS.set('own_dzv',j.dzv||{});try{dvar()}catch(e){}try{drawNote()}catch(e){}pause();if(ch)reapply();drawPz()}catch(e){}}
+  const ch=JSON.stringify([j.hide,j.add,j.pages])!==JSON.stringify([CFG.hide,CFG.add,CFG.pages]);CFG=j;LS.set('own_cfg',j);noimg();dnote(CFG);if(PVZ===null){LS.set('own_dz',j.dz||'');LS.set('own_pick',j.pick||['base','haram']);const d=curDz();if(!document.documentElement.classList.contains('dz-'+d)||!d)design(d);drawPick()}LS.set('own_dzm',j.dzm||{});try{dmode()}catch(e){}LS.set('own_dzv',j.dzv||{});try{dvar()}catch(e){}try{drawNote()}catch(e){}pause();if(ch)reapply();drawPz()}catch(e){}}
 load();try{pause()}catch(e){}try{drawNote()}catch(e){}if((CFG.hide||[]).length||(CFG.add||[]).length||(CFG.pages||[]).length)try{applyTo(document.body)}catch(e){}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
 

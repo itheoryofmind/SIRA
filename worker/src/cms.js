@@ -88,7 +88,7 @@ const DZM_DEF = { haram: 'white' };
 function pub(c) {
   return { on: !!c.pause.on, msg: c.pause.on ? c.pause.msg : '', np: !!(c.pause.on && c.pause.np), hide: c.hide.map((h) => ({ id: h.id, sel: h.sel, fp: h.fp, sec: h.sec })),
     add: c.add.map((a) => ({ id: a.id, sel: a.sel, fp: a.fp, sec: a.sec, k: a.k, t: a.t })),
-    note: (c.note && c.note.on && !(c.note.from && Date.now() < c.note.from) && !(c.note.to && Date.now() >= c.note.to)) ? { t: c.note.t || '', m: c.note.m || null, v: c.note.at || 0 } : null, tsk: c.tsk !== false, isn: !!c.isn, srch: !!c.srch, dz: c.dz || '', dzm: Object.assign({}, DZM_DEF, c.dzm || {}), dzv: c.dzv || {}, pick: c.pick || ['base', 'haram'], noimg: !!c.noimg, noimgb: Array.isArray(c.noimgb) ? c.noimgb : [], lnk: Array.isArray(c.lnk) ? c.lnk.map((x) => [x.f, x.p, x.i, x.k, x.s, x.a, x.z]) : [], pages: c.pages.filter((p) => !p.off).map((p) => ({ id: p.id, sel: p.sel, fp: p.fp, sec: p.sec, title: p.title, sub: p.sub, blocks: p.blocks })), v: c.v || 0 };
+    note: (c.note && c.note.on && !(c.note.from && Date.now() < c.note.from) && !(c.note.to && Date.now() >= c.note.to)) ? { t: c.note.t || '', m: c.note.m || null, v: c.note.at || 0 } : null, tsk: c.tsk !== false, isn: !!c.isn, srch: !!c.srch, dnote: !!c.dnote, dz: c.dz || '', dzm: Object.assign({}, DZM_DEF, c.dzm || {}), dzv: c.dzv || {}, pick: c.pick || ['base', 'haram'], noimg: !!c.noimg, noimgb: Array.isArray(c.noimgb) ? c.noimgb : [], lnk: Array.isArray(c.lnk) ? c.lnk.map((x) => [x.f, x.p, x.i, x.k, x.s, x.a, x.z]) : [], pages: c.pages.filter((p) => !p.off).map((p) => ({ id: p.id, sel: p.sel, fp: p.fp, sec: p.sec, title: p.title, sub: p.sub, blocks: p.blocks })), v: c.v || 0 };
 }
 const okRule = (r) => r && typeof r.sel === 'string' && /^[a-z][a-z0-9]{0,11}(\.[A-Za-z_][A-Za-z0-9_-]{0,39})?$/.test(r.sel) && typeof r.fp === 'string' && /^[0-9a-z]{4,40}$/.test(r.fp) && typeof r.sec === 'string' && r.sec.length <= 200;
 const okBlocks = (b) => Array.isArray(b) && b.length <= 400 && b.every((x) => x && ['h', 'p', 'q'].includes(x.k) && typeof x.t === 'string' && x.t.length <= 20000);
@@ -311,7 +311,7 @@ export async function cmsFetch(req, env, u) {
       c.note = { on, t, m: mm, at, from, to };
     } else if (a === 'tsk') {
       c.tsk = !!b.on;
-    } else if (a === 'isn' || a === 'srch') {
+    } else if (a === 'isn' || a === 'srch' || a === 'dnote') {
       // features the keeper tries first and then shows to readers: the isnad tree, the search of the books
       c[a] = !!b.on;
     } else if (a === 'noimg') {
@@ -461,7 +461,7 @@ function helperMay(p, b, P) {
     if (['hide', 'unhide', 'add', 'unadd', 'page', 'unpage', 'lnk'].includes(a)) return !!P.cfg;
     if (a === 'note') return !!P.msg;
     if (a === 'pause') return !!P.pause;
-    if (['design', 'dzmode', 'dzvar', 'pick', 'noimg', 'noimgb', 'tsk', 'isn', 'srch'].includes(a)) return !!P.dz;
+    if (['design', 'dzmode', 'dzvar', 'pick', 'noimg', 'noimgb', 'tsk', 'isn', 'srch', 'dnote'].includes(a)) return !!P.dz;
     return false;
   }
   return false;
