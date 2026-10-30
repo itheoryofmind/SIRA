@@ -438,6 +438,23 @@ async function panelExtra(u, b, s, env, out) {
     const n = await ownerAlert(env, null, 0, { t: 'تنبيهات لوحة التحكم', b: 'فُعّلت على هذا الجهاز: محاولات الدخول الخاطئة، وملاحظات القرّاء، وتعطّل أحد الموقعين، وملخص كل جمعة.', u: PANEL, tag: 'own-on' });
     return out({ ok: true, on: true, sent: n });
   }
+  if (p === '/c/dorar') {   // a hadith's words looked up in the hadith encyclopedia (dorar.net), for comparing in the panel
+    const q = str(b.q, 300).replace(/[\u064B-\u065F\u0670]/g, '').split(/\s+/).filter((w) => /[\u0621-\u064A]/.test(w)).slice(0, 10).join(' ');
+    if (!q) return out({ ok: false, bad: 1 }, 400);
+    const search = 'https://dorar.net/hadith/search?q=' + encodeURIComponent(q);
+    try {
+      const r = await fetch('https://dorar.net/dorar_api.json?skey=' + encodeURIComponent(q), { headers: { 'User-Agent': 'Mozilla/5.0 (seeratuh.com keeper check)', Accept: 'application/json' } });
+      const t = await r.text(); let j; try { j = JSON.parse(t); } catch (e) { return out({ ok: false, blocked: 1, search }); }
+      const H = (j.ahadith && j.ahadith.result) || '';
+      const res = H.split('<div class="hadith"').slice(1).map((blk) => {
+        const i = blk.indexOf('</div>');
+        const strip = (x) => x.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+        const links = [...blk.matchAll(/href="([^"]+)"/g)].map((m) => m[1]).filter((h) => /^(https?:\/\/dorar\.net)?\//.test(h)).map((h) => (h.startsWith('/') ? 'https://dorar.net' + h : h));
+        return { t: strip((i >= 0 ? blk.slice(0, i) : blk).replace(/^[^>]*>/, '')), info: strip(i >= 0 ? blk.slice(i + 6) : '').slice(0, 400), links: links.slice(0, 4) };
+      }).slice(0, 15);
+      return out({ ok: true, res, search });
+    } catch (e) { return out({ ok: false, net: 1, search }); }
+  }
   if (p === '/c/wk') {   // «الفحص الأسبوعي»: its switch, a run asked now, a stop, and his choice on each note (the notes are in the repository)
     const ctl = (await env.PUSH.get('wkctl', 'json')) || { auto: true };
     if (b.a === 'get') {
