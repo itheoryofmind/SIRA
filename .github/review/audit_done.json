@@ -254,5 +254,35 @@
 "illegible": 0,
 "unchecked": [],
 "at": "2026-10-30"
+},
+"sira:28": {
+"name": "البداية والنهاية ٩",
+"site": "sira",
+"total": 673,
+"checked": 251,
+"diffs": 101,
+"new": 69,
+"illegible": 0,
+"unchecked": [
+670,
+671,
+672
+],
+"at": "2026-10-30"
+},
+"sira:30": {
+"name": "البداية والنهاية ١١",
+"site": "sira",
+"total": 154,
+"checked": 144,
+"diffs": 20,
+"new": 16,
+"illegible": 0,
+"unchecked": [
+151,
+152,
+153
+],
+"at": "2026-10-30"
 }
 }
