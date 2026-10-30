@@ -58,6 +58,23 @@ def uadj(d, path, old, new):
     except Exception:
         pass
 
+def patch(cur, old, new):
+    # his change (old -> new) carried onto the text as it is now, when every changed part is still found there once, with its surroundings
+    import difflib
+    ops = [o for o in difflib.SequenceMatcher(None, old, new, autojunk=False).get_opcodes() if o[0] != 'equal']
+    if not ops: return cur
+    H = []
+    for t, a1, a2, b1, b2 in ops:
+        if H and a1 - H[-1][1] < 40: H[-1] = [H[-1][0], a2, H[-1][2], b2]
+        else: H.append([a1, a2, b1, b2])
+    out = cur
+    for a1, a2, b1, b2 in reversed(H):
+        L, R = old[max(0, a1 - 25):a1], old[a2:a2 + 25]
+        k = L + old[a1:a2] + R
+        if not k.strip() or out.count(k) != 1: return None
+        out = out.replace(k, L + new[b1:b2] + R)
+    return out
+
 def verse(t):
     return re.sub(r'\{\s*', '﴿', re.sub(r'\s*\}', '﴾', t))
 
@@ -94,11 +111,17 @@ for e in E:
         done.append((e, False, 'الموضع لم يعد موجوداً')); continue
     if not isinstance(cur, str):
         done.append((e, False, 'الموضع ليس نصاً')); continue
+    msg = ''
+    nw = e['nw']
     if cur != e['old']:
-        done.append((e, False, 'تغيّر النص في هذا الموضع منذ فتحته؛ افتحه من جديد')); continue
-    o[last] = e['nw']
-    uadj(d, e['path'], e['old'], e['nw'])
-    done.append((e, True, ''))
+        if not e.get('force'):
+            done.append((e, False, 'تغيّر النص في هذا الموضع بعد أن فتحته (نُشر عليه تعديل آخر قبل تعديلك)، فلم يُطبَّق حتى لا يضيع ذلك التعديل. إن كنت متأكداً فاضغط «أُصرّ على تعديلي».')); continue
+        p2 = patch(cur, e['old'], e['nw'])
+        if p2 is not None: nw = p2; msg = 'طُبّق تعديلك على النص الحالي مع إبقاء التعديل الآخر.'
+        else: msg = 'لم يمكن جمعه مع التعديل الآخر، فكُتب نصك كما هو مكان النص كله (بإصرارك).'
+    o[last] = nw
+    uadj(d, e['path'], cur, nw)
+    done.append((e, True, msg))
 
 # a verse he corrected is shown again in the mushaf's script when its words are now the mushaf's words (umatch.py)
 try:

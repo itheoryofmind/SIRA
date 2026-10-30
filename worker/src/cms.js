@@ -230,9 +230,9 @@ export async function cmsFetch(req, env, u) {
     if (!okFile(f) || !okPath(path) || !okText(old) || !okText(nw) || old === nw) return out({ ok: false, bad: 1 }, 400);
     const AL = await all(env);
     const same = AL.filter((x) => x.metadata && (x.metadata.st === 'p' || x.metadata.st === 't') && x.metadata.f === f && siteOf(x) === s);
-    for (const x of same) { const v = await env.PUSH.get(x.name, 'json'); if (v && JSON.stringify(v.path) === JSON.stringify(path)) return out({ ok: false, busy: 1 }); }
+    if (!b.force) for (const x of same) { const v = await env.PUSH.get(x.name, 'json'); if (v && JSON.stringify(v.path) === JSON.stringify(path)) return out({ ok: false, busy: 1 }); }
     const id = P + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
-    const v = { s, f, path, old, nw, note: str(b.note, 300), lb: str(b.lb, 200), sec: str(b.sec, 120), rv: b.rv ? str(b.rv, 60) : '', st: 'p', at: Date.now() };
+    const v = { s, f, path, old, nw, note: str(b.note, 300), lb: str(b.lb, 200), sec: str(b.sec, 120), rv: b.rv ? str(b.rv, 60) : '', force: b.force ? 1 : 0, st: 'p', at: Date.now() };
     await env.PUSH.put(id, JSON.stringify(v), { metadata: { st: 'p', f, s } });
     const fin = AL.filter((x) => x.metadata && (x.metadata.st === 'ok' || x.metadata.st === 'err'));
     for (const x of fin.slice(0, Math.max(0, AL.length - 300))) await env.PUSH.delete(x.name);
