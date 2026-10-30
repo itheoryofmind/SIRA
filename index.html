@@ -3146,7 +3146,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-2100';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-2115';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -6863,7 +6863,28 @@ async function vGuard(old,nw){const sp=t=>[...(t||'').matchAll(/\{([^{}]+)\}/g)]
   if(!VGQ){try{const Q=await getJSON('data/quran.json');VGQ=Q.a.map(L=>vgSk(L.map(x=>x.replace(/۝[٠-٩]+/g,'')).join(' ')))}catch(e){return 'تعذّر تحميل نص المصحف للتحقق من الآية التي عدّلتها. هل تحفظ مع ذلك؟'}}
   const bad=ch.filter(v=>!VGQ.some(s=>s.includes(vgSk(v))));if(!bad.length)return '';
   return 'تنبيه: '+(bad.length>1?'هذه الآيات لا تطابق':'هذه الآية لا تطابق')+' حروف المصحف:\n'+bad.map(v=>'«'+v.slice(0,120)+'»').join('\n')+'\n\nإن كنت متأكداً من نصك فاضغط «موافق» ليُحفظ، وإلا فاضغط «إلغاء» وراجعه.'}
-function oData(g,txt){const x=g.at[0];const [ov,c]=sheet('تعديل النص');
+/* a verse begun at the end of one page and ending at the start of the next: both halves are shown in one box, so it is corrected whole */
+const XMK='\n⟪ — هنا تبدأ الصفحة التالية، لا تحذف هذا السطر — ⟫\n';
+function xPair(g){if(g.at.length!==1)return null;const x=g.at[0];if(!/^t\d+\.json$/.test(x.f)||x.p.length!==3||x.p[0]!=='p')return null;
+  const D=MEM['data/'+x.f];if(!D||!Array.isArray(D.p))return null;const pg=x.p[1],ix=x.p[2];
+  const strs=P=>Array.isArray(P)?P.map((s,i)=>[i,s]).filter(e=>typeof e[1]==='string'):[];
+  const open=s=>s.lastIndexOf('{')>s.lastIndexOf('}'),cont=s=>{const j=s.indexOf('}');return j>0&&s.slice(0,j).indexOf('{')<0};
+  const S=strs(D.p[pg]);if(!S.length)return null;
+  const L=S[S.length-1],F=S[0];
+  if(L[0]===ix&&open(L[1])){const N=strs(D.p[pg+1]);if(N.length&&cont(N[0][1]))return [{f:x.f,p:['p',pg,ix],s:L[1]},{f:x.f,p:['p',pg+1,N[0][0]],s:N[0][1]}]}
+  if(F[0]===ix&&cont(F[1])){const R=strs(D.p[pg-1]);if(pg>0&&R.length&&open(R[R.length-1][1]))return [{f:x.f,p:['p',pg-1,R[R.length-1][0]],s:R[R.length-1][1]},{f:x.f,p:['p',pg,ix],s:F[1]}]}
+  return null}
+function oPair(Q,txt){const [ov,c]=sheet('تعديل النص');const old=Q[0].s+XMK+Q[1].s;
+  c.append(el('p','own-n',fileName(Q[0].f)+' — هذه آية تبدأ في آخر صفحة وتتم في أول التي بعدها، فجُمع لك نصّا الموضعين في مربع واحد لتعدّل الآية كاملة. السطر الفاصل بينهما يبيّن أين تبدأ الصفحة التالية؛ لا تحذفه.'));
+  editor(c,old,txt,async(nw,note)=>{const parts=nw.split(XMK);if(parts.length!==2){oToast('حُذف أو تغيّر السطر الفاصل بين الصفحتين؛ أعده كما كان (أو اضغط «أرجع النص كما كان») ثم احفظ.',1);return false}
+    {const vm=await vGuard(old.split(XMK).join(' '),nw.split(XMK).join(' '));if(vm&&!confirm(vm))return false}const sec=secName();
+    const ch=Q.map((a,i)=>[a,parts[i]]).filter(([a,v])=>v!==a.s);let ok=0,busy=0,force=0;
+    for(const [a,v] of ch){const r=await call('/c/save',{f:a.f,path:a.p,old:a.s,nw:v,note,lb:fileName(a.f),sec});if(r.ok)ok++;else if(r.busy)busy++}
+    if(ok<ch.length&&busy&&confirm('على أحد الموضعين تعديل سابق ينتظر النشر. إن حفظت تعديلك الآن يُطبَّق بعده على النص كما يصير، فإن تعذّر جمعهما كُتب نصك هذا مكان النص كله. هل تريد حفظه مع ذلك؟')){
+      ok=0;for(const [a,v] of ch){const r=await call('/c/save',{f:a.f,path:a.p,old:a.s,nw:v,note,lb:fileName(a.f),sec,force:1});if(r.ok)ok++}}
+    if(ok===ch.length){ov.remove();oToast(window.HELPQ?'حُفظ، وينتظر موافقة صاحب الموقع قبل أن يُنشر.':'حُفظ، ويظهر للجميع خلال ساعة على الأكثر.');return true}
+    oToast(ok?'حُفظ أحد الموضعين فقط، والآخر لم يُحفظ؛ افتح السجل وراجعه.':busy?'لم يُحفظ: على هذا الموضع تعديل ينتظر النشر؛ انتظر حتى يُنشر أو ألغه من السجل.':'تعذّر الحفظ؛ حاول مرة أخرى.',1);if(ok){ov.remove();return true}return false})}
+function oData(g,txt){{const Q=xPair(g);if(Q)return oPair(Q,txt)}const x=g.at[0];const [ov,c]=sheet('تعديل النص');
   c.append(el('p','own-n',fileName(x.f)+(g.at.length>1?' — والنص نفسه في '+ar(g.at.length)+' مواضع، يُعدَّل فيها كلها':'')));
   editor(c,g.s,txt,async(nw,note)=>{{const vm=await vGuard(g.s,nw);if(vm&&!confirm(vm))return false}const sec=secName();let ok=0,busy=0;
     for(const a of g.at){const r=await call('/c/save',{f:a.f,path:a.p,old:a.s,nw,note,lb:fileName(a.f),sec});if(r.ok)ok++;else if(r.busy)busy++}

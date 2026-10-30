@@ -45,7 +45,13 @@ def uadj(d, path, old, new):
                 if a1 <= i < a2 or (end and i == a2 and tag == 'equal'):
                     return b1 + (i - a1) if tag == 'equal' else (b2 if end else b1)
             return len(new)
-        br = lambda t: re.findall(r'\{([^{}]*)\}', t)
+        # each verse of the paragraph by its place: the k-th { with its words up to its } (or to the end, a verse that goes on to
+        # the next page), and k = -1 the words before the first } (a verse begun on the page before); only a verse whose own
+        # words changed loses its mushaf script, not one beside the change
+        br = lambda t: {t[:m.start()].count('{'): m.group(1) for m in re.finditer(r'\{([^{}]*)(?:\}|$)', t)}
+        def cont(t):
+            j = t.find('}')
+            return t[:j] if j >= 0 and '{' not in t[:j] else None
         bo, bn = br(old), br(new)
         for r in L:
             if r[0] != it: continue
@@ -53,7 +59,9 @@ def uadj(d, path, old, new):
                 r[6], r[7] = f(r[6]), f(r[7], True)
             elif isinstance(r[1], int) and r[2]:
                 k = r[1]
-                if k >= len(bn) or k >= len(bo) or bo[k] != bn[k]:
+                if k == -1: same = cont(old) is not None and cont(old) == cont(new)
+                else: same = k in bo and bo.get(k) == bn.get(k)
+                if not same:
                     r[2] = None; r[3] = None
     except Exception:
         pass
@@ -146,10 +154,24 @@ try:
     for f, (d, s) in OPEN.items():
         if not (isinstance(d, dict) and 'p' in d): continue
         pgs = {e['path'][1] for e, g, m in done if g and e.get('f') == f and len(e['path']) == 3 and e['path'][0] == 'p'}
-        for pg in sorted(pgs | {p + 1 for p in pgs if p + 1 < len(d['p'])}):
+        for pg in sorted(pgs | {p + 1 for p in pgs if p + 1 < len(d['p'])} | {p - 1 for p in pgs if p > 0}):
             umatch.page(d, pg)
 except Exception as x:
     print('mushaf script not refreshed:', x)
+# a verse that was in the mushaf's script before his correction and is not now: said in his result, never silently
+try:
+    for n, (e, g, m) in enumerate(done):
+        if not g or e.get('f') == 'ui' or len(e.get('path') or []) != 3 or e['path'][0] != 'p': continue
+        d, s = OPEN[e['f']]; d0 = json.loads(s); pg = e['path'][1]; lost = []
+        for q in (pg - 1, pg, pg + 1):
+            was = {(r[0], r[1]): r[2] for r in (d0.get('u', {}).get(str(q)) or []) if isinstance(r[1], int) and r[2]}
+            now = {(r[0], r[1]) for r in (d.get('u', {}).get(str(q)) or []) if isinstance(r[1], int) and r[2]}
+            lost += [u for k, u in was.items() if k not in now]
+        if lost:
+            w = 'تنبيه: ' + ('هذه الآيات لم تعد تظهر' if len(lost) > 1 else 'هذه الآية لم تعد تظهر') + ' برسم المصحف، لأن نصها بعد التعديل لا يطابق كلمات المصحف كلمةً كلمة، فتظهر بلفظ الكتاب: ' + '، '.join('«' + re.sub('[\u064B-\u065F\u0670\u06D6-\u06ED]', '', u)[:60] + '»' for u in lost[:3]) + '. راجعها.'
+            done[n] = (e, g, (m + ' ' if m else '') + w)
+except Exception as x:
+    print('verse check not reported:', x)
 
 ok = [x for x in done if x[1]]
 okd = [x for x in ok if x[0]['f'] != 'ui']

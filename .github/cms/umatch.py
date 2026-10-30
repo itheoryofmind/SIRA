@@ -121,6 +121,34 @@ def find1(text,su=None,nums=None):
     h=hits[0]
     if uBad(text,h[0]): return None
     return h
+def uthOf(s_,a,b):
+    """the mushaf's words for the imla'i words a..b of sura s_ (with the aya marks), or None when a mushaf word is split there"""
+    L=SW[s_]; G=GR[s_]
+    if a>b or (a>0 and L[a-1][2]==L[a][2]) or (b+1<len(L) and L[b+1][2]==L[b][2]): return None
+    parts=[]
+    for g in sorted(set(x[2] for x in L[a:b+1])):
+        us,ay,last=G[g]; parts.append(us)
+        if last: parts.append(MARK[(s_,ay)])
+    return ' '.join(p for p in parts if p)
+def split(ta,tb,su=None,nums=None):
+    """a verse written in two pieces (the end of one page and the start of the next): found whole, then cut where the first
+    piece ends; returns (sura, aya from, aya to, mushaf words of the first piece, its last aya, of the second, its first aya) or None"""
+    whole=find1(ta+' '+tb,su,nums)
+    if not whole: return None
+    s_=whole[1]; L=SW[s_]; C,ST,AT=CAT[s_]
+    T=''.join(nz(w) for w in re.split(r'\s+',ta+' '+tb) if nz(w)); Ta=''.join(nz(w) for w in re.split(r'\s+',ta) if nz(w))
+    if not Ta or len(Ta)>=len(T): return None
+    i=C.find(T); hits=[]
+    while i>=0:
+        if i in AT and (i+len(T)==len(C) or (i+len(T)) in AT) and (i+len(Ta)) in AT:
+            a=AT[i]; m=AT[i+len(Ta)]; b=(AT[i+len(T)]-1) if (i+len(T)) in AT else len(L)-1
+            ua,ub=uthOf(s_,a,m-1),uthOf(s_,m,b)
+            if ua and ub and L[a][1]==whole[2] and L[b][1]==whole[3]: hits.append((s_,whole[2],whole[3],ua,L[m-1][1],ub,L[m][1]))
+        i=C.find(T,i+1)
+    if not hits or len(set(h[3:] for h in hits))>1: return None
+    h=hits[0]
+    if uBad(ta,h[3]) or uBad(tb,h[5]): return None
+    return h
 SKIP=re.compile(r'\.\.\.|…|\bالآية\b|إلى قوله|الى قوله|[\[\]\(\)«»"]|\d')
 def page(d,pg,force=False):
     """fills the verse marks of one page; returns how many were added"""
@@ -157,6 +185,21 @@ def page(d,pg,force=False):
             if r=='bad': continue
             h=find(body,*(r if r else (None,None)))
             if h: add.append([it,k,h[0],h[1],h[2],h[3]])
+    # a verse begun at the end of this page and ending on the next one: matched whole (both halves together, with the reference
+    # after its end), then this half's own words from the mushaf; the next page's half follows from it when that page is matched
+    last=[(idx,s) for idx,s in enumerate(P) if isinstance(s,str)][-1:]
+    if last and pg+1<len(d['p']) and isinstance(d['p'][pg+1],list):
+        idx,s=last[0]; o=s.rfind('{')
+        if o>s.rfind('}'):
+            it=idx-1; kk=s.count('{')-1; body=s[o+1:]
+            nx=[x for x in d['p'][pg+1] if isinstance(x,str)][:1]
+            if (it,kk) not in have and nx and not SKIP.search(body) and nz(body):
+                ns=nx[0]; j=ns.find('}')
+                if j>0 and '{' not in ns[:j] and not SKIP.search(ns[:j]):
+                    r=ref_after(ns,j+1)
+                    if r!='bad':
+                        sp=split(body,ns[:j],*(r if r else (None,None)))
+                        if sp: add.append([it,kk,sp[3],sp[0],sp[1],sp[2]])
     # a verse begun on the previous page and ending in the first paragraph here: the rest in the mushaf's script too
     first=[(idx,s) for idx,s in enumerate(P) if isinstance(s,str)][:1]
     if first:
@@ -172,8 +215,13 @@ def page(d,pg,force=False):
             if prev and not SKIP.search(body) and nz(body):
                 su=prev[0][3]
                 r_=ref_after(s,j+1)
-                h=find(prev and ps[ps.rfind('{')+1:]+' '+body,su,(r_[1] if r_ and r_!='bad' and r_[0]==su else None))
-                if h:
+                nums=(r_[1] if r_ and r_!='bad' and r_[0]==su else None)
+                sp=split(ps[ps.rfind('{')+1:],body,su,nums)
+                h=None if sp else find(prev and ps[ps.rfind('{')+1:]+' '+body,su,nums)
+                if sp:
+                    add.append([idx-1,-1,sp[5],su,sp[1],sp[2]])
+                    if prev[0][5] is not None and sp[2]>prev[0][5]: prev[0][5]=sp[2]
+                elif h:
                     h2=find(body,su,None)
                     # the rest's own words, from the mushaf, where the whole verse was found
                     if h2 and h2[2]>=prev[0][4]:
