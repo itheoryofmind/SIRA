@@ -3146,7 +3146,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-1345';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-1430';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -6831,9 +6831,15 @@ function editor(c,old,tapped,onSave){c.append(el('p','own-n','في المربع 
     if(a>=0)setTimeout(()=>{const st=ix[a],en=ix[Math.min(a+T.length,ix.length)-1]+1;try{ta.focus({preventScroll:true});ta.setSelectionRange(st,en);const lh=parseFloat(getComputedStyle(ta).lineHeight)||34;ta.scrollTop=Math.max(0,st/Math.max(20,ta.clientWidth/11)*lh-lh*2)}catch(e){}},60)}
   sv.onclick=async()=>{if(!confirm('سيُنشر هذا التعديل في الموقع خلال ساعة على الأكثر. هل راجعت التغيير؟'))return;sv.disabled=true;sv.textContent='يُحفظ…';
     const r=await onSave(ta.value,nt.value.trim());if(!r){sv.disabled=false;sv.textContent='احفظ التعديل'}}}
+/* when he edits a text that holds a verse between braces, the verse's letters are matched against the mushaf before saving; a mismatch is shown and he decides */
+let VGQ=null;const vgSk=t=>t.replace(/[ؐ-ًؚ-ٰٟۖ-ۭـ]/g,'').replace(/[^ء-يٱ]/g,'').replace(/[اأإآٱءؤئوىيةهت]/g,'').replace(/(.)\1+/g,'$1');
+async function vGuard(old,nw){const sp=t=>[...(t||'').matchAll(/\{([^{}]+)\}/g)].map(m=>m[1]);const os=new Set(sp(old).map(vgSk));const ch=sp(nw).filter(v=>{const k=vgSk(v);return k.length>=4&&!os.has(k)});if(!ch.length)return '';
+  if(!VGQ){try{const Q=await getJSON('data/quran.json');VGQ=Q.a.map(L=>vgSk(L.map(x=>x.replace(/۝[٠-٩]+/g,'')).join(' ')))}catch(e){return 'تعذّر تحميل نص المصحف للتحقق من الآية التي عدّلتها. هل تحفظ مع ذلك؟'}}
+  const bad=ch.filter(v=>!VGQ.some(s=>s.includes(vgSk(v))));if(!bad.length)return '';
+  return 'تنبيه: '+(bad.length>1?'هذه الآيات لا تطابق':'هذه الآية لا تطابق')+' حروف المصحف:\n'+bad.map(v=>'«'+v.slice(0,120)+'»').join('\n')+'\n\nإن كنت متأكداً من نصك فاضغط «موافق» ليُحفظ، وإلا فاضغط «إلغاء» وراجعه.'}
 function oData(g,txt){const x=g.at[0];const [ov,c]=sheet('تعديل النص');
   c.append(el('p','own-n',fileName(x.f)+(g.at.length>1?' — والنص نفسه في '+ar(g.at.length)+' مواضع، يُعدَّل فيها كلها':'')));
-  editor(c,g.s,txt,async(nw,note)=>{const sec=secName();let ok=0,busy=0;
+  editor(c,g.s,txt,async(nw,note)=>{{const vm=await vGuard(g.s,nw);if(vm&&!confirm(vm))return false}const sec=secName();let ok=0,busy=0;
     for(const a of g.at){const r=await call('/c/save',{f:a.f,path:a.p,old:a.s,nw,note,lb:fileName(a.f),sec});if(r.ok)ok++;else if(r.busy)busy++}
     if(!ok&&busy&&confirm('على هذا الموضع تعديل سابق ينتظر النشر. إن حفظت تعديلك الآن يُطبَّق بعده على النص كما يصير، فإن تعذّر جمعهما كُتب نصك هذا مكان النص كله. هل تريد حفظه مع ذلك؟')){
       for(const a of g.at){const r=await call('/c/save',{f:a.f,path:a.p,old:a.s,nw,note,lb:fileName(a.f),sec,force:1});if(r.ok)ok++}}
