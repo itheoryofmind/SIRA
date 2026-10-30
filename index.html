@@ -3001,7 +3001,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-0733';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-0735';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -6113,8 +6113,8 @@ function ibkShamail(P){const w=el('section','sf-ch');const hd=el('button','sf-hd
   sync();new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['class']})}}
 
 /* the home page goes on below the first screen: a small sign at its foot, until the reader scrolls (every design) */
-{let seen=false;try{seen=localStorage.getItem('arcHint')==='1'}catch(e){}const B=document.querySelectorAll('.dz-arc button');
-  if(!seen&&B.length){B[0].parentNode.classList.add('pulse');B.forEach(b=>b.addEventListener('click',()=>{B[0].parentNode.classList.remove('pulse');try{localStorage.setItem('arcHint','1')}catch(e){}},{once:true}))}}
+{let seen=false;try{seen=localStorage.getItem('arcPulse')==='1'}catch(e){}const B=document.querySelectorAll('.dz-arc button');
+  if(!seen&&B.length){B[0].parentNode.classList.add('pulse');B.forEach(b=>b.addEventListener('click',()=>{B[0].parentNode.classList.remove('pulse');try{localStorage.setItem('arcPulse','1')}catch(e){}},{once:true}))}}
 {const home=document.getElementById('home')||document.body;const cue=document.createElement('button');cue.type='button';cue.className='scroll-cue';cue.setAttribute('aria-label','انزل لبقية الصفحة');
   cue.onclick=()=>window.scrollBy({top:Math.round(innerHeight*.75),behavior:'smooth'});document.body.append(cue);
   const upd=()=>{const onHome=!document.getElementById('reader')||document.getElementById('reader').hidden;const lk=document.body.classList.contains('ov-locked')||document.body.classList.contains('sx-locked')||document.body.classList.contains('pg-locked');
