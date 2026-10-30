@@ -3146,7 +3146,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-1239';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-30-1345';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4244,7 +4244,7 @@ $('#mSave').onclick=async()=>{closeSheet();const n=cur.n;
 
 /* in-reader search */
 /* ---------- البحث في كل كتب الموقع (تجربة للمالك، ثم للقرّاء إذا أظهره): لا يكتب شيئاً من عنده؛ يعرض النصوص كما هي، كل موضع بلا استثناء ---------- */
-const DS={on:()=>{try{if(OWN())return true}catch(e){}try{const c=JSON.parse(localStorage.getItem('own_cfg')||'null');return !!(c&&c.srch)}catch(e){return false}},cache:{}};
+const DS={on:()=>{try{if(window.OWNQ&&window.OWNQ())return true}catch(e){}try{const c=JSON.parse(localStorage.getItem('own_cfg')||'null');return !!(c&&c.srch)}catch(e){return false}},cache:{}};
 const DS_PRE='(?:و|ف)?(?:ب|ك|ل)?(?:ال|لل)?',DS_SUF='(?:ه|ها|هم|هما|هن|كم|كما|كن|نا|ني|ي|ك|ات|ون|ين|ان|ا|وا|ت|تم|تن|يه|يها|يهم)?';
 const dsEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 function dsPat(q,deep){const alts=q.split(/\s+أو\s+/).filter(x=>x.trim());if(alts.length>1){const A=alts.map(a=>dsPat1(a,deep)).filter(Boolean);return A.length?{alt:A}:null}const one=dsPat1(q,deep);return one?{alt:[one]}:null}
@@ -5449,7 +5449,7 @@ function twJoin(e){const W=document.createTreeWalker(e,NodeFilter.SHOW_TEXT);con
    in Ibn Hajar's Taqrib (and Tahdhib for the detail) only where his name in the chain can be no one else among the book's men there;
    otherwise every man it may be is listed under «يحتمل», and none is chosen. Shown to the keeper first; to readers when he turns it on. */
 const ISN={d:null,td:null,p:null,q:null};
-const isnOn=()=>{try{if(OWN())return true}catch(e){}try{const c=JSON.parse(localStorage.getItem('own_cfg')||'null');return !!(c&&c.isn)}catch(e){return false}};
+const isnOn=()=>{try{if(window.OWNQ&&window.OWNQ())return true}catch(e){}try{const c=JSON.parse(localStorage.getItem('own_cfg')||'null');return !!(c&&c.isn)}catch(e){return false}};
 const isnK=t=>t.replace(/[ؐ-ًؚ-ٰٟۖ-ۭـ]/g,'').replace(/[^ء-ي]/g,'').slice(0,90);
 function isnLoad(){if(!ISN.p)ISN.p=getJSON('data/isn.json').then(x=>{ISN.d=x}).catch(()=>{ISN.p=null});return ISN.p||Promise.resolve()}
 function isnBtn(e,t){if(!t||!/^\s*و?(?:حدث|أخبر)/.test(t)||!isnOn())return;isnLoad().then(()=>{if(!ISN.d||!e.isConnected&&!e.parentNode)return;const ch=ISN.d.h[isnK(t)];if(!ch||e.querySelector('.isn-b'))return;
@@ -6545,7 +6545,7 @@ const OWN_DESIGNS={"haram": {"n": "القناديل", "d": "أروقة الحر�
 (function(){
 const SITE='sira',W='https://push.seeratuh.com',HOME='سِيرَتُه';
 {const h=new URLSearchParams(location.hash.slice(1)).get('own');if(h){LS.set('ownk',h);history.replaceState(null,'',location.pathname+location.search)}}
-let KEY=LS.get('ownk','');const OWN=()=>!!KEY;
+let KEY=LS.get('ownk','');const OWN=()=>!!KEY;window.OWNQ=()=>!!KEY;
 let CFG=LS.get('own_cfg',null)||{on:false,msg:'',hide:[],add:[],pages:[]};
 
 /* ---------- letters and fingerprints ---------- */
