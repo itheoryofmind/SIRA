@@ -52,7 +52,7 @@ for c in hr['notes']:
     if c['f'] in lnk: c['lnk'] = lnk[c['f']]
     if c['id'] not in HNOTES:
         c['why'] = 'الفحص الأسبوعي (' + now + '): ' + c['why']; HNOTES[c['id']] = c
-st['h'] = hr['next']; st['at'] = now; st['last'] = {k: hr[k] for k in ('total', 'checked', 'nores', 'errs')}
+st['sample'] = hr.get('sample'); st['h'] = hr['next']; st['at'] = now; st['last'] = {k: hr[k] for k in ('total', 'checked', 'nores', 'errs')}
 # the cards: last week's verse notes give way to this week's (a corrected verse leaves the list); hadith notes stay
 D['review'] = nwk + V + list(HNOTES.values())
 new = [c for c in V + list(HNOTES.values()) if c['id'] not in old_ids]
