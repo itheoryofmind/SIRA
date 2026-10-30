@@ -79,6 +79,20 @@ for s_,L in SW.items():
     CAT[s_]=(''.join(ks),st,{v:i for i,v in enumerate(st)})
 def find(text,su=None,nums=None):
     """the Uthmani text for the book's words, or None; returns (uth, sura, a0, a1)"""
+    h=find1(text,su,nums)
+    if h: return h
+    # the mushaf's own spelling of a ta marbuta as ت (شجرت، رحمت، نعمت): tried as ة too, a few words at most
+    ws=re.split(r'(\s+)',text); tx=[i for i,w in enumerate(ws) if re.search('ت[\u064B-\u065F\u0670]*$',w)]
+    if not tx or len(tx)>4: return None
+    import itertools
+    for n in range(1,len(tx)+1):
+        for c in itertools.combinations(tx,n):
+            w2=list(ws)
+            for i in c: w2[i]=re.sub('ت([\u064B-\u065F\u0670]*)$',r'ة\1',w2[i])
+            h=find1(''.join(w2),su,nums)
+            if h and not uBad(text,h[0]): return h
+    return None
+def find1(text,su=None,nums=None):
     ws=[w for w in re.split(r'\s+',text) if nz(w)]
     T=''.join(nz(w) for w in ws)
     if len(T)<3: return None
