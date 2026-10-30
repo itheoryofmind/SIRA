@@ -1,0 +1,19 @@
+name: dorar-probe
+# one look at the hadith encyclopedia's answer, kept on the branch «probe» (for building the comparison in the panel)
+on:
+  workflow_dispatch:
+    inputs:
+      q: {description: 'words', required: true}
+permissions: {contents: write}
+jobs:
+  get:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          Q: ${{ inputs.q }}
+        run: |
+          mkdir out && cd out
+          python3 -c "import urllib.parse,os;print(urllib.parse.quote(os.environ['Q']))" > q.txt
+          curl -sS -A 'Mozilla/5.0' "https://dorar.net/dorar_api.json?skey=$(cat q.txt)" -o api.json
+          curl -sS -A 'Mozilla/5.0' "https://dorar.net/hadith/search?q=$(cat q.txt)" -o search.html || true
+          git init -q && git checkout -q -b probe && git add . && git -c user.name=bot -c user.email=bot@x commit -qm probe && git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" probe
