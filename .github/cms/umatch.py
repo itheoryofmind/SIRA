@@ -77,10 +77,23 @@ for s_,L in SW.items():
     ks=[nz(x[0]) for x in L]; st=[];p=0
     for k in ks: st.append(p); p+=len(k)
     CAT[s_]=(''.join(ks),st,{v:i for i,v in enumerate(st)})
+def nz2(w): return nz(re.sub('[أإ]','ا',w))
+CAT2={}
+def cat2(s_):
+    if s_ not in CAT2:
+        ks=[nz2(x[0]) for x in SW[s_]]; st=[];p=0
+        for k in ks: st.append(p); p+=len(k)
+        CAT2[s_]=(''.join(ks),st,{v:i for i,v in enumerate(st)})
+    return CAT2
 def find(text,su=None,nums=None):
     """the Uthmani text for the book's words, or None; returns (uth, sura, a0, a1)"""
     h=find1(text,su,nums)
     if h: return h
+    # the book writes a hamza on an alif differently from the mushaf (واتبعوا / وأتبعوا): accepted only where the reference after
+    # the verse names its sura and ayas, and the words are found there and nowhere else in that sura
+    if su and nums:
+        cat2(su); h=find1(text,su,nums,nz2,CAT2)
+        if h: return h
     # the mushaf's own spelling of a ta marbuta as ت (شجرت، رحمت، نعمت): tried as ة too, a few words at most
     ws=re.split(r'(\s+)',text); tx=[i for i,w in enumerate(ws) if re.search('ت[\u064B-\u065F\u0670]*$',w)]
     if not tx or len(tx)>4: return None
@@ -92,14 +105,15 @@ def find(text,su=None,nums=None):
             h=find1(''.join(w2),su,nums)
             if h and not uBad(text,h[0]): return h
     return None
-def find1(text,su=None,nums=None):
-    ws=[w for w in re.split(r'\s+',text) if nz(w)]
-    T=''.join(nz(w) for w in ws)
+def find1(text,su=None,nums=None,NZ=None,CT=None):
+    NZ=NZ or nz; CT=CT or CAT
+    ws=[w for w in re.split(r'\s+',text) if NZ(w)]
+    T=''.join(NZ(w) for w in ws)
     if len(T)<3: return None
     suras=[su] if su else list(SW)
     hits=[]
     for s_ in suras:
-        L=SW[s_]; G=GR[s_]; C,ST,AT=CAT[s_]
+        L=SW[s_]; G=GR[s_]; C,ST,AT=CT[s_]
         i=C.find(T)
         while i>=0 and len(hits)<=3:
             stw=AT.get(i)
