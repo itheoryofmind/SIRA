@@ -193,7 +193,7 @@ try:
                 if own or near: LOST.setdefault((own or near)[0], []).append(u)
     # a verse whose words he changed and that still shows in the mushaf's script: his text differs from the mushaf's only in
     # spelling (hamza, vowel marks, ى/ي, ة/ه), so the reader sees no change; said in his result, so he knows it was not lost
-    KEPT = {}
+    KEPT = {}; NOTM = {}
     BR = lambda t: {t[:m.start()].count('{'): m.group(1) for m in re.finditer(r'\{([^{}]*)(?:\}|$)', t)}
     CT = lambda t: t[:t.find('}')] if '}' in t and '{' not in t[:t.find('}')] else None
     for n, e in P3:
@@ -204,6 +204,14 @@ try:
         bo, bn = BR(o_), BR(w_); ch = [k for k in bn if k in bo and bo[k] != bn[k]]
         if CT(o_) is not None and CT(w_) is not None and CT(o_) != CT(w_): ch.append(-1)
         if any((it, k) in now for k in ch): KEPT[n] = 1
+        # a verse he added or changed that is not shown in the mushaf's script now: said too, so a verse is never left in the book's
+        # wording without his knowing
+        NEWV = [k for k in bn if bo.get(k) != bn[k] and len(bn[k].split()) >= 2 and (it, k) not in now]
+        if NEWV: NOTM.setdefault(n, []).extend(bn[k] for k in NEWV)
+    for n, L in NOTM.items():
+        e, g, m = done[n]
+        if 'لم تعد تظهر برسم المصحف' in (m or ''): continue
+        done[n] = (e, g, (m + ' ' if m else '') + 'تنبيه: ' + ('هذه الآيات تظهر' if len(L) > 1 else 'هذه الآية تظهر') + ' للقارئ بلفظ الكتاب لا برسم المصحف، لأن نصها لا يطابق كلمات المصحف كلمةً كلمة: ' + '، '.join('«' + t[:60] + '»' for t in L[:3]) + '. راجعها، أو اخترها من لفظ المصحف.')
     for n in KEPT:
         e, g, m = done[n]
         done[n] = (e, g, (m + ' ' if m else '') + 'الآية التي عدّلتها ما زالت تظهر للقارئ برسم المصحف كما كانت، لأن الفرق بين نصك ونص المصحف في الإملاء فقط (الهمزة أو التشكيل أو الياء والألف المقصورة أو التاء المربوطة والهاء)؛ فلا يتغير ما يراه القارئ، ويُصلَح النص المحفوظ الذي يُبحث فيه.')
