@@ -3146,7 +3146,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-31-0600';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-31-0545';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -4518,6 +4518,11 @@ async function markPassage(){
     const b=document.querySelector('#tpage .pgblk[data-p="'+q.p+'"] .tbody');
     if(b&&TX.n===q.n){PASSAGE=null;const S=bodyText(b).s;let t=q.t,j=S.indexOf(t);
       if(j<0){t=t.slice(0,Math.min(40,t.length));j=S.indexOf(t)}
+      if(j<0){   // the same words written otherwise on screen (ﷺ for «صلى الله عليه وسلم», a hamza's seat, the vowel marks, the punctuation): letters only
+        const L=c=>c==='ﷺ'?'صلىاللهعليهوسلم':/[\u0621-\u064A]/.test(c)?c.replace(/[أإآ]/,'ا').replace('ى','ي').replace('ة','ه'):'';let ns='';const ix=[];
+        for(let i=0;i<S.length;i++)for(const ch of L(S[i])){ns+=ch;ix.push(i)}
+        const qq=[...q.t.replace(/صلى الله عليه وسلم/g,'ﷺ')].map(L).join('');let k=qq.length>=4?ns.indexOf(qq):-1,n=qq.length;if(k<0&&qq.length>30){n=30;k=ns.indexOf(qq.slice(0,30))}
+        if(k>=0){j=ix[k];t=S.slice(j,ix[Math.min(k+n,ix.length)-1]+1)}}
       if(j<0){   // a verse shown in the mushaf's script: the passage is looked up in the book's stored wording kept on it
         const nz=x=>x.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^\u0621-\u064A]/g,'');
         const tq=nz(q.t);let hit=null;
