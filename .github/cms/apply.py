@@ -158,18 +158,25 @@ try:
             umatch.page(d, pg)
 except Exception as x:
     print('mushaf script not refreshed:', x)
-# a verse that was in the mushaf's script before his correction and is not now: said in his result, never silently
+# a verse that was in the mushaf's script before his correction and is not now: said in his result, never silently; each such
+# verse is told once, in the result of the correction made in its own paragraph (else the one on the page next to it)
 try:
-    for n, (e, g, m) in enumerate(done):
-        if not g or e.get('f') == 'ui' or len(e.get('path') or []) != 3 or e['path'][0] != 'p': continue
-        d, s = OPEN[e['f']]; d0 = json.loads(s); pg = e['path'][1]; lost = []
-        for q in (pg - 1, pg, pg + 1):
+    P3 = [(n, e) for n, (e, g, m) in enumerate(done) if g and e.get('f') != 'ui' and len(e.get('path') or []) == 3 and e['path'][0] == 'p']
+    LOST = {}
+    for f in {e['f'] for n, e in P3}:
+        d, s = OPEN[f]; d0 = json.loads(s)
+        for q in sorted({e['path'][1] + k for n, e in P3 if e['f'] == f for k in (-1, 0, 1)}):
             was = {(r[0], r[1]): r[2] for r in (d0.get('u', {}).get(str(q)) or []) if isinstance(r[1], int) and r[2]}
             now = {(r[0], r[1]) for r in (d.get('u', {}).get(str(q)) or []) if isinstance(r[1], int) and r[2]}
-            lost += [u for k, u in was.items() if k not in now]
-        if lost:
-            w = 'تنبيه: ' + ('هذه الآيات لم تعد تظهر' if len(lost) > 1 else 'هذه الآية لم تعد تظهر') + ' برسم المصحف، لأن نصها بعد التعديل لا يطابق كلمات المصحف كلمةً كلمة، فتظهر بلفظ الكتاب: ' + '، '.join('«' + re.sub('[\u064B-\u065F\u0670\u06D6-\u06ED]', '', u)[:60] + '»' for u in lost[:3]) + '. راجعها.'
-            done[n] = (e, g, (m + ' ' if m else '') + w)
+            for k, u in was.items():
+                if k in now: continue
+                own = [n for n, e in P3 if e['f'] == f and e['path'][1] == q and e['path'][2] == k[0] + 1]
+                near = [n for n, e in P3 if e['f'] == f and abs(e['path'][1] - q) <= 1]
+                if own or near: LOST.setdefault((own or near)[0], []).append(u)
+    for n, lost in LOST.items():
+        e, g, m = done[n]
+        w = 'تنبيه: ' + ('هذه الآيات لم تعد تظهر' if len(lost) > 1 else 'هذه الآية لم تعد تظهر') + ' برسم المصحف، لأن نصها بعد التعديل لا يطابق كلمات المصحف كلمةً كلمة، فتظهر بلفظ الكتاب. ' + ('وهي التي أولها: ' if len(lost) == 1 else 'وأوائلها: ') + '، '.join('«' + re.sub('[\u064B-\u065F\u0670\u06D6-\u06ED]', '', u)[:60] + '»' for u in lost[:3]) + '. راجعها.'
+        done[n] = (e, g, (m + ' ' if m else '') + w)
 except Exception as x:
     print('verse check not reported:', x)
 
