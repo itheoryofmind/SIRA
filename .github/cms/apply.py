@@ -133,6 +133,24 @@ for e in E:
         if not ok_:
             done.append((e, False, 'لم يُطبَّق: تغيّر هذا الموضع منذ الفحص، أو الموضع الجديد لا يطابق نص الآية')); continue
         o[last] = new; done.append((e, True, 'صُحّح موضع الآية في المصحف')); continue
+    if f == 'mid.json' and len(e['path']) == 1 and isinstance(cur, list):
+        # «يخالف المطبوع» marks of a page taken away from the panel after his choice there: nw = {"rm": [[item, offset], ...],
+        # "dl": n} — those marks are dropped from the page's marks as they are now (so two choices on one page do not clash), and a
+        # later mark in the same paragraph moves by the length of the text he put in before it
+        try:
+            q = json.loads(e['nw']); rm = [list(x[:2]) for x in q['rm']]; dl = int(q.get('dl') or 0)
+            ok_ = bool(rm) and all(isinstance(a, int) and isinstance(b, int) for a, b in rm)
+        except Exception:
+            ok_ = False
+        if not ok_:
+            done.append((e, False, 'لم يُطبَّق: طلب إزالة العلامة غير مفهوم')); continue
+        new = [x for x in cur if list(x[:2]) not in rm]
+        if len(new) == len(cur):
+            done.append((e, True, 'العلامة كانت قد أُزيلت')); continue
+        new = [[x[0], x[1] + dl] + list(x[2:]) if dl and x[0] == rm[0][0] and x[1] > rm[0][1] else x for x in new]
+        if new: o[last] = new
+        else: del o[last]
+        done.append((e, True, 'أُزيلت علامة «يخالف المطبوع» من هذا الموضع')); continue
     if not isinstance(cur, str):
         done.append((e, False, 'الموضع ليس نصاً')); continue
     msg = ''
