@@ -27,6 +27,8 @@ jobs:
             !/vols/
             !/book/
             !/download/
+      - name: Renew stale file fingerprints
+        run: python3 .github/cms/dhfix.py
       - id: a
         name: Apply the waiting corrections
         env:
