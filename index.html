@@ -3146,7 +3146,7 @@ audio.own-note-m{background:none;height:44px}
 // the Quran verses are shown in the mushaf (Uthmani) script with full vowelling wherever their place is certain (data 'u' r[2], qu.json)
 window.UTHM=true;
 const DV='37';
-const APP_VER='2026-10-30-2115';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
+const APP_VER='2026-10-31-0500';   // must match version.json; tells an installed copy that a newer version exists               // version of the data files
 const ORD=['','الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر'];
 // وصف الأجزاء من بيان الأجزاء في آخر الجزء السادس عشر (ص ٤٩٤–٤٩٦)
 const VOLS=[
@@ -3695,8 +3695,8 @@ function richInline(s,hl,inQ,rep){
     // kashida, as the print sets it («بـ ﴿…﴾»); the kashida is left out when copying
     if(!sup&&'{"«(['.includes(ch)){const mt=buf.match(/(^|[\s(«"])(و[بكل]|ف[بل]|[بكلف])(\s+)$/);if(mt){const sp=mt[3];buf=buf.slice(0,buf.length-sp.length);flush();node.append(el('span','tw'));buf=sp}}
     if(ch==='\u0003'||ch==='\u0004'){flush();const d=ch==='\u0004',g=el('button',d?'gap d':'gap');g.type='button';g.setAttribute('aria-label',d?'النص هنا يخالف المطبوع':'هنا في المطبوع كلام ليس في النص');g.onclick=e=>{e.stopPropagation();midNote(0,1,d)};node.append(g);continue}
-    if(ch==='\uE000'){if(!qspan&&!ed){flush();qspan=el('span','q');const r=VSQ.shift();if(r&&r[3]){qspan.classList.add('qa');qspan.dataset.s=r[3];qspan.dataset.a=r[4];qspan.dataset.b=r[5]}f.append(qspan);node=qspan;if(window.UTHM&&r&&r[2]){qspan.classList.add('qm');qspan.append(document.createTextNode(r[2]));skip=true}}continue}
-    if(ch==='\uE001'){if(qspan){if(skip)buf='';else flush();skip=false;node=f;qspan=null}continue}
+    if(ch==='\uE000'){if(!qspan&&!ed){flush();qspan=el('span','q');const r=VSQ.shift();if(r&&r[3]){qspan.classList.add('qa');qspan.dataset.s=r[3];qspan.dataset.a=r[4];qspan.dataset.b=r[5]}f.append(qspan);node=qspan;if(window.UTHM&&r&&r[2]){qspan.classList.add('qm');qspan.append(document.createTextNode(r[2]));skip=true;skipO=''}}continue}
+    if(ch==='\uE001'){if(qspan){if(skip){buf='';qspan.dataset.o=skipO}else flush();skip=false;node=f;qspan=null}continue}
     if(ch==='\u0001'){flush();sup=el('sup','fn');sup.title='رقم حاشية في النسخة الرقمية، والحاشية غير منقولة هنا';node.append(sup);continue}
     if(ch==='\u0002'){if(sup){sup.textContent=buf;buf=''}sup=null;continue}
     if(sup){buf+=ch;continue}
@@ -3718,7 +3718,7 @@ function richInline(s,hl,inQ,rep){
     buf+=ch;
   }
   if(skip&&uNode&&skipO.trim()&&uBad(skipO,uNode.textContent)){qspan.classList.remove('qm');uNode.replaceWith(document.createTextNode(skipO))}   // a verse that goes on past this paragraph: its first part checked too
-  flush();if(qspan)qspan.classList.add('qo');f.inQ=!!qspan;return f;
+  flush();if(qspan){qspan.classList.add('qo');if(skip&&skipO.trim())qspan.dataset.o=skipO}f.inQ=!!qspan;return f;   // a verse going on past this paragraph keeps the book's wording too, so a link to its words finds it
 }
 function appendHL(node,text,hl){
   if(!hl||!hl.length){node.append(text);return}
@@ -4521,7 +4521,9 @@ async function markPassage(){
       if(j<0){   // a verse shown in the mushaf's script: the passage is looked up in the book's stored wording kept on it
         const nz=x=>x.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^\u0621-\u064A]/g,'');
         const tq=nz(q.t);let hit=null;
-        for(const v of b.querySelectorAll('.q.qm[data-o]')){const o=nz(v.dataset.o);if(o.length<3)continue;if(tq.includes(o)||o.includes(tq.slice(0,24))||(tq.length>12&&o.includes(tq.slice(-24)))){hit=v;break}}
+        // the words inside the verse's brackets are looked up too, without what was written before or after it (a reference, «الآية»)
+        const pcs=[tq,...q.t.split(/[{}]/).map(nz).filter(x=>x.length>=4&&x!==tq).sort((x,y)=>y.length-x.length)];
+        for(const v of b.querySelectorAll('.q.qm[data-o]')){const o=nz(v.dataset.o);if(o.length<3)continue;if(pcs.some(p=>p.includes(o)||o.includes(p.slice(0,24))||(p.length>12&&o.includes(p.slice(-24))))){hit=v;break}}
         if(hit){hit.classList.add('hlt','c-l');TX.lock=true;hit.scrollIntoView({block:'center'});setTimeout(()=>{TX.lock=false},300);return}
         toast('فُتحت الصفحة، ولم يُعثر على الفقرة بلفظها.',3000);return}
       {const W=/[\u0621-\u065F\u0670-\u06D3\w]/;let e=j+t.length;while(j>0&&W.test(S[j-1])&&W.test(S[j]))j--;while(e<S.length&&W.test(S[e])&&W.test(S[e-1]))e++;t=S.slice(j,e)}   // whole words: a mark never cuts a word in two
@@ -5538,8 +5540,9 @@ const FRQ=[[1,'مرة واحدة: صباحاً، بعد الشروق بساعة'
 const frq=n=>[1,2,6].includes(+n.fq)?+n.fq:2;
 const NTFDEF=Object.fromEntries(NTF.map(x=>[x[0],x[1]]));
 // the reader's choice: {h:{kind:hour}, sd:{si,kh}, tz:null (the phone's own) or a zone}; readers from before this page keep what they had
-function ntGet(){let n=LS.get('ntf',null);if(n&&n.h)return n;n={h:{},sd:{},tz:null};
-  if(LS.get('pushSh',null)!==0&&LS.get('pushTz',null)){n.h.sh=6;n.h.fr=9}
+function ntGet(){let n=LS.get('ntf',null);if(n&&n.h){if(!('fr' in n.h)&&!n.fo)n.h.fr=9;return n}   // Friday is on for everyone until he turns it off himself
+  n={h:{},sd:{},tz:null};
+  n.h.fr=9;if(LS.get('pushSh',null)!==0&&LS.get('pushTz',null)){n.h.sh=6}
   if(LS.get('sxPlanPush',null))n.h.pl=20;return n}
 const ntSet=n=>LS.set('ntf',n);
 // a fresh start for the ordered notifications (Sira, caliphs, Maghazi), from the day named here
@@ -5556,7 +5559,7 @@ async function ntSync(n,ask,test){
   if(!Object.keys(n.h).length){if(s)await pushDrop(s);ntSet(n);return true}
   if(!s){if(!ask)return false;s=await pushGet();if(!s)return false}
   if('mg' in n.h){n.sd=n.sd||{};n.sd.mg=mgStart()}
-  const body={sub:s,tz:myTz(),h:n.h,sd:n.sd,cx:n.cx!==false,fq:frq(n),pl:pl?{t:pl.t,d:pl.d}:null};if(test)body.test=1;
+  const body={sub:s,tz:myTz(),h:n.h,sd:n.sd,cx:n.cx!==false,fq:frq(n),fo:('fr' in n.h)?0:1,pl:pl?{t:pl.t,d:pl.d}:null};if(test)body.test=1;
   const r=await fetch(PUSHU+'/sub',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw 0;
   const j=await r.json();n.sd=j.sd||{};ntSet(n);LS.set('pushTz',myTz());return true}
 // the time zone of the phone changed (travel): tell the sender
@@ -5616,7 +5619,7 @@ async function ntPaint0(B){
     const on=(k in n.h)&&!noPlan;
     const sw=el('button','nt-sw');sw.type='button';sw.setAttribute('role','switch');sw.setAttribute('aria-label',t);sw.setAttribute('aria-checked',on?'true':'false');
     sw.disabled=!ok||noPlan;top.append(tx,sw);r.append(top);
-    sw.onclick=()=>{if(k in n.h)delete n.h[k];else n.h[k]=saved.h[k]??def;mark()};
+    sw.onclick=()=>{if(k in n.h){delete n.h[k];if(k==='fr')n.fo=1}else{n.h[k]=saved.h[k]??def;if(k==='fr')delete n.fo}mark()};
     if(on&&k==='fr'){const tm=el('label','nt-tm');tm.innerHTML='<span>كم مرة:</span> ';const sel=el('select');sel.setAttribute('aria-label','كم مرة يصلك تذكير الجمعة');
       FRQ.forEach(([v,t])=>sel.append(new Option(t,v)));sel.value=frq(n);tm.append(sel);r.append(tm);sel.onchange=()=>{n.fq=+sel.value;mark()}}
     else if(on){const tm=el('label','nt-tm');tm.innerHTML='<span>الوقت:</span> ';const sel=el('select');sel.setAttribute('aria-label','وقت '+t);
@@ -5648,7 +5651,7 @@ async function ntPaint0(B){
       setTimeout(()=>{tb.textContent='أرسل إشعاراً تجريبياً';tb.disabled=false},6000)};B.append(tb)}
   if(live){const off=el('button','nt-off','إيقاف الإشعارات كلها');off.type='button';
     off.onclick=async()=>{if(!confirm('إيقاف الإشعارات كلها؟ لن يصلك شيء من الموقع، وتستطيع تفعيلها من هذه الصفحة متى شئت.'))return;off.disabled=true;off.textContent='جارٍ الإيقاف…';
-      try{const m=ntGet();m.h={};await ntSync(m,false);NTD.n=JSON.parse(JSON.stringify(ntGet()));NTD.dirty=false;NTD.msg=['nt-ok','أُوقفت الإشعارات كلها، فلن يصلك شيء.']}
+      try{const m=ntGet();m.h={};m.fo=1;await ntSync(m,false);NTD.n=JSON.parse(JSON.stringify(ntGet()));NTD.dirty=false;NTD.msg=['nt-ok','أُوقفت الإشعارات كلها، فلن يصلك شيء.']}
       catch(e){NTD.msg=['nt-err','تعذّر الإيقاف الآن. تأكد من اتصالك بالإنترنت ثم حاول مرة أخرى.']}ntPaint();seqPend()};B.append(off)}
   if(ok&&IOS)B.append(el('p','nt-note','على الآيفون: لا تصل الإشعارات إلا بعد إضافة الموقع إلى الشاشة الرئيسية، وفتحه منها.'))}
 

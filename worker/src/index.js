@@ -140,7 +140,7 @@ function prTimes(y, m, d, lat, lng, mk, hanafi, ramadan) {
   if (typeof M[1] === 'string') t[5] = t[4] + (ramadan ? 120 : +M[1]) / 60;
   return t.map((h) => h - lng / 15);
 }
-// Friday: to a reader who has it on, as often as chosen (fq, below), from an hour after sunrise to half an hour before maghrib (never in the hour and a half
+// Friday: to every reader unless he turned it off himself (fo), as often as chosen (fq, below), from an hour after sunrise to half an hour before maghrib (never in the hour and a half
 // before the Friday prayer nor the 45 minutes after it), by the reader's place: the coordinates the network gives when the reader
 // subscribes or opens the site (no permission asked, nothing else kept); before that, the capital of the reader's time zone
 const TZPLACE = { 'Asia/Riyadh': [24.71, 46.68], 'Asia/Kuwait': [29.37, 47.98], 'Asia/Qatar': [25.29, 51.53], 'Asia/Bahrain': [26.23, 50.59], 'Asia/Dubai': [25.2, 55.27], 'Asia/Muscat': [23.59, 58.41], 'Asia/Aden': [12.79, 45.03], 'Asia/Baghdad': [33.31, 44.36], 'Asia/Amman': [31.95, 35.93], 'Asia/Damascus': [33.51, 36.29], 'Asia/Beirut': [33.89, 35.5], 'Asia/Jerusalem': [31.77, 35.21], 'Asia/Gaza': [31.5, 34.47], 'Asia/Hebron': [31.53, 35.1], 'Africa/Cairo': [30.04, 31.24], 'Africa/Khartoum': [15.5, 32.56], 'Africa/Tripoli': [32.89, 13.19], 'Africa/Tunis': [36.81, 10.18], 'Africa/Algiers': [36.75, 3.06], 'Africa/Casablanca': [33.57, -7.59], 'Africa/Nouakchott': [18.08, -15.98], 'Africa/Mogadishu': [2.05, 45.32], 'Asia/Karachi': [24.86, 67.0], 'Asia/Kolkata': [28.61, 77.21], 'Asia/Dhaka': [23.81, 90.41], 'Asia/Jakarta': [-6.2, 106.85], 'Asia/Kuala_Lumpur': [3.14, 101.69], 'Europe/Istanbul': [41.01, 28.98], 'Europe/London': [51.51, -0.13], 'Europe/Paris': [48.86, 2.35], 'Europe/Berlin': [52.52, 13.4], 'America/New_York': [40.71, -74.01], 'America/Chicago': [41.88, -87.63], 'America/Los_Angeles': [34.05, -118.24] };
@@ -233,7 +233,7 @@ async function due(env, force) {
       if (kind) out.push([k.name, kind === 'sh' ? 'daily' : kind]);
       const ll = placeLL(m, tz), tnow = Date.now();
       // Friday: to a reader who has it on (the switch on the notifications page), as often as the reader chose
-      if (ll && L.wd === 'Fri' && 'fr' in m.h) { const fq = fqOf(m), g = ll.join(',') + '|' + tz + '|' + fq; if (!fmemo.has(g)) fmemo.set(g, fridaySlots(ll[0], ll[1], tz, tnow, fq).some((t) => tnow >= t && tnow - t < 5 * 6e4)); if (fmemo.get(g)) out.push([k.name, 'friday']); }
+      if (ll && L.wd === 'Fri' && !m.fo) { const fq = fqOf(m), g = ll.join(',') + '|' + tz + '|' + fq; if (!fmemo.has(g)) fmemo.set(g, fridaySlots(ll[0], ll[1], tz, tnow, fq).some((t) => tnow >= t && tnow - t < 5 * 6e4)); if (fmemo.get(g)) out.push([k.name, 'friday']); }
     }
     cursor = l.list_complete ? null : l.cursor;
   } while (cursor);
@@ -381,6 +381,8 @@ export default {
       if (!pl) delete h.pl;
       md.h = h;
       { const fq = 'fq' in body ? +body.fq : (om ? +om.fq : NaN); if (FQS.includes(fq)) md.fq = fq; }   // how often on Friday
+      // Friday reaches every subscriber on its own (the keeper's rule); only a reader who turned it off himself is left out
+      if ('fo' in body ? !!body.fo : !!(om && om.fo)) md.fo = 1;
       if ('cx' in body ? !!body.cx : !!(om && om.cx)) md.cx = 1;   // after the Sira, the caliphs
       // where each reader is in the Sira and the caliphs: the day the reader turned it on (or the page's own count)
       const sd = {}, osd = (om && om.sd) || {}, bsd = (body.sd && typeof body.sd === 'object') ? body.sd : {};
