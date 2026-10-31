@@ -191,6 +191,22 @@ try:
                 own = [n for n, e in P3 if e['f'] == f and e['path'][1] == q and e['path'][2] == k[0] + 1]
                 near = [n for n, e in P3 if e['f'] == f and abs(e['path'][1] - q) <= 1]
                 if own or near: LOST.setdefault((own or near)[0], []).append(u)
+    # a verse whose words he changed and that still shows in the mushaf's script: his text differs from the mushaf's only in
+    # spelling (hamza, vowel marks, ى/ي, ة/ه), so the reader sees no change; said in his result, so he knows it was not lost
+    KEPT = {}
+    BR = lambda t: {t[:m.start()].count('{'): m.group(1) for m in re.finditer(r'\{([^{}]*)(?:\}|$)', t)}
+    CT = lambda t: t[:t.find('}')] if '}' in t and '{' not in t[:t.find('}')] else None
+    for n, e in P3:
+        o_, w_ = e.get('_old'), e.get('_nw')
+        if not isinstance(o_, str) or not isinstance(w_, str): continue
+        d = OPEN[e['f']][0]; it = e['path'][2] - 1
+        now = {(r[0], r[1]) for r in (d.get('u', {}).get(str(e['path'][1])) or []) if isinstance(r[1], int) and r[2]}
+        bo, bn = BR(o_), BR(w_); ch = [k for k in bn if k in bo and bo[k] != bn[k]]
+        if CT(o_) is not None and CT(w_) is not None and CT(o_) != CT(w_): ch.append(-1)
+        if any((it, k) in now for k in ch): KEPT[n] = 1
+    for n in KEPT:
+        e, g, m = done[n]
+        done[n] = (e, g, (m + ' ' if m else '') + 'الآية التي عدّلتها ما زالت تظهر للقارئ برسم المصحف كما كانت، لأن الفرق بين نصك ونص المصحف في الإملاء فقط (الهمزة أو التشكيل أو الياء والألف المقصورة أو التاء المربوطة والهاء)؛ فلا يتغير ما يراه القارئ، ويُصلَح النص المحفوظ الذي يُبحث فيه.')
     for n, lost in LOST.items():
         e, g, m = done[n]
         w = 'تنبيه: ' + ('هذه الآيات لم تعد تظهر' if len(lost) > 1 else 'هذه الآية لم تعد تظهر') + ' برسم المصحف، لأن نصها بعد التعديل لا يطابق كلمات المصحف كلمةً كلمة، فتظهر بلفظ الكتاب. ' + ('وهي التي أولها: ' if len(lost) == 1 else 'وأوائلها: ') + '، '.join('«' + re.sub('[\u064B-\u065F\u0670\u06D6-\u06ED]', '', u)[:60] + '»' for u in lost[:3]) + '. راجعها.'
